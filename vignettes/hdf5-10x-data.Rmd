@@ -35,11 +35,59 @@ download.file(h5_url, dest = h5_file)
 Use `tiledbsc`'s conversion function to create a TileDB array containing the same data.
 
 ```{r}
-array_uri <- H510xToTiledb(source = h5_file)
-array_uri
+tdb_uri <- H510xToTiledb(source = h5_file, overwrite = TRUE, tile_order = "COL_MAJOR")
+tdb_uri
 ```
 
-This created a new directory in your current working directory named `r array_uri`, which contains the TileDB array.
+This created a new directory in your current working directory named `r tdb_uri`, which contains the TileDB array.
+
+```{r}
+dir(tdb_uri)
+```
+
+## Querying
+
+We can use the tiledb package to slice the array without loading the entire dataset into memory.
+
+Open the array:
+
+```{r}
+tdb_array <- tiledb_array(tdb_uri, return_as = "tibble")
+```
+
+Use standard R indexing to slice by feature
+
+```{r}
+tdb_array["B2M", ]
+```
+
+or barcode:
+
+```{r}
+tdb_array[, "AATCACGGTCTTCATT-1"]
+```
+
+
+You can also retrieve counts for multiple genes across all barcodes:
+
+```{r}
+# specify genes of interest
+genes <- c("B2M", "EEF1A1", "IGKC", "MALAT1", "MT-ATP6", "MT-CO1")
+selected_ranges(tdb_array) <- list(feature = cbind(genes, genes))
+
+# run the query
+tbl_counts <- tdb_array[]
+
+boxplot(data ~ feature, data = tbl_counts, col = "skyblue", pch = 16)
+```
+
+
+## Session
+
+```{r}
+sessionInfo()
+```
+
 
 ```{r cleanup, include=FALSE}
 unlink(array_uri, recursive = TRUE)
