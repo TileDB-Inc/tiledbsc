@@ -1,0 +1,48 @@
+---
+title: "Converting HDF5 files from 10x Genomics"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{HDF5 10X Data}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Setup
+
+```{r setup}
+library(tiledbsc)
+h5_url <- "https://cf.10xgenomics.com/samples/cell-exp/6.1.0/500_PBMC_3p_LT_Chromium_X/500_PBMC_3p_LT_Chromium_X_filtered_feature_bc_matrix.h5"
+```
+
+In this vignette we'll work with a small example dataset provided by 10x Genomics containing ~500 Human peripheral blood mononuclear cells (PBMCs). More information about this data is available [here](https://www.10xgenomics.com/resources/datasets/500-human-pbm-cs-3-lt-v-3-1-chromium-x-3-1-low-6-1-0).
+
+Let's download a local of the HDF5 file.
+
+```{r}
+h5_file <- basename(h5_url)
+download.file(h5_url, dest = h5_file)
+```
+
+## Conversion
+
+Use `tiledbsc`'s conversion function to create a TileDB array containing the same data.
+
+```{r}
+array_uri <- H510xToTiledb(source = h5_file)
+array_uri
+```
+
+This created a new directory in your current working directory named `r array_uri`, which contains the TileDB array.
+
+```{r cleanup, include=FALSE}
+unlink(array_uri, recursive = TRUE)
+unlink(h5_file)
+```
+
