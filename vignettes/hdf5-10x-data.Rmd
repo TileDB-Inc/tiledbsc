@@ -2,7 +2,7 @@
 title: "Converting HDF5 files from 10x Genomics"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{HDF5 10X Data}
+  %\VignetteIndexEntry{Converting HDF5 files from 10x Genomics}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -17,7 +17,10 @@ knitr::opts_chunk$set(
 ## Setup
 
 ```{r setup}
+library(tiledb)
+library(Seurat)
 library(tiledbsc)
+
 h5_url <- "https://cf.10xgenomics.com/samples/cell-exp/6.1.0/500_PBMC_3p_LT_Chromium_X/500_PBMC_3p_LT_Chromium_X_filtered_feature_bc_matrix.h5"
 ```
 
@@ -52,7 +55,7 @@ We can use the tiledb package to slice the array without loading the entire data
 Open the array:
 
 ```{r}
-tdb_array <- tiledb_array(tdb_uri, return_as = "matrix")
+tdb_array <- tiledb_array(tdb_uri, return_as = "tibble")
 ```
 
 Use standard R indexing to slice by feature
@@ -105,7 +108,7 @@ sessionInfo()
 
 
 ```{r cleanup, include=FALSE}
-unlink(array_uri, recursive = TRUE)
+unlink(tdb_uri, recursive = TRUE)
 unlink(h5_file)
 ```
 
