@@ -52,7 +52,7 @@ We can use the tiledb package to slice the array without loading the entire data
 Open the array:
 
 ```{r}
-tdb_array <- tiledb_array(tdb_uri, return_as = "tibble")
+tdb_array <- tiledb_array(tdb_uri, return_as = "matrix")
 ```
 
 Use standard R indexing to slice by feature
@@ -79,6 +79,21 @@ selected_ranges(tdb_array) <- list(feature = cbind(genes, genes))
 tbl_counts <- tdb_array[]
 
 boxplot(data ~ feature, data = tbl_counts, col = "skyblue", pch = 16)
+```
+
+## Analyzing with Seurat
+
+In order to use *Seurat* to analyze 10x count data stored with TileDB you'll need to read the dataset into memory
+
+```{r}
+count_mat <- Read10x_tiledb(tdb_uri, verbose = TRUE)
+```
+
+and create a Seurat object:
+
+```{r}
+counts <- Seurat::CreateSeuratObject(counts = count_mat, project = "pbmc3p")
+counts
 ```
 
 
