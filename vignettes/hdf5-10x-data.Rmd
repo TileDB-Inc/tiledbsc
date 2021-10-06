@@ -21,7 +21,7 @@ knitr::opts_chunk$set(
 ```{r setup}
 library(tiledb)
 library(Seurat)
-devtools::load_all()
+library(tiledbsc)
 
 h5_url <- "https://cf.10xgenomics.com/samples/cell-exp/6.1.0/500_PBMC_3p_LT_Chromium_X/500_PBMC_3p_LT_Chromium_X_filtered_feature_bc_matrix.h5"
 h5_file <- basename(h5_url)
