@@ -1,12 +1,13 @@
 #' Write Seurat Object to TileDB
 #'
+#' @param x A [`SeuratObject::Seurat`] object
 #' @param base_uri The base directory into which the individual TileDB arrays
 #'   will be written.
 #' @references
 #' https://mojaveazure.github.io/seurat-disk/articles/h5Seurat-load.html
 #'
 #'
-#'
+#' @export
 
 writeTiledbSeurat <- function(x, base_uri) {
 
@@ -18,6 +19,9 @@ writeTiledbSeurat <- function(x, base_uri) {
   walkIt(x, base_uri, nm = deparse(substitute(x)))
 }
 
+#' Recurse over the slots of a SeuratObject and selectively convert them to
+#' TileDB arrays based on their class/size
+#' @noRd
 walkIt <- function(x, base_uri, nm="", reduce=TRUE) {
     if (nm=="") nm <- deparse(substitute(x))
     print(nm)
@@ -67,17 +71,20 @@ walkIt <- function(x, base_uri, nm="", reduce=TRUE) {
 
 }
 
+
 .newName <- function(x, nm) gsub("[@$.]", "_", nm)
+
 
 .saveToTileDB <- function(x, base_uri, nm) {
      newnm <- .newName(x, nm)
-     uri <- file.path(base_uri, nm)
+     uri <- file.path(base_uri, newnm)
      # dir.create(uri, showWarnings=FALSE, recursive = TRUE)
      switch(class(x)[1],
             "dgCMatrix"  = fromSparseMatrix(x, uri),
             "data.frame" = fromDataFrame(.flipLogical(x), uri),
             "matrix"     = fromDataFrame(as.data.frame(x), uri))
  }
+
 
 .sizeTest <- function(x, base_uri, nm) {
     s <- object.size(x)
