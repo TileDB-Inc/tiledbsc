@@ -2,6 +2,7 @@
 
 export(H510xToTiledb)
 export(Read10x_tiledb)
+export(writeTiledbSeurat)
 import(tiledb)
 importFrom(Seurat,Read10X_h5)
 importFrom(tools,file_ext)
