@@ -72,4 +72,16 @@ ingest_image_data <- function(array_uri, image_data, verbose = TRUE) {
   if (verbose) message("Ingesting image into ", array_uri)
   tdb_array <- tiledb::tiledb_array(array_uri, query_type = "WRITE")
   tdb_array[] <- image_list
+
+  # store additional image info as metadata
+  image_info <- attr(image_data, which = "info")
+  tiledb_array_open(tdb_array, "WRITE")
+  mapply(
+    FUN = tiledb::tiledb_put_metadata,
+    key = names(image_info),
+    val = image_info,
+    MoreArgs = list(arr = tdb_array),
+    SIMPLIFY = FALSE
+  )
+  tiledb_array_close(tdb_array)
 }
