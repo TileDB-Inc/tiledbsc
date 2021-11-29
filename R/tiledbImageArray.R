@@ -23,7 +23,7 @@ ImagePositionstoTileDB <- function(file_path, array_uri, verbose = TRUE) {
   )
 }
 
-ImagetoTileDB <- function(image_path, array_uri, verbose=TRUE) {
+ImagetoTileDB <- function(image_path, array_uri, scale_factors_path = NULL, verbose = TRUE) {
 
   if (verbose) message("Loading image data from ", image_path)
 
@@ -32,6 +32,24 @@ ImagetoTileDB <- function(image_path, array_uri, verbose=TRUE) {
 
   create_image_array(array_uri, width = ncol(image_data), height = nrow(image_data))
   ingest_image_data(array_uri, image_data)
+
+  if (!is.null(scale_factors_path)) {
+    if (verbose) message("Loading scaling factors from ", scale_factors_path)
+    stopifnot(file.exists(scale_factors_path))
+    scale_factors <- jsonlite::fromJSON(scale_factors_path)
+
+    tdb_image <- tiledb_array(array_uri, "WRITE")
+    tiledb_array_open(tdb_image, "WRITE")
+    mapply(
+      FUN = tiledb::tiledb_put_metadata,
+      key = paste0("scale_factor_", names(scale_factors)),
+      val = scale_factors,
+      MoreArgs = list(arr = tdb_image),
+      SIMPLIFY = FALSE
+    )
+    tiledb_array_close(tdb_image)
+  }
+  return(array_uri)
 }
 
 

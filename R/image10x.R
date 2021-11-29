@@ -47,6 +47,11 @@ Convert10x_Spatial_Tiledb <- function(
   # Add image data array
   if (verbose) message("Loading image data from ", image_dir)
   img_array <- file.path(dest, tools::file_path_sans_ext(basename(png_file)))
+  ImagetoTileDB(
+    image_path = png_file,
+    scale_factors_path = sf_file,
+    array_uri = img_array
+  )
 
   # Add image position data
   pos_array <- file.path(dest, tools::file_path_sans_ext(basename(pos_file)))
