@@ -18,6 +18,7 @@ Convert10x_Spatial_Tiledb <- function(
   h5_file <- dir(data_dir, pattern = "h5$", full.names = TRUE)
   png_file <- dir(image_dir, pattern = "png$", full.names = TRUE)
   sf_file <- dir(image_dir, pattern = "json$", full.names = TRUE)
+  pos_file <- dir(image_dir, pattern = "csv$", full.names = TRUE)
 
   if (is.null(dest)) {
     dest <- file.path(getwd(), basename(data_dir))
@@ -46,7 +47,10 @@ Convert10x_Spatial_Tiledb <- function(
   # Add image data array
   if (verbose) message("Loading image data from ", image_dir)
   img_array <- file.path(dest, tools::file_path_sans_ext(basename(png_file)))
-  ImagetoTileDB(image_path = png_file, array_uri = img_array)
+
+  # Add image position data
+  pos_array <- file.path(dest, tools::file_path_sans_ext(basename(pos_file)))
+  ImagePositionstoTileDB(file_path = pos_file, array_uri = pos_array)
 
   return(dest)
   # scale_factors <- jsonlite::fromJSON(txt = sf_file)

@@ -1,3 +1,27 @@
+#' Create a TileDB array for Visium Image Positions
+#'
+#' @param file_path Path to CSV file containing 10X visium positions
+#'
+ImagePositionstoTileDB <- function(file_path, array_uri, verbose = TRUE) {
+  stopifnot(file.exists(file_path))
+  if (verbose) message("Loading image position data from ", file_path)
+
+  tbl_positions <- read.csv(
+    file = file_path,
+    col.names = c("barcodes", "tissue", "row", "col", "imagerow", "imagecol"),
+    header = FALSE,
+    as.is = TRUE,
+    row.names = NULL
+  )
+
+  if (verbose) message("Ingesting image position data into ", array_uri)
+  tiledb::fromDataFrame(
+    obj = tbl_positions,
+    uri = array_uri,
+    col_index = "barcodes",
+    sparse = TRUE
+  )
+}
 
 ImagetoTileDB <- function(image_path, array_uri, verbose=TRUE) {
 
