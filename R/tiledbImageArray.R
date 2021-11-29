@@ -6,7 +6,7 @@ ImagetoTileDB <- function(image_path, array_uri, verbose=TRUE) {
   image_data <- png::readPNG(source = image_path, info = TRUE)
   dimnames(image_data) <- list(NULL, NULL, c("red", "green", "blue"))
 
-  create_image_array(array_uri, width = nrow(image_data), height = ncol(image_data))
+  create_image_array(array_uri, width = ncol(image_data), height = nrow(image_data))
   ingest_image_data(array_uri, image_data)
 }
 
@@ -19,15 +19,16 @@ ImagetoTileDB <- function(image_path, array_uri, verbose=TRUE) {
 
 create_image_array <- function(array_uri, width, height) {
 
+  # TODO: Switch dimensions to UINT16 after bug retrieving UINT dims is fixed
   tdb_dims <- mapply(
       tiledb::tiledb_dim,
       name = c("x", "y"),
       domain = list(
-          c(0L, width - 1L),
-          c(0L, height - 1L)
+          c(1L, height),
+          c(1L, width)
       ),
       MoreArgs = list(
-          type = "UINT16",
+          type = "INT16",
           tile = 100
       )
     )
