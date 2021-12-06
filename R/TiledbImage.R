@@ -41,6 +41,10 @@ TiledbImage <- R6::R6Class(
       args$uri <- self$array_uri
       args$query_type <- "READ"
       do.call(tiledb::tiledb_array, args)
+    },
+
+    metadata = function() {
+      private$get_metadata(self$tiledb_array())
     }
   ),
 
@@ -49,11 +53,12 @@ TiledbImage <- R6::R6Class(
     build_tiledb_image_array = function(array_uri) {
       image_data <- private$read_image_data()
       image_array <- private$create_image_array(
+        array_uri,
         height = dim(image_data)[1],
         width = dim(image_data)[2],
         attrs = dimnames(image_data)[[3]]
       )
-      private$ingest_image_data(image_data)
+      private$ingest_image_data(array_uri, image_data)
     },
 
     #' @description Read image data from a file and return a 3D array with
@@ -139,16 +144,56 @@ TiledbImage <- R6::R6Class(
       tdb_array[] <- image_list
 
       # store additional image info as metadata
-      image_info <- attr(image_data, which = "info")
-      tiledb::tiledb_array_open(tdb_array, "WRITE")
+      private$add_metadata(metadata = attr(image_data, which = "info"))
+      return(NULL)
+    },
+
+    #' @description Retrieve metadata from a TileDB array.
+    #' @param arr A [`tiledb_array`] object.
+    #' @param key The name of the metadata attribute to retrieve.
+    #' @param prefix Filter metadata using an optional prefix. Ignored if `key`
+    #'   is not NULL.
+    #' @return A list of metadata values.
+    get_metadata = function(arr = NULL, key = NULL, prefix = NULL) {
+      if (is.null(arr)) {
+        arr <- self$tiledb_array()
+      }
+
+      tiledb::tiledb_array_open(arr, "READ")
+      if (!is.null(key)) {
+        metadata <- tiledb::tiledb_get_metadata(arr, key)
+      } else {
+        metadata <- tiledb::tiledb_get_all_metadata(arr)
+        if (!is.null(prefix)) {
+          metadata <- metadata[string_starts_with(names(metadata), prefix)]
+        }
+      }
+      tiledb::tiledb_array_close(arr)
+      return(metadata)
+    },
+
+    #' @description Add specify list of metadata to the specified TileDB array.
+    #' @param arr A [`tiledb_array`] object.
+    #' @param metadata Named list of metadata to add.
+    #' @param prefix Optional prefix to add to the metadata attribute names.
+    #' @return NULL
+    add_metadata = function(arr = NULL, metadata, prefix = "") {
+      stopifnot(
+        "Metadata must be a named list" = is.list(metadata) && is_named(metadata)
+      )
+      if (is.null(arr)) {
+        arr <- self$tiledb_array()
+      }
+      tiledb::tiledb_array_open(arr, "WRITE")
       mapply(
         FUN = tiledb::tiledb_put_metadata,
-        key = names(image_info),
-        val = image_info,
-        MoreArgs = list(arr = tdb_array),
+        key = paste0(prefix, names(metadata)),
+        val = metadata,
+        MoreArgs = list(arr = arr),
         SIMPLIFY = FALSE
       )
-      tiledb::tiledb_array_close(tdb_array)
+      tiledb::tiledb_array_close(arr)
+      return(NULL)
     }
   )
 )

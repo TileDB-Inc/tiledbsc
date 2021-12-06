@@ -28,4 +28,15 @@ test_that("A tiledb object can be retrieved", {
   testthat::expect_s4_class(tdb_img$tiledb_array(), "tiledb_array")
 })
 
+test_that("TiledbImage can be instantiated with existing array", {
+  tdb_image <- TiledbImage$new(array_uri = tdb_uri)
+  expect_true(inherits(tdb_image, "TiledbImage"))
+})
+
+test_that("Image metadata can be retrieved", {
+  md <- tdb_image$metadata()
+  testthat::expect_equal(names(md), c("bit.depth", "color.type", "dim"))
+})
+
+
 tiledb::tiledb_vfs_remove_dir(tdb_uri)
