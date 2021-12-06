@@ -1,37 +1,48 @@
 #' TileDB Image Data
 #'
-#' @examples
-#' fltr <- tiledb::tiledb_filter_list(tiledb::tiledb_filter("ZSTD"))
-#' a1 <- tiledb_attr(name = "a1", type = "INT32", filter_list = fltr)
-#' tdb_attr <- TiledbAttribute$new(a1)
-#' tdb_attr
-#'
-#' tdb_attr$to_list()
-#' tdb_attr$to_dataframe()
-#' tdb_attr$to_dataframe(simplify = TRUE)
+#' An object to store and manipulate images in TileDB.
 #'
 #' @importFrom png readPNG
 #' @importFrom tools file_ext
+#' @export
 
 TiledbImage <- R6::R6Class(
   classname = "TiledbImage",
   public = list(
     array_uri = NULL,
     image_path = NULL,
+    verbose = TRUE,
 
-    #' @description Create a new TiledbImage object. A new array is created if an `image_path` is provided, otherwise an existing array is opened at the specified URI.
+    #' @description Create a new TiledbImage object. A new array is created if
+    #' an `image_path` is provided, otherwise an existing array is opened at
+    #' the specified URI.
     #' @param image_path File path for the image to ingest.
     initialize = function(array_uri, image_path = NULL, verbose = TRUE) {
 
       self$array_uri <- array_uri
       self$image_path <- image_path
+      self$verbose <- verbose
 
       if (!is.null(self$image_path)) {
         stopifnot(file.exists(self$image_path))
+        image_data <- private$read_image_data()
+        image_array <- private$create_image_array(
+          height = dim(image_data)[1],
+          width = dim(image_data)[2],
+          attrs = dimnames(image_data)[[3]]
+        )
+        private$ingest_image_data(image_data)
+      }
+    },
 
-        image_data <- private$read_image_data(self$image_path)
-        browser()
-
+    #' @description Return a [`tiledbarray`] object
+    #' @param ... Optional arguments to pass to `tiledb::tiledb_array`
+    #' @return A [`tiledbarray`] object
+    tiledb_array = function(...) {
+      args <- list(...)
+      args$uri <- self$array_uri
+      args$query_type <- "READ"
+      do.call(tiledb::tiledb_array, args)
     }
   ),
 
@@ -40,6 +51,8 @@ TiledbImage <- R6::R6Class(
     #' proper names assigned to the Z dimension, and any additional metadata
     #' stored as attributes.
     read_image_data = function() {
+
+      if (self$verbose) message("Loading image data from ", self$image_path)
 
       image_data <- switch(
         tools::file_ext(self$image_path),
@@ -54,8 +67,14 @@ TiledbImage <- R6::R6Class(
 
     #' @description Create an empty TileDB array suitable for storing pixel
     #' data.
-    #' @param width,height The width and height of the image.
-    create_array = function(array_uri, width, height) {
+    #' @param height,width Height and width of the image channels.
+    #' @param attrs Names of the TileDB attributes.
+    create_image_array = function(height, width, attrs) {
+
+      # expecting names to accomodate a 2D array with 3 attributes
+      stopifnot(length(attrs) == 3)
+      if (self$verbose) message("Creating new array at ", self$array_uri)
+
       # TODO: Switch dims to UINT16 after bug retrieving UINT dims is fixed
       tdb_dims <- mapply(
           tiledb::tiledb_dim,
@@ -72,7 +91,7 @@ TiledbImage <- R6::R6Class(
 
       tdb_attrs <- mapply(
         tiledb::tiledb_attr,
-        name = c("red", "green", "blue"),
+        name = attrs,
         MoreArgs = list(
           type = "FLOAT64",
           ncells = 1,
@@ -89,7 +108,38 @@ TiledbImage <- R6::R6Class(
         offsets_filter_list = tiledb::tiledb_filter_list()
       )
 
-      tiledb::tiledb_array_create(array_uri, schema = tdb_schema)
+      tiledb::tiledb_array_create(self$array_uri, schema = tdb_schema)
+    },
+
+    #' @description Ingest image data into the TileDB array.
+    #' @param image_data 3D array containing the image pixel data.
+    ingest_image_data = function(image_data) {
+      stopifnot(
+        "Image data must be an array" = is.array(image_data)
+      )
+
+      # convert array to a list of matrices suitable for ingestion
+      image_list <- sapply(
+        X = dimnames(image_data)[[3]],
+        FUN = function(x) image_data[,,x],
+        simplify = FALSE
+      )
+
+      if (self$verbose) message("Ingesting image into ", self$array_uri)
+      tdb_array <- tiledb::tiledb_array(self$array_uri, query_type = "WRITE")
+      tdb_array[] <- image_list
+
+      # store additional image info as metadata
+      image_info <- attr(image_data, which = "info")
+      tiledb::tiledb_array_open(tdb_array, "WRITE")
+      mapply(
+        FUN = tiledb::tiledb_put_metadata,
+        key = names(image_info),
+        val = image_info,
+        MoreArgs = list(arr = tdb_array),
+        SIMPLIFY = FALSE
+      )
+      tiledb::tiledb_array_close(tdb_array)
     }
   )
 )
