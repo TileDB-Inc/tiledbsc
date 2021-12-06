@@ -25,13 +25,11 @@ TiledbImage <- R6::R6Class(
 
       if (!is.null(self$image_path)) {
         stopifnot(file.exists(self$image_path))
-        image_data <- private$read_image_data()
-        image_array <- private$create_image_array(
-          height = dim(image_data)[1],
-          width = dim(image_data)[2],
-          attrs = dimnames(image_data)[[3]]
+        private$build_tiledb_image_array(self$array_uri)
+      } else {
+        stopifnot(
+          `No array found at array_uri` = tiledb::tiledb_vfs_is_dir(self$array_uri)
         )
-        private$ingest_image_data(image_data)
       }
     },
 
@@ -47,6 +45,17 @@ TiledbImage <- R6::R6Class(
   ),
 
   private = list(
+    #' @description Top-level function to create and populate the new array.
+    build_tiledb_image_array = function(array_uri) {
+      image_data <- private$read_image_data()
+      image_array <- private$create_image_array(
+        height = dim(image_data)[1],
+        width = dim(image_data)[2],
+        attrs = dimnames(image_data)[[3]]
+      )
+      private$ingest_image_data(image_data)
+    },
+
     #' @description Read image data from a file and return a 3D array with
     #' proper names assigned to the Z dimension, and any additional metadata
     #' stored as attributes.
@@ -69,11 +78,11 @@ TiledbImage <- R6::R6Class(
     #' data.
     #' @param height,width Height and width of the image channels.
     #' @param attrs Names of the TileDB attributes.
-    create_image_array = function(height, width, attrs) {
+    create_image_array = function(array_uri, height, width, attrs) {
 
       # expecting names to accomodate a 2D array with 3 attributes
       stopifnot(length(attrs) == 3)
-      if (self$verbose) message("Creating new array at ", self$array_uri)
+      if (self$verbose) message("Creating new array at ", array_uri)
 
       # TODO: Switch dims to UINT16 after bug retrieving UINT dims is fixed
       tdb_dims <- mapply(
@@ -108,12 +117,12 @@ TiledbImage <- R6::R6Class(
         offsets_filter_list = tiledb::tiledb_filter_list()
       )
 
-      tiledb::tiledb_array_create(self$array_uri, schema = tdb_schema)
+      tiledb::tiledb_array_create(array_uri, schema = tdb_schema)
     },
 
     #' @description Ingest image data into the TileDB array.
     #' @param image_data 3D array containing the image pixel data.
-    ingest_image_data = function(image_data) {
+    ingest_image_data = function(array_uri, image_data) {
       stopifnot(
         "Image data must be an array" = is.array(image_data)
       )
@@ -125,8 +134,8 @@ TiledbImage <- R6::R6Class(
         simplify = FALSE
       )
 
-      if (self$verbose) message("Ingesting image into ", self$array_uri)
-      tdb_array <- tiledb::tiledb_array(self$array_uri, query_type = "WRITE")
+      if (self$verbose) message("Ingesting image into ", array_uri)
+      tdb_array <- tiledb::tiledb_array(array_uri, query_type = "WRITE")
       tdb_array[] <- image_list
 
       # store additional image info as metadata
