@@ -75,6 +75,37 @@ TiledbVisiumImage <- R6::R6Class(
         )
       }
       return(self)
+    },
+
+    #' @description Convert to a Seurat VisiumV1 object.
+    to_seurat = function(filter_matrix = TRUE) {
+
+      image <- self$image_array$to_array()
+      scale.factors <- self$image_array$get_metadata(prefix = "scale_factors_")
+      tissue.positions <- self$positions_array$to_dataframe()
+
+      if (filter_matrix) {
+        tissue.positions <- tissue.positions[which(x = tissue.positions$tissue == 1), , drop = FALSE]
+      }
+
+      unnormalized.radius <- prod(
+        scale.factors$scale_factors_fiducial_diameter_fullres,
+        scale.factors$scale_factors_tissue_lowres_scalef
+      )
+
+      spot.radius <-  unnormalized.radius / max(dim(x = image))
+      return(new(
+        Class = 'VisiumV1',
+        image = image,
+        scale.factors = Seurat::scalefactors(
+          spot = scale.factors$scale_factors_tissue_hires_scalef,
+          fiducial = scale.factors$scale_factors_fiducial_diameter_fullres,
+          hires = scale.factors$scale_factors_tissue_hires_scalef,
+          lowres = scale.factors$scale_factors_tissue_lowres_scalef
+        ),
+        coordinates = tissue.positions,
+        spot.radius = spot.radius
+      ))
     }
   ),
 

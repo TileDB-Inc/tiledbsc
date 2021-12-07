@@ -35,3 +35,7 @@ test_that("A TiledbVisiumImage object can be created", {
   expect_true(inherits(tdb, "TiledbVisiumImage"))
 })
 
+test_that("A Seurat VisiumV1 object can be created from the object", {
+  sv1 <- tdb$to_seurat()
+  expect_s4_class(sv1, "VisiumV1")
+})
