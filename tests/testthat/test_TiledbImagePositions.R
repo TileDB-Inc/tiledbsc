@@ -14,5 +14,7 @@ test_that("A TiledbImagePositions object can be created", {
 })
 
 test_that("Image positions can be retrieved", {
-  expect_true(is.data.frame(tdb$to_dataframe()))
+  df <- tdb$to_dataframe()
+  expect_true(is.data.frame(df))
+  expect_equal(rownames(df)[1], "AAACAACGAATAGTTC-1")
 })

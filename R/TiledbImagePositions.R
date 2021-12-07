@@ -28,7 +28,9 @@ TiledbImagePositions <- R6::R6Class(
     #' @description Retrieve the image positions data from TileDB
     to_dataframe = function() {
       if (self$verbose) message("Reading image position data into memory")
-      self$tiledb_array(return_as = "data.frame")[]
+      tbl_pos <- self$tiledb_array(return_as = "data.frame")[]
+      # seurat objects expect rownames to contain sell/sample IDs
+      as.data.frame(tbl_pos[-1], row.names = tbl_pos[[1]])
     }
   ),
 
