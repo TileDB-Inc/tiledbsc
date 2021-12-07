@@ -27,6 +27,27 @@ TiledbImage <- R6::R6Class(
       } else {
         private$verify_array_exists()
       }
+    },
+
+    #' @description Retrieve the image data from TileDB
+    #' @return A 3D array containing the image data.
+    to_array = function() {
+      if (self$verbose) message("Reading image data into memory")
+      image_dims <- rev(self$get_metadata("dim"))
+
+      # return the image data as a list of matrices
+      matrix_list <- self$tiledb_array(
+        selected_ranges =  list(
+          cbind(1, image_dims[1]),
+          cbind(1, image_dims[2])
+        ),
+        return_as = "matrix"
+      )[]
+
+      array(
+        as.numeric(unlist(matrix_list)),
+        dim = c(image_dims, 3)
+      )
     }
   ),
 

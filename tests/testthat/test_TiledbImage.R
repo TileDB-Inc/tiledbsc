@@ -46,3 +46,10 @@ test_that("Image metadata can be retrieved", {
   md <- tdb_image$get_metadata()
   testthat::expect_equal(names(md), c("bit.depth", "color.type", "dim"))
 })
+
+test_that("Retrieved image data matches original", {
+  orig_img_data <- png::readPNG(img_file)
+  tdb_img_data <- tdb_image$to_array()
+  expect_true(is.array(tdb_img_data))
+  expect_equal(orig_img_data, tdb_img_data)
+})
