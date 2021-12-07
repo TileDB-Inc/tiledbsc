@@ -8,9 +8,9 @@
 
 TiledbImage <- R6::R6Class(
   classname = "TiledbImage",
+  inherit = TiledbBase,
   public = list(
     array_uri = NULL,
-    image_path = NULL,
     verbose = TRUE,
 
     #' @description Create a new TiledbImage object. A new array is created if
@@ -18,76 +18,39 @@ TiledbImage <- R6::R6Class(
     #' the specified URI.
     #' @param image_path File path for the image to ingest.
     initialize = function(array_uri, image_path = NULL, verbose = TRUE) {
-
       self$array_uri <- array_uri
-      self$image_path <- image_path
       self$verbose <- verbose
 
-      if (!is.null(self$image_path)) {
-        stopifnot(file.exists(self$image_path))
-        private$build_tiledb_image_array(self$array_uri)
+      if (!is.null(image_path)) {
+        stopifnot(file.exists(image_path))
+        private$build_array(image_path)
       } else {
-        stopifnot(
-          `No array found at array_uri` = tiledb::tiledb_vfs_is_dir(self$array_uri)
-        )
+        private$verify_array_exists()
       }
-    },
-
-    #' @description Return a [`tiledbarray`] object
-    #' @param ... Optional arguments to pass to `tiledb::tiledb_array`
-    #' @return A [`tiledbarray`] object
-    tiledb_array = function(...) {
-      args <- list(...)
-      args$uri <- self$array_uri
-      args$query_type <- "READ"
-      do.call(tiledb::tiledb_array, args)
-    },
-
-    metadata = function() {
-      private$get_metadata(self$tiledb_array())
     }
   ),
 
   private = list(
     #' @description Top-level function to create and populate the new array.
-    build_tiledb_image_array = function(array_uri) {
-      image_data <- private$read_image_data()
-      image_array <- private$create_image_array(
-        array_uri,
+    build_array = function(image_path) {
+      image_data <- private$read_image_data(image_path)
+      image_array <- private$create_empty_array(
         height = dim(image_data)[1],
         width = dim(image_data)[2],
         attrs = dimnames(image_data)[[3]]
       )
-      private$ingest_image_data(array_uri, image_data)
-    },
-
-    #' @description Read image data from a file and return a 3D array with
-    #' proper names assigned to the Z dimension, and any additional metadata
-    #' stored as attributes.
-    read_image_data = function() {
-
-      if (self$verbose) message("Loading image data from ", self$image_path)
-
-      image_data <- switch(
-        tools::file_ext(self$image_path),
-        "png" = png::readPNG(self$image_path, info = TRUE),
-        stop("Unsupported image format")
-      )
-
-      # TODO: Generalize, currently assuming the image contains RGB data
-      dimnames(image_data) <- list(NULL, NULL, c("red", "green", "blue"))
-      return(image_data)
+      private$ingest_data(image_data)
     },
 
     #' @description Create an empty TileDB array suitable for storing pixel
     #' data.
     #' @param height,width Height and width of the image channels.
     #' @param attrs Names of the TileDB attributes.
-    create_image_array = function(array_uri, height, width, attrs) {
+    create_empty_array = function(height, width, attrs) {
 
       # expecting names to accomodate a 2D array with 3 attributes
       stopifnot(length(attrs) == 3)
-      if (self$verbose) message("Creating new array at ", array_uri)
+      if (self$verbose) message("Creating new array at ", self$array_uri)
 
       # TODO: Switch dims to UINT16 after bug retrieving UINT dims is fixed
       tdb_dims <- mapply(
@@ -122,12 +85,12 @@ TiledbImage <- R6::R6Class(
         offsets_filter_list = tiledb::tiledb_filter_list()
       )
 
-      tiledb::tiledb_array_create(array_uri, schema = tdb_schema)
+      tiledb::tiledb_array_create(self$array_uri, schema = tdb_schema)
     },
 
     #' @description Ingest image data into the TileDB array.
     #' @param image_data 3D array containing the image pixel data.
-    ingest_image_data = function(array_uri, image_data) {
+    ingest_data = function(image_data) {
       stopifnot(
         "Image data must be an array" = is.array(image_data)
       )
@@ -139,61 +102,30 @@ TiledbImage <- R6::R6Class(
         simplify = FALSE
       )
 
-      if (self$verbose) message("Ingesting image into ", array_uri)
-      tdb_array <- tiledb::tiledb_array(array_uri, query_type = "WRITE")
+      if (self$verbose) message("Ingesting image into ", self$array_uri)
+      tdb_array <- tiledb::tiledb_array(self$array_uri, query_type = "WRITE")
       tdb_array[] <- image_list
 
       # store additional image info as metadata
-      private$add_metadata(metadata = attr(image_data, which = "info"))
-      return(NULL)
+      self$add_metadata(metadata = attr(image_data, which = "info"))
     },
 
-    #' @description Retrieve metadata from a TileDB array.
-    #' @param arr A [`tiledb_array`] object.
-    #' @param key The name of the metadata attribute to retrieve.
-    #' @param prefix Filter metadata using an optional prefix. Ignored if `key`
-    #'   is not NULL.
-    #' @return A list of metadata values.
-    get_metadata = function(arr = NULL, key = NULL, prefix = NULL) {
-      if (is.null(arr)) {
-        arr <- self$tiledb_array()
-      }
+    #' @description Read image data from a file and return a 3D array with
+    #' proper names assigned to the Z dimension, and any additional metadata
+    #' stored as attributes.
+    read_image_data = function(image_path) {
 
-      tiledb::tiledb_array_open(arr, "READ")
-      if (!is.null(key)) {
-        metadata <- tiledb::tiledb_get_metadata(arr, key)
-      } else {
-        metadata <- tiledb::tiledb_get_all_metadata(arr)
-        if (!is.null(prefix)) {
-          metadata <- metadata[string_starts_with(names(metadata), prefix)]
-        }
-      }
-      tiledb::tiledb_array_close(arr)
-      return(metadata)
-    },
+      if (self$verbose) message("Loading image data from ", image_path)
 
-    #' @description Add specify list of metadata to the specified TileDB array.
-    #' @param arr A [`tiledb_array`] object.
-    #' @param metadata Named list of metadata to add.
-    #' @param prefix Optional prefix to add to the metadata attribute names.
-    #' @return NULL
-    add_metadata = function(arr = NULL, metadata, prefix = "") {
-      stopifnot(
-        "Metadata must be a named list" = is.list(metadata) && is_named(metadata)
+      image_data <- switch(
+        tools::file_ext(image_path),
+        "png" = png::readPNG(image_path, info = TRUE),
+        stop("Unsupported image format")
       )
-      if (is.null(arr)) {
-        arr <- self$tiledb_array()
-      }
-      tiledb::tiledb_array_open(arr, "WRITE")
-      mapply(
-        FUN = tiledb::tiledb_put_metadata,
-        key = paste0(prefix, names(metadata)),
-        val = metadata,
-        MoreArgs = list(arr = arr),
-        SIMPLIFY = FALSE
-      )
-      tiledb::tiledb_array_close(arr)
-      return(NULL)
+
+      # TODO: Generalize, currently assuming the image contains RGB data
+      dimnames(image_data) <- list(NULL, NULL, c("red", "green", "blue"))
+      return(image_data)
     }
   )
 )
