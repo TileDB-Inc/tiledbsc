@@ -12,3 +12,7 @@ test_that("A TiledbImagePositions object can be created", {
   tdb <<- TiledbImagePositions$new(tdb_uri, pos_file)
   expect_true(inherits(tdb, "TiledbImagePositions"))
 })
+
+test_that("Image positions can be retrieved", {
+  expect_true(is.data.frame(tdb$to_dataframe()))
+})

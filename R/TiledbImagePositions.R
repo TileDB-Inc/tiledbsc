@@ -23,6 +23,12 @@ TiledbImagePositions <- R6::R6Class(
         private$verify_array_exists()
       }
       return(self)
+    },
+
+    #' @description Retrieve the image positions data from TileDB
+    to_dataframe = function() {
+      if (self$verbose) message("Reading image position data into memory")
+      self$tiledb_array(return_as = "data.frame")[]
     }
   ),
 
