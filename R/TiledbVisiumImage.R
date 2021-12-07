@@ -3,6 +3,8 @@
 #' Creates a TileDB group containing two TileDB arrays: one for the image data,
 #' and one for the image positions.
 #'
+#' @importFrom Seurat scalefactors
+#' @importClassesFrom Seurat VisiumV1
 #' @export
 
 TiledbVisiumImage <- R6::R6Class(
@@ -78,7 +80,7 @@ TiledbVisiumImage <- R6::R6Class(
     },
 
     #' @description Convert to a Seurat VisiumV1 object.
-    to_seurat = function(filter_matrix = TRUE) {
+    to_seurat_visium = function(filter_matrix = TRUE) {
 
       image <- self$image_array$to_array()
       scale.factors <- self$image_array$get_metadata(prefix = "scale_factors_")

@@ -36,6 +36,6 @@ test_that("A TiledbVisiumImage object can be created", {
 })
 
 test_that("A Seurat VisiumV1 object can be created from the object", {
-  sv1 <- tdb$to_seurat()
+  sv1 <- tdb$to_seurat_visium()
   expect_s4_class(sv1, "VisiumV1")
 })
