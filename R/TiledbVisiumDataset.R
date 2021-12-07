@@ -94,7 +94,7 @@ TiledbVisiumDataset <- R6::R6Class(
     #' @inheritParams SeuratObject::CreateSeuratObject
     to_seurat_object = function(
       project = "SeuratProject",
-      assay = "Spacial",
+      assay = "Spatial",
       slice = "slice1",
       filter.matrix = TRUE,
       to.upper = FALSE,
