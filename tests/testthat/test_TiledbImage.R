@@ -38,18 +38,18 @@ test_that("A tiledb object can be retrieved", {
 })
 
 test_that("TiledbImage can be instantiated with existing array", {
-  tdb_image <- TiledbImage$new(array_uri = tdb_uri)
-  expect_true(inherits(tdb_image, "TiledbImage"))
+  tdb_img <- TiledbImage$new(array_uri = tdb_uri)
+  expect_true(inherits(tdb_img, "TiledbImage"))
 })
 
 test_that("Image metadata can be retrieved", {
-  md <- tdb_image$get_metadata()
+  md <- tdb_img$get_metadata()
   testthat::expect_equal(names(md), c("bit.depth", "color.type", "dim"))
 })
 
 test_that("Retrieved image data matches original", {
   orig_img_data <- png::readPNG(img_file)
-  tdb_img_data <- tdb_image$to_array()
+  tdb_img_data <- tdb_img$to_array()
   expect_true(is.array(tdb_img_data))
   expect_equal(orig_img_data, tdb_img_data)
 })
