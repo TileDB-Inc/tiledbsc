@@ -1,0 +1,113 @@
+---
+title: "Visium Spatial Data from 10x Genomics"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Visium Spatial Data from 10x Genomics}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+params:
+  cleanup: TRUE
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Setup
+
+```{r setup}
+devtools::load_all()
+library(tiledb)
+library(Seurat)
+library(ggplot2)
+library(patchwork)
+
+data_dir <- system.file("tests/testdata/visium", package = "tiledbsc")
+```
+
+## Conversion
+
+Setup a URI for the new TileDB array group.
+
+```{r}
+tdb_uri <- file.path(data_dir, "tiledb-visium-dataset")
+
+if (tiledb::tiledb_vfs_is_dir(tdb_uri)) {
+  tiledb::tiledb_vfs_remove_dir(tdb_uri)
+}
+```
+
+Check out contents of test data directory:
+
+```{r}
+dir(data_dir, recursive = TRUE)
+```
+
+Create a group of TileDB arrays containing each of the various components included in a Visium dataset.
+
+```{r}
+tdb_brain <- TiledbVisiumDataset$new(
+  array_uri = tdb_uri,
+  count_path = file.path(data_dir, "filtered_feature_bc_matrix.h5"),
+  image_path = file.path(data_dir, "spatial/tissue_lowres_image.png"),
+  scale_factors_path = file.path(data_dir, "spatial/scalefactors_json.json"),
+  image_positions_path = file.path(data_dir, "spatial/tissue_positions_list.csv"),
+  verbose = TRUE
+)
+
+tdb_brain
+```
+
+
+Each of the arrays can be accessed/queried individually.
+
+Count data:
+
+```{r}
+tdb_brain$assay_array$to_dataframe()[1:5,]
+```
+
+
+Image data:
+
+```{r}
+image(tdb_brain$image_array$to_array()[,,1])
+```
+
+## Seurat
+
+Convert to a Seurat object:
+
+```{r}
+brain <- tdb_brain$to_seurat_object()
+brain
+```
+
+Seurat accessors:
+
+```{r}
+Cells(brain)[1:10]
+```
+
+Visualizations:
+
+```{r}
+plot1 <- VlnPlot(brain, features = "nCount_Spatial", pt.size = 0.1) + NoLegend()
+plot2 <- SpatialFeaturePlot(brain, features = "nCount_Spatial") + theme(legend.position = "right")
+
+wrap_plots(plot1, plot2)
+```
+
+
+## Session
+
+```{r}
+sessionInfo()
+```
+
+```{r cleanup, include=FALSE, eval=params$cleanup}
+tiledb::tiledb_vfs_remove_dir(tdb_brain$array_uri)
+```
