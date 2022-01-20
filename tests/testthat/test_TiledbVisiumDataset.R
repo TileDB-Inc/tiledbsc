@@ -25,8 +25,8 @@ test_that("A TiledbVisiumDataset object can be created", {
 })
 
 test_that("TiledbVisiumDataset can be instantiated with existing array", {
-  tdb <- TiledbVisiumDataset$new(array_uri = tdb_uri)
-  expect_true(inherits(tdb_img, "TiledbImage"))
+  tdb_img <- TiledbVisiumDataset$new(array_uri = tdb_uri)
+  expect_true(inherits(tdb_img, "TiledbVisiumDataset"))
 })
 
 test_that("A Seurat VisiumV1 object can be created from the object", {
