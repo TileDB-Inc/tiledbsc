@@ -1,7 +1,7 @@
 #' TileDB Array Base Class
 #' @noRd
 TiledbBase <- R6::R6Class(
-  classname = "TiledbImage",
+  classname = "TiledbBase",
   public = list(
     array_uri = NULL,
     verbose = TRUE,
