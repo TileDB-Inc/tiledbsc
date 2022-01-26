@@ -45,7 +45,7 @@ TiledbBase <- R6::R6Class(
       return(metadata)
     },
 
-    #' @description Add specify list of metadata to the specified TileDB array.
+    #' @description Add list of metadata to the specified TileDB array.
     #' @param arr A [`tiledb_array`] object.
     #' @param metadata Named list of metadata to add.
     #' @param prefix Optional prefix to add to the metadata attribute names.
