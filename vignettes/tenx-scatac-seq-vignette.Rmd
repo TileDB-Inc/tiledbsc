@@ -1,0 +1,108 @@
+---
+title: "Converting scRNA-seq and scATAC-seq data"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Converting scRNA-seq and scATAC-seq data}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Setup
+
+```{r setup}
+pkgload::load_all(helpers = FALSE)
+library(tiledb)
+library(Seurat)
+library(SeuratData)
+
+data_dir <- file.path(tempdir(), "sc_group")
+```
+
+Create the group:
+
+```{r}
+if (tiledb_vfs_is_dir(data_dir)) {
+  tiledb_vfs_remove_dir(data_dir)
+}
+
+tiledb::tiledb_group_create(data_dir)
+```
+
+# Load data
+
+```{r}
+if (requireNamespace("pbmcMultiome", quietly = TRUE)) {
+  message("Installing pbmcMultiome")
+  SeuratData::InstallData("pbmcMultiome")
+}
+```
+
+```{r}
+pbmc.rna <- LoadData("pbmcMultiome", "pbmc.rna")
+```
+
+
+# Step-by-step Conversion
+
+## RNA Counts
+
+Create a new instance of `SCGroup_X` and specify its location.
+
+```{r}
+if (tiledb_vfs_is_dir(scgroup_x_uri)) {
+  tiledb_vfs_remove_dir(scgroup_x_uri)
+}
+
+scgroup_x_uri <- file.path(data_dir, "X")
+scgroup_x <- SCGroup_X$new(array_uri = scgroup_x_uri)
+```
+
+Ingest RNA counts from the `SeruatObject` into the `X` component of a TileDB `sc_group`. While the higher-level The higher-level `SCGroup` class will provide convenience functions that accept `Seurat` objects directly and then pass the individual
+
+```{r}
+scgroup_x$from_matrix(
+  x = GetAssayData(object = pbmc.rna, slot = "counts")
+)
+```
+
+
+## Observation (sample) annotations
+
+Create an instance of `SCGroup_Annotation` for the observation annotations:
+
+```{r}
+scgroup_obs_uri <- file.path(data_dir, "obs")
+scgroup_obs <- SCGroup_Annotation$new(array_uri = scgroup_obs_uri)
+```
+
+Ingest `data.frame` containing observation annotations into the `obs` component.
+
+```{r}
+scgroup_obs$from_dataframe(
+  x = pbmc.rna[[]]
+)
+```
+
+Check out contents of test data directory:
+
+```{r}
+dir(data_dir, recursive = TRUE)
+```
+
+
+## Session
+
+```{r}
+sessionInfo()
+```
+
+```{r cleanup, include=FALSE, eval=params$cleanup}
+tiledb::tiledb_vfs_remove_dir(tdb_brain$array_uri)
+```
