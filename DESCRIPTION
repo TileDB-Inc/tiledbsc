@@ -24,10 +24,13 @@ Imports:
     tools,
     Matrix,
     tiledb (>= 0.9.6),
-    Seurat
+    Seurat,
+    png
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 Suggests:
     rmarkdown,
-    knitr
+    knitr,
+    testthat (>= 3.0.0)
 VignetteBuilder: knitr
+Config/testthat/edition: 2
