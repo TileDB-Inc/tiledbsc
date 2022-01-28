@@ -65,6 +65,24 @@ TiledbBase <- R6::R6Class(
       )
       tiledb::tiledb_array_close(arr)
       return(NULL)
+    },
+
+    #' @description Retrieve the array schema
+    #' @return A [`tiledb::tiledb_array_schema`] object
+    schema = function() {
+      tiledb::schema(self$tiledb_array())
+    },
+
+    #' @description Retrieve the array dimensions
+    #' @return A list of [`tiledb::tiledb_dimension`] objects
+    dimensions = function() {
+      tiledb::dimensions(self$schema())
+    },
+
+    #' @description Retrieve dimension names
+    #' @return A character vection of dimension names
+    dimnames = function() {
+      vapply(self$dimensions(), tiledb::name, FUN.VALUE = vector("character", 1L))
     }
   ),
 
