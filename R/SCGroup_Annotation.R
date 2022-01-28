@@ -5,9 +5,6 @@
 #' the number of rows equal to the length of the corresponding `X` dimension,
 #' and rownames matching the values of the corresponding `X` dimension's labels.
 #'
-#' @examples
-#'
-#'
 #' @export
 
 SCGroup_Annotation <- R6::R6Class(
@@ -105,7 +102,9 @@ SCGroup_Annotation <- R6::R6Class(
     #' @description Ingest annotation data into the TileDB array.
     #' @param x A [`data.frame`] containing annotation data
     ingest_data = function(x) {
-      if (self$verbose) message("Ingesting annotation data into ", self$array_uri)
+      if (self$verbose) {
+        message("Ingesting annotation data into ", self$array_uri)
+      }
       tdb_array <- tiledb::tiledb_array(self$array_uri, query_type = "WRITE")
       tdb_array[] <- cbind(index = rownames(x), x)
       tiledb::tiledb_array_close(tdb_array)
