@@ -22,17 +22,20 @@ library(tiledb)
 library(Seurat)
 library(SeuratData)
 
-data_dir <- file.path(tempdir(), "sc_group")
+data_dir <- tempdir()
 ```
 
-Create the group:
+# Load data
 
 ```{r}
-if (tiledb_vfs_is_dir(data_dir)) {
-  tiledb_vfs_remove_dir(data_dir)
+if (requireNamespace("pbmcMultiome", quietly = TRUE)) {
+  message("Installing pbmcMultiome")
+  SeuratData::InstallData("pbmcMultiome")
 }
+```
 
-tiledb::tiledb_group_create(data_dir)
+```{r}
+pbmc.rna <- LoadData("pbmcMultiome", "pbmc.rna")
 ```
 
 Feature-level annoations are empty for this dataset. To aid in testing we add an `ensembl_id` column containing Ensembl identifiers.
@@ -55,27 +58,24 @@ var_df$ensembl_id <- unname(
 pbmc.rna@assays$RNA@meta.features <- var_df
 ```
 
-}
-```
+# Step-by-step Conversion
+
+Create URIs for each of the 3 arrays in the `sc_group`:
 
 ```{r}
-pbmc.rna <- LoadData("pbmcMultiome", "pbmc.rna")
+sc_group_uris <- sapply(c("X", "obs", "var"), \(x) file.path(data_dir, x))
 ```
-
-
-# Step-by-step Conversion
 
 ## RNA Counts
 
 Create a new instance of `SCGroup_X` and specify its location.
 
 ```{r}
-if (tiledb_vfs_is_dir(scgroup_x_uri)) {
-  tiledb_vfs_remove_dir(scgroup_x_uri)
+if (tiledb_vfs_is_dir(sc_group_uris[["X"]])) {
+  tiledb_vfs_remove_dir(sc_group_uris[["X"]])
 }
 
-scgroup_x_uri <- file.path(data_dir, "X")
-scgroup_x <- SCGroup_X$new(array_uri = scgroup_x_uri)
+scgroup_x <- SCGroup_X$new(array_uri = sc_group_uris[["X"]])
 ```
 
 Ingest RNA counts from the `SeruatObject` into the `X` component of a TileDB `sc_group`. While the higher-level The higher-level `SCGroup` class will provide convenience functions that accept `Seurat` objects directly and then pass the individual
@@ -86,10 +86,30 @@ scgroup_x$from_matrix(
 )
 ```
 
+## Feature (variable) annotations
+
+Create an instance of `SCGroup_Annotation` for the variable annotations:
+
+```{r}
+if (tiledb_vfs_is_dir(sc_group_uris[["var"]])) {
+  tiledb_vfs_remove_dir(sc_group_uris[["var"]])
+}
+
+scgroup_var <- SCGroup_Annotation$new(array_uri = sc_group_uris[["var"]])
+```
+
+Ingest `data.frame` containing the RNA assay's feature annotations into the `var` array.
+
+```{r}
+scgroup_var$from_dataframe(
+  x = GetAssay(pbmc.rna, assay = "RNA")[[]]
+)
+```
+
 
 ## Observation (sample) annotations
 
-Create an instance of `SCGroup_Annotation` for the observation annotations:
+Create a second instance of `SCGroup_Annotation` for the observation annotations:
 
 ```{r}
 scgroup_obs_uri <- file.path(data_dir, "obs")
@@ -110,8 +130,29 @@ Check out contents of test data directory:
 dir(data_dir, recursive = TRUE)
 ```
 
+# Convert Seurat object to TileDB-backed sc_group
 
-## Session
+Create the empty group:
+
+```{r}
+scgroup_uri <- file.path(data_dir, "sc_group")
+
+if (tiledb_vfs_is_dir(scgroup_uri)) {
+  tiledb_vfs_remove_dir(scgroup_uri)
+}
+
+scgroup <- SCGroup$new(array_uri = scgroup_uri)
+```
+
+
+Ingest the RNA assay (including feature annotations) and observation annotations from a Seurat object into the TileDB-backed `sc_group`:
+
+```{r}
+scgroup$from_seurat(object = pbmc.rna, assay = "RNA")
+```
+
+
+# Session
 
 ```{r}
 sessionInfo()
