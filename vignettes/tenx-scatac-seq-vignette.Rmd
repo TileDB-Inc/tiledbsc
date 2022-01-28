@@ -35,12 +35,26 @@ if (tiledb_vfs_is_dir(data_dir)) {
 tiledb::tiledb_group_create(data_dir)
 ```
 
-# Load data
+Feature-level annoations are empty for this dataset. To aid in testing we add an `ensembl_id` column containing Ensembl identifiers.
 
 ```{r}
-if (requireNamespace("pbmcMultiome", quietly = TRUE)) {
-  message("Installing pbmcMultiome")
-  SeuratData::InstallData("pbmcMultiome")
+suppressPackageStartupMessages(library(org.Hs.eg.db))
+
+var_df <- GetAssay(pbmc.rna)[[]]
+
+var_df$ensembl_id <- unname(
+  mapIds(
+    org.Hs.eg.db,
+    keys = rownames(var_df),
+    keytype = "SYMBOL",
+    column = "ENSEMBL",
+    multiVals = "first"
+  )
+)
+
+pbmc.rna@assays$RNA@meta.features <- var_df
+```
+
 }
 ```
 
