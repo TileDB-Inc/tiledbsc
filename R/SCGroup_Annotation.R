@@ -36,10 +36,17 @@ SCGroup_Annotation <- R6::R6Class(
     },
 
     #' @description Retrieve the annotation data from TileDB
-    #' @return A [`data.frame`].
+    #' @return A [`data.frame`] with row names containing values from the index
+    #'    dimension
     to_dataframe = function() {
       if (self$verbose) message("Reading annotation data into memory")
-      self$tiledb_array(return_as = "data.frame")[]
+      df <- self$tiledb_array(return_as = "data.frame")[]
+      dimname <- self$dimnames()
+
+      data.frame(
+        df[setdiff(colnames(df), dimname)],
+        row.names = df[[dimname]]
+      )
     }
   ),
 
