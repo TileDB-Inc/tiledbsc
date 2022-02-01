@@ -76,6 +76,7 @@ SCGroup <- R6::R6Class(
       to.upper = FALSE,
       ...) {
 
+      set_allocation_size_preference(9e8)
       seurat_obj <- Seurat::CreateSeuratObject(
         counts = self$assay_array$to_matrix(),
         assay = assay
