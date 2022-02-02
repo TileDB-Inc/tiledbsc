@@ -18,6 +18,7 @@ knitr::opts_chunk$set(
 
 ```{r setup}
 pkgload::load_all(helpers = FALSE)
+library(fs)
 library(tiledb)
 library(Seurat)
 library(SeuratData)
@@ -149,6 +150,12 @@ Ingest the RNA assay (including feature annotations) and observation annotations
 
 ```{r}
 scgroup$from_seurat(object = pbmc.rna, assay = "RNA")
+```
+
+Examine the directory structure of the `sc_group`:
+
+```{r}
+fs::dir_tree(scgroup_uri)
 ```
 
 # Load Seurat object from TileDB-backed `sc_group`
