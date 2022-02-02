@@ -4,7 +4,7 @@
 #'
 #' @param uri URI for the TileDB array.
 #' @param verbose Show progress updates.
-#' @return Returns a [Matrix::`dgCMatrix-class`] with feature and barcode
+#' @return Returns a [`Matrix::dgCMatrix-class`] with feature and barcode
 #'   dimensions.
 #' @export
 

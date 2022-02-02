@@ -11,6 +11,15 @@ TileDB Image Position Data
 \section{Super class}{
 \code{\link[tiledbsc:TiledbBase]{tiledbsc::TiledbBase}} -> \code{TiledbImagePositions}
 }
+\section{Public fields}{
+\if{html}{\out{<div class="r6-fields">}}
+\describe{
+\item{\code{array_uri}}{URI of the TileDB array}
+
+\item{\code{verbose}}{Print status messages}
+}
+\if{html}{\out{</div>}}
+}
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
@@ -49,7 +58,11 @@ the specified URI.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
+\item{\code{array_uri}}{URI of the TileDB array}
+
 \item{\code{image_positions_path}}{File path for the image positions table to ingest.}
+
+\item{\code{verbose}}{Print progress updates}
 }
 \if{html}{\out{</div>}}
 }

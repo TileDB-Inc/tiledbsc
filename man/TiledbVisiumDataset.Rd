@@ -15,6 +15,22 @@ data, one for the image positions, and one for the count data.
 \section{Super class}{
 \code{\link[tiledbsc:TiledbVisiumImage]{tiledbsc::TiledbVisiumImage}} -> \code{TiledbVisiumDataset}
 }
+\section{Public fields}{
+\if{html}{\out{<div class="r6-fields">}}
+\describe{
+\item{\code{array_uri}}{URI of the TileDB array}
+
+\item{\code{assay_array}}{Access the TileDB array containing the assay data}
+
+\item{\code{image_array}}{Access the TileDB array containing the image data}
+
+\item{\code{positions_array}}{Access the TileDB array containing the image
+positions}
+
+\item{\code{verbose}}{Print status messages}
+}
+\if{html}{\out{</div>}}
+}
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
@@ -49,9 +65,17 @@ Create a new TiledbVisiumDataset object. A new array is created if \code{count_p
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
+\item{\code{array_uri}}{URI of the TileDB group}
+
 \item{\code{count_path}}{File path for the h5 file to ingest.}
 
-\item{\code{image_path}}{File path for the image to ingest.}
+\item{\code{image_path}}{File path for the image to ingest}
+
+\item{\code{scale_factors_path}}{File path for the scale factors}
+
+\item{\code{image_positions_path}}{File path for the image positions}
+
+\item{\code{verbose}}{Print progress updates}
 }
 \if{html}{\out{</div>}}
 }
@@ -65,13 +89,21 @@ Convert to a Seurat object.
 \if{html}{\out{<div class="r">}}\preformatted{TiledbVisiumDataset$to_seurat_object(
   project = "SeuratProject",
   assay = "Spatial",
-  slice = "slice1",
-  filter.matrix = TRUE,
-  to.upper = FALSE,
-  ...
+  slice = "slice1"
 )}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{project}}{\code{\link[SeuratObject:Project]{SeuratObject::Project}} name for the \code{Seurat} object}
+
+\item{\code{assay}}{Name of the initial assay}
+
+\item{\code{slice}}{Name for the stored image of the tissue slice}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-clone"></a>}}

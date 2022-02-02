@@ -9,6 +9,11 @@
 
 TiledbVisiumImage <- R6::R6Class(
   classname = "TiledbVisiumImage",
+
+  #' @field array_uri URI of the TileDB array
+  #' @field image_array URI of the TileDB array image data
+  #' @field positions_array Access the TileDB array containing the image
+  #' @field verbose Print status messages
   public = list(
     array_uri = NULL,
     image_array = NULL,
@@ -18,7 +23,11 @@ TiledbVisiumImage <- R6::R6Class(
     #' @description Create a new TiledbImage object. A new array is created if
     #' an `image_path` is provided, otherwise an existing array is opened at
     #' the specified URI.
-    #' @param image_path File path for the image to ingest.
+    #' @param array_uri URI of the TileDB group
+    #' @param image_path File path for the image to ingest
+    #' @param scale_factors_path File path for the scale factors
+    #' @param image_positions_path File path for the image positions
+    #' @param verbose Print progress updates
     initialize = function(
       array_uri,
       image_path = NULL,
@@ -80,6 +89,8 @@ TiledbVisiumImage <- R6::R6Class(
     },
 
     #' @description Convert to a Seurat VisiumV1 object.
+    #' @param filter_matrix Only keep spots that have been determined to be over
+    #' tissue
     to_seurat_visium = function(filter_matrix = TRUE) {
 
       image <- self$image_array$to_array()
@@ -112,7 +123,7 @@ TiledbVisiumImage <- R6::R6Class(
   ),
 
   private = list(
-    #' @description Read scale factors from a JSON file.
+    # @description Read scale factors from a JSON file.
     read_scale_factors = function(file_path) {
       stopifnot(
         "Scaling factors file not found" = file.exists(file_path),

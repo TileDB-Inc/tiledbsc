@@ -12,6 +12,19 @@ TileDB 10X Visium Image
 Creates a TileDB group containing two TileDB arrays: one for the image data,
 and one for the image positions.
 }
+\section{Public fields}{
+\if{html}{\out{<div class="r6-fields">}}
+\describe{
+\item{\code{array_uri}}{URI of the TileDB array}
+
+\item{\code{image_array}}{URI of the TileDB array image data}
+
+\item{\code{positions_array}}{Access the TileDB array containing the image}
+
+\item{\code{verbose}}{Print status messages}
+}
+\if{html}{\out{</div>}}
+}
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
@@ -40,7 +53,15 @@ the specified URI.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{image_path}}{File path for the image to ingest.}
+\item{\code{array_uri}}{URI of the TileDB group}
+
+\item{\code{image_path}}{File path for the image to ingest}
+
+\item{\code{scale_factors_path}}{File path for the scale factors}
+
+\item{\code{image_positions_path}}{File path for the image positions}
+
+\item{\code{verbose}}{Print progress updates}
 }
 \if{html}{\out{</div>}}
 }
@@ -54,6 +75,14 @@ Convert to a Seurat VisiumV1 object.
 \if{html}{\out{<div class="r">}}\preformatted{TiledbVisiumImage$to_seurat_visium(filter_matrix = TRUE)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{filter_matrix}}{Only keep spots that have been determined to be over
+tissue}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-clone"></a>}}

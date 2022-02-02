@@ -9,6 +9,13 @@
 TiledbVisiumDataset <- R6::R6Class(
   classname = "TiledbVisiumDataset",
   inherit = TiledbVisiumImage,
+
+  #' @field array_uri URI of the TileDB array
+  #' @field assay_array Access the TileDB array containing the assay data
+  #' @field image_array Access the TileDB array containing the image data
+  #' @field positions_array Access the TileDB array containing the image
+  #' positions
+  #' @field verbose Print status messages
   public = list(
     array_uri = NULL,
     assay_array = NULL,
@@ -17,8 +24,12 @@ TiledbVisiumDataset <- R6::R6Class(
     verbose = TRUE,
 
     #' @description Create a new TiledbVisiumDataset object. A new array is created if `count_path` and `image_path` are provided, otherwise an existing array is opened at the specified URI.
-    #' @param image_path File path for the image to ingest.
     #' @param count_path File path for the h5 file to ingest.
+    #' @param array_uri URI of the TileDB group
+    #' @param image_path File path for the image to ingest
+    #' @param scale_factors_path File path for the scale factors
+    #' @param image_positions_path File path for the image positions
+    #' @param verbose Print progress updates
     initialize = function(
       array_uri,
       count_path = NULL,
@@ -91,14 +102,13 @@ TiledbVisiumDataset <- R6::R6Class(
     },
 
     #' @description Convert to a Seurat object.
-    #' @inheritParams SeuratObject::CreateSeuratObject
+    #' @param project [`SeuratObject::Project`] name for the `Seurat` object
+    #' @param assay Name of the initial assay
+    #' @param slice Name for the stored image of the tissue slice
     to_seurat_object = function(
       project = "SeuratProject",
       assay = "Spatial",
-      slice = "slice1",
-      filter.matrix = TRUE,
-      to.upper = FALSE,
-      ...) {
+      slice = "slice1") {
 
       seurat_obj <- Seurat::CreateSeuratObject(
         counts = self$assay_array$to_matrix(),

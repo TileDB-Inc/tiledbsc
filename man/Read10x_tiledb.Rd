@@ -12,7 +12,7 @@ Read10x_tiledb(uri, verbose = TRUE)
 \item{verbose}{Show progress updates.}
 }
 \value{
-Returns a \link[Matrix:`dgCMatrix-class`]{Matrix::\code{dgCMatrix-class}} with feature and barcode
+Returns a \code{\link[Matrix:dgCMatrix-class]{Matrix::dgCMatrix}} with feature and barcode
 dimensions.
 }
 \description{

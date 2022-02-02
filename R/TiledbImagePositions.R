@@ -4,6 +4,9 @@
 TiledbImagePositions <- R6::R6Class(
   classname = "TiledbImagePositions",
   inherit = TiledbBase,
+
+  #' @field array_uri URI of the TileDB array
+  #' @field verbose Print status messages
   public = list(
     array_uri = NULL,
     verbose = TRUE,
@@ -11,7 +14,9 @@ TiledbImagePositions <- R6::R6Class(
     #' @description Create a new TiledbImagePositions object. A new array is created if
     #' an `image_positions_path` is provided, otherwise an existing array is opened at
     #' the specified URI.
+    #' @param array_uri URI of the TileDB array
     #' @param image_positions_path File path for the image positions table to ingest.
+    #' @param verbose Print progress updates
     initialize = function(array_uri, image_positions_path = NULL, verbose = TRUE) {
       self$array_uri <- array_uri
       self$verbose <- verbose
@@ -35,7 +40,7 @@ TiledbImagePositions <- R6::R6Class(
   ),
 
   private = list(
-    #' @description Top-level function to create and populate the new array.
+    # @description Top-level function to create and populate the new array.
     build_array = function(image_positions_path) {
       tbl_positions <- private$read_image_positions_data(image_positions_path)
       tiledb::fromDataFrame(
@@ -46,7 +51,7 @@ TiledbImagePositions <- R6::R6Class(
       )
     },
 
-    #' @description Read image positions data from a CSV file.
+    # @description Read image positions data from a CSV file.
     read_image_positions_data = function(image_positions_path) {
 
       if (self$verbose) {

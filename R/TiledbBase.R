@@ -74,7 +74,7 @@ TiledbBase <- R6::R6Class(
     },
 
     #' @description Retrieve the array dimensions
-    #' @return A list of [`tiledb::tiledb_dimension`] objects
+    #' @return A list of [`tiledb::tiledb_dim`] objects
     dimensions = function() {
       tiledb::dimensions(self$schema())
     },

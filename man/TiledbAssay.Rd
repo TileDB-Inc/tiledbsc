@@ -14,6 +14,15 @@ An object to store and manipulate feature/observation matrices in TileDB.
 \section{Super class}{
 \code{\link[tiledbsc:TiledbBase]{tiledbsc::TiledbBase}} -> \code{TiledbAssay}
 }
+\section{Public fields}{
+\if{html}{\out{<div class="r6-fields">}}
+\describe{
+\item{\code{array_uri}}{URI of the TileDB array}
+
+\item{\code{verbose}}{Print status messages}
+}
+\if{html}{\out{</div>}}
+}
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
@@ -49,8 +58,12 @@ the specified URI.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
+\item{\code{array_uri}}{URI of the TileDB array}
+
 \item{\code{file_path}}{File path for the assay data to ingest. Support is
-currently limited 10X HDF5 files.}
+currently limited 10X HDF5 files}
+
+\item{\code{verbose}}{Print progress updates}
 }
 \if{html}{\out{</div>}}
 }
@@ -65,7 +78,7 @@ Retrieve the assay data from TileDB
 }
 
 \subsection{Returns}{
-A \code{\link[Matrix:dgTMatrix]{Matrix::dgTMatrix}}.
+A \code{\link[Matrix:dgTMatrix-class]{Matrix::dgTMatrix}}.
 }
 }
 \if{html}{\out{<hr>}}
@@ -78,7 +91,7 @@ Retrieve the assay data from TileDB
 }
 
 \subsection{Returns}{
-A \code{\link[Matrix:dgTMatrix]{Matrix::dgTMatrix}}.
+A \code{\link[Matrix:dgTMatrix-class]{Matrix::dgTMatrix}}.
 }
 }
 \if{html}{\out{<hr>}}
