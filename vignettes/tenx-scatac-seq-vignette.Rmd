@@ -23,6 +23,7 @@ library(tiledb)
 library(Seurat)
 library(SeuratData)
 
+dataset_name <- "pbmcMultiome"
 data_dir <- file.path(tempdir(), "vignette-data")
 dir.create(data_dir, showWarnings = FALSE)
 ```
@@ -30,14 +31,14 @@ dir.create(data_dir, showWarnings = FALSE)
 ## Load data
 
 ```{r}
-if (requireNamespace("pbmcMultiome", quietly = TRUE)) {
-  message("Installing pbmcMultiome")
-  SeuratData::InstallData("pbmcMultiome")
+if (requireNamespace(dataset_name, quietly = TRUE)) {
+  message(paste("Installing", dataset_name))
+  SeuratData::InstallData(dataset_name)
 }
 ```
 
 ```{r}
-pbmc.rna <- LoadData("pbmcMultiome", "pbmc.rna")
+pbmc.rna <- LoadData(dataset_name)
 ```
 
 Feature-level annotations are empty for this dataset. To aid in testing we add an `ensembl_id` column containing Ensembl identifiers.
