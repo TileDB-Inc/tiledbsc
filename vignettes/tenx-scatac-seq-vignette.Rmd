@@ -23,7 +23,7 @@ library(tiledb)
 library(Seurat)
 library(SeuratData)
 
-dataset_name <- "pbmcMultiome"
+dataset_name <- "pbmc3k"
 data_dir <- file.path(tempdir(), "vignette-data")
 dir.create(data_dir, showWarnings = FALSE)
 ```
