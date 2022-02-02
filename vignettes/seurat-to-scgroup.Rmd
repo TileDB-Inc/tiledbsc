@@ -1,8 +1,8 @@
 ---
-title: "Converting scRNA-seq and scATAC-seq data"
+title: "Seurat to sc_group"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Converting scRNA-seq and scATAC-seq data}
+  %\VignetteIndexEntry{Seurat to sc_group}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
