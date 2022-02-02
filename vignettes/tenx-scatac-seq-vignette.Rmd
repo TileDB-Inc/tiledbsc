@@ -23,10 +23,11 @@ library(tiledb)
 library(Seurat)
 library(SeuratData)
 
-data_dir <- tempdir()
+data_dir <- file.path(tempdir(), "vignette-data")
+dir.create(data_dir, showWarnings = FALSE)
 ```
 
-# Load data
+## Load data
 
 ```{r}
 if (requireNamespace("pbmcMultiome", quietly = TRUE)) {
@@ -59,12 +60,13 @@ var_df$ensembl_id <- unname(
 pbmc.rna@assays$RNA@meta.features <- var_df
 ```
 
-# Step-by-step Conversion
+# Step-by-step Conversion from Seurat to a TileDB `sc_group`
 
-Create URIs for each of the 3 arrays in the `sc_group`:
+Create URIs for each of the 3 arrays that will make up the new `sc_group`:
 
 ```{r}
 sc_group_uris <- sapply(c("X", "obs", "var"), \(x) file.path(data_dir, x))
+sc_group_uris
 ```
 
 ## RNA Counts
@@ -72,14 +74,10 @@ sc_group_uris <- sapply(c("X", "obs", "var"), \(x) file.path(data_dir, x))
 Create a new instance of `SCGroup_X` and specify its location.
 
 ```{r}
-if (tiledb_vfs_is_dir(sc_group_uris[["X"]])) {
-  tiledb_vfs_remove_dir(sc_group_uris[["X"]])
-}
-
 scgroup_x <- SCGroup_X$new(array_uri = sc_group_uris[["X"]])
 ```
 
-Retrieve the RNA count matrix from the Seruat `Assay` object and ingest it into the `X` component of the `sc_group`.
+Retrieve a count matrix from the Seruat `Assay` object and ingest it into the `X` array of the `sc_group`.
 
 ```{r}
 scgroup_x$from_matrix(
@@ -87,23 +85,29 @@ scgroup_x$from_matrix(
 )
 ```
 
+Examine the contents of the newly created `X` array.
+
 ```{r}
-mat <- scgroup_x$to_matrix()
+fs::dir_tree(scgroup_x$array_uri)
+```
+
+Data stored in the `X` array can then be loaded back into R in the same `dGTMatrix` format:
+
+```{r}
+scgroup_x$to_matrix()
 ```
 
 ## Feature (variable) annotations
 
-Create an instance of `SCGroup_Annotation` for the variable annotations:
+Both `var` and `obs` annotations are handled by the same `SCGroup_Annotation` class.
+
+Create one instance of `SCGroup_Annotation` for the variable annotations:
 
 ```{r}
-if (tiledb_vfs_is_dir(sc_group_uris[["var"]])) {
-  tiledb_vfs_remove_dir(sc_group_uris[["var"]])
-}
-
 scgroup_var <- SCGroup_Annotation$new(array_uri = sc_group_uris[["var"]])
 ```
 
-Ingest `data.frame` containing the RNA assay's feature annotations into the `var` array.
+Ingest the `data.frame` containing the RNA assay's feature annotations into the `var` array.
 
 ```{r}
 scgroup_var$from_dataframe(
@@ -111,14 +115,24 @@ scgroup_var$from_dataframe(
 )
 ```
 
+Examine the contents of the newly created `var` array.
+
+```{r}
+fs::dir_tree(scgroup_var$array_uri)
+```
+
+Retrieve the feature annotations from the `var` array:
+
+```{r}
+scgroup_var$to_dataframe()
+```
 
 ## Observation (sample) annotations
 
 Create a second instance of `SCGroup_Annotation` for the observation annotations:
 
 ```{r}
-scgroup_obs_uri <- file.path(data_dir, "obs")
-scgroup_obs <- SCGroup_Annotation$new(array_uri = scgroup_obs_uri)
+scgroup_obs <- SCGroup_Annotation$new(array_uri = sc_group_uris[["obs"]])
 ```
 
 Ingest `data.frame` containing observation annotations into the `obs` component.
@@ -129,28 +143,26 @@ scgroup_obs$from_dataframe(
 )
 ```
 
-Check out contents of test data directory:
+Retrieve the observation annotations from the `obs` array:
 
 ```{r}
-dir(data_dir, recursive = TRUE)
+scgroup_obs$to_dataframe()
 ```
 
 # Convert Seurat object to TileDB-backed sc_group
 
-Create the empty group:
+Now we'll use the higher-level `SCGroup` class to handle the entire conversion process from a `Seurat` object to a TileDB `sc_group`.
+
+First, create the empty group:
 
 ```{r}
 scgroup_uri <- file.path(data_dir, "sc_group")
-
-if (tiledb_vfs_is_dir(scgroup_uri)) {
-  tiledb_vfs_remove_dir(scgroup_uri)
-}
-
 scgroup <- SCGroup$new(array_uri = scgroup_uri)
+
+fs::dir_tree(scgroup_uri)
 ```
 
-
-Ingest the RNA assay (including feature annotations) and observation annotations from a Seurat object into the TileDB-backed `sc_group`:
+Then pass the `pmbc.rna` object to the `from_seurat` method of the `SCGroup` class:
 
 ```{r}
 scgroup$from_seurat(object = pbmc.rna, assay = "RNA")
@@ -162,14 +174,6 @@ Examine the directory structure of the `sc_group`:
 fs::dir_tree(scgroup_uri)
 ```
 
-# Load Seurat object from TileDB-backed `sc_group`
-
-Create new instance of `SCGroup` that discovers the existing group of TileDB arrays:
-
-```{r}
-scgroup <- SCGroup$new(array_uri = scgroup_uri)
-```
-
 From the TileDB `sc_group` we can load the data back into memory as either a _Seurat_ `Assay` object
 
 ```{r}
@@ -179,7 +183,7 @@ scgroup$to_seurat_assay()
 or as a `Seurat` object:
 
 ```{r}
-scgroup$to_seurat_object()
+scgroup$to_seurat_object(project = "SCGroup Example", assay = "RNA")
 ```
 
 # Session
