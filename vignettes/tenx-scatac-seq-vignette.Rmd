@@ -17,6 +17,8 @@ knitr::opts_chunk$set(
 ## Setup
 
 ```{r setup}
+options(max.print = 500)
+
 pkgload::load_all(helpers = FALSE)
 library(fs)
 library(tiledb)
@@ -126,7 +128,8 @@ fs::dir_tree(scgroup_var$array_uri)
 Retrieve the feature annotations from the `var` array:
 
 ```{r}
-scgroup_var$to_dataframe()
+# return only the first 10 rows
+scgroup_var$to_dataframe()[1:10, ]
 ```
 
 ## Observation (sample) annotations
@@ -148,7 +151,8 @@ scgroup_obs$from_dataframe(
 Retrieve the observation annotations from the `obs` array:
 
 ```{r}
-scgroup_obs$to_dataframe()
+# return only the first 10 rows
+scgroup_obs$to_dataframe()[1:10, ]
 ```
 
 # Convert Seurat object to TileDB-backed sc_group
