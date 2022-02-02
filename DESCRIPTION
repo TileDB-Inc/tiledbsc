@@ -25,6 +25,7 @@ Imports:
     Matrix,
     tiledb (>= 0.9.6),
     Seurat,
+    SeuratObject,
     png
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2

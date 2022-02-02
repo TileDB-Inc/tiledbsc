@@ -4,7 +4,7 @@
 #' - `X` ([`SCGroup_X`]): a labeled 2D sparse array
 #' - `obs` ([`SCGroup_Annotation`]): 1D labeled array containing column labels for `X`
 #' - `var` ([`SCGroup_Annotation`]): 1D labeled array containing row labels for `X`
-#'
+#' @importFrom SeuratObject CreateAssayObject
 #' @export
 SCGroup <- R6::R6Class(
   classname = "SCGroup",
@@ -66,20 +66,38 @@ SCGroup <- R6::R6Class(
       if (self$verbose) message("Finished converting Seurat object to TileDB")
     },
 
-    #' @description Convert to a Seurat object
-    #' @inheritParams SeuratObject::CreateSeuratObject
-    to_seurat = function(
-      project = "SeuratProject",
-      assay = "Spatial",
-      slice = "slice1",
-      filter.matrix = TRUE,
-      to.upper = FALSE,
+    #' @description Convert to a [`SeuratObject::Assay`] object.
+    #' @param min_cells Include features detected in at least this many cells.
+    #' Will subset the counts matrix as well. To reintroduce excluded features,
+    #' create a new object with a lower cutoff.
+    #' @param min_features Include cells where at least this many features are
+    #' detected.
+    #' @param check_matrix Check counts matrix for NA, NaN, Inf, and non-integer
+    #' values
+    #' @param ... Arguments passed to [`SeuratObject::as.sparse`]
+    to_seurat_assay = function(
+      min_cells = 0,
+      min_features = 0,
+      check_matrix = FALSE,
       ...) {
 
+      stopifnot(is_scalar_character(project))
+      stopifnot(is_scalar_character(assay))
+
       set_allocation_size_preference(9e8)
-      seurat_obj <- Seurat::CreateSeuratObject(
-        counts = self$assay_array$to_matrix(),
-        assay = assay
+      mat <- self$X$to_matrix()
+      var_df <- self$var$to_dataframe()[rownames(mat), , drop = FALSE]
+
+      SeuratObject::CreateAssayObject(
+        counts = mat,  # unnormalized/raw counts
+        # data = NULL, # prenormalized data (placeholder for now)
+        meta.features = var_df,
+        min.cells = min_cells,
+        min.features = min_features,
+        check.matrix = check_matrix,
+      )
+    }
+      obs_df <- self$obs$to_dataframe()[colnames(mat), , drop = FALSE]
       )
 
       image_obj <- self$to_seurat_visium()[SeuratObject::Cells(seurat_obj)]

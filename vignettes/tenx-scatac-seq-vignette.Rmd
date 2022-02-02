@@ -151,6 +151,19 @@ Ingest the RNA assay (including feature annotations) and observation annotations
 scgroup$from_seurat(object = pbmc.rna, assay = "RNA")
 ```
 
+# Load Seurat object from TileDB-backed `sc_group`
+
+Create new instance of `SCGroup` that discovers the existing group of TileDB arrays:
+
+```{r}
+scgroup <- SCGroup$new(array_uri = scgroup_uri)
+```
+
+Load the data into memory and create a Seurat `Assay` object:
+
+```{r}
+scgroup$to_seurat_assay()
+```
 
 # Session
 
