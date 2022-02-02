@@ -1,6 +1,6 @@
 #' Single-cell Group Annotation
 #'
-#' Base class for representing annotations for the `X` data matrix's
+#' Base class for representing annotations for the [`SCGroup_X`] data matrix's
 #' observations and variables. Annotation data is stored as a `data.frame` with
 #' the number of rows equal to the length of the corresponding `X` dimension,
 #' and rownames matching the values of the corresponding `X` dimension's labels.
@@ -10,11 +10,16 @@
 SCGroup_Annotation <- R6::R6Class(
   classname = "SCGroup_Annotation",
   inherit = TiledbBase,
+
   public = list(
+    #' @field array_uri URI of the TileDB array
     array_uri = NULL,
+    #' @field verbose Print status messages
     verbose = TRUE,
 
     #' @description Create a new SCObject_Annotation object.
+    #' @param array_uri URI of the TileDB array
+    #' @param verbose Print status messages
     initialize = function(array_uri, verbose = TRUE) {
       self$array_uri <- array_uri
       self$verbose <- verbose
@@ -52,15 +57,15 @@ SCGroup_Annotation <- R6::R6Class(
 
   private = list(
 
-    #' @description Create an empty TileDB array suitable for storing annotation
+    # @description Create an empty TileDB array suitable for storing annotation
     #' data.
-    #' @param x a [`data.frame`]
-    #' @param cell_order,tile_order Configure the TileDB array's global cell
-    #' ordering by specifying the tile (default: `"ROW_MAJOR"`) and cell
-    #' (default: `"ROW_MAJOR"`) ordering. See
-    #' [the docs](https://docs.tiledb.com/main/basic-concepts/terminology) for
-    #' more information.
-    #' @param capacity Capacity of sparse fragments (default: 10000)
+    # @param x a [`data.frame`]
+    # @param cell_order,tile_order Configure the TileDB array's global cell
+    # ordering by specifying the tile (default: `"ROW_MAJOR"`) and cell
+    # (default: `"ROW_MAJOR"`) ordering. See
+    # [the docs](https://docs.tiledb.com/main/basic-concepts/terminology) for
+    # more information.
+    # @param capacity Capacity of sparse fragments (default: 10000)
     create_empty_array = function(
       x,
       cell_order = "ROW_MAJOR",
@@ -106,8 +111,8 @@ SCGroup_Annotation <- R6::R6Class(
       tiledb::tiledb_array_create(uri = self$array_uri, schema = tdb_schema)
     },
 
-    #' @description Ingest annotation data into the TileDB array.
-    #' @param x A [`data.frame`] containing annotation data
+    # @description Ingest annotation data into the TileDB array.
+    # @param x A [`data.frame`] containing annotation data
     ingest_data = function(x) {
       if (self$verbose) {
         message("Ingesting annotation data into ", self$array_uri)

@@ -1,5 +1,6 @@
 #' Single-cell Group
 #'
+#' @description
 #' Class for representing a group of TileDB arrays that consitute an `sc_group`, which includes:
 #' - `X` ([`SCGroup_X`]): a labeled 2D sparse array
 #' - `obs` ([`SCGroup_Annotation`]): 1D labeled array containing column labels for `X`
@@ -9,11 +10,17 @@
 SCGroup <- R6::R6Class(
   classname = "SCGroup",
   inherit = TiledbBase,
+
   public = list(
+    #' @field array_uri URI of the TileDB array group
     array_uri = NULL,
+    #' @field obs [`SCGroup_Annotation`] object containing observation annotations
     obs = NULL,
+    #' @field var [`SCGroup_Annotation`] object containing variable annotations
     var = NULL,
+    #' @field X [`SCGroup_X`] object containing assay data
     X = NULL,
+    #' @field verbose Print status messages
     verbose = TRUE,
 
     #' @description Create a new SCGoup object. The existing array group is
@@ -53,7 +60,7 @@ SCGroup <- R6::R6Class(
     },
 
     #' @description Convert a Seurat object to a TileDB-backed sc_group.
-    #' @param object A [`Seurat::Seurat`] object.
+    #' @param object A [`SeuratObject::Seurat`] object.
     #' @param assay Name of the assay to retrieve from the Seurat object. By
     #'   default the active assay is used.
     from_seurat = function(object, assay = NULL) {
@@ -81,9 +88,6 @@ SCGroup <- R6::R6Class(
       check_matrix = FALSE,
       ...) {
 
-      stopifnot(is_scalar_character(project))
-      stopifnot(is_scalar_character(assay))
-
       set_allocation_size_preference(9e8)
       mat <- self$X$to_matrix()
       var_df <- self$var$to_dataframe()[rownames(mat), , drop = FALSE]
@@ -99,7 +103,8 @@ SCGroup <- R6::R6Class(
     },
 
     #' @description Convert to a [SeuratObject::Seurat] object.
-    #' @inheritParams SeuratObject::CreateSeuratObject
+    #' @param project [`SeuratObject::Project`] name for the `Seurat` object
+    #' @param assay Name of the initial assay
     to_seurat_object = function(
       project = "SeuratProject",
       assay = "RNA") {

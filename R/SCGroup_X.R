@@ -1,21 +1,25 @@
 #' Single-cell Group: X Matrix
 #'
-# The `X` matrix component of an SCGroup triplet.
-#'
-#' @examples
+#' @details
+#' The `X` matrix component of an [`SCGroup`].
 #'
 #'
 #' @importFrom Matrix sparseMatrix
-#' @importClassFrom Matrix dGTMatrix
+#' @export
 
 SCGroup_X <- R6::R6Class(
   classname = "SCGroup_X",
   inherit = TiledbBase,
+
   public = list(
+    #' @field array_uri URI of the TileDB array
     array_uri = NULL,
+    #' @field verbose Print status messages
     verbose = TRUE,
 
     #' @description Create a new SCObject_X object.
+    #' @param array_uri URI of the TileDB array
+    #' @param verbose Print status messages
     initialize = function(array_uri, verbose = TRUE) {
       self$array_uri <- array_uri
       self$verbose <- verbose
@@ -28,7 +32,8 @@ SCGroup_X <- R6::R6Class(
     },
 
     #' @description Ingest assay data from a sparse matrix
-    #' @param x a [`Matrix::dgCMatrix`] with string dimensions
+    #' @param x a [`Matrix::dgCMatrix-class`] or [`Matrix::dgTMatrix-class`]
+    #' with string dimensions
     from_matrix = function(x) {
      if (inherits(x, "dgCMatrix")) {
         message("Converting to dgTMatrix")
@@ -40,14 +45,14 @@ SCGroup_X <- R6::R6Class(
     },
 
     #' @description Retrieve the assay data from TileDB
-    #' @return A [`Matrix::dgTMatrix`].
+    #' @return A [`Matrix::dgTMatrix-class`].
     to_dataframe = function() {
       if (self$verbose) message("Reading assay data into memory")
       self$tiledb_array(return_as = "data.frame")[]
     },
 
     #' @description Retrieve the assay data from TileDB
-    #' @return A [`Matrix::dgTMatrix`].
+    #' @return A [`Matrix::dgTMatrix-class`].
     to_matrix = function() {
       assay_data <- self$to_dataframe()
       assay_dims <- vapply(assay_data[1:2], n_unique, FUN.VALUE = integer(1L))
@@ -67,16 +72,16 @@ SCGroup_X <- R6::R6Class(
 
   private = list(
 
-    #' @description Create an empty TileDB array suitable for storing pixel
-    #' data.
-    #' @param attr_type Should the data attribute type be 'integer' or
-    #' 'double'.
-    #' @param cell_order,tile_order Configure the TileDB array's global cell
-    #' ordering by specifying the tile (default: `"HILBERT"`) and cell
-    #' (default: `"ROW_MAJOR"`) ordering. See
-    #' [the docs](https://docs.tiledb.com/main/basic-concepts/terminology) for
+    # @description Create an empty TileDB array suitable for storing pixel
+    # data.
+    # @param attr_type Should the data attribute type be 'integer' or
+    # 'double'.
+    # @param cell_order,tile_order Configure the TileDB array's global cell
+    # ordering by specifying the tile (default: `"HILBERT"`) and cell
+    # (default: `"ROW_MAJOR"`) ordering. See
+    # [the docs](https://docs.tiledb.com/main/basic-concepts/terminology) for
     #' more information.
-    #' @param capacity Capacity of sparse fragments (default: 10000)
+    # @param capacity Capacity of sparse fragments (default: 10000)
     create_empty_array = function(
       attr_type = "integer",
       cell_order = "HILBERT",
@@ -133,8 +138,9 @@ SCGroup_X <- R6::R6Class(
       tiledb::tiledb_array_create(uri = self$array_uri, schema = tdb_schema)
     },
 
-    #' @description Ingest assay data into the TileDB array.
-    #' @param assay_data A [`Matrix::dgTMatrix`] containing the assay data.
+    # @description Ingest assay data into the TileDB array.
+    # @param assay_data A [`Matrix::dgTMatrix-class`] containing the assay
+    #' data.
     ingest_data = function(assay_data) {
       stopifnot(
         "Assay data must be a dgTMatrix" = inherits(assay_data, "dgTMatrix")
