@@ -39,7 +39,7 @@ if (requireNamespace("pbmcMultiome", quietly = TRUE)) {
 pbmc.rna <- LoadData("pbmcMultiome", "pbmc.rna")
 ```
 
-Feature-level annoations are empty for this dataset. To aid in testing we add an `ensembl_id` column containing Ensembl identifiers.
+Feature-level annotations are empty for this dataset. To aid in testing we add an `ensembl_id` column containing Ensembl identifiers.
 
 ```{r}
 suppressPackageStartupMessages(library(org.Hs.eg.db))
@@ -79,12 +79,16 @@ if (tiledb_vfs_is_dir(sc_group_uris[["X"]])) {
 scgroup_x <- SCGroup_X$new(array_uri = sc_group_uris[["X"]])
 ```
 
-Ingest RNA counts from the `SeruatObject` into the `X` component of a TileDB `sc_group`. While the higher-level The higher-level `SCGroup` class will provide convenience functions that accept `Seurat` objects directly and then pass the individual
+Retrieve the RNA count matrix from the Seruat `Assay` object and ingest it into the `X` component of the `sc_group`.
 
 ```{r}
 scgroup_x$from_matrix(
   x = GetAssayData(object = pbmc.rna, slot = "counts")
 )
+```
+
+```{r}
+mat <- scgroup_x$to_matrix()
 ```
 
 ## Feature (variable) annotations
