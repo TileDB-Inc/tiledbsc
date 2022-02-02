@@ -4,11 +4,6 @@
 \alias{SCGroup}
 \title{Single-cell Group}
 \description{
-Single-cell Group
-
-Single-cell Group
-}
-\details{
 Class for representing a group of TileDB arrays that consitute an \code{sc_group}, which includes:
 \itemize{
 \item \code{X} (\code{\link{SCGroup_X}}): a labeled 2D sparse array
@@ -19,20 +14,39 @@ Class for representing a group of TileDB arrays that consitute an \code{sc_group
 \section{Super class}{
 \code{\link[tiledbsc:TiledbBase]{tiledbsc::TiledbBase}} -> \code{SCGroup}
 }
+\section{Public fields}{
+\if{html}{\out{<div class="r6-fields">}}
+\describe{
+\item{\code{array_uri}}{URI of the TileDB array group}
+
+\item{\code{obs}}{\code{\link{SCGroup_Annotation}} object containing observation annotations}
+
+\item{\code{var}}{\code{\link{SCGroup_Annotation}} object containing variable annotations}
+
+\item{\code{X}}{\code{\link{SCGroup_X}} object containing assay data}
+
+\item{\code{verbose}}{Print status messages}
+}
+\if{html}{\out{</div>}}
+}
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-new}{\code{SCGroup$new()}}
 \item \href{#method-from_seurat}{\code{SCGroup$from_seurat()}}
-\item \href{#method-to_seurat}{\code{SCGroup$to_seurat()}}
+\item \href{#method-to_seurat_assay}{\code{SCGroup$to_seurat_assay()}}
+\item \href{#method-to_seurat_object}{\code{SCGroup$to_seurat_object()}}
 \item \href{#method-clone}{\code{SCGroup$clone()}}
 }
 }
 \if{html}{
-\out{<details open ><summary>Inherited methods</summary>}
+\out{<details ><summary>Inherited methods</summary>}
 \itemize{
 \item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TiledbBase" data-id="add_metadata">}\href{../../tiledbsc/html/TiledbBase.html#method-add_metadata}{\code{tiledbsc::TiledbBase$add_metadata()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TiledbBase" data-id="dimensions">}\href{../../tiledbsc/html/TiledbBase.html#method-dimensions}{\code{tiledbsc::TiledbBase$dimensions()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TiledbBase" data-id="dimnames">}\href{../../tiledbsc/html/TiledbBase.html#method-dimnames}{\code{tiledbsc::TiledbBase$dimnames()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TiledbBase" data-id="get_metadata">}\href{../../tiledbsc/html/TiledbBase.html#method-get_metadata}{\code{tiledbsc::TiledbBase$get_metadata()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TiledbBase" data-id="schema">}\href{../../tiledbsc/html/TiledbBase.html#method-schema}{\code{tiledbsc::TiledbBase$schema()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TiledbBase" data-id="tiledb_array">}\href{../../tiledbsc/html/TiledbBase.html#method-tiledb_array}{\code{tiledbsc::TiledbBase$tiledb_array()}}\out{</span>}
 }
 \out{</details>}
@@ -42,7 +56,7 @@ Class for representing a group of TileDB arrays that consitute an \code{sc_group
 \if{latex}{\out{\hypertarget{method-new}{}}}
 \subsection{Method \code{new()}}{
 Create a new SCGoup object. The existing array group is
-opened at the specified \code{group_uri} if one is present, otherwise a new
+opened at the specified \code{array_uri} if one is present, otherwise a new
 array group is created.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{SCGroup$new(array_uri, verbose = TRUE)}\if{html}{\out{</div>}}
@@ -51,9 +65,9 @@ array group is created.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{verbose}}{Print status messages}
+\item{\code{array_uri}}{URI of the TileDB group}
 
-\item{\code{array}}{URI of the TileDB group}
+\item{\code{verbose}}{Print status messages}
 }
 \if{html}{\out{</div>}}
 }
@@ -70,7 +84,7 @@ Convert a Seurat object to a TileDB-backed sc_group.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{object}}{A \code{\link[Seurat:Seurat-package]{Seurat::Seurat}} object.}
+\item{\code{object}}{A \code{\link[SeuratObject:Seurat-class]{SeuratObject::Seurat}} object.}
 
 \item{\code{assay}}{Name of the assay to retrieve from the Seurat object. By
 default the active assay is used.}
@@ -79,21 +93,55 @@ default the active assay is used.}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-to_seurat"></a>}}
-\if{latex}{\out{\hypertarget{method-to_seurat}{}}}
-\subsection{Method \code{to_seurat()}}{
-Convert to a Seurat object
+\if{html}{\out{<a id="method-to_seurat_assay"></a>}}
+\if{latex}{\out{\hypertarget{method-to_seurat_assay}{}}}
+\subsection{Method \code{to_seurat_assay()}}{
+Convert to a \code{\link[SeuratObject:Assay-class]{SeuratObject::Assay}} object.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{SCGroup$to_seurat(
-  project = "SeuratProject",
-  assay = "Spatial",
-  slice = "slice1",
-  filter.matrix = TRUE,
-  to.upper = FALSE,
+\if{html}{\out{<div class="r">}}\preformatted{SCGroup$to_seurat_assay(
+  min_cells = 0,
+  min_features = 0,
+  check_matrix = FALSE,
   ...
 )}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{min_cells}}{Include features detected in at least this many cells.
+Will subset the counts matrix as well. To reintroduce excluded features,
+create a new object with a lower cutoff.}
+
+\item{\code{min_features}}{Include cells where at least this many features are
+detected.}
+
+\item{\code{check_matrix}}{Check counts matrix for NA, NaN, Inf, and non-integer
+values}
+
+\item{\code{...}}{Arguments passed to \code{\link[SeuratObject:as.sparse]{SeuratObject::as.sparse}}}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-to_seurat_object"></a>}}
+\if{latex}{\out{\hypertarget{method-to_seurat_object}{}}}
+\subsection{Method \code{to_seurat_object()}}{
+Convert to a \link[SeuratObject:Seurat-class]{SeuratObject::Seurat} object.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{SCGroup$to_seurat_object(project = "SeuratProject", assay = "RNA")}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{project}}{\code{\link[SeuratObject:Project]{SeuratObject::Project}} name for the \code{Seurat} object}
+
+\item{\code{assay}}{Name of the initial assay}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-clone"></a>}}

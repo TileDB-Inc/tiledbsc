@@ -9,13 +9,22 @@ Single-cell Group Annotation
 Single-cell Group Annotation
 }
 \details{
-Base class for representing annotations for the \code{X} data matrix's
+Base class for representing annotations for the \code{\link{SCGroup_X}} data matrix's
 observations and variables. Annotation data is stored as a \code{data.frame} with
 the number of rows equal to the length of the corresponding \code{X} dimension,
 and rownames matching the values of the corresponding \code{X} dimension's labels.
 }
 \section{Super class}{
 \code{\link[tiledbsc:TiledbBase]{tiledbsc::TiledbBase}} -> \code{SCGroup_Annotation}
+}
+\section{Public fields}{
+\if{html}{\out{<div class="r6-fields">}}
+\describe{
+\item{\code{array_uri}}{URI of the TileDB array}
+
+\item{\code{verbose}}{Print status messages}
+}
+\if{html}{\out{</div>}}
 }
 \section{Methods}{
 \subsection{Public methods}{
@@ -27,10 +36,13 @@ and rownames matching the values of the corresponding \code{X} dimension's label
 }
 }
 \if{html}{
-\out{<details open ><summary>Inherited methods</summary>}
+\out{<details ><summary>Inherited methods</summary>}
 \itemize{
 \item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TiledbBase" data-id="add_metadata">}\href{../../tiledbsc/html/TiledbBase.html#method-add_metadata}{\code{tiledbsc::TiledbBase$add_metadata()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TiledbBase" data-id="dimensions">}\href{../../tiledbsc/html/TiledbBase.html#method-dimensions}{\code{tiledbsc::TiledbBase$dimensions()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TiledbBase" data-id="dimnames">}\href{../../tiledbsc/html/TiledbBase.html#method-dimnames}{\code{tiledbsc::TiledbBase$dimnames()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TiledbBase" data-id="get_metadata">}\href{../../tiledbsc/html/TiledbBase.html#method-get_metadata}{\code{tiledbsc::TiledbBase$get_metadata()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TiledbBase" data-id="schema">}\href{../../tiledbsc/html/TiledbBase.html#method-schema}{\code{tiledbsc::TiledbBase$schema()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TiledbBase" data-id="tiledb_array">}\href{../../tiledbsc/html/TiledbBase.html#method-tiledb_array}{\code{tiledbsc::TiledbBase$tiledb_array()}}\out{</span>}
 }
 \out{</details>}
@@ -44,6 +56,15 @@ Create a new SCObject_Annotation object.
 \if{html}{\out{<div class="r">}}\preformatted{SCGroup_Annotation$new(array_uri, verbose = TRUE)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{array_uri}}{URI of the TileDB array}
+
+\item{\code{verbose}}{Print status messages}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-from_dataframe"></a>}}
@@ -72,7 +93,9 @@ Retrieve the annotation data from TileDB
 }
 
 \subsection{Returns}{
-A \code{\link{data.frame}}.
+A \code{\link{data.frame}} with row names containing values from the index
+dimension
+data.
 }
 }
 \if{html}{\out{<hr>}}
