@@ -31,7 +31,8 @@ dir.create(data_dir, showWarnings = FALSE)
 ## Load data
 
 ```{r}
-if (requireNamespace(dataset_name, quietly = TRUE)) {
+dataset_pkg <- paste0(dataset_name, ".SeuratData")
+if (!requireNamespace(dataset_pkg, quietly = TRUE)) {
   message(paste("Installing", dataset_name))
   SeuratData::InstallData(dataset_name)
 }
