@@ -4,7 +4,7 @@
 #' - `X` ([`SCGroup_X`]): a labeled 2D sparse array
 #' - `obs` ([`SCGroup_Annotation`]): 1D labeled array containing column labels for `X`
 #' - `var` ([`SCGroup_Annotation`]): 1D labeled array containing row labels for `X`
-#' @importFrom SeuratObject CreateAssayObject
+#' @importFrom SeuratObject CreateAssayObject CreateSeuratObject
 #' @export
 SCGroup <- R6::R6Class(
   classname = "SCGroup",
@@ -96,14 +96,26 @@ SCGroup <- R6::R6Class(
         min.features = min_features,
         check.matrix = check_matrix,
       )
-    }
-      obs_df <- self$obs$to_dataframe()[colnames(mat), , drop = FALSE]
-      )
+    },
 
-      image_obj <- self$to_seurat_visium()[SeuratObject::Cells(seurat_obj)]
-      SeuratObject::DefaultAssay(image_obj) <- assay
-      seurat_obj[[slice]] <- image_obj
-      return(seurat_obj)
+    #' @description Convert to a [SeuratObject::Seurat] object.
+    #' @inheritParams SeuratObject::CreateSeuratObject
+    to_seurat_object = function(
+      project = "SeuratProject",
+      assay = "RNA") {
+
+      stopifnot(is_scalar_character(project))
+      stopifnot(is_scalar_character(assay))
+
+      assay_obj <- self$to_seurat_assay()
+      obs_df <- self$obs$to_dataframe()[colnames(assay_obj), , drop = FALSE]
+
+      Seurat::CreateSeuratObject(
+        counts = assay_obj,
+        project = project,
+        assay = assay,
+        meta.data = obs_df
+      )
     }
   ),
 

@@ -170,10 +170,16 @@ Create new instance of `SCGroup` that discovers the existing group of TileDB arr
 scgroup <- SCGroup$new(array_uri = scgroup_uri)
 ```
 
-Load the data into memory and create a Seurat `Assay` object:
+From the TileDB `sc_group` we can load the data back into memory as either a _Seurat_ `Assay` object
 
 ```{r}
 scgroup$to_seurat_assay()
+```
+
+or as a `Seurat` object:
+
+```{r}
+scgroup$to_seurat_object()
 ```
 
 # Session
