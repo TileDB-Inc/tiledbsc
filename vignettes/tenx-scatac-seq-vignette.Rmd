@@ -192,6 +192,6 @@ scgroup$to_seurat_object(project = "SCGroup Example", assay = "RNA")
 sessionInfo()
 ```
 
-```{r cleanup, include=FALSE, eval=params$cleanup}
-tiledb::tiledb_vfs_remove_dir(tdb_brain$array_uri)
+```{r cleanup, include=FALSE}
+tiledb::tiledb_vfs_remove_dir(data_dir)
 ```
