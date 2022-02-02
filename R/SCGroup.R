@@ -17,10 +17,10 @@ SCGroup <- R6::R6Class(
     verbose = TRUE,
 
     #' @description Create a new SCGoup object. The existing array group is
-    #'   opened at the specified `group_uri` if one is present, otherwise a new
+    #'   opened at the specified `array_uri` if one is present, otherwise a new
     #'   array group is created.
     #'
-    #' @param array URI of the TileDB group
+    #' @param array_uri URI of the TileDB group
     #' @param verbose Print status messages
     initialize = function(
       array_uri,
