@@ -2,14 +2,8 @@
 #'
 #' @param x A `dgTMatrix` or list of multiple dgTMatrix's with identical
 #' dimensions and dimension names
-#' @returns A `data.frame` with columns for the unnormalized (`counts`) and
-#' normalized (`data`) data indexed by `feature`/`barcode` coordinates.
-#'
-#' @examples
-#' data("pbmc_small", package = "SeuratObject")
-#' mats <- list(GetAssayData(pbmc_small, "counts"), GetAssayData(pbmc_small, "data"))
-#' mats <- lapply(mats, FUN = as, Class = "dgTMatrix")
-#' dgtmatrix_to_dataframe(mats)
+#' @returns A `data.frame` with columns for the i/j indices, and a value column
+#' for each of the matrices included in `x`
 #'
 #' @noRD
 dgtmatrix_to_dataframe <- function(x, index_cols = c("i", "j"), value_cols = NULL) {
