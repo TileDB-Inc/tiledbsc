@@ -66,9 +66,23 @@ SCGroup <- R6::R6Class(
     from_seurat = function(object, assay = NULL) {
       stopifnot(inherits(object, "Seurat"))
 
-      assay <- Seurat::GetAssay(object, assay = assay)
-      self$X$from_matrix(Seurat::GetAssayData(assay))
-      self$var$from_dataframe(assay[[]])
+      # retrieve assay data as a list of dGT matrices
+      assay_object <- Seurat::GetAssay(object, assay)
+      assay_mats <- mapply(
+        FUN = SeuratObject::GetAssayData,
+        slot = c("counts", "data"),
+        MoreArgs = list(object = assay_object),
+        SIMPLIFY = FALSE
+      )
+      assay_mats <- lapply(assay_mats, FUN = as, Class = "dgTMatrix")
+
+      # TODO: decide on a consistent naming convention for array dimensions
+      index_cols <- c("feature", "barcode")
+      self$X$from_dataframe(
+        dgtmatrix_to_dataframe(assay_mats, index_cols)
+      )
+
+      self$var$from_dataframe(assay_object[[]])
       self$obs$from_dataframe(object[[]])
       if (self$verbose) message("Finished converting Seurat object to TileDB")
     },
