@@ -5,7 +5,7 @@
 #' - `X` ([`SCGroup_X`]): a labeled 2D sparse array
 #' - `obs` ([`SCGroup_Annotation`]): 1D labeled array containing column labels for `X`
 #' - `var` ([`SCGroup_Annotation`]): 1D labeled array containing row labels for `X`
-#' @importFrom SeuratObject CreateAssayObject CreateSeuratObject
+#' @importFrom SeuratObject GetAssayData CreateAssayObject CreateSeuratObject
 #' @export
 SCGroup <- R6::R6Class(
   classname = "SCGroup",
