@@ -23,6 +23,10 @@ test_that("SCGroup object can be created from a Seurat object", {
 test_that("Seurat Assay can be recreated from an existing SCGroup", {
   pbmc_small_assay <- scgroup$to_seurat_assay()
   expect_s4_class(pbmc_small_assay, "Assay")
+  expect_equal(
+    slot(pbmc_small_assay, "key"),
+    slot(pbmc_small@assays$RNA, "key")
+  )
 })
 
 test_that("Seurat object can be created from an existing SCGroup", {

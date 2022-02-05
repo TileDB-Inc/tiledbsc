@@ -81,6 +81,9 @@ SCGroup <- R6::R6Class(
       self$X$from_dataframe(
         dgtmatrix_to_dataframe(assay_mats, index_cols)
       )
+      # TODO: Seurat Assay metadata should be stored in separate empty array
+      # until metadata support is added to TileDB groups
+      self$X$add_metadata(list(key = SeuratObject::Key(assay_object)))
 
       self$var$from_dataframe(assay_object[[]])
       self$obs$from_dataframe(object[[]])
@@ -106,25 +109,24 @@ SCGroup <- R6::R6Class(
       mat <- self$X$to_matrix()
       var_df <- self$var$to_dataframe()[rownames(mat), , drop = FALSE]
 
-      SeuratObject::CreateAssayObject(
+      assay_obj <- SeuratObject::CreateAssayObject(
         counts = mat,  # unnormalized/raw counts
         # data = NULL, # prenormalized data (placeholder for now)
         meta.features = var_df,
         min.cells = min_cells,
         min.features = min_features,
-        check.matrix = check_matrix,
+        check.matrix = check_matrix
       )
+
+      # set metadata
+      SeuratObject::Key(assay_obj) <- self$X$get_metadata(key = "key")
+      return(assay_obj)
     },
 
     #' @description Convert to a [SeuratObject::Seurat] object.
     #' @param project [`SeuratObject::Project`] name for the `Seurat` object
-    #' @param assay Name of the initial assay
-    to_seurat_object = function(
-      project = "SeuratProject",
-      assay = "RNA") {
-
+    to_seurat_object = function(project = "SeuratProject") {
       stopifnot(is_scalar_character(project))
-      stopifnot(is_scalar_character(assay))
 
       assay_obj <- self$to_seurat_assay()
       obs_df <- self$obs$to_dataframe()[colnames(assay_obj), , drop = FALSE]
@@ -132,7 +134,6 @@ SCGroup <- R6::R6Class(
       Seurat::CreateSeuratObject(
         counts = assay_obj,
         project = project,
-        assay = assay,
         meta.data = obs_df
       )
     }
