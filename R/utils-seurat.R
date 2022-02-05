@@ -5,7 +5,7 @@
 #' @returns A `data.frame` with columns for the i/j indices, and a value column
 #' for each of the matrices included in `x`
 #'
-#' @noRD
+#' @noRd
 dgtmatrix_to_dataframe <- function(x, index_cols = c("i", "j"), value_cols = NULL) {
   if (inherits(x, "dgTMatrix")) {
     x <- list(x)
