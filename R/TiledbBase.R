@@ -7,7 +7,7 @@ TiledbBase <- R6::R6Class(
     verbose = TRUE,
 
     #' @description Create a new TiledbBase object.
-    #' @param image_path File path for the image to ingest.
+    #' @param array_uri TileDB array URI.
     initialize = function(array_uri, verbose = TRUE) {
       self$array_uri <- array_uri
       self$verbose <- verbose
