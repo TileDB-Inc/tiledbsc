@@ -79,10 +79,22 @@ TiledbBase <- R6::R6Class(
       tiledb::dimensions(self$schema())
     },
 
+    #' @description Retrieve the array attributes
+    #' @return A list of [`tiledb::tiledb_attr`] objects
+    attributes = function() {
+      tiledb::attrs(self$schema())
+    },
+
     #' @description Retrieve dimension names
-    #' @return A character vection of dimension names
+    #' @return A character vector with the array's dimension names
     dimnames = function() {
       vapply(self$dimensions(), tiledb::name, FUN.VALUE = vector("character", 1L))
+    },
+
+    #' @description Retrieve attribute names
+    #' @return A character vector with the array's attribute names
+    attrnames = function() {
+      vapply(self$attributes(), tiledb::name, FUN.VALUE = vector("character", 1L), USE.NAMES = FALSE)
     }
   ),
 
