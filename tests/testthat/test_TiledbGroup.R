@@ -12,3 +12,16 @@ test_that("a new TileDB group can be created", {
   expect_true(dir.exists(grp_uri))
   expect_match(tiledb::tiledb_object_type(grp_uri), "GROUP")
 })
+
+
+test_that("arrays within a group can be discovered", {
+  grp_uri <<- file.path(withr::local_tempdir(), "new-group")
+  grp <- TiledbGroup$new(uri = grp_uri, verbose = FALSE)
+
+  a1 <- create_empty_test_array(file.path(grp_uri, "a1"))
+  a2 <- create_empty_test_array(file.path(grp_uri, "a2"))
+
+  objs <- grp$list_objects()
+  expect_is(objs, "data.frame")
+  expect_equal(nrow(objs), 2)
+})

@@ -16,6 +16,12 @@ TiledbGroup <- R6::R6Class(
         private$create_group()
       }
       return(self)
+    },
+
+    #' @description List the TileDB objects within the group.
+    #' @return A `data.frame` with columns `URI` and `TYPE`.
+    list_objects = function() {
+      tiledb::tiledb_object_ls(self$uri)
     }
   ),
 
