@@ -10,7 +10,7 @@ data("pbmc_small", package = "SeuratObject")
 
 test_that("SCGroup object can be created from a Seurat object", {
 
-  scgroup <<- SCGroup$new(array_uri = tdb_uri, verbose = FALSE)
+  scgroup <<- SCGroup$new(uri = tdb_uri, verbose = TRUE)
   expect_true(inherits(scgroup, "SCGroup"))
 
   scgroup$from_seurat(pbmc_small)

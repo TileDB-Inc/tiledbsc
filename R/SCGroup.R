@@ -9,50 +9,44 @@
 #' @export
 SCGroup <- R6::R6Class(
   classname = "SCGroup",
-  inherit = TiledbBase,
+  inherit = TiledbGroup,
 
   public = list(
-    #' @field array_uri URI of the TileDB array group
-    array_uri = NULL,
     #' @field obs [`SCGroup_Annotation`] object containing observation annotations
     obs = NULL,
     #' @field var [`SCGroup_Annotation`] object containing variable annotations
     var = NULL,
     #' @field X [`SCGroup_X`] object containing assay data
     X = NULL,
-    #' @field verbose Print status messages
-    verbose = TRUE,
 
     #' @description Create a new SCGoup object. The existing array group is
     #'   opened at the specified `array_uri` if one is present, otherwise a new
     #'   array group is created.
     #'
-    #' @param array_uri URI of the TileDB group
+    #' @param uri URI of the TileDB group
     #' @param verbose Print status messages
     initialize = function(
-      array_uri,
+      uri,
       verbose = TRUE) {
-
-      self$array_uri <- array_uri
+      self$uri <- uri
       self$verbose <- verbose
 
-      if (!private$tiledb_group_exists()) {
-        if (self$verbose) message(glue::glue("Creating new array group at '{array_uri}'"))
-        tiledb::tiledb_group_create(array_uri)
+      if (!private$group_exists()) {
+        private$create_group()
       }
 
       self$obs <- SCGroup_Annotation$new(
-        array_uri = paste0(self$array_uri, "/obs"),
+        array_uri = paste0(self$uri, "/obs"),
         verbose = self$verbose
       )
 
       self$var <- SCGroup_Annotation$new(
-        array_uri = paste0(self$array_uri, "/var"),
+        array_uri = paste0(self$uri, "/var"),
         verbose = self$verbose
       )
 
       self$X <- SCGroup_X$new(
-        array_uri = paste0(self$array_uri, "/X"),
+        array_uri = paste0(self$uri, "/X"),
         verbose = self$verbose
       )
 
@@ -136,19 +130,6 @@ SCGroup <- R6::R6Class(
         project = project,
         meta.data = obs_df
       )
-    }
-  ),
-
-  private = list(
-    tiledb_group_exists = function() {
-      result <- tiledb::tiledb_object_type(self$array_uri) == "GROUP"
-      if (result) {
-        msg <- glue::glue("Found existing TileDB group at '{self$array_uri}'")
-      } else {
-        msg <- glue::glue("No TileDB group currently exists at '{self$array_uri}'")
-      }
-      if (self$verbose) message(msg)
-      result
     }
   )
 )
