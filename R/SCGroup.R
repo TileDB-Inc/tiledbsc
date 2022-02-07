@@ -5,7 +5,7 @@
 #' - `X` ([`SCGroup_X`]): a labeled 2D sparse array
 #' - `obs` ([`SCGroup_Annotation`]): 1D labeled array containing column labels for `X`
 #' - `var` ([`SCGroup_Annotation`]): 1D labeled array containing row labels for `X`
-#' @importFrom SeuratObject GetAssayData CreateAssayObject CreateSeuratObject
+#' @importFrom SeuratObject GetAssayData CreateAssayObject CreateSeuratObject AddMetaData
 #' @export
 SCGroup <- R6::R6Class(
   classname = "SCGroup",
@@ -100,17 +100,19 @@ SCGroup <- R6::R6Class(
       ...) {
 
       set_allocation_size_preference(9e8)
-      mat <- self$X$to_matrix()
-      var_df <- self$var$to_dataframe()[rownames(mat), , drop = FALSE]
+      count_mat <- self$X$to_matrix()
 
       assay_obj <- SeuratObject::CreateAssayObject(
-        counts = mat,  # unnormalized/raw counts
+        counts = count_mat,  # unnormalized/raw counts
         # data = NULL, # prenormalized data (placeholder for now)
-        meta.features = var_df,
         min.cells = min_cells,
         min.features = min_features,
         check.matrix = check_matrix
       )
+
+      # variable annotations
+      var_df <- self$var$to_dataframe()
+      assay_obj <- SeuratObject::AddMetaData(assay_obj, var_df)
 
       # set metadata
       SeuratObject::Key(assay_obj) <- self$X$get_metadata(key = "key")

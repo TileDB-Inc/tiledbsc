@@ -21,11 +21,16 @@ test_that("SCGroup object can be created from a Seurat object", {
 })
 
 test_that("Seurat Assay can be recreated from an existing SCGroup", {
-  pbmc_small_assay <- scgroup$to_seurat_assay()
-  expect_s4_class(pbmc_small_assay, "Assay")
+  assay1 <- Seurat::GetAssay(pbmc_small)
+  assay2 <- scgroup$to_seurat_assay()
+
+  expect_s4_class(assay2, "Assay")
+  expect_equal(slot(assay2, "key"), slot(assay1, "key"))
+
+  # manually remove vst.variable column because logicals are returned as ints
   expect_equal(
-    slot(pbmc_small_assay, "key"),
-    slot(pbmc_small@assays$RNA, "key")
+    assay2[[]][rownames(assay1), -5],
+    assay1[[]][rownames(assay1), -5]
   )
 })
 
