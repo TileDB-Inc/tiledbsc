@@ -52,3 +52,32 @@ dgtmatrix_to_dataframe <- function(x, index_cols = c("i", "j"), value_cols = NUL
 
   cbind(index_data, as.data.frame(value_data))
 }
+
+#' Convert from COO-formatted Data Frame to dgTMatrix
+#' @param x A COO-formatted `data.frame` with columns for the i/j indices, and
+#' and one or more value columns.
+#' @returns A list of `dgTMatrix` objects, with one element per value column in
+#' `x`.
+#' @noRd
+dataframe_to_dgtmatrix <- function(x, index_cols = c("i", "j")) {
+  stopifnot(is.data.frame(x))
+  stopifnot(length(index_cols) == 2)
+  stopifnot(all(index_cols %in% colnames(x)))
+
+  value_cols <- setdiff(colnames(x), index_cols)
+  dim_labels <- as.list(x[index_cols])
+  dim_names <- lapply(dim_labels, unique)
+  dim_lengths <- vapply(dim_names, length, FUN.VALUE = integer(1L))
+
+  mapply(
+    FUN = Matrix::sparseMatrix,
+    x = x[value_cols],
+    MoreArgs = list(
+      i = match(dim_labels[[1]], dim_names[[1]]),
+      j = match(dim_labels[[2]], dim_names[[2]]),
+      dims = dim_lengths,
+      dimnames = unname(dim_names),
+      repr = "T"
+    )
+  )
+}
