@@ -32,6 +32,8 @@ TileDB Image Position Data
 \out{<details ><summary>Inherited methods</summary>}
 \itemize{
 \item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TiledbBase" data-id="add_metadata">}\href{../../tiledbsc/html/TiledbBase.html#method-add_metadata}{\code{tiledbsc::TiledbBase$add_metadata()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TiledbBase" data-id="attributes">}\href{../../tiledbsc/html/TiledbBase.html#method-attributes}{\code{tiledbsc::TiledbBase$attributes()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TiledbBase" data-id="attrnames">}\href{../../tiledbsc/html/TiledbBase.html#method-attrnames}{\code{tiledbsc::TiledbBase$attrnames()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TiledbBase" data-id="dimensions">}\href{../../tiledbsc/html/TiledbBase.html#method-dimensions}{\code{tiledbsc::TiledbBase$dimensions()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TiledbBase" data-id="dimnames">}\href{../../tiledbsc/html/TiledbBase.html#method-dimnames}{\code{tiledbsc::TiledbBase$dimnames()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TiledbBase" data-id="get_metadata">}\href{../../tiledbsc/html/TiledbBase.html#method-get_metadata}{\code{tiledbsc::TiledbBase$get_metadata()}}\out{</span>}

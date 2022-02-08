@@ -4,12 +4,12 @@
 \alias{SCGroup_X}
 \title{Single-cell Group: X Matrix}
 \description{
-Single-cell Group: X Matrix
-
-Single-cell Group: X Matrix
-}
-\details{
 The \code{X} matrix component of an \code{\link{SCGroup}}.
+
+A \code{SCGroup_X} object is a 2D sparse array with string dimensions \code{obs_id}
+and \code{var_id} that map to the dimensions of the \code{obs} and \code{var} arrays,
+respectively. An \code{X} matrix can contain or more "layers", which that all
+share the same labels/coordinates and non-empty cells.
 }
 \section{Super class}{
 \code{\link[tiledbsc:TiledbBase]{tiledbsc::TiledbBase}} -> \code{SCGroup_X}
@@ -28,6 +28,7 @@ The \code{X} matrix component of an \code{\link{SCGroup}}.
 \itemize{
 \item \href{#method-new}{\code{SCGroup_X$new()}}
 \item \href{#method-from_matrix}{\code{SCGroup_X$from_matrix()}}
+\item \href{#method-from_dataframe}{\code{SCGroup_X$from_dataframe()}}
 \item \href{#method-to_dataframe}{\code{SCGroup_X$to_dataframe()}}
 \item \href{#method-to_matrix}{\code{SCGroup_X$to_matrix()}}
 \item \href{#method-clone}{\code{SCGroup_X$clone()}}
@@ -37,6 +38,8 @@ The \code{X} matrix component of an \code{\link{SCGroup}}.
 \out{<details ><summary>Inherited methods</summary>}
 \itemize{
 \item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TiledbBase" data-id="add_metadata">}\href{../../tiledbsc/html/TiledbBase.html#method-add_metadata}{\code{tiledbsc::TiledbBase$add_metadata()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TiledbBase" data-id="attributes">}\href{../../tiledbsc/html/TiledbBase.html#method-attributes}{\code{tiledbsc::TiledbBase$attributes()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TiledbBase" data-id="attrnames">}\href{../../tiledbsc/html/TiledbBase.html#method-attrnames}{\code{tiledbsc::TiledbBase$attrnames()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TiledbBase" data-id="dimensions">}\href{../../tiledbsc/html/TiledbBase.html#method-dimensions}{\code{tiledbsc::TiledbBase$dimensions()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TiledbBase" data-id="dimnames">}\href{../../tiledbsc/html/TiledbBase.html#method-dimnames}{\code{tiledbsc::TiledbBase$dimnames()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TiledbBase" data-id="get_metadata">}\href{../../tiledbsc/html/TiledbBase.html#method-get_metadata}{\code{tiledbsc::TiledbBase$get_metadata()}}\out{</span>}
@@ -83,14 +86,43 @@ with string dimensions}
 }
 }
 \if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-from_dataframe"></a>}}
+\if{latex}{\out{\hypertarget{method-from_dataframe}{}}}
+\subsection{Method \code{from_dataframe()}}{
+Ingest assay data from a COO-formatted data frame
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{SCGroup_X$from_dataframe(x, index_cols = c("feature", "barcode"))}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{x}}{a \code{\link{data.frame}}}
+
+\item{\code{index_cols}}{A column index, either numeric with a column index, or
+character with a column name, designating one or more index columns. All
+other columns are ingested as attributes.}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-to_dataframe"></a>}}
 \if{latex}{\out{\hypertarget{method-to_dataframe}{}}}
 \subsection{Method \code{to_dataframe()}}{
 Retrieve the assay data from TileDB
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{SCGroup_X$to_dataframe()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{SCGroup_X$to_dataframe(attrs = NULL)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{attrs}}{Specify one or more layer attributes to retrieve. If \code{NULL},
+all attributes are retrieved.}
+}
+\if{html}{\out{</div>}}
+}
 \subsection{Returns}{
 A \code{\link[Matrix:dgTMatrix-class]{Matrix::dgTMatrix}}.
 }
@@ -99,15 +131,22 @@ A \code{\link[Matrix:dgTMatrix-class]{Matrix::dgTMatrix}}.
 \if{html}{\out{<a id="method-to_matrix"></a>}}
 \if{latex}{\out{\hypertarget{method-to_matrix}{}}}
 \subsection{Method \code{to_matrix()}}{
-Retrieve the assay data from TileDB
+Retrieve assay data from TileDB as a 2D sparse matrix.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{SCGroup_X$to_matrix()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{SCGroup_X$to_matrix(attr = NULL)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{attr}}{The name of the attribute layer to retrieve. If \code{NULL}, the
+first layer is returned.}
+}
+\if{html}{\out{</div>}}
+}
 \subsection{Returns}{
 A \code{\link[Matrix:dgTMatrix-class]{Matrix::dgTMatrix}}.
 more information.
-data.
 }
 }
 \if{html}{\out{<hr>}}

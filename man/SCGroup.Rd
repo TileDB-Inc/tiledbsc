@@ -12,20 +12,16 @@ Class for representing a group of TileDB arrays that consitute an \code{sc_group
 }
 }
 \section{Super class}{
-\code{\link[tiledbsc:TiledbBase]{tiledbsc::TiledbBase}} -> \code{SCGroup}
+\code{\link[tiledbsc:TiledbGroup]{tiledbsc::TiledbGroup}} -> \code{SCGroup}
 }
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
-\item{\code{array_uri}}{URI of the TileDB array group}
-
 \item{\code{obs}}{\code{\link{SCGroup_Annotation}} object containing observation annotations}
 
 \item{\code{var}}{\code{\link{SCGroup_Annotation}} object containing variable annotations}
 
 \item{\code{X}}{\code{\link{SCGroup_X}} object containing assay data}
-
-\item{\code{verbose}}{Print status messages}
 }
 \if{html}{\out{</div>}}
 }
@@ -40,14 +36,9 @@ Class for representing a group of TileDB arrays that consitute an \code{sc_group
 }
 }
 \if{html}{
-\out{<details ><summary>Inherited methods</summary>}
+\out{<details open ><summary>Inherited methods</summary>}
 \itemize{
-\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TiledbBase" data-id="add_metadata">}\href{../../tiledbsc/html/TiledbBase.html#method-add_metadata}{\code{tiledbsc::TiledbBase$add_metadata()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TiledbBase" data-id="dimensions">}\href{../../tiledbsc/html/TiledbBase.html#method-dimensions}{\code{tiledbsc::TiledbBase$dimensions()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TiledbBase" data-id="dimnames">}\href{../../tiledbsc/html/TiledbBase.html#method-dimnames}{\code{tiledbsc::TiledbBase$dimnames()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TiledbBase" data-id="get_metadata">}\href{../../tiledbsc/html/TiledbBase.html#method-get_metadata}{\code{tiledbsc::TiledbBase$get_metadata()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TiledbBase" data-id="schema">}\href{../../tiledbsc/html/TiledbBase.html#method-schema}{\code{tiledbsc::TiledbBase$schema()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TiledbBase" data-id="tiledb_array">}\href{../../tiledbsc/html/TiledbBase.html#method-tiledb_array}{\code{tiledbsc::TiledbBase$tiledb_array()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TiledbGroup" data-id="list_objects">}\href{../../tiledbsc/html/TiledbGroup.html#method-list_objects}{\code{tiledbsc::TiledbGroup$list_objects()}}\out{</span>}
 }
 \out{</details>}
 }
@@ -59,13 +50,13 @@ Create a new SCGoup object. The existing array group is
 opened at the specified \code{array_uri} if one is present, otherwise a new
 array group is created.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{SCGroup$new(array_uri, verbose = TRUE)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{SCGroup$new(uri, verbose = TRUE)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{array_uri}}{URI of the TileDB group}
+\item{\code{uri}}{URI of the TileDB group}
 
 \item{\code{verbose}}{Print status messages}
 }
@@ -130,15 +121,13 @@ values}
 \subsection{Method \code{to_seurat_object()}}{
 Convert to a \link[SeuratObject:Seurat-class]{SeuratObject::Seurat} object.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{SCGroup$to_seurat_object(project = "SeuratProject", assay = "RNA")}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{SCGroup$to_seurat_object(project = "SeuratProject")}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{project}}{\code{\link[SeuratObject:Project]{SeuratObject::Project}} name for the \code{Seurat} object}
-
-\item{\code{assay}}{Name of the initial assay}
 }
 \if{html}{\out{</div>}}
 }
