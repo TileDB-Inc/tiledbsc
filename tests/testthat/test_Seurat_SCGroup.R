@@ -27,10 +27,21 @@ test_that("Seurat Assay can be recreated from an existing SCGroup", {
   expect_s4_class(assay2, "Assay")
   expect_equal(slot(assay2, "key"), slot(assay1, "key"))
 
-  # manually remove vst.variable column because logicals are returned as ints
+  # use feature/sample names to ensure objects being compared are sorted
+  features <- rownames(assay1)
+  samples <- colnames(assay1)
+
+  # validate feature metadata
+  # (manually remove vst.variable column because logicals are returned as ints)
   expect_equal(
-    assay2[[]][rownames(assay1), -5],
-    assay1[[]][rownames(assay1), -5]
+    assay2[[]][features, -5],
+    assay1[[]][features, -5]
+  )
+
+  # validate raw counts
+  expect_identical(
+    SeuratObject::GetAssayData(assay2, "counts")[features, samples],
+    SeuratObject::GetAssayData(assay1, "counts")[features, samples]
   )
 })
 
