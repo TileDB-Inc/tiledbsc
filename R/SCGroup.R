@@ -5,7 +5,8 @@
 #' - `X` ([`SCGroup_X`]): a labeled 2D sparse array
 #' - `obs` ([`SCGroup_Annotation`]): 1D labeled array containing column labels for `X`
 #' - `var` ([`SCGroup_Annotation`]): 1D labeled array containing row labels for `X`
-#' @importFrom SeuratObject GetAssayData CreateAssayObject CreateSeuratObject AddMetaData
+#' @importFrom SeuratObject CreateSeuratObject AddMetaData
+#' @importFrom SeuratObject GetAssayData CreateAssayObject SetAssayData
 #' @export
 SCGroup <- R6::R6Class(
   classname = "SCGroup",
@@ -100,14 +101,26 @@ SCGroup <- R6::R6Class(
       ...) {
 
       set_allocation_size_preference(9e8)
-      count_mat <- self$X$to_matrix()
 
+      assay_data <- dataframe_to_dgtmatrix(
+        self$X$to_dataframe(attrs = c("counts", "data")),
+        index_cols = c("feature", "barcode")
+      )
+
+      # Seurat doesn't allow us to supply data for both the `counts` and `data`
+      # slots simultaneously, so we have to update the `data` slot separately
       assay_obj <- SeuratObject::CreateAssayObject(
-        counts = count_mat,  # unnormalized/raw counts
-        # data = NULL, # prenormalized data (placeholder for now)
+        counts = assay_data$counts,
         min.cells = min_cells,
         min.features = min_features,
         check.matrix = check_matrix
+      )
+
+      # Unable to add a dgTMatrix to the data slot, so we have to convert
+      assay_obj <- SeuratObject::SetAssayData(
+        object = assay_obj,
+        slot = "data",
+        new.data = as(assay_data$data, "dgCMatrix")
       )
 
       # variable annotations
