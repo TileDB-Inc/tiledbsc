@@ -63,16 +63,25 @@ SCGroup_X <- R6::R6Class(
     },
 
     #' @description Retrieve the assay data from TileDB
+    #' @param attrs Specify one or more layer attributes to retrieve. If `NULL`,
+    #' all attributes are retrieved.
     #' @return A [`Matrix::dgTMatrix-class`].
-    to_dataframe = function() {
+    to_dataframe = function(attrs = NULL) {
       if (self$verbose) message("Reading assay data into memory")
-      self$tiledb_array(return_as = "data.frame")[]
+      self$tiledb_array(attrs = attrs, return_as = "data.frame")[]
     },
 
-    #' @description Retrieve the assay data from TileDB
+    #' @description Retrieve assay data from TileDB as a 2D sparse matrix.
+    #' @param attr The name of the attribute layer to retrieve. If `NULL`, the
+    #' first layer is returned.
     #' @return A [`Matrix::dgTMatrix-class`].
-    to_matrix = function() {
-      assay_data <- self$to_dataframe()
+    to_matrix = function(attr = NULL) {
+      if (is.null(attr)) {
+        attr <- self$attrnames()[1]
+      }
+      stopifnot(is_scalar_character(attr))
+
+      assay_data <- self$to_dataframe(attrs = attr)
       assay_dims <- vapply(assay_data[1:2], n_unique, FUN.VALUE = integer(1L))
       row_labels <- unique(assay_data[[1]])
       col_labels <- unique(assay_data[[2]])
