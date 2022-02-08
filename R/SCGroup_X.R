@@ -1,9 +1,13 @@
 #' Single-cell Group: X Matrix
 #'
-#' @details
+#' @description
 #' The `X` matrix component of an [`SCGroup`].
 #'
-#'
+#' A `SCGroup_X` object is a 2D sparse array with string dimensions `obs_id`
+#' and `var_id` that map to the dimensions of the `obs` and `var` arrays,
+#' respectively. An `X` matrix can contain or more "layers", which that all
+#' share the same labels/coordinates and non-empty cells.
+
 #' @importFrom Matrix sparseMatrix
 #' @export
 
