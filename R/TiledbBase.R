@@ -2,17 +2,17 @@
 #' @export
 TiledbBase <- R6::R6Class(
   classname = "TiledbBase",
-  #' @field array_uri The URI of the TileDB array
+  #' @field uri The URI of the TileDB array
   #' @field verbose Whether to print verbose output
   public = list(
-    array_uri = NULL,
+    uri = NULL,
     verbose = TRUE,
 
     #' @description Create a new TiledbBase object.
-    #' @param array_uri TileDB array URI.
+    #' @param uri URI for the TileDB array
     #' @param verbose Print status messages
-    initialize = function(array_uri, verbose = TRUE) {
-      self$array_uri <- array_uri
+    initialize = function(uri, verbose = TRUE) {
+      self$uri <- uri
       self$verbose <- verbose
       private$verify_array_exists()
       return(self)
@@ -23,7 +23,7 @@ TiledbBase <- R6::R6Class(
     #' @return A [`tiledb::tiledb_array`] object.
     tiledb_array = function(...) {
       args <- list(...)
-      args$uri <- self$array_uri
+      args$uri <- self$uri
       args$query_type <- "READ"
       do.call(tiledb::tiledb_array, args)
     },
@@ -113,8 +113,8 @@ TiledbBase <- R6::R6Class(
     # @description Check if the array exists.
     verify_array_exists = function() {
       stopifnot(
-        `No array found at array_uri` = tiledb::tiledb_vfs_is_dir(
-          self$array_uri
+        `No array found at URI` = tiledb::tiledb_vfs_is_dir(
+          self$uri
         )
       )
     }

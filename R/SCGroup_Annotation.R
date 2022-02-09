@@ -12,22 +12,22 @@ SCGroup_Annotation <- R6::R6Class(
   inherit = TiledbBase,
 
   public = list(
-    #' @field array_uri URI of the TileDB array
-    array_uri = NULL,
+    #' @field uri URI of the TileDB array
+    uri = NULL,
     #' @field verbose Print status messages
     verbose = TRUE,
 
     #' @description Create a new SCObject_Annotation object.
-    #' @param array_uri URI of the TileDB array
+    #' @param uri URI of the TileDB array
     #' @param verbose Print status messages
-    initialize = function(array_uri, verbose = TRUE) {
-      self$array_uri <- array_uri
+    initialize = function(uri, verbose = TRUE) {
+      self$uri <- uri
       self$verbose <- verbose
 
-      if (tiledb::tiledb_vfs_is_dir(array_uri)) {
-        message(glue::glue("Found existing array at '{array_uri}'"))
+      if (tiledb::tiledb_vfs_is_dir(uri)) {
+        message(glue::glue("Found existing array at '{uri}'"))
       } else {
-        message(glue::glue("No array currently exists at '{array_uri}'"))
+        message(glue::glue("No array currently exists at '{uri}'"))
       }
     },
 
@@ -107,17 +107,17 @@ SCGroup_Annotation <- R6::R6Class(
         ))
       )
 
-      if (self$verbose) message("Creating new array at ", self$array_uri)
-      tiledb::tiledb_array_create(uri = self$array_uri, schema = tdb_schema)
+      if (self$verbose) message("Creating new array at ", self$uri)
+      tiledb::tiledb_array_create(uri = self$uri, schema = tdb_schema)
     },
 
     # @description Ingest annotation data into the TileDB array.
     # @param x A [`data.frame`] containing annotation data
     ingest_data = function(x) {
       if (self$verbose) {
-        message("Ingesting annotation data into ", self$array_uri)
+        message("Ingesting annotation data into ", self$uri)
       }
-      tdb_array <- tiledb::tiledb_array(self$array_uri, query_type = "WRITE")
+      tdb_array <- tiledb::tiledb_array(self$uri, query_type = "WRITE")
       tdb_array[] <- cbind(index = rownames(x), x)
       tiledb::tiledb_array_close(tdb_array)
     }

@@ -13,20 +13,20 @@ teardown({
 test_that("Can't be instantiated without a URI", {
   expect_error(
     TiledbVisiumImage$new(),
-    "argument \"array_uri\" is missing, with no default"
+    "argument \"uri\" is missing, with no default"
   )
 })
 
 test_that("Can't be instantiated if the array doesn't exist", {
   expect_error(
-    TiledbVisiumImage$new(array_uri = "non-existent-array"),
-    "No array found at array_uri"
+    TiledbVisiumImage$new(uri = "non-existent-array"),
+    "No array found at URI"
   )
 })
 
 test_that("A TiledbVisiumImage object can be created", {
   tdb <<- TiledbVisiumImage$new(
-    array_uri = tdb_uri,
+    uri = tdb_uri,
     image_path = img_file,
     scale_factors_path = sf_file,
     image_positions_path = pos_file,

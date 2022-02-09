@@ -50,12 +50,12 @@ Convert10x_Spatial_Tiledb <- function(
   ImagetoTileDB(
     image_path = png_file,
     scale_factors_path = sf_file,
-    array_uri = img_array
+    uri = img_array
   )
 
   # Add image position data
   pos_array <- file.path(dest, tools::file_path_sans_ext(basename(pos_file)))
-  ImagePositionstoTileDB(file_path = pos_file, array_uri = pos_array)
+  ImagePositionstoTileDB(file_path = pos_file, uri = pos_array)
 
   return(dest)
   # scale_factors <- jsonlite::fromJSON(txt = sf_file)

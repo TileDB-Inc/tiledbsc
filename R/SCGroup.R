@@ -21,7 +21,7 @@ SCGroup <- R6::R6Class(
     X = NULL,
 
     #' @description Create a new SCGoup object. The existing array group is
-    #'   opened at the specified `array_uri` if one is present, otherwise a new
+    #'   opened at the specified array `uri` if one is present, otherwise a new
     #'   array group is created.
     #'
     #' @param uri URI of the TileDB group
@@ -37,17 +37,17 @@ SCGroup <- R6::R6Class(
       }
 
       self$obs <- SCGroup_Annotation$new(
-        array_uri = paste0(self$uri, "/obs"),
+        uri = paste0(self$uri, "/obs"),
         verbose = self$verbose
       )
 
       self$var <- SCGroup_Annotation$new(
-        array_uri = paste0(self$uri, "/var"),
+        uri = paste0(self$uri, "/var"),
         verbose = self$verbose
       )
 
       self$X <- SCGroup_X$new(
-        array_uri = paste0(self$uri, "/X"),
+        uri = paste0(self$uri, "/X"),
         verbose = self$verbose
       )
 

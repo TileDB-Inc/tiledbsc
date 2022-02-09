@@ -16,22 +16,22 @@ SCGroup_X <- R6::R6Class(
   inherit = TiledbBase,
 
   public = list(
-    #' @field array_uri URI of the TileDB array
-    array_uri = NULL,
+    #' @field uri URI of the TileDB array
+    uri = NULL,
     #' @field verbose Print status messages
     verbose = TRUE,
 
     #' @description Create a new SCObject_X object.
-    #' @param array_uri URI of the TileDB array
+    #' @param uri URI of the TileDB array
     #' @param verbose Print status messages
-    initialize = function(array_uri, verbose = TRUE) {
-      self$array_uri <- array_uri
+    initialize = function(uri, verbose = TRUE) {
+      self$uri <- uri
       self$verbose <- verbose
 
-      if (tiledb::tiledb_vfs_is_dir(array_uri)) {
-        message(glue::glue("Found existing array at '{array_uri}'"))
+      if (tiledb::tiledb_vfs_is_dir(uri)) {
+        message(glue::glue("Found existing array at '{uri}'"))
       } else {
-        message(glue::glue("No array currently exists at '{array_uri}'"))
+        message(glue::glue("No array currently exists at '{uri}'"))
       }
     },
 
@@ -115,10 +115,10 @@ SCGroup_X <- R6::R6Class(
       cell_order = "HILBERT",
       tile_order = "ROW_MAJOR",
       capacity = 10000) {
-      if (self$verbose) message("Creating new array at ", self$array_uri)
+      if (self$verbose) message("Creating new array at ", self$uri)
       tiledb::fromDataFrame(
         obj = x,
-        uri = self$array_uri,
+        uri = self$uri,
         col_index = index_cols,
         cell_order = cell_order,
         tile_order = tile_order,
@@ -135,10 +135,10 @@ SCGroup_X <- R6::R6Class(
         "Assay data must be a data.frame" = is.data.frame(x)
       )
 
-      if (self$verbose) message("Ingesting assay data into ", self$array_uri)
+      if (self$verbose) message("Ingesting assay data into ", self$uri)
       tiledb::fromDataFrame(
         obj = x,
-        uri = self$array_uri,
+        uri = self$uri,
         col_index = index_cols,
         mode = "append"
       )

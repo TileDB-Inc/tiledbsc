@@ -50,7 +50,7 @@ Create a group of TileDB arrays containing each of the various components includ
 
 ```{r}
 tdb_brain <- TiledbVisiumDataset$new(
-  array_uri = tdb_uri,
+  uri = tdb_uri,
   count_path = file.path(data_dir, "filtered_feature_bc_matrix.h5"),
   image_path = file.path(data_dir, "spatial/tissue_lowres_image.png"),
   scale_factors_path = file.path(data_dir, "spatial/scalefactors_json.json"),
@@ -109,5 +109,5 @@ sessionInfo()
 ```
 
 ```{r cleanup, include=FALSE, eval=params$cleanup}
-tiledb::tiledb_vfs_remove_dir(tdb_brain$array_uri)
+tiledb::tiledb_vfs_remove_dir(tdb_brain$uri)
 ```

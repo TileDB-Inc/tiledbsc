@@ -13,7 +13,7 @@ pbmc_small_rna <- Seurat::GetAssay(pbmc_small, assay = "RNA")
 test_that("SCGroup_X object can be created from a dgCMatrix", {
   x_uri <- file.path(tdb_uri, "X")
 
-  scgroup_x <- SCGroup_X$new(array_uri = x_uri, verbose = FALSE)
+  scgroup_x <- SCGroup_X$new(uri = x_uri, verbose = FALSE)
   expect_true(inherits(scgroup_x, "SCGroup_X"))
 
   mat <- Seurat::GetAssayData(pbmc_small_rna)

@@ -10,20 +10,20 @@ TiledbImage <- R6::R6Class(
   classname = "TiledbImage",
   inherit = TiledbBase,
 
-  #' @field array_uri URI of the TileDB array
+  #' @field uri URI of the TileDB array
   #' @field verbose Print status messages
   public = list(
-    array_uri = NULL,
+    uri = NULL,
     verbose = TRUE,
 
     #' @description Create a new TiledbImage object. A new array is created if
     #' an `image_path` is provided, otherwise an existing array is opened at
     #' the specified URI.
-    #' @param array_uri URI of the TileDB array
+    #' @param uri URI of the TileDB array
     #' @param image_path File path for the image to ingest.
     #' @param verbose Show progress updates.
-    initialize = function(array_uri, image_path = NULL, verbose = TRUE) {
-      self$array_uri <- array_uri
+    initialize = function(uri, image_path = NULL, verbose = TRUE) {
+      self$uri <- uri
       self$verbose <- verbose
 
       if (!is.null(image_path)) {
@@ -76,7 +76,7 @@ TiledbImage <- R6::R6Class(
 
       # expecting names to accomodate a 2D array with 3 attributes
       stopifnot(length(attrs) == 3)
-      if (self$verbose) message("Creating new array at ", self$array_uri)
+      if (self$verbose) message("Creating new array at ", self$uri)
 
       # TODO: Switch dims to UINT16 after bug retrieving UINT dims is fixed
       tdb_dims <- mapply(
@@ -111,7 +111,7 @@ TiledbImage <- R6::R6Class(
         offsets_filter_list = tiledb::tiledb_filter_list()
       )
 
-      tiledb::tiledb_array_create(self$array_uri, schema = tdb_schema)
+      tiledb::tiledb_array_create(self$uri, schema = tdb_schema)
     },
 
     # @description Ingest image data into the TileDB array.
@@ -128,8 +128,8 @@ TiledbImage <- R6::R6Class(
         simplify = FALSE
       )
 
-      if (self$verbose) message("Ingesting image into ", self$array_uri)
-      tdb_array <- tiledb::tiledb_array(self$array_uri, query_type = "WRITE")
+      if (self$verbose) message("Ingesting image into ", self$uri)
+      tdb_array <- tiledb::tiledb_array(self$uri, query_type = "WRITE")
       tdb_array[] <- image_list
 
       # store additional image info as metadata

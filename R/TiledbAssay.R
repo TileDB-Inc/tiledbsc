@@ -8,21 +8,21 @@ TiledbAssay <- R6::R6Class(
   classname = "TiledbAssay",
   inherit = TiledbBase,
 
-  #' @field array_uri URI of the TileDB array
+  #' @field uri URI of the TileDB array
   #' @field verbose Print status messages
   public = list(
-    array_uri = NULL,
+    uri = NULL,
     verbose = TRUE,
 
     #' @description Create a new TiledbAssay object. A new array is created if
     #' an `file_path` is provided, otherwise an existing array is opened at
     #' the specified URI.
-    #' @param array_uri URI of the TileDB array
+    #' @param uri URI of the TileDB array
     #' @param file_path File path for the assay data to ingest. Support is
     #' currently limited 10X HDF5 files
     #' @param verbose Print progress updates
-    initialize = function(array_uri, file_path = NULL, verbose = TRUE) {
-      self$array_uri <- array_uri
+    initialize = function(uri, file_path = NULL, verbose = TRUE) {
+      self$uri <- uri
       self$verbose <- verbose
 
       if (!is.null(file_path)) {
@@ -129,8 +129,8 @@ TiledbAssay <- R6::R6Class(
         offsets_filter_list = offset_filters
       )
 
-      if (self$verbose) message("Creating new array at ", self$array_uri)
-      tiledb::tiledb_array_create(uri = self$array_uri, schema = tdb_schema)
+      if (self$verbose) message("Creating new array at ", self$uri)
+      tiledb::tiledb_array_create(uri = self$uri, schema = tdb_schema)
     },
 
     # @description Ingest assay data into the TileDB array.
@@ -140,8 +140,8 @@ TiledbAssay <- R6::R6Class(
         "Assay data must be a dgTMatrix" = inherits(assay_data, "dgTMatrix")
       )
 
-      if (self$verbose) message("Ingesting assay data into ", self$array_uri)
-      tdb_array <- tiledb::tiledb_array(self$array_uri, query_type = "WRITE")
+      if (self$verbose) message("Ingesting assay data into ", self$uri)
+      tdb_array <- tiledb::tiledb_array(self$uri, query_type = "WRITE")
 
       tbl_data <- data.frame(
         feature = rownames(assay_data)[assay_data@i + 1],

@@ -78,7 +78,7 @@ sc_group_uris
 Create a new instance of `SCGroup_X` and specify its location.
 
 ```{r}
-scgroup_x <- SCGroup_X$new(array_uri = sc_group_uris[["X"]])
+scgroup_x <- SCGroup_X$new(uri = sc_group_uris[["X"]])
 ```
 
 Retrieve a count matrix from the Seruat `Assay` object and ingest it into the `X` array of the `sc_group`.
@@ -92,7 +92,7 @@ scgroup_x$from_matrix(
 Examine the contents of the newly created `X` array.
 
 ```{r}
-fs::dir_tree(scgroup_x$array_uri)
+fs::dir_tree(scgroup_x$uri)
 ```
 
 Data stored in the `X` array can then be loaded back into R in the same `dGTMatrix` format:
@@ -108,7 +108,7 @@ Both `var` and `obs` annotations are handled by the same `SCGroup_Annotation` cl
 Create one instance of `SCGroup_Annotation` for the variable annotations:
 
 ```{r}
-scgroup_var <- SCGroup_Annotation$new(array_uri = sc_group_uris[["var"]])
+scgroup_var <- SCGroup_Annotation$new(uri = sc_group_uris[["var"]])
 ```
 
 Ingest the `data.frame` containing the RNA assay's feature annotations into the `var` array.
@@ -122,7 +122,7 @@ scgroup_var$from_dataframe(
 Examine the contents of the newly created `var` array.
 
 ```{r}
-fs::dir_tree(scgroup_var$array_uri)
+fs::dir_tree(scgroup_var$uri)
 ```
 
 Retrieve the feature annotations from the `var` array:
@@ -137,7 +137,7 @@ scgroup_var$to_dataframe()[1:10, ]
 Create a second instance of `SCGroup_Annotation` for the observation annotations:
 
 ```{r}
-scgroup_obs <- SCGroup_Annotation$new(array_uri = sc_group_uris[["obs"]])
+scgroup_obs <- SCGroup_Annotation$new(uri = sc_group_uris[["obs"]])
 ```
 
 Ingest `data.frame` containing observation annotations into the `obs` component.
@@ -163,7 +163,7 @@ First, create the empty group:
 
 ```{r}
 scgroup_uri <- file.path(data_dir, "sc_group")
-scgroup <- SCGroup$new(array_uri = scgroup_uri)
+scgroup <- SCGroup$new(uri = scgroup_uri)
 
 fs::dir_tree(scgroup_uri)
 ```

@@ -2,7 +2,7 @@
 #'
 #' @param file_path Path to CSV file containing 10X visium positions
 #'
-ImagePositionstoTileDB <- function(file_path, array_uri, verbose = TRUE) {
+ImagePositionstoTileDB <- function(file_path, uri, verbose = TRUE) {
   stopifnot(file.exists(file_path))
   if (verbose) message("Loading image position data from ", file_path)
 
@@ -14,31 +14,31 @@ ImagePositionstoTileDB <- function(file_path, array_uri, verbose = TRUE) {
     row.names = NULL
   )
 
-  if (verbose) message("Ingesting image position data into ", array_uri)
+  if (verbose) message("Ingesting image position data into ", uri)
   tiledb::fromDataFrame(
     obj = tbl_positions,
-    uri = array_uri,
+    uri = uri,
     col_index = "barcodes",
     sparse = TRUE
   )
 }
 
-ImagetoTileDB <- function(image_path, array_uri, scale_factors_path = NULL, verbose = TRUE) {
+ImagetoTileDB <- function(image_path, uri, scale_factors_path = NULL, verbose = TRUE) {
 
   if (verbose) message("Loading image data from ", image_path)
 
   image_data <- png::readPNG(source = image_path, info = TRUE)
   dimnames(image_data) <- list(NULL, NULL, c("red", "green", "blue"))
 
-  create_image_array(array_uri, width = ncol(image_data), height = nrow(image_data))
-  ingest_image_data(array_uri, image_data)
+  create_image_array(uri, width = ncol(image_data), height = nrow(image_data))
+  ingest_image_data(uri, image_data)
 
   if (!is.null(scale_factors_path)) {
     if (verbose) message("Loading scaling factors from ", scale_factors_path)
     stopifnot(file.exists(scale_factors_path))
     scale_factors <- jsonlite::fromJSON(scale_factors_path)
 
-    tdb_image <- tiledb_array(array_uri, "WRITE")
+    tdb_image <- tiledb_array(uri, "WRITE")
     tiledb_array_open(tdb_image, "WRITE")
     mapply(
       FUN = tiledb::tiledb_put_metadata,
@@ -49,17 +49,17 @@ ImagetoTileDB <- function(image_path, array_uri, scale_factors_path = NULL, verb
     )
     tiledb_array_close(tdb_image)
   }
-  return(array_uri)
+  return(uri)
 }
 
 
 #' Create a TileDB array suitable for storing pixel data.
 #'
-#' @param array_uri Path to array to create
+#' @param uri Path to array to create
 #' @param width Number of columns in array domain
 #' @param height Number of rows in array domain
 
-create_image_array <- function(array_uri, width, height) {
+create_image_array <- function(uri, width, height) {
 
   # TODO: Switch dimensions to UINT16 after bug retrieving UINT dims is fixed
   tdb_dims <- mapply(
@@ -94,15 +94,15 @@ create_image_array <- function(array_uri, width, height) {
     offsets_filter_list = tiledb::tiledb_filter_list()
   )
 
-  tiledb::tiledb_array_create(array_uri, schema = tdb_schema)
+  tiledb::tiledb_array_create(uri, schema = tdb_schema)
 }
 
 
-ingest_image_data <- function(array_uri, image_data, verbose = TRUE) {
+ingest_image_data <- function(uri, image_data, verbose = TRUE) {
 
   stopifnot(
     "Image data must be an array" = is.array(image_data),
-    "Specified 'array_uri' array does not exist" = tiledb::tiledb_vfs_is_dir(array_uri)
+    "Specified 'uri' array does not exist" = tiledb::tiledb_vfs_is_dir(uri)
   )
 
   # convert array to a list of matrices suitable for ingestion
@@ -112,8 +112,8 @@ ingest_image_data <- function(array_uri, image_data, verbose = TRUE) {
     simplify = FALSE
   )
 
-  if (verbose) message("Ingesting image into ", array_uri)
-  tdb_array <- tiledb::tiledb_array(array_uri, query_type = "WRITE")
+  if (verbose) message("Ingesting image into ", uri)
+  tdb_array <- tiledb::tiledb_array(uri, query_type = "WRITE")
   tdb_array[] <- image_list
 
   # store additional image info as metadata

@@ -3,8 +3,8 @@ test_that("TiledbBase helper functions", {
   df <- as.data.frame(UCBAdmissions)
   uri <- test_array_from_dataframe(df, index_cols)
 
-  tdb <- TiledbBase$new(array_uri = uri)
-  expect_identical(tdb$array_uri, uri)
+  tdb <- TiledbBase$new(uri = uri)
+  expect_identical(tdb$uri, uri)
   expect_is(tdb$tiledb_array(), "tiledb_array")
   expect_identical(tdb$dimnames(), index_cols)
 

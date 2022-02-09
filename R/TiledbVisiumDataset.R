@@ -10,14 +10,14 @@ TiledbVisiumDataset <- R6::R6Class(
   classname = "TiledbVisiumDataset",
   inherit = TiledbVisiumImage,
 
-  #' @field array_uri URI of the TileDB array
+  #' @field uri URI of the TileDB array
   #' @field assay_array Access the TileDB array containing the assay data
   #' @field image_array Access the TileDB array containing the image data
   #' @field positions_array Access the TileDB array containing the image
   #' positions
   #' @field verbose Print status messages
   public = list(
-    array_uri = NULL,
+    uri = NULL,
     assay_array = NULL,
     image_array = NULL,
     positions_array = NULL,
@@ -25,26 +25,26 @@ TiledbVisiumDataset <- R6::R6Class(
 
     #' @description Create a new TiledbVisiumDataset object. A new array is created if `count_path` and `image_path` are provided, otherwise an existing array is opened at the specified URI.
     #' @param count_path File path for the h5 file to ingest.
-    #' @param array_uri URI of the TileDB group
+    #' @param uri URI of the TileDB group
     #' @param image_path File path for the image to ingest
     #' @param scale_factors_path File path for the scale factors
     #' @param image_positions_path File path for the image positions
     #' @param verbose Print progress updates
     initialize = function(
-      array_uri,
+      uri,
       count_path = NULL,
       image_path = NULL,
       scale_factors_path = NULL,
       image_positions_path = NULL,
       verbose = TRUE) {
 
-      self$array_uri <- array_uri
+      self$uri <- uri
       self$verbose <- verbose
 
       # group sub-arrays
-      assay_array_uri <- paste0(array_uri, "/assay")
-      image_array_uri <- paste0(array_uri, "/image")
-      positions_array_uri <- paste0(array_uri, "/image_positions")
+      assay_array_uri <- paste0(uri, "/assay")
+      image_array_uri <- paste0(uri, "/image")
+      positions_array_uri <- paste0(uri, "/image_positions")
 
       if (!is.null(image_path) && !is.null(count_path)) {
         stopifnot(
@@ -55,18 +55,18 @@ TiledbVisiumDataset <- R6::R6Class(
         )
 
         # create array group
-        tiledb::tiledb_group_create(array_uri)
+        tiledb::tiledb_group_create(uri)
 
         # build the count array
         self$assay_array <- TiledbAssay$new(
-          array_uri = assay_array_uri,
+          uri = assay_array_uri,
           file_path = count_path,
           verbose = verbose
         )
 
         # build the image array
         self$image_array <- TiledbImage$new(
-          array_uri = image_array_uri,
+          uri = image_array_uri,
           image_path = image_path,
           verbose = verbose
         )
@@ -79,7 +79,7 @@ TiledbVisiumDataset <- R6::R6Class(
 
         # build the image positions array
         self$positions_array <- TiledbImagePositions$new(
-          array_uri = positions_array_uri,
+          uri = positions_array_uri,
           image_positions_path = image_positions_path,
           verbose = verbose
         )
