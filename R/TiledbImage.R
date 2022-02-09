@@ -74,7 +74,7 @@ TiledbImage <- R6::R6Class(
     # @param attrs Names of the TileDB attributes.
     create_empty_array = function(height, width, attrs) {
 
-      # expecting names to accomodate a 2D array with 3 attributes
+      # expecting names to accommodate a 2D array with 3 attributes
       stopifnot(length(attrs) == 3)
       if (self$verbose) message("Creating new array at ", self$uri)
 
@@ -124,7 +124,7 @@ TiledbImage <- R6::R6Class(
       # convert array to a list of matrices suitable for ingestion
       image_list <- sapply(
         X = dimnames(image_data)[[3]],
-        FUN = function(x) image_data[,,x],
+        FUN = function(x) image_data[, , x],
         simplify = FALSE
       )
 
@@ -155,4 +155,3 @@ TiledbImage <- R6::R6Class(
     }
   )
 )
-

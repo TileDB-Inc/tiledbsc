@@ -134,7 +134,7 @@ TiledbAssay <- R6::R6Class(
     },
 
     # @description Ingest assay data into the TileDB array.
-    # @param assay_data A [`Matrix::dgTMatrix-class`] containg the assay data.
+    # @param assay_data A [`Matrix::dgTMatrix-class`] containing the assay data.
     ingest_data = function(assay_data) {
       stopifnot(
         "Assay data must be a dgTMatrix" = inherits(assay_data, "dgTMatrix")
@@ -165,4 +165,3 @@ TiledbAssay <- R6::R6Class(
     }
   )
 )
-

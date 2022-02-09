@@ -13,7 +13,7 @@ teardown({
 })
 
 test_that("A TiledbVisiumDataset object can be created", {
-  tdb <<- TiledbVisiumDataset$new(
+  tdb <- TiledbVisiumDataset$new(
     uri = tdb_uri,
     count_path = h5_file,
     image_path = img_file,
@@ -25,16 +25,16 @@ test_that("A TiledbVisiumDataset object can be created", {
 })
 
 test_that("TiledbVisiumDataset can be instantiated with existing array", {
-  tdb_img <- TiledbVisiumDataset$new(uri = tdb_uri)
+  tdb_img <<- TiledbVisiumDataset$new(uri = tdb_uri)
   expect_true(inherits(tdb_img, "TiledbVisiumDataset"))
 })
 
 test_that("A Seurat VisiumV1 object can be created from the object", {
-  sv1 <- tdb$to_seurat_visium()
+  sv1 <- tdb_img$to_seurat_visium()
   expect_s4_class(sv1, "VisiumV1")
 })
 
 test_that("A Seurat object can be created from the object", {
-  sobj <- tdb$to_seurat_object()
+  sobj <- tdb_img$to_seurat_object()
   expect_s4_class(sobj, "Seurat")
 })

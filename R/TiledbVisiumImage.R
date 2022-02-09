@@ -3,6 +3,7 @@
 #' Creates a TileDB group containing two TileDB arrays: one for the image data,
 #' and one for the image positions.
 #'
+#' @importFrom tools from_ext
 #' @importFrom Seurat scalefactors
 #' @importClassesFrom Seurat VisiumV1
 #' @export
@@ -94,30 +95,31 @@ TiledbVisiumImage <- R6::R6Class(
     to_seurat_visium = function(filter_matrix = TRUE) {
 
       image <- self$image_array$to_array()
-      scale.factors <- self$image_array$get_metadata(prefix = "scale_factors_")
-      tissue.positions <- self$positions_array$to_dataframe()
+      scale_factors <- self$image_array$get_metadata(prefix = "scale_factors_")
+      tissue_positions <- self$positions_array$to_dataframe()
 
       if (filter_matrix) {
-        tissue.positions <- tissue.positions[which(x = tissue.positions$tissue == 1), , drop = FALSE]
+        filtered_rows <- tissue_positions$is.tissue == FALSE
+        tissue_positions <- tissue_positions[filtered_rows, , drop = FALSE]
       }
 
-      unnormalized.radius <- prod(
-        scale.factors$scale_factors_fiducial_diameter_fullres,
-        scale.factors$scale_factors_tissue_lowres_scalef
+      unnormalized_radius <- prod(
+        scale_factors$scale_factors_fiducial_diameter_fullres,
+        scale_factors$scale_factors_tissue_lowres_scalef
       )
 
-      spot.radius <-  unnormalized.radius / max(dim(x = image))
+      spot_radius <-  unnormalized_radius / max(dim(x = image))
       return(new(
-        Class = 'VisiumV1',
+        Class = "VisiumV1",
         image = image,
         scale.factors = Seurat::scalefactors(
-          spot = scale.factors$scale_factors_tissue_hires_scalef,
-          fiducial = scale.factors$scale_factors_fiducial_diameter_fullres,
-          hires = scale.factors$scale_factors_tissue_hires_scalef,
-          lowres = scale.factors$scale_factors_tissue_lowres_scalef
+          spot = scale_factors$scale_factors_tissue_hires_scalef,
+          fiducial = scale_factors$scale_factors_fiducial_diameter_fullres,
+          hires = scale_factors$scale_factors_tissue_hires_scalef,
+          lowres = scale_factors$scale_factors_tissue_lowres_scalef
         ),
-        coordinates = tissue.positions,
-        spot.radius = spot.radius
+        coordinates = tissue_positions,
+        spot.radius = spot_radius
       ))
     }
   ),
@@ -134,4 +136,3 @@ TiledbVisiumImage <- R6::R6Class(
     }
   )
 )
-

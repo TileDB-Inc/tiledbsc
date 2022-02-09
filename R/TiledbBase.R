@@ -54,7 +54,7 @@ TiledbBase <- R6::R6Class(
     #' @return NULL
     add_metadata = function(metadata, prefix = "") {
       stopifnot(
-        "Metadata must be a named list" = is.list(metadata) && is_named(metadata)
+        "Metadata must be a named list" = is_named_list(metadata)
       )
       arr <- self$tiledb_array()
       tiledb::tiledb_array_open(arr, "WRITE")
@@ -90,13 +90,22 @@ TiledbBase <- R6::R6Class(
     #' @description Retrieve dimension names
     #' @return A character vector with the array's dimension names
     dimnames = function() {
-      vapply(self$dimensions(), tiledb::name, FUN.VALUE = vector("character", 1L))
+      vapply(
+        self$dimensions(),
+        FUN = tiledb::name,
+        FUN.VALUE = vector("character", 1L)
+      )
     },
 
     #' @description Retrieve attribute names
     #' @return A character vector with the array's attribute names
     attrnames = function() {
-      vapply(self$attributes(), tiledb::name, FUN.VALUE = vector("character", 1L), USE.NAMES = FALSE)
+      vapply(
+        self$attributes(),
+        FUN = tiledb::name,
+        FUN.VALUE = vector("character", 1L),
+        USE.NAMES = FALSE
+      )
     }
   ),
 

@@ -123,4 +123,3 @@ SCGroup_Annotation <- R6::R6Class(
     }
   )
 )
-

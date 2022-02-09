@@ -27,9 +27,8 @@
     tiledb::tiledb_attr(
       name = name,
       type = dtype,
-      ncells = ifelse(dtype %in% c("CHAR","ASCII"), NA_integer_, 1L),
+      ncells = ifelse(dtype %in% c("CHAR", "ASCII"), NA_integer_, 1L),
       filter_list = tiledb::tiledb_filter_list(attr_filter),
       nullable = any(is.na(value))
     )
   }
-

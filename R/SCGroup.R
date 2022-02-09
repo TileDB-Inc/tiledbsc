@@ -1,10 +1,11 @@
 #' Single-cell Group
 #'
 #' @description
-#' Class for representing a group of TileDB arrays that consitute an `sc_group`, which includes:
+#' Class for representing a group of TileDB arrays that consitute an `sc_group`,
+#' which includes:
 #' - `X` ([`SCGroup_X`]): a labeled 2D sparse array
-#' - `obs` ([`SCGroup_Annotation`]): 1D labeled array containing column labels for `X`
-#' - `var` ([`SCGroup_Annotation`]): 1D labeled array containing row labels for `X`
+#' - `obs` ([`SCGroup_Annotation`]): 1D labeled array with column labels for `X`
+#' - `var` ([`SCGroup_Annotation`]): 1D labeled array with row labels for `X`
 #' @importFrom SeuratObject CreateSeuratObject AddMetaData
 #' @importFrom SeuratObject GetAssayData CreateAssayObject SetAssayData
 #' @export
@@ -20,7 +21,7 @@ SCGroup <- R6::R6Class(
     #' @field X [`SCGroup_X`] object containing assay data
     X = NULL,
 
-    #' @description Create a new SCGoup object. The existing array group is
+    #' @description Create a new SCGroup object. The existing array group is
     #'   opened at the specified array `uri` if one is present, otherwise a new
     #'   array group is created.
     #'
@@ -100,7 +101,7 @@ SCGroup <- R6::R6Class(
       check_matrix = FALSE,
       ...) {
 
-      set_allocation_size_preference(9e8)
+      tiledb::set_allocation_size_preference(9e8)
 
       assay_data <- dataframe_to_dgtmatrix(
         self$X$to_dataframe(attrs = c("counts", "data")),

@@ -145,4 +145,3 @@ SCGroup_X <- R6::R6Class(
     }
   )
 )
-

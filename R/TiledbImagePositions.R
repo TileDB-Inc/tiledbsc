@@ -11,11 +11,12 @@ TiledbImagePositions <- R6::R6Class(
     uri = NULL,
     verbose = TRUE,
 
-    #' @description Create a new TiledbImagePositions object. A new array is created if
-    #' an `image_positions_path` is provided, otherwise an existing array is opened at
-    #' the specified URI.
+    #' @description Create a new TiledbImagePositions object. A new array is
+    #' created if an `image_positions_path` is provided, otherwise an existing
+    #' array is opened at the specified URI.
     #' @param uri URI of the TileDB array
-    #' @param image_positions_path File path for the image positions table to ingest.
+    #' @param image_positions_path File path for the image positions table to
+    #' ingest.
     #' @param verbose Print progress updates
     initialize = function(uri, image_positions_path = NULL, verbose = TRUE) {
       self$uri <- uri
@@ -60,7 +61,13 @@ TiledbImagePositions <- R6::R6Class(
 
       read.csv(
         file = image_positions_path,
-        col.names = c("barcodes", "tissue", "row", "col", "imagerow", "imagecol"),
+        col.names = c(
+          "barcodes",
+          "tissue",
+          "row",
+          "col",
+          "imagerow",
+          "imagecol"),
         header = FALSE,
         as.is = TRUE,
         row.names = NULL
@@ -68,4 +75,3 @@ TiledbImagePositions <- R6::R6Class(
     }
   )
 )
-
