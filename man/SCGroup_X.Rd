@@ -17,7 +17,7 @@ share the same labels/coordinates and non-empty cells.
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
-\item{\code{array_uri}}{URI of the TileDB array}
+\item{\code{uri}}{URI of the TileDB array}
 
 \item{\code{verbose}}{Print status messages}
 }
@@ -54,13 +54,13 @@ share the same labels/coordinates and non-empty cells.
 \subsection{Method \code{new()}}{
 Create a new SCObject_X object.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{SCGroup_X$new(array_uri, verbose = TRUE)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{SCGroup_X$new(uri, verbose = TRUE)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{array_uri}}{URI of the TileDB array}
+\item{\code{uri}}{URI of the TileDB array}
 
 \item{\code{verbose}}{Print status messages}
 }

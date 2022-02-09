@@ -18,7 +18,7 @@ data, one for the image positions, and one for the count data.
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
-\item{\code{array_uri}}{URI of the TileDB array}
+\item{\code{uri}}{URI of the TileDB array}
 
 \item{\code{assay_array}}{Access the TileDB array containing the assay data}
 
@@ -53,7 +53,7 @@ positions}
 Create a new TiledbVisiumDataset object. A new array is created if \code{count_path} and \code{image_path} are provided, otherwise an existing array is opened at the specified URI.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{TiledbVisiumDataset$new(
-  array_uri,
+  uri,
   count_path = NULL,
   image_path = NULL,
   scale_factors_path = NULL,
@@ -65,7 +65,7 @@ Create a new TiledbVisiumDataset object. A new array is created if \code{count_p
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{array_uri}}{URI of the TileDB group}
+\item{\code{uri}}{URI of the TileDB group}
 
 \item{\code{count_path}}{File path for the h5 file to ingest.}
 

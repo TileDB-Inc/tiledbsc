@@ -15,7 +15,7 @@ and one for the image positions.
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
-\item{\code{array_uri}}{URI of the TileDB array}
+\item{\code{uri}}{URI of the TileDB array}
 
 \item{\code{image_array}}{URI of the TileDB array image data}
 
@@ -42,7 +42,7 @@ an \code{image_path} is provided, otherwise an existing array is opened at
 the specified URI.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{TiledbVisiumImage$new(
-  array_uri,
+  uri,
   image_path = NULL,
   scale_factors_path = NULL,
   image_positions_path = NULL,
@@ -53,7 +53,7 @@ the specified URI.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{array_uri}}{URI of the TileDB group}
+\item{\code{uri}}{URI of the TileDB group}
 
 \item{\code{image_path}}{File path for the image to ingest}
 

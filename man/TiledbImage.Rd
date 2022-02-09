@@ -17,7 +17,7 @@ An object to store and manipulate images in TileDB.
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
-\item{\code{array_uri}}{URI of the TileDB array}
+\item{\code{uri}}{URI of the TileDB array}
 
 \item{\code{verbose}}{Print status messages}
 }
@@ -53,13 +53,13 @@ Create a new TiledbImage object. A new array is created if
 an \code{image_path} is provided, otherwise an existing array is opened at
 the specified URI.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{TiledbImage$new(array_uri, image_path = NULL, verbose = TRUE)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{TiledbImage$new(uri, image_path = NULL, verbose = TRUE)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{array_uri}}{URI of the TileDB array}
+\item{\code{uri}}{URI of the TileDB array}
 
 \item{\code{image_path}}{File path for the image to ingest.}
 

@@ -47,7 +47,7 @@ Class for representing a group of TileDB arrays that consitute an \code{sc_group
 \if{latex}{\out{\hypertarget{method-new}{}}}
 \subsection{Method \code{new()}}{
 Create a new SCGoup object. The existing array group is
-opened at the specified \code{array_uri} if one is present, otherwise a new
+opened at the specified array \code{uri} if one is present, otherwise a new
 array group is created.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{SCGroup$new(uri, verbose = TRUE)}\if{html}{\out{</div>}}

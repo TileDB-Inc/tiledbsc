@@ -4,7 +4,7 @@
 \alias{ImagePositionstoTileDB}
 \title{Create a TileDB array for Visium Image Positions}
 \usage{
-ImagePositionstoTileDB(file_path, array_uri, verbose = TRUE)
+ImagePositionstoTileDB(file_path, uri, verbose = TRUE)
 }
 \arguments{
 \item{file_path}{Path to CSV file containing 10X visium positions}

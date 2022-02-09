@@ -4,10 +4,10 @@
 \alias{create_image_array}
 \title{Create a TileDB array suitable for storing pixel data.}
 \usage{
-create_image_array(array_uri, width, height)
+create_image_array(uri, width, height)
 }
 \arguments{
-\item{array_uri}{Path to array to create}
+\item{uri}{Path to array to create}
 
 \item{width}{Number of columns in array domain}
 
