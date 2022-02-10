@@ -1,5 +1,13 @@
-# TileDB Single Cell
+# tiledbsc
 
-This is an experimental project to support conversion to and from 10x and seurat disk formats into a native TileDB array format.
+This is an experimental R implementation of the proposed [Unified Single-cell Data Model](https://github.com/single-cell-data/matrix-api).
+## Installation
 
-An example vignette can be found in [vignettes/hdf5-10x-data.Rmd](vignettes/hdf5-10x-data.Rmd).
+You can install the development version of *tiledbsc* from [GitHub](https://github.com/) with:
+
+``` r
+# install.packages("remotes")
+# currently requires the development version of TileDB-R
+remotes::install_github("tiledb-inc/tiledb-r")
+remotes::install_github("tiledb-inc/tiledbsc")
+```
