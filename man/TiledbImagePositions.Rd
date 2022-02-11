@@ -46,9 +46,9 @@ TileDB Image Position Data
 \if{html}{\out{<a id="method-new"></a>}}
 \if{latex}{\out{\hypertarget{method-new}{}}}
 \subsection{Method \code{new()}}{
-Create a new TiledbImagePositions object. A new array is created if
-an \code{image_positions_path} is provided, otherwise an existing array is opened at
-the specified URI.
+Create a new TiledbImagePositions object. A new array is
+created if an \code{image_positions_path} is provided, otherwise an existing
+array is opened at the specified URI.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{TiledbImagePositions$new(uri, image_positions_path = NULL, verbose = TRUE)}\if{html}{\out{</div>}}
 }
@@ -58,7 +58,8 @@ the specified URI.
 \describe{
 \item{\code{uri}}{URI of the TileDB array}
 
-\item{\code{image_positions_path}}{File path for the image positions table to ingest.}
+\item{\code{image_positions_path}}{File path for the image positions table to
+ingest.}
 
 \item{\code{verbose}}{Print progress updates}
 }

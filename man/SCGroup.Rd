@@ -4,11 +4,12 @@
 \alias{SCGroup}
 \title{Single-cell Group}
 \description{
-Class for representing a group of TileDB arrays that consitute an \code{sc_group}, which includes:
+Class for representing a group of TileDB arrays that consitute an \code{sc_group},
+which includes:
 \itemize{
 \item \code{X} (\code{\link{SCGroup_X}}): a labeled 2D sparse array
-\item \code{obs} (\code{\link{SCGroup_Annotation}}): 1D labeled array containing column labels for \code{X}
-\item \code{var} (\code{\link{SCGroup_Annotation}}): 1D labeled array containing row labels for \code{X}
+\item \code{obs} (\code{\link{SCGroup_Annotation}}): 1D labeled array with column labels for \code{X}
+\item \code{var} (\code{\link{SCGroup_Annotation}}): 1D labeled array with row labels for \code{X}
 }
 }
 \section{Super class}{
@@ -46,7 +47,7 @@ Class for representing a group of TileDB arrays that consitute an \code{sc_group
 \if{html}{\out{<a id="method-new"></a>}}
 \if{latex}{\out{\hypertarget{method-new}{}}}
 \subsection{Method \code{new()}}{
-Create a new SCGoup object. The existing array group is
+Create a new SCGroup object. The existing array group is
 opened at the specified array \code{uri} if one is present, otherwise a new
 array group is created.
 \subsection{Usage}{
