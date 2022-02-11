@@ -9,16 +9,21 @@
 TiledbImage <- R6::R6Class(
   classname = "TiledbImage",
   inherit = TiledbBase,
+
+  #' @field uri URI of the TileDB array
+  #' @field verbose Print status messages
   public = list(
-    array_uri = NULL,
+    uri = NULL,
     verbose = TRUE,
 
     #' @description Create a new TiledbImage object. A new array is created if
     #' an `image_path` is provided, otherwise an existing array is opened at
     #' the specified URI.
+    #' @param uri URI of the TileDB array
     #' @param image_path File path for the image to ingest.
-    initialize = function(array_uri, image_path = NULL, verbose = TRUE) {
-      self$array_uri <- array_uri
+    #' @param verbose Show progress updates.
+    initialize = function(uri, image_path = NULL, verbose = TRUE) {
+      self$uri <- uri
       self$verbose <- verbose
 
       if (!is.null(image_path)) {
@@ -52,7 +57,7 @@ TiledbImage <- R6::R6Class(
   ),
 
   private = list(
-    #' @description Top-level function to create and populate the new array.
+    # @description Top-level function to create and populate the new array.
     build_array = function(image_path) {
       image_data <- private$read_image_data(image_path)
       image_array <- private$create_empty_array(
@@ -63,15 +68,15 @@ TiledbImage <- R6::R6Class(
       private$ingest_data(image_data)
     },
 
-    #' @description Create an empty TileDB array suitable for storing pixel
-    #' data.
-    #' @param height,width Height and width of the image channels.
-    #' @param attrs Names of the TileDB attributes.
+    # @description Create an empty TileDB array suitable for storing pixel
+    # data.
+    # @param height,width Height and width of the image channels.
+    # @param attrs Names of the TileDB attributes.
     create_empty_array = function(height, width, attrs) {
 
-      # expecting names to accomodate a 2D array with 3 attributes
+      # expecting names to accommodate a 2D array with 3 attributes
       stopifnot(length(attrs) == 3)
-      if (self$verbose) message("Creating new array at ", self$array_uri)
+      if (self$verbose) message("Creating new array at ", self$uri)
 
       # TODO: Switch dims to UINT16 after bug retrieving UINT dims is fixed
       tdb_dims <- mapply(
@@ -106,11 +111,11 @@ TiledbImage <- R6::R6Class(
         offsets_filter_list = tiledb::tiledb_filter_list()
       )
 
-      tiledb::tiledb_array_create(self$array_uri, schema = tdb_schema)
+      tiledb::tiledb_array_create(self$uri, schema = tdb_schema)
     },
 
-    #' @description Ingest image data into the TileDB array.
-    #' @param image_data 3D array containing the image pixel data.
+    # @description Ingest image data into the TileDB array.
+    # @param image_data 3D array containing the image pixel data.
     ingest_data = function(image_data) {
       stopifnot(
         "Image data must be an array" = is.array(image_data)
@@ -119,21 +124,21 @@ TiledbImage <- R6::R6Class(
       # convert array to a list of matrices suitable for ingestion
       image_list <- sapply(
         X = dimnames(image_data)[[3]],
-        FUN = function(x) image_data[,,x],
+        FUN = function(x) image_data[, , x],
         simplify = FALSE
       )
 
-      if (self$verbose) message("Ingesting image into ", self$array_uri)
-      tdb_array <- tiledb::tiledb_array(self$array_uri, query_type = "WRITE")
+      if (self$verbose) message("Ingesting image into ", self$uri)
+      tdb_array <- tiledb::tiledb_array(self$uri, query_type = "WRITE")
       tdb_array[] <- image_list
 
       # store additional image info as metadata
       self$add_metadata(metadata = attr(image_data, which = "info"))
     },
 
-    #' @description Read image data from a file and return a 3D array with
-    #' proper names assigned to the Z dimension, and any additional metadata
-    #' stored as attributes.
+    # @description Read image data from a file and return a 3D array with
+    # proper names assigned to the Z dimension, and any additional metadata
+    # stored as attributes.
     read_image_data = function(image_path) {
 
       if (self$verbose) message("Loading image data from ", image_path)
@@ -150,4 +155,3 @@ TiledbImage <- R6::R6Class(
     }
   )
 )
-

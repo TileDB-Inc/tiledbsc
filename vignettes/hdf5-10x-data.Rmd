@@ -40,8 +40,9 @@ download.file(h5_url, dest = h5_file)
 Use `tiledbsc`'s conversion function to create a TileDB array containing the same data.
 
 ```{r}
-tdb_10x_uri <- H510xToTiledb(source = h5_file, overwrite = TRUE, tile_order = "COL_MAJOR")
-tdb_10x_uri
+tdb_10x_uri <- tools::file_path_sans_ext(h5_file)
+
+tdb_assay <- TiledbAssay$new(uri = tdb_10x_uri, file_path = h5_file)
 ```
 
 This created a new directory in your current working directory named `r tdb_10x_uri`, which contains the TileDB array.
@@ -57,7 +58,7 @@ We can use the tiledb package to slice the array without loading the entire data
 Open the array:
 
 ```{r}
-tdb_array <- tiledb_array(tdb_10x_uri, return_as = "tibble")
+tdb_array <- tdb_assay$tiledb_array(return_as = "tibble")
 ```
 
 Use standard R indexing to slice by feature
@@ -90,7 +91,7 @@ boxplot(data ~ feature, data = tbl_counts, col = "skyblue", pch = 16)
 In order to use *Seurat* to analyze 10x count data stored with TileDB you'll first need to read it into into memory.
 
 ```{r}
-count_mat <- Read10x_tiledb(tdb_10x_uri, verbose = TRUE)
+count_mat <- tdb_assay$to_matrix()
 head(count_mat)
 ```
 

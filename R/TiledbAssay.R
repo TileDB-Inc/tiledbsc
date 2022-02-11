@@ -2,23 +2,27 @@
 #'
 #' An object to store and manipulate feature/observation matrices in TileDB.
 #' @importFrom Matrix sparseMatrix
-#' @importClassFrom Matrix dGTMatrix
 #' @export
 
 TiledbAssay <- R6::R6Class(
   classname = "TiledbAssay",
   inherit = TiledbBase,
+
+  #' @field uri URI of the TileDB array
+  #' @field verbose Print status messages
   public = list(
-    array_uri = NULL,
+    uri = NULL,
     verbose = TRUE,
 
     #' @description Create a new TiledbAssay object. A new array is created if
     #' an `file_path` is provided, otherwise an existing array is opened at
     #' the specified URI.
+    #' @param uri URI of the TileDB array
     #' @param file_path File path for the assay data to ingest. Support is
-    #' currently limited 10X HDF5 files.
-    initialize = function(array_uri, file_path = NULL, verbose = TRUE) {
-      self$array_uri <- array_uri
+    #' currently limited 10X HDF5 files
+    #' @param verbose Print progress updates
+    initialize = function(uri, file_path = NULL, verbose = TRUE) {
+      self$uri <- uri
       self$verbose <- verbose
 
       if (!is.null(file_path)) {
@@ -30,14 +34,14 @@ TiledbAssay <- R6::R6Class(
     },
 
     #' @description Retrieve the assay data from TileDB
-    #' @return A [`Matrix::dgTMatrix`].
+    #' @return A [`Matrix::dgTMatrix-class`].
     to_dataframe = function() {
       if (self$verbose) message("Reading assay data into memory")
       self$tiledb_array(return_as = "data.frame")[]
     },
 
     #' @description Retrieve the assay data from TileDB
-    #' @return A [`Matrix::dgTMatrix`].
+    #' @return A [`Matrix::dgTMatrix-class`].
     to_matrix = function() {
       assay_data <- self$to_dataframe()
       assay_dims <- vapply(assay_data[1:2], n_unique, FUN.VALUE = integer(1L))
@@ -56,23 +60,23 @@ TiledbAssay <- R6::R6Class(
   ),
 
   private = list(
-    #' @description Top-level function to create and populate the new array.
+    # @description Top-level function to create and populate the new array.
     build_array = function(file_path) {
       assay_data <- private$read_assay_data(file_path)
       private$create_empty_array(attr_type = typeof(assay_data@x))
       private$ingest_data(assay_data)
     },
 
-    #' @description Create an empty TileDB array suitable for storing pixel
-    #' data.
-    #' @param attr_type Should the data attribute type be 'integer' or
-    #' 'double'.
-    #' @param cell_order,tile_order Configure the TileDB array's global cell
-    #' ordering by specifying the tile (default: `"HILBERT"`) and cell
-    #' (default: `"ROW_MAJOR"`) ordering. See
-    #' [the docs](https://docs.tiledb.com/main/basic-concepts/terminology) for
-    #' more information.
-    #' @param capacity Capacity of sparse fragments (default: 10000)
+    # @description Create an empty TileDB array suitable for storing pixel
+    # data.
+    # @param attr_type Should the data attribute type be 'integer' or
+    # 'double'.
+    # @param cell_order,tile_order Configure the TileDB array's global cell
+    # ordering by specifying the tile (default: `"HILBERT"`) and cell
+    # (default: `"ROW_MAJOR"`) ordering. See
+    # [the docs](https://docs.tiledb.com/main/basic-concepts/terminology) for
+    # more information.
+    # @param capacity Capacity of sparse fragments (default: 10000)
     create_empty_array = function(
       attr_type = "integer",
       cell_order = "HILBERT",
@@ -125,19 +129,19 @@ TiledbAssay <- R6::R6Class(
         offsets_filter_list = offset_filters
       )
 
-      if (self$verbose) message("Creating new array at ", self$array_uri)
-      tiledb::tiledb_array_create(uri = self$array_uri, schema = tdb_schema)
+      if (self$verbose) message("Creating new array at ", self$uri)
+      tiledb::tiledb_array_create(uri = self$uri, schema = tdb_schema)
     },
 
-    #' @description Ingest assay data into the TileDB array.
-    #' @param assay_data A [`Matrix::dgTMatrix`] containg the assay data.
+    # @description Ingest assay data into the TileDB array.
+    # @param assay_data A [`Matrix::dgTMatrix-class`] containing the assay data.
     ingest_data = function(assay_data) {
       stopifnot(
         "Assay data must be a dgTMatrix" = inherits(assay_data, "dgTMatrix")
       )
 
-      if (self$verbose) message("Ingesting assay data into ", self$array_uri)
-      tdb_array <- tiledb::tiledb_array(self$array_uri, query_type = "WRITE")
+      if (self$verbose) message("Ingesting assay data into ", self$uri)
+      tdb_array <- tiledb::tiledb_array(self$uri, query_type = "WRITE")
 
       tbl_data <- data.frame(
         feature = rownames(assay_data)[assay_data@i + 1],
@@ -148,8 +152,8 @@ TiledbAssay <- R6::R6Class(
       tdb_array[] <- tbl_data
     },
 
-    #' @description Read assay data from a 10X HDF5 file.
-    #' @return A [`Matrix::dgTMatrix`].
+    # @description Read assay data from a 10X HDF5 file.
+    # @return A [`Matrix::dgTMatrix-class`].
     read_assay_data = function(file_path) {
 
       if (self$verbose) message("Loading assay data from ", file_path)
@@ -161,4 +165,3 @@ TiledbAssay <- R6::R6Class(
     }
   )
 )
-

@@ -1,15 +1,18 @@
 #' TileDB Array Base Class
-#' @noRd
+#' @export
 TiledbBase <- R6::R6Class(
   classname = "TiledbBase",
+  #' @field uri The URI of the TileDB array
+  #' @field verbose Whether to print verbose output
   public = list(
-    array_uri = NULL,
+    uri = NULL,
     verbose = TRUE,
 
     #' @description Create a new TiledbBase object.
-    #' @param image_path File path for the image to ingest.
-    initialize = function(array_uri, verbose = TRUE) {
-      self$array_uri <- array_uri
+    #' @param uri URI for the TileDB array
+    #' @param verbose Print status messages
+    initialize = function(uri, verbose = TRUE) {
+      self$uri <- uri
       self$verbose <- verbose
       private$verify_array_exists()
       return(self)
@@ -20,7 +23,7 @@ TiledbBase <- R6::R6Class(
     #' @return A [`tiledb::tiledb_array`] object.
     tiledb_array = function(...) {
       args <- list(...)
-      args$uri <- self$array_uri
+      args$uri <- self$uri
       args$query_type <- "READ"
       do.call(tiledb::tiledb_array, args)
     },
@@ -45,14 +48,13 @@ TiledbBase <- R6::R6Class(
       return(metadata)
     },
 
-    #' @description Add specify list of metadata to the specified TileDB array.
-    #' @param arr A [`tiledb_array`] object.
+    #' @description Add list of metadata to the specified TileDB array.
     #' @param metadata Named list of metadata to add.
     #' @param prefix Optional prefix to add to the metadata attribute names.
     #' @return NULL
     add_metadata = function(metadata, prefix = "") {
       stopifnot(
-        "Metadata must be a named list" = is.list(metadata) && is_named(metadata)
+        "Metadata must be a named list" = is_named_list(metadata)
       )
       arr <- self$tiledb_array()
       tiledb::tiledb_array_open(arr, "WRITE")
@@ -65,24 +67,63 @@ TiledbBase <- R6::R6Class(
       )
       tiledb::tiledb_array_close(arr)
       return(NULL)
+    },
+
+    #' @description Retrieve the array schema
+    #' @return A [`tiledb::tiledb_array_schema`] object
+    schema = function() {
+      tiledb::schema(self$tiledb_array())
+    },
+
+    #' @description Retrieve the array dimensions
+    #' @return A list of [`tiledb::tiledb_dim`] objects
+    dimensions = function() {
+      tiledb::dimensions(self$schema())
+    },
+
+    #' @description Retrieve the array attributes
+    #' @return A list of [`tiledb::tiledb_attr`] objects
+    attributes = function() {
+      tiledb::attrs(self$schema())
+    },
+
+    #' @description Retrieve dimension names
+    #' @return A character vector with the array's dimension names
+    dimnames = function() {
+      vapply(
+        self$dimensions(),
+        FUN = tiledb::name,
+        FUN.VALUE = vector("character", 1L)
+      )
+    },
+
+    #' @description Retrieve attribute names
+    #' @return A character vector with the array's attribute names
+    attrnames = function() {
+      vapply(
+        self$attributes(),
+        FUN = tiledb::name,
+        FUN.VALUE = vector("character", 1L),
+        USE.NAMES = FALSE
+      )
     }
   ),
 
   private = list(
-    #' @description Top-level function to create and populate the new array.
+    # @description Top-level function to create and populate the new array.
     build_array = function() return(NULL),
 
-    #' @description Create empty TileDB array.
+    # @description Create empty TileDB array.
     create_empty_array = function() return(NULL),
 
-    #' @description Ingest data into the TileDB array.
+    # @description Ingest data into the TileDB array.
     ingest_data = function() return(NULL),
 
-    #' @description Check if the array exists.
+    # @description Check if the array exists.
     verify_array_exists = function() {
       stopifnot(
-        `No array found at array_uri` = tiledb::tiledb_vfs_is_dir(
-          self$array_uri
+        `No array found at URI` = tiledb::tiledb_vfs_is_dir(
+          self$uri
         )
       )
     }

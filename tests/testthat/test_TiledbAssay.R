@@ -9,7 +9,7 @@ teardown({
 
 test_that("A TiledbAssay object can be created from a 10X H5 file", {
   tdb <<- TiledbAssay$new(
-    array_uri = tdb_uri,
+    uri = tdb_uri,
     file_path = h5_file,
     verbose = interactive()
   )
@@ -17,7 +17,7 @@ test_that("A TiledbAssay object can be created from a 10X H5 file", {
 })
 
 test_that("TiledbAssay can be instantiated with existing array", {
-  tdb <- TiledbAssay$new(array_uri = tdb_uri)
+  tdb <- TiledbAssay$new(uri = tdb_uri)
   expect_true(inherits(tdb, "TiledbAssay"))
 })
 
