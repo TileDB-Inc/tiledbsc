@@ -101,8 +101,6 @@ SCGroup <- R6::R6Class(
       check_matrix = FALSE,
       ...) {
 
-      tiledb::set_allocation_size_preference(9e8)
-
       assay_data <- dataframe_to_dgtmatrix(
         self$X$to_dataframe(attrs = c("counts", "data")),
         index_cols = c("feature", "barcode")
