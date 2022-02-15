@@ -3,7 +3,7 @@
 #' Creates a TileDB group containing two TileDB arrays: one for the image data,
 #' and one for the image positions.
 #'
-#' @importFrom tools from_ext
+#' @importFrom tools file_ext
 #' @importFrom Seurat scalefactors
 #' @importClassesFrom Seurat VisiumV1
 #' @export
