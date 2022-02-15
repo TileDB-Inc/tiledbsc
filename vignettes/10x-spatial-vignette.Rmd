@@ -19,7 +19,7 @@ knitr::opts_chunk$set(
 ## Setup
 
 ```{r setup}
-devtools::load_all()
+library(tiledbsc)
 library(tiledb)
 library(Seurat)
 library(ggplot2)
