@@ -73,7 +73,7 @@ SCGroup <- R6::R6Class(
       assay_mats <- lapply(assay_mats, FUN = as, Class = "dgTMatrix")
 
       # TODO: decide on a consistent naming convention for array dimensions
-      index_cols <- c("feature", "barcode")
+      index_cols <- c("var_id", "obs_id")
       self$X$from_dataframe(
         dgtmatrix_to_dataframe(assay_mats, index_cols)
       )
@@ -103,7 +103,7 @@ SCGroup <- R6::R6Class(
 
       assay_data <- dataframe_to_dgtmatrix(
         self$X$to_dataframe(attrs = c("counts", "data")),
-        index_cols = c("feature", "barcode")
+        index_cols = c("var_id", "obs_id")
       )
 
       # Seurat doesn't allow us to supply data for both the `counts` and `data`

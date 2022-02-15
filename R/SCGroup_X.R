@@ -45,7 +45,7 @@ SCGroup_X <- R6::R6Class(
       }
       stopifnot("'x' must be a dgTMatrix" = inherits(x, "dgTMatrix"))
       self$from_dataframe(
-        dgtmatrix_to_dataframe(x, index_cols = c("feature", "barcode"))
+        dgtmatrix_to_dataframe(x, index_cols = c("var_id", "obs_id"))
       )
     },
 
@@ -54,7 +54,7 @@ SCGroup_X <- R6::R6Class(
     #' @param index_cols A column index, either numeric with a column index, or
     #' character with a column name, designating one or more index columns. All
     #' other columns are ingested as attributes.
-    from_dataframe = function(x, index_cols = c("feature", "barcode")) {
+    from_dataframe = function(x, index_cols = c("var_id", "obs_id")) {
       stopifnot("'x' must be a data.frame" = is.data.frame(x))
       stopifnot(length(index_cols) == 2)
       stopifnot(all(index_cols %in% colnames(x)))
