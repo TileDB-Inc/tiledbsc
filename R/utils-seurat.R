@@ -53,6 +53,37 @@ dgtmatrix_to_dataframe <- function(x, index_cols = c("i", "j"), value_cols = NUL
   cbind(index_data, as.data.frame(value_data))
 }
 
+#' Normalize dimensions of one dgTMatrix to match a reference
+#'
+#' Resize the dimensions of sparse matrix `x` to match the dimensions of sparse
+#' matrix `ref`.
+#'
+#' @param x A dgTMatrix
+#' @param ref The reference dgTMatrix
+#' @returns A dgTMatrix with the same number of non-empty cells as `x` but with
+#' dimensions equal to `ref`'s.
+#' @noRd
+
+normalize_dgtmatrix_dimensions <- function(x, ref) {
+  stopifnot(inherits(x, "dgTMatrix"))
+  stopifnot(inherits(ref, "dgTMatrix"))
+
+  # ensure that matrix x's dimensions equal to or a subset of ref's
+  stopifnot(
+    all(rownames(x) %in% rownames(ref)) &&
+    all(colnames(x) %in% colnames(ref))
+  )
+
+  Matrix::sparseMatrix(
+    i = match(rownames(x)[x@i + 1L], rownames(ref)),
+    j = match(colnames(x)[x@j + 1L], colnames(ref)),
+    x = x@x,
+    dimnames = dimnames(ref),
+    dims = dim(ref),
+    repr = "C"
+  )
+}
+
 #' Convert from COO-formatted Data Frame to dgTMatrix
 #' @param x A COO-formatted `data.frame` with columns for the i/j indices, and
 #' and one or more value columns.
