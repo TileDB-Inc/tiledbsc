@@ -58,9 +58,11 @@ SCGroup_X <- R6::R6Class(
     #' character with a column name, designating one or more index columns. All
     #' other columns are ingested as attributes.
     from_dataframe = function(x, index_cols = c("var_id", "obs_id")) {
-      stopifnot("'x' must be a data.frame" = is.data.frame(x))
-      stopifnot(length(index_cols) == 2)
-      stopifnot(all(index_cols %in% colnames(x)))
+      stopifnot(
+        "'x' must be a data.frame" = is.data.frame(x),
+        length(index_cols) == 2,
+        all(index_cols %in% colnames(x))
+      )
       private$create_empty_array(x, index_cols)
       private$ingest_data(x, index_cols)
     },

@@ -24,8 +24,7 @@ dgtmatrix_to_dataframe <- function(x, index_cols = c("i", "j"), value_cols = NUL
      }
   }
 
-  stopifnot(length(index_cols) == 2)
-  stopifnot(length(value_cols) == length(x))
+  stopifnot(length(index_cols) == 2, length(value_cols) == length(x))
 
   is_dgt <- vapply(x, inherits, FUN.VALUE = logical(1L), what = "dgTMatrix")
   if (!all(is_dgt)) {
@@ -67,9 +66,11 @@ dgtmatrix_to_dataframe <- function(x, index_cols = c("i", "j"), value_cols = NUL
 #' `x`.
 #' @noRd
 dataframe_to_dgtmatrix <- function(x, index_cols = c("i", "j")) {
-  stopifnot(is.data.frame(x))
-  stopifnot(length(index_cols) == 2)
-  stopifnot(all(index_cols %in% colnames(x)))
+  stopifnot(
+    is.data.frame(x),
+    length(index_cols) == 2,
+    all(index_cols %in% colnames(x))
+  )
 
   value_cols <- setdiff(colnames(x), index_cols)
   dim_labels <- as.list(x[index_cols])

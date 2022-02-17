@@ -34,8 +34,10 @@ SCGroup_Annotation <- R6::R6Class(
     #' @description Ingest annotation data
     #' @param x a [`data.frame`]
     from_dataframe = function(x) {
-      stopifnot("Annotation data must be a data.frame" = is.data.frame(x))
-      stopifnot("Annotation data must have character row names" = has_character_rownames(x))
+      stopifnot(
+        "Annotation data must be a data.frame" = is.data.frame(x),
+        "Annotation data must have character row names" = has_character_rownames(x)
+      )
       private$create_empty_array(x)
       private$ingest_data(x)
     },
