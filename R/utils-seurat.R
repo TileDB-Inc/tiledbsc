@@ -1,7 +1,12 @@
 #' Convert dgTMatrix to a COO-formatted Data Frame
 #'
-#' @param x A `dgTMatrix` or list of multiple dgTMatrix's with identical
-#' dimensions and dimension names
+#' Combine a list of dGTMatrix objects in a single `data.frame`. If `x` is a
+#' list of dgTMatrix's, then dimnames from the first matrix `x[[1]]` are used to
+#' create the index columns in the resulting `data.frame`. Thus, dimnames in all
+#' subsequent dgTMatrix matrices `x[[2:n]]` must be equal to or a subset of
+#' `x[[1]]`'s dimnames.
+#'
+#' @param x A `dgTMatrix` or list of multiple dgTMatrix's.
 #' @returns A `data.frame` with columns for the i/j indices, and a value column
 #' for each of the matrices included in `x`
 #'
@@ -27,17 +32,9 @@ dgtmatrix_to_dataframe <- function(x, index_cols = c("i", "j"), value_cols = NUL
     stop("When 'x' is a list all elements must contain a dgTMatrix")
   }
 
-  rows <- unique(vapply(x, nrow, integer(1L)))
-  cols <- unique(vapply(x, ncol, integer(1L)))
-  if (length(rows) != 1 || length(cols) != 1) {
-    stop("All matrices in 'x' must share the same dimensions")
-  }
-
-  row_labels <- unique(unlist(lapply(x, rownames), use.names = FALSE))
-  col_labels <- unique(unlist(lapply(x, colnames), use.names = FALSE))
-  if (length(row_labels) != rows || length(col_labels) != cols) {
-    stop("All matrices in 'x' must share the same dimension names")
-  }
+  # dimension names from the first matrix are used to create the index columns
+  row_labels <- rownames(x[[1]])
+  col_labels <- colnames(x[[1]])
 
   index_data <- data.frame(
     i = row_labels[x[[1]]@i + 1],
@@ -45,43 +42,22 @@ dgtmatrix_to_dataframe <- function(x, index_cols = c("i", "j"), value_cols = NUL
   )
   colnames(index_data) <- index_cols
 
-  value_data <- structure(
-    lapply(x, slot, name = "x"),
-    names = value_cols
-  )
-
-  cbind(index_data, as.data.frame(value_data))
-}
-
-#' Normalize dimensions of one dgTMatrix to match a reference
-#'
-#' Resize the dimensions of sparse matrix `x` to match the dimensions of sparse
-#' matrix `ref`.
-#'
-#' @param x A dgTMatrix
-#' @param ref The reference dgTMatrix
-#' @returns A dgTMatrix with the same number of non-empty cells as `x` but with
-#' dimensions equal to `ref`'s.
-#' @noRd
-
-normalize_dgtmatrix_dimensions <- function(x, ref) {
-  stopifnot(inherits(x, "dgTMatrix"))
-  stopifnot(inherits(ref, "dgTMatrix"))
-
-  # ensure that matrix x's dimensions equal to or a subset of ref's
-  stopifnot(
-    all(rownames(x) %in% rownames(ref)) &&
-    all(colnames(x) %in% colnames(ref))
-  )
-
-  Matrix::sparseMatrix(
-    i = match(rownames(x)[x@i + 1L], rownames(ref)),
-    j = match(colnames(x)[x@j + 1L], colnames(ref)),
-    x = x@x,
-    dimnames = dimnames(ref),
-    dims = dim(ref),
-    repr = "C"
-  )
+  # To accommodate the specific case of a matrix containing scaled data from
+  # seurat that contains only a subset of the features, we coerce to a
+  # data.frame table and perform a left merge to automatically fill in missing
+  # values as NA
+  nmats <- length(x)
+  for (i in seq_len(nmats)) {
+    value_col <- value_cols[i]
+    if (any(dim(x[[1]]) != dim(x[[i]]))) {
+      value_tbl <- as.data.frame.table(as.matrix(x[[i]]))
+      colnames(value_tbl) <- c(index_cols, value_col)
+      index_data <- merge(index_data, value_tbl, by = index_cols, all.x = TRUE)
+    } else {
+      index_data[[value_col]] <- x[[i]][row_labels, col_labels]@x
+    }
+  }
+  return(index_data)
 }
 
 #' Convert from COO-formatted Data Frame to dgTMatrix

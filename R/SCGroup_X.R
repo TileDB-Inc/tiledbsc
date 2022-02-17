@@ -38,14 +38,17 @@ SCGroup_X <- R6::R6Class(
     #' @description Ingest assay data from a sparse matrix
     #' @param x a [`Matrix::dgCMatrix-class`] or [`Matrix::dgTMatrix-class`]
     #' with string dimensions
-    from_matrix = function(x) {
+    #' @param attr Name of the attribute within the TileDB array that will
+    #' store the Matrix data
+    from_matrix = function(x, attr = "counts") {
      if (inherits(x, "dgCMatrix")) {
         message("Converting to dgTMatrix")
         x <- as(x, "dgTMatrix")
       }
       stopifnot("'x' must be a dgTMatrix" = inherits(x, "dgTMatrix"))
+      stopifnot(is_scalar_character(attr))
       self$from_dataframe(
-        dgtmatrix_to_dataframe(x, index_cols = c("var_id", "obs_id"))
+        dgtmatrix_to_dataframe(x, index_cols = c("var_id", "obs_id"), value_cols = attr)
       )
     },
 

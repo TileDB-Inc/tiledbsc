@@ -66,7 +66,7 @@ SCGroup <- R6::R6Class(
       assay_object <- Seurat::GetAssay(object, assay)
       assay_mats <- mapply(
         FUN = SeuratObject::GetAssayData,
-        slot = c("counts", "data"),
+        slot = c("counts", "data", "scale.data"),
         MoreArgs = list(object = assay_object),
         SIMPLIFY = FALSE
       )
