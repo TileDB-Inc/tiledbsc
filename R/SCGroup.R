@@ -64,9 +64,15 @@ SCGroup <- R6::R6Class(
 
       # retrieve assay data as a list of dGT matrices
       assay_object <- Seurat::GetAssay(object, assay)
+
+      assay_slots <- c("counts", "data")
+      if (seurat_assay_has_scale_data(assay_object)) {
+        assay_slots <- c(assay_slots, "scale.data")
+      }
+
       assay_mats <- mapply(
         FUN = SeuratObject::GetAssayData,
-        slot = c("counts", "data", "scale.data"),
+        slot = assay_slots,
         MoreArgs = list(object = assay_object),
         SIMPLIFY = FALSE
       )
