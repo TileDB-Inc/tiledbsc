@@ -66,6 +66,6 @@ test_that("creation from a Seurat object with no scale.data", {
     new.data = new(Class = "matrix")
   )
 
-  scgroup <<- SCGroup$new(uri = uri, verbose = TRUE)
-  scgroup$from_seurat(pbmc_small2)
+  scgroup <<- SCGroup$new(uri = uri, verbose = FALSE)
+  testthat::expect_silent(scgroup$from_seurat(pbmc_small2))
 })
