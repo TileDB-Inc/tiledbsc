@@ -73,7 +73,7 @@ Create a new SCObject_X object.
 \subsection{Method \code{from_matrix()}}{
 Ingest assay data from a sparse matrix
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{SCGroup_X$from_matrix(x)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{SCGroup_X$from_matrix(x, attr = "counts")}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -81,6 +81,9 @@ Ingest assay data from a sparse matrix
 \describe{
 \item{\code{x}}{a \code{\link[Matrix:dgCMatrix-class]{Matrix::dgCMatrix}} or \code{\link[Matrix:dgTMatrix-class]{Matrix::dgTMatrix}}
 with string dimensions}
+
+\item{\code{attr}}{Name of the attribute within the TileDB array that will
+store the Matrix data}
 }
 \if{html}{\out{</div>}}
 }
@@ -91,7 +94,7 @@ with string dimensions}
 \subsection{Method \code{from_dataframe()}}{
 Ingest assay data from a COO-formatted data frame
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{SCGroup_X$from_dataframe(x, index_cols = c("feature", "barcode"))}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{SCGroup_X$from_dataframe(x, index_cols = c("var_id", "obs_id"))}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
