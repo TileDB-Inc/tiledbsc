@@ -90,15 +90,15 @@ TiledbAssay <- R6::R6Class(
         stop("attr_type must be either 'integer' or 'double'", call. = FALSE)
       )
 
-      feature_dim <- tiledb::tiledb_dim(
-        name = "feature",
+      var_dim <- tiledb::tiledb_dim(
+        name = "var_id",
         type = "ASCII",
         tile = NULL,
         domain = NULL
       )
 
-      barcode_dim <- tiledb::tiledb_dim(
-        name = "barcode",
+      obs_dim <- tiledb::tiledb_dim(
+        name = "obs_id",
         type = "ASCII",
         tile = NULL,
         domain = NULL
@@ -120,7 +120,7 @@ TiledbAssay <- R6::R6Class(
       )
 
       tdb_schema <- tiledb::tiledb_array_schema(
-        domain = tiledb::tiledb_domain(dims = c(feature_dim, barcode_dim)),
+        domain = tiledb::tiledb_domain(dims = c(var_dim, obs_dim)),
         attrs = data_attr,
         cell_order = cell_order,
         tile_order = tile_order,
@@ -144,8 +144,8 @@ TiledbAssay <- R6::R6Class(
       tdb_array <- tiledb::tiledb_array(self$uri, query_type = "WRITE")
 
       tbl_data <- data.frame(
-        feature = rownames(assay_data)[assay_data@i + 1],
-        barcode = colnames(assay_data)[assay_data@j + 1],
+        var_id = rownames(assay_data)[assay_data@i + 1],
+        obs_id = colnames(assay_data)[assay_data@j + 1],
         data = assay_data@x,
         stringsAsFactors = FALSE
       )

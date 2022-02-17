@@ -55,3 +55,17 @@ test_that("Seurat object can be created from an existing SCGroup", {
   pbmc_small_2 <- scgroup$to_seurat_object()
   expect_s4_class(pbmc_small_2, "Seurat")
 })
+
+
+test_that("creation from a Seurat object with no scale.data", {
+  uri <- withr::local_tempdir()
+
+  pbmc_small2 <- SeuratObject::SetAssayData(
+    pbmc_small,
+    slot = "scale.data",
+    new.data = new(Class = "matrix")
+  )
+
+  scgroup <<- SCGroup$new(uri = uri, verbose = FALSE)
+  testthat::expect_silent(scgroup$from_seurat(pbmc_small2))
+})

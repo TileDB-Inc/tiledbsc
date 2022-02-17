@@ -38,14 +38,17 @@ SCGroup_X <- R6::R6Class(
     #' @description Ingest assay data from a sparse matrix
     #' @param x a [`Matrix::dgCMatrix-class`] or [`Matrix::dgTMatrix-class`]
     #' with string dimensions
-    from_matrix = function(x) {
+    #' @param attr Name of the attribute within the TileDB array that will
+    #' store the Matrix data
+    from_matrix = function(x, attr = "counts") {
      if (inherits(x, "dgCMatrix")) {
         message("Converting to dgTMatrix")
         x <- as(x, "dgTMatrix")
       }
       stopifnot("'x' must be a dgTMatrix" = inherits(x, "dgTMatrix"))
+      stopifnot(is_scalar_character(attr))
       self$from_dataframe(
-        dgtmatrix_to_dataframe(x, index_cols = c("feature", "barcode"))
+        dgtmatrix_to_dataframe(x, index_cols = c("var_id", "obs_id"), value_cols = attr)
       )
     },
 
@@ -54,10 +57,12 @@ SCGroup_X <- R6::R6Class(
     #' @param index_cols A column index, either numeric with a column index, or
     #' character with a column name, designating one or more index columns. All
     #' other columns are ingested as attributes.
-    from_dataframe = function(x, index_cols = c("feature", "barcode")) {
-      stopifnot("'x' must be a data.frame" = is.data.frame(x))
-      stopifnot(length(index_cols) == 2)
-      stopifnot(all(index_cols %in% colnames(x)))
+    from_dataframe = function(x, index_cols = c("var_id", "obs_id")) {
+      stopifnot(
+        "'x' must be a data.frame" = is.data.frame(x),
+        length(index_cols) == 2,
+        all(index_cols %in% colnames(x))
+      )
       private$create_empty_array(x, index_cols)
       private$ingest_data(x, index_cols)
     },

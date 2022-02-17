@@ -64,16 +64,22 @@ SCGroup <- R6::R6Class(
 
       # retrieve assay data as a list of dGT matrices
       assay_object <- Seurat::GetAssay(object, assay)
+
+      assay_slots <- c("counts", "data")
+      if (seurat_assay_has_scale_data(assay_object)) {
+        assay_slots <- c(assay_slots, "scale.data")
+      }
+
       assay_mats <- mapply(
         FUN = SeuratObject::GetAssayData,
-        slot = c("counts", "data"),
+        slot = assay_slots,
         MoreArgs = list(object = assay_object),
         SIMPLIFY = FALSE
       )
       assay_mats <- lapply(assay_mats, FUN = as, Class = "dgTMatrix")
 
       # TODO: decide on a consistent naming convention for array dimensions
-      index_cols <- c("feature", "barcode")
+      index_cols <- c("var_id", "obs_id")
       self$X$from_dataframe(
         dgtmatrix_to_dataframe(assay_mats, index_cols)
       )
@@ -101,11 +107,9 @@ SCGroup <- R6::R6Class(
       check_matrix = FALSE,
       ...) {
 
-      tiledb::set_allocation_size_preference(9e8)
-
       assay_data <- dataframe_to_dgtmatrix(
         self$X$to_dataframe(attrs = c("counts", "data")),
-        index_cols = c("feature", "barcode")
+        index_cols = c("var_id", "obs_id")
       )
 
       # Seurat doesn't allow us to supply data for both the `counts` and `data`
