@@ -78,12 +78,12 @@ You can also retrieve counts for multiple genes across all barcodes:
 ```{r}
 # specify genes of interest
 genes <- c("B2M", "EEF1A1", "IGKC", "MALAT1", "MT-ATP6", "MT-CO1")
-selected_ranges(tdb_array) <- list(feature = cbind(genes, genes))
+selected_ranges(tdb_array) <- list(var_id = cbind(genes, genes))
 
 # run the query
 tbl_counts <- tdb_array[]
 
-boxplot(data ~ feature, data = tbl_counts, col = "skyblue", pch = 16)
+boxplot(data ~ var_id, data = tbl_counts, col = "skyblue", pch = 16)
 ```
 
 ## Analyzing with Seurat
@@ -98,7 +98,7 @@ head(count_mat)
 Similar to `Seurat::Read10X_h5()` this returns a `dgCMatrix`, which can then be converted to a `Seurat` object.
 
 ```{r}
-pbmc3p <- Seurat::CreateSeuratObject(counts = count_mat, project = "pbmc3p")
+pbmc3p <- CreateSeuratObject(counts = count_mat, project = "pbmc3p")
 ```
 
 We can then treat this just as you would any `Seurat` object and apply any of Seurat's methods that each update the object with a new set of results/annotations.
@@ -150,6 +150,3 @@ unlink(tdb_10x_uri, recursive = TRUE)
 unlink(tdb_seurat_uri, recursive = TRUE)
 unlink(h5_file)
 ```
-
-
-

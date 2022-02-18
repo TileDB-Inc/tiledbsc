@@ -22,9 +22,16 @@ TiledbGroup <- R6::R6Class(
     },
 
     #' @description List the TileDB objects within the group.
+    #' @param type The type of object to list, either `"ARRAY"`, or `"GROUP"`.
+    #' By default all object types are listed.
     #' @return A `data.frame` with columns `URI` and `TYPE`.
-    list_objects = function() {
-      tiledb::tiledb_object_ls(self$uri)
+    list_objects = function(type = NULL) {
+      objects <- tiledb::tiledb_object_ls(self$uri)
+      if (!is.null(type)) {
+        type <- match.arg(type, c("ARRAY", "GROUP"), several.ok = TRUE)
+        objects <- objects[objects$TYPE %in% type, , drop = FALSE]
+      }
+      return(objects)
     }
   ),
 

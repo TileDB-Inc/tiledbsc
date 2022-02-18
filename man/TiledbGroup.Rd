@@ -50,9 +50,17 @@ Create a new TiledbGroup object.
 \subsection{Method \code{list_objects()}}{
 List the TileDB objects within the group.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{TiledbGroup$list_objects()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{TiledbGroup$list_objects(type = NULL)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{type}}{The type of object to list, either \code{"ARRAY"}, or \code{"GROUP"}.
+By default all object types are listed.}
+}
+\if{html}{\out{</div>}}
+}
 \subsection{Returns}{
 A \code{data.frame} with columns \code{URI} and \code{TYPE}.
 }

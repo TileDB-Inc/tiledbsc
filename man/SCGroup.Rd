@@ -30,7 +30,7 @@ which includes:
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-new}{\code{SCGroup$new()}}
-\item \href{#method-from_seurat}{\code{SCGroup$from_seurat()}}
+\item \href{#method-from_seurat_assay}{\code{SCGroup$from_seurat_assay()}}
 \item \href{#method-to_seurat_assay}{\code{SCGroup$to_seurat_assay()}}
 \item \href{#method-to_seurat_object}{\code{SCGroup$to_seurat_object()}}
 \item \href{#method-clone}{\code{SCGroup$clone()}}
@@ -65,21 +65,21 @@ array group is created.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-from_seurat"></a>}}
-\if{latex}{\out{\hypertarget{method-from_seurat}{}}}
-\subsection{Method \code{from_seurat()}}{
-Convert a Seurat object to a TileDB-backed sc_group.
+\if{html}{\out{<a id="method-from_seurat_assay"></a>}}
+\if{latex}{\out{\hypertarget{method-from_seurat_assay}{}}}
+\subsection{Method \code{from_seurat_assay()}}{
+Convert a Seurat Assay to a TileDB-backed sc_group.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{SCGroup$from_seurat(object, assay = NULL)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{SCGroup$from_seurat_assay(object, obs = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{object}}{A \code{\link[SeuratObject:Seurat-class]{SeuratObject::Seurat}} object.}
+\item{\code{object}}{A \code{\link[SeuratObject:Assay-class]{SeuratObject::Assay}} object}
 
-\item{\code{assay}}{Name of the assay to retrieve from the Seurat object. By
-default the active assay is used.}
+\item{\code{obs}}{An optional \code{data.frame} containing annotations for
+cell/sample-level observations.}
 }
 \if{html}{\out{</div>}}
 }

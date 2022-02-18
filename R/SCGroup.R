@@ -55,25 +55,36 @@ SCGroup <- R6::R6Class(
       return(self)
     },
 
-    #' @description Convert a Seurat object to a TileDB-backed sc_group.
-    #' @param object A [`SeuratObject::Seurat`] object.
-    #' @param assay Name of the assay to retrieve from the Seurat object. By
-    #'   default the active assay is used.
-    from_seurat = function(object, assay = NULL) {
-      stopifnot(inherits(object, "Seurat"))
+    #' @description Convert a Seurat Assay to a TileDB-backed sc_group.
+    #' @param object A [`SeuratObject::Assay`] object
+    #' @param obs An optional `data.frame` containing annotations for
+    #' cell/sample-level observations.
+    from_seurat_assay = function(object, obs = NULL) {
+      stopifnot(
+        "sc_groups must be created from a Seurat Assay"
+          = inherits(object, "Assay")
+      )
 
-      # retrieve assay data as a list of dGT matrices
-      assay_object <- Seurat::GetAssay(object, assay)
+      if (!is.null(obs)) {
+        stopifnot(
+          "'obs' must be a data.frame" = is.data.frame(obs),
+          "Number of rows in 'obs' must match the number of cells in the assay"
+            = nrow(obs) == ncol(object),
+          "'obs' rownames must match the assay's cell names"
+            = all(rownames(obs) %in% colnames(object))
+        )
+        obs <- obs[colnames(object), , drop = FALSE]
+      }
 
       assay_slots <- c("counts", "data")
-      if (seurat_assay_has_scale_data(assay_object)) {
+      if (seurat_assay_has_scale_data(object)) {
         assay_slots <- c(assay_slots, "scale.data")
       }
 
       assay_mats <- mapply(
         FUN = SeuratObject::GetAssayData,
         slot = assay_slots,
-        MoreArgs = list(object = assay_object),
+        MoreArgs = list(object = object),
         SIMPLIFY = FALSE
       )
       assay_mats <- lapply(assay_mats, FUN = as, Class = "dgTMatrix")
@@ -85,10 +96,10 @@ SCGroup <- R6::R6Class(
       )
       # TODO: Seurat Assay metadata should be stored in separate empty array
       # until metadata support is added to TileDB groups
-      self$X$add_metadata(list(key = SeuratObject::Key(assay_object)))
+      self$X$add_metadata(list(key = SeuratObject::Key(object)))
 
-      self$var$from_dataframe(assay_object[[]])
-      self$obs$from_dataframe(object[[]])
+      self$var$from_dataframe(object[[]])
+      if (!is.null(obs)) self$obs$from_dataframe(obs)
       if (self$verbose) message("Finished converting Seurat object to TileDB")
     },
 

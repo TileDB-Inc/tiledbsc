@@ -7,65 +7,82 @@ teardown({
 })
 
 data("pbmc_small", package = "SeuratObject")
+assay1 <- Seurat::GetAssay(pbmc_small, "RNA")
 
-test_that("SCGroup object can be created from a Seurat object", {
+test_that("SCGroup object can be created from a Seurat assay", {
 
   scgroup <<- SCGroup$new(uri = tdb_uri, verbose = TRUE)
   expect_true(inherits(scgroup, "SCGroup"))
 
-  scgroup$from_seurat(pbmc_small)
+  expect_error(
+    scgroup$from_seurat_assay(pbmc_small),
+    "sc_groups must be created from a Seurat Assay"
+  )
 
+  scgroup$from_seurat_assay(assay1, obs = pbmc_small[[]])
   expect_s4_class(scgroup$X$tiledb_array(), "tiledb_array")
   expect_s4_class(scgroup$obs$tiledb_array(), "tiledb_array")
   expect_s4_class(scgroup$var$tiledb_array(), "tiledb_array")
 })
 
 test_that("Seurat Assay can be recreated from an existing SCGroup", {
-  assay1 <- Seurat::GetAssay(pbmc_small)
+  scgroup <- SCGroup$new(uri = tdb_uri, verbose = TRUE)
   assay2 <- scgroup$to_seurat_assay()
 
   expect_s4_class(assay2, "Assay")
   expect_equal(slot(assay2, "key"), slot(assay1, "key"))
 
   # use feature/sample names to ensure objects being compared are sorted
-  features <- rownames(assay1)
-  samples <- colnames(assay1)
+  var_ids <- rownames(assay1)
+  obs_ids <- colnames(assay1)
+
+  # validate sample metadata, which isn't part of the Seurat Assay so we grab
+  # it from the Seurat object
+  obs <- pbmc_small[[]]
+
+  # factors are stored in tiledb as character vectors
+  factcols <- sapply(obs, is.factor)
+  obs[factcols] <- lapply(obs[factcols], as.character)
+  expect_equal(
+    obs[obs_ids, ],
+    scgroup$obs$to_dataframe()[obs_ids, ]
+  )
 
   # validate feature metadata
   # (manually remove vst.variable column because logicals are returned as ints)
   expect_equal(
-    assay2[[]][features, -5],
-    assay1[[]][features, -5]
+    assay2[[]][var_ids, -5],
+    assay1[[]][var_ids, -5]
   )
 
   # validate raw counts matrix
   expect_identical(
-    SeuratObject::GetAssayData(assay2, "counts")[features, samples],
-    SeuratObject::GetAssayData(assay1, "counts")[features, samples]
+    SeuratObject::GetAssayData(assay2, "counts")[var_ids, obs_ids],
+    SeuratObject::GetAssayData(assay1, "counts")[var_ids, obs_ids]
   )
 
   # validate normalized data matrix
   expect_identical(
-    SeuratObject::GetAssayData(assay2, "data")[features, samples],
-    SeuratObject::GetAssayData(assay1, "data")[features, samples]
+    SeuratObject::GetAssayData(assay2, "data")[var_ids, obs_ids],
+    SeuratObject::GetAssayData(assay1, "data")[var_ids, obs_ids]
   )
 })
 
-test_that("Seurat object can be created from an existing SCGroup", {
-  pbmc_small_2 <- scgroup$to_seurat_object()
-  expect_s4_class(pbmc_small_2, "Seurat")
-})
-
-
-test_that("creation from a Seurat object with no scale.data", {
+test_that("creation from a Seurat Assay without scale.data", {
   uri <- withr::local_tempdir()
 
-  pbmc_small2 <- SeuratObject::SetAssayData(
-    pbmc_small,
+  assay1 <- SeuratObject::SetAssayData(
+    assay1,
     slot = "scale.data",
     new.data = new(Class = "matrix")
   )
 
-  scgroup <<- SCGroup$new(uri = uri, verbose = FALSE)
-  testthat::expect_silent(scgroup$from_seurat(pbmc_small2))
+  scgroup <- SCGroup$new(uri = uri, verbose = FALSE)
+  testthat::expect_silent(scgroup$from_seurat_assay(assay1))
+
+  assay2 <- scgroup$to_seurat_assay()
+  testthat::expect_equal(
+    SeuratObject::GetAssayData(assay2, "scale.data"),
+    SeuratObject::GetAssayData(assay1, "scale.data")
+  )
 })
