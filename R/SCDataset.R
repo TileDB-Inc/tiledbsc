@@ -56,9 +56,7 @@ SCDataset <- R6::R6Class(
     #' a nested TileDB group with a URI of `./scgroup_<assay>` where `<assay>`
     #'  is the name of the Seurat assay.
     #' @param object A [`SeuratObject::Seurat`] object.
-    #' @param assay Name of the assay to retrieve from the Seurat object. By
-    #'   default the active assay is used.
-    from_seurat = function(object, assay = NULL) {
+    from_seurat = function(object) {
       stopifnot(inherits(object, "Seurat"))
 
       assays <- SeuratObject::Assays(object)
@@ -67,7 +65,7 @@ SCDataset <- R6::R6Class(
         assay_object <- Seurat::GetAssay(object, assay)
         assay_uri <- file.path(self$uri, paste0("scgroup_", assay))
         scgroup <- SCGroup$new(assay_uri, verbose = self$verbose)
-        scgroup$from_seurat(object, assay)
+        scgroup$from_seurat_assay(assay_object, obs = object[[]])
         self$scgroups[[assay]] <- scgroup
       }
 
