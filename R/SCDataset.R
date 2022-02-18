@@ -1,19 +1,23 @@
 #' Single-cell Dataset
 #'
 #' @description
-#' Class for representing a group of one or more [`SCGroup`]s.
+#' Class for representing a sc_dataset, which may contain of one or more
+#' [`SCGroup`]s.
 #' @export
 SCDataset <- R6::R6Class(
   classname = "SCDataset",
   inherit = TiledbGroup,
 
   public = list(
-    #' @field scgroups List of [`SCGroup`]s in the dataset
+    #' @field scgroups Named list of [`SCGroup`]s in the dataset
     scgroups = list(),
 
     #' @description Create a new SCDataset object. The existing array group is
     #'   opened at the specified array `uri` if one is present, otherwise a new
-    #'   array group is created.
+    #'   array group is created. The `scgroups` field is populated with
+    #'   `SCGroup` objects for each URI passed explicitly to `scgroup_uris`, as
+    #'   well `SCGroup` objects discovered within the `SCdataset` object's
+    #'   TileDB group.
     #'
     #' @param uri URI of the TileDB group
     #' @param verbose Print status messages
@@ -30,6 +34,16 @@ SCDataset <- R6::R6Class(
 
       if (!private$group_exists()) {
         private$create_group()
+      }
+
+      # Collect user-specified and auto-discovered scgroup URIs
+      scgroup_uris <- c(scgroup_uris, private$get_scgroup_uris())
+
+      # Create SCGroup objects for each scgroup URI
+      if (!is_empty(scgroup_uris)) {
+        scgroups <- lapply(scgroup_uris, SCGroup$new, verbose = self$verbose)
+        names(scgroups) <- sub("scgroup_", "", basename(scgroup_uris), fixed = TRUE)
+        self$scgroups <- scgroups
       }
 
       return(self)
@@ -71,6 +85,15 @@ SCDataset <- R6::R6Class(
         project = project,
         meta.data = obs_df
       )
+    }
+  ),
+
+  private = list(
+    get_scgroup_uris = function() {
+      group_uris <- self$list_objects(type = "GROUP")$URI
+      if (is_empty(group_uris)) return(group_uris)
+      is_scgroup <- string_starts_with(basename(group_uris), "scgroup_")
+      group_uris[is_scgroup]
     }
   )
 )

@@ -1,3 +1,9 @@
+#' Check if object is empty
+#' @noRd
+is_empty <- function(x) {
+  length(x) == 0
+}
+
 #' Check if a vector is named
 #' @noRd
 is_named <- function(x) {
