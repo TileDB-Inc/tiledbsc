@@ -53,6 +53,9 @@ TileDB group.
 \describe{
 \item{\code{uri}}{URI of the TileDB group}
 
+\item{\code{scgroup_uris}}{Optional vector of URIs for existing \code{\link{SCGroup}}s to
+add to the dataset}
+
 \item{\code{verbose}}{Print status messages}
 }
 \if{html}{\out{</div>}}
@@ -67,16 +70,13 @@ Each \verb{[SeuratObject::Assay}] is converted to a \code{\link{SCGroup}} and wr
 a nested TileDB group with a URI of \verb{./scgroup_<assay>} where \verb{<assay>}
 is the name of the Seurat assay.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{SCDataset$from_seurat(object, assay = NULL)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{SCDataset$from_seurat(object)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{object}}{A \code{\link[SeuratObject:Seurat-class]{SeuratObject::Seurat}} object.}
-
-\item{\code{assay}}{Name of the assay to retrieve from the Seurat object. By
-default the active assay is used.}
 }
 \if{html}{\out{</div>}}
 }
