@@ -77,14 +77,26 @@ SCDataset <- R6::R6Class(
     to_seurat = function(project = "SeuratProject") {
       stopifnot(is_scalar_character(project))
 
-      assay_obj <- self$to_seurat_assay()
-      obs_df <- self$obs$to_dataframe()[colnames(assay_obj), , drop = FALSE]
+      assays <- lapply(self$scgroups, function(x) x$to_seurat_assay())
+      nassays <- length(assays)
 
-      Seurat::CreateSeuratObject(
-        counts = assay_obj,
+      # feature-level obs metadata is stored in each scgroup, so for now we
+      # just take the first scgroup's obs metadata
+      obs_df <- self$scgroups[[1]]$obs$to_dataframe()
+
+      object <- Seurat::CreateSeuratObject(
+        counts = assays[[1]],
         project = project,
         meta.data = obs_df
       )
+
+      if (nassays > 1) {
+        for (i in seq(2, nassays)) {
+          assay <- names(assays)[i]
+          object[[assay]] <- assays[[assay]]
+        }
+      }
+      return(object)
     },
 
     #' @description List the [`SCGroup`] URIs in the dataset.
