@@ -37,7 +37,7 @@ SCDataset <- R6::R6Class(
       }
 
       # Collect user-specified and auto-discovered scgroup URIs
-      scgroup_uris <- c(scgroup_uris, private$get_scgroup_uris())
+      scgroup_uris <- c(scgroup_uris, private$list_scgroup_uris())
 
       # Create SCGroup objects for each scgroup URI
       if (!is_empty(scgroup_uris)) {
@@ -85,11 +85,18 @@ SCDataset <- R6::R6Class(
         project = project,
         meta.data = obs_df
       )
+    },
+
+    #' @description List the [`SCGroup`] URIs in the dataset.
+    #' @return A vector of URIs for each [`SCGroup`] in the dataset.
+    scgroup_uris = function() {
+      vapply(self$scgroups, function(x) x$uri, FUN.VALUE = character(1L))
     }
   ),
 
   private = list(
-    get_scgroup_uris = function() {
+    # Discover scgroup URIs within the TileDB group
+    list_scgroup_uris = function() {
       group_uris <- self$list_objects(type = "GROUP")$URI
       if (is_empty(group_uris)) return(group_uris)
       is_scgroup <- string_starts_with(basename(group_uris), "scgroup_")
