@@ -36,6 +36,9 @@ SCDataset <- R6::R6Class(
     },
 
     #' @description Convert a Seurat object to a TileDB-backed sc_group.
+    #' Each `[SeuratObject::Assay`] is converted to a [`SCGroup`] and written to
+    #' a nested TileDB group with a URI of `./scgroup_<assay>` where `<assay>`
+    #'  is the name of the Seurat assay.
     #' @param object A [`SeuratObject::Seurat`] object.
     #' @param assay Name of the assay to retrieve from the Seurat object. By
     #'   default the active assay is used.
