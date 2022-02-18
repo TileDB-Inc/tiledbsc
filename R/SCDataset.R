@@ -20,6 +20,8 @@ SCDataset <- R6::R6Class(
     #'   TileDB group.
     #'
     #' @param uri URI of the TileDB group
+    #' @param scgroup_uris Optional vector of URIs for existing [`SCGroup`]s to
+    #'  add to the dataset
     #' @param verbose Print status messages
     initialize = function(
       uri,
