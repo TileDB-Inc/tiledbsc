@@ -22,6 +22,8 @@ Base class for interacting with TileDB groups
 \itemize{
 \item \href{#method-new}{\code{TiledbGroup$new()}}
 \item \href{#method-list_objects}{\code{TiledbGroup$list_objects()}}
+\item \href{#method-get_metadata}{\code{TiledbGroup$get_metadata()}}
+\item \href{#method-add_metadata}{\code{TiledbGroup$add_metadata()}}
 \item \href{#method-clone}{\code{TiledbGroup$clone()}}
 }
 }
@@ -63,6 +65,51 @@ By default all object types are listed.}
 }
 \subsection{Returns}{
 A \code{data.frame} with columns \code{URI} and \code{TYPE}.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-get_metadata"></a>}}
+\if{latex}{\out{\hypertarget{method-get_metadata}{}}}
+\subsection{Method \code{get_metadata()}}{
+Retrieve metadata from the TileDB group.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{TiledbGroup$get_metadata(key = NULL, prefix = NULL)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{key}}{The name of the metadata attribute to retrieve.}
+
+\item{\code{prefix}}{Filter metadata using an optional prefix. Ignored if \code{key}
+is not NULL.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A list of metadata values.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-add_metadata"></a>}}
+\if{latex}{\out{\hypertarget{method-add_metadata}{}}}
+\subsection{Method \code{add_metadata()}}{
+Add list of metadata to the TileDB group.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{TiledbGroup$add_metadata(metadata, prefix = "")}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{metadata}}{Named list of metadata to add.}
+
+\item{\code{prefix}}{Optional prefix to add to the metadata attribute names.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+NULL
 }
 }
 \if{html}{\out{<hr>}}
