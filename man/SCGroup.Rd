@@ -39,6 +39,8 @@ which includes:
 \if{html}{
 \out{<details open ><summary>Inherited methods</summary>}
 \itemize{
+\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TiledbGroup" data-id="add_metadata">}\href{../../tiledbsc/html/TiledbGroup.html#method-add_metadata}{\code{tiledbsc::TiledbGroup$add_metadata()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TiledbGroup" data-id="get_metadata">}\href{../../tiledbsc/html/TiledbGroup.html#method-get_metadata}{\code{tiledbsc::TiledbGroup$get_metadata()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TiledbGroup" data-id="list_objects">}\href{../../tiledbsc/html/TiledbGroup.html#method-list_objects}{\code{tiledbsc::TiledbGroup$list_objects()}}\out{</span>}
 }
 \out{</details>}
