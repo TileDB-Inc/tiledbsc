@@ -15,8 +15,14 @@ TiledbGroup <- R6::R6Class(
     initialize = function(uri, verbose = TRUE) {
       self$uri <- uri
       self$verbose <- verbose
+
+      # Until TileDB supports group metadata, we need to create an array
+      # to store the metadata.
+      private$metadata_uri <- file.path(self$uri, "__tiledb_group_metadata")
+
       if (!private$group_exists()) {
         private$create_group()
+        private$create_metadata_array()
       }
       return(self)
     },
@@ -32,10 +38,56 @@ TiledbGroup <- R6::R6Class(
         objects <- objects[objects$TYPE %in% type, , drop = FALSE]
       }
       return(objects)
+    },
+
+    #' @description Retrieve metadata from the TileDB group.
+    #' @param key The name of the metadata attribute to retrieve.
+    #' @param prefix Filter metadata using an optional prefix. Ignored if `key`
+    #'   is not NULL.
+    #' @return A list of metadata values.
+    get_metadata = function(key = NULL, prefix = NULL) {
+      arr <- tiledb::tiledb_array(private$metadata_uri, query_type = "WRITE")
+      tiledb::tiledb_array_open(arr, "READ")
+      if (!is.null(key)) {
+        metadata <- tiledb::tiledb_get_metadata(arr, key)
+      } else {
+        metadata <- tiledb::tiledb_get_all_metadata(arr)
+        if (!is.null(prefix)) {
+          metadata <- metadata[string_starts_with(names(metadata), prefix)]
+        }
+      }
+      tiledb::tiledb_array_close(arr)
+      return(metadata)
+    },
+
+    #' @description Add list of metadata to the TileDB group.
+    #' @param metadata Named list of metadata to add.
+    #' @param prefix Optional prefix to add to the metadata attribute names.
+    #' @return NULL
+    add_metadata = function(metadata, prefix = "") {
+      stopifnot(
+        "Metadata must be a named list" = is_named_list(metadata)
+      )
+
+      arr <- tiledb::tiledb_array(private$metadata_uri, query_type = "WRITE")
+      tiledb::tiledb_array_open(arr, "WRITE")
+      mapply(
+        FUN = tiledb::tiledb_put_metadata,
+        key = paste0(prefix, names(metadata)),
+        val = metadata,
+        MoreArgs = list(arr = arr),
+        SIMPLIFY = FALSE
+      )
+      tiledb::tiledb_array_close(arr)
+      return(NULL)
     }
   ),
 
   private = list(
+    # @field URI of the array where group metadata is stored
+    # TODO: Remove once TileDB supports group metadata
+    metadata_uri = NULL,
+
     group_exists = function() {
       result <- tiledb::tiledb_object_type(self$uri) == "GROUP"
       if (result) {
@@ -46,6 +98,17 @@ TiledbGroup <- R6::R6Class(
       if (self$verbose) message(msg)
       result
     },
+
+    # TODO: Remove once TileDB supports group metadata
+    create_metadata_array = function() {
+      dom <- tiledb::tiledb_domain(
+        dims = c(tiledb::tiledb_dim("d0", domain = c(0L, 1L), type = "INT32"))
+      )
+      attrs <- tiledb::tiledb_attr("a0", type = "INT32")
+      schema <- tiledb::tiledb_array_schema(domain = dom, attrs = attrs)
+      tiledb::tiledb_array_create(private$metadata_uri, schema)
+    },
+
     create_group = function() {
       if (self$verbose) {
         message(glue::glue("Creating new TileDB group at '{self$uri}'"))

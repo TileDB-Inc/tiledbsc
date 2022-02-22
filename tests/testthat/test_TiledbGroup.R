@@ -13,9 +13,8 @@ test_that("a new TileDB group can be created", {
   expect_match(tiledb::tiledb_object_type(grp_uri), "GROUP")
 })
 
-
 test_that("arrays within a group can be discovered", {
-  grp_uri <<- file.path(withr::local_tempdir(), "new-group")
+  grp_uri <- file.path(withr::local_tempdir(), "new-group")
   grp <- TiledbGroup$new(uri = grp_uri, verbose = FALSE)
 
   a1 <- create_empty_test_array(file.path(grp_uri, "a1"))
@@ -23,5 +22,15 @@ test_that("arrays within a group can be discovered", {
 
   objs <- grp$list_objects()
   expect_is(objs, "data.frame")
-  expect_equal(nrow(objs), 2)
+  # TODO: Change this back to 2 once TileDB supports group metadata
+  expect_equal(nrow(objs), 3)
+})
+
+test_that("metadata can be set and retrieved from a group", {
+  grp_uri <- file.path(withr::local_tempdir(), "metadata-group")
+  grp <- TiledbGroup$new(uri = grp_uri, verbose = TRUE)
+
+  md <- list(foo = "bar")
+  grp$add_metadata(md)
+  expect_equal(grp$get_metadata(key = "foo"), "bar")
 })
