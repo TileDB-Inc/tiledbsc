@@ -23,6 +23,11 @@ has_character_rownames <- function(x) {
   typeof(attr(x, "row.names")) == "character"
 }
 
+has_dimnames <- function(x) {
+  stopifnot(is.matrix(x))
+  !is.null(dimnames(x))
+}
+
 string_starts_with <- function(x, prefix) {
   prefix <- paste0("^", prefix)
   grepl(prefix, x)
