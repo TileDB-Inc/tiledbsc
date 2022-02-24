@@ -20,6 +20,10 @@ SCGroup <- R6::R6Class(
     var = NULL,
     #' @field X [`SCGroup_X`] object containing assay data
     X = NULL,
+    #' @field obsm named list of [`AnnotationMatrix`] objects aligned with `obs`
+    obsm = list(),
+    #' @field varm named list of [`AnnotationMatrix`] objects aligned with `var`
+    varm = list(),
 
     #' @description Create a new SCGroup object. The existing array group is
     #'   opened at the specified array `uri` if one is present, otherwise a new
@@ -53,6 +57,28 @@ SCGroup <- R6::R6Class(
       )
 
       return(self)
+    },
+
+    #' @description Add a new observation aligned [`AnnotationMatrix`]
+    #' @param name Name of the new observation annotation matrix
+    #' @param data a [`matrix`]
+    add_obsm = function(name, data) {
+      self$obsm[[name]] <- AnnotationMatrix$new(
+        uri = file.path(self$uri, paste0("obsm_", name)),
+        verbose = self$verbose
+      )
+      self$obsm[[name]]$from_matrix(data, index_col = "obs_id")
+    },
+
+    #' @description Add a new variable aligned [`AnnotationMatrix`]
+    #' @param name Name of the new variable annotation matrix
+    #' @param data a [`matrix`]
+    add_varm = function(name, data) {
+      self$varm[[name]] <- AnnotationMatrix$new(
+        uri = file.path(self$uri, paste0("varm_", name)),
+        verbose = self$verbose
+      )
+      self$varm[[name]]$from_matrix(data, index_col = "var_id")
     },
 
     #' @description Convert a Seurat Assay to a TileDB-backed sc_group.
