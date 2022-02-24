@@ -3,6 +3,7 @@
 #' @description
 #' Class for representing a sc_dataset, which may contain of one or more
 #' [`SCGroup`]s.
+#' @importFrom SeuratObject Reductions Loadings Embeddings
 #' @export
 SCDataset <- R6::R6Class(
   classname = "SCDataset",
@@ -67,6 +68,32 @@ SCDataset <- R6::R6Class(
         scgroup <- SCGroup$new(assay_uri, verbose = self$verbose)
         scgroup$from_seurat_assay(assay_object, obs = object[[]])
         self$scgroups[[assay]] <- scgroup
+      }
+
+      reductions <- SeuratObject::Reductions(object)
+      if (!is_empty(reductions)) {
+        for (reduction in reductions) {
+          reduction_object <- Seurat::Reductions(object, slot = reduction)
+          assay <- SeuratObject::DefaultAssay(reduction_object)
+          reduction_name <- paste(assay, reduction, sep = "_")
+          if (self$verbose) message("Ingesting reduction: ", reduction_name)
+
+          loadings <- SeuratObject::Loadings(reduction_object)
+          if (!is_empty(loadings)) {
+            self$scgroups[[assay]]$add_varm(
+              name = reduction_name,
+              data = loadings
+            )
+          }
+
+          embeddings <- SeuratObject::Embeddings(reduction_object)
+          if (!is_empty(embeddings)) {
+            self$scgroups[[assay]]$add_obsm(
+              name = reduction_name,
+              data = embeddings
+            )
+          }
+        }
       }
 
       if (self$verbose) message("Finished converting Seurat object to TileDB")

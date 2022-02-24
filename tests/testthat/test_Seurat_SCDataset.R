@@ -10,7 +10,6 @@ data("pbmc_small", package = "SeuratObject")
 
 test_that("SCDataset object can be created from a Seurat object", {
   scdataset <- SCDataset$new(uri = tdb_uri, verbose = TRUE)
-
   expect_true(inherits(scdataset, "SCDataset"))
 
   scdataset$from_seurat(pbmc_small)
