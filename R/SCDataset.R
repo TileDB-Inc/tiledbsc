@@ -75,7 +75,7 @@ SCDataset <- R6::R6Class(
         for (reduction in reductions) {
           reduction_object <- Seurat::Reductions(object, slot = reduction)
           assay <- SeuratObject::DefaultAssay(reduction_object)
-          reduction_name <- paste(assay, reduction, sep = "_")
+          reduction_name <- paste0("dimreduction_", reduction)
           if (self$verbose) message("Ingesting reduction: ", reduction_name)
 
           loadings <- SeuratObject::Loadings(reduction_object)
