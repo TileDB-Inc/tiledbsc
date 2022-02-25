@@ -1,4 +1,4 @@
-#' Single-cell Group Annotation
+#' Single-cell Group Annotation Data Frame
 #'
 #' Base class for representing annotations for the [`SCGroup_X`] data matrix's
 #' observations and variables. Annotation data is stored as a `data.frame` with

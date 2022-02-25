@@ -23,6 +23,10 @@ which includes:
 \item{\code{var}}{\code{\link{SCGroup_Annotation}} object containing variable annotations}
 
 \item{\code{X}}{\code{\link{SCGroup_X}} object containing assay data}
+
+\item{\code{obsm}}{named list of \code{\link{AnnotationMatrix}} objects aligned with \code{obs}}
+
+\item{\code{varm}}{named list of \code{\link{AnnotationMatrix}} objects aligned with \code{var}}
 }
 \if{html}{\out{</div>}}
 }
@@ -30,6 +34,8 @@ which includes:
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-new}{\code{SCGroup$new()}}
+\item \href{#method-add_obsm}{\code{SCGroup$add_obsm()}}
+\item \href{#method-add_varm}{\code{SCGroup$add_varm()}}
 \item \href{#method-from_seurat_assay}{\code{SCGroup$from_seurat_assay()}}
 \item \href{#method-to_seurat_assay}{\code{SCGroup$to_seurat_assay()}}
 \item \href{#method-to_seurat_object}{\code{SCGroup$to_seurat_object()}}
@@ -62,6 +68,44 @@ array group is created.
 \item{\code{uri}}{URI of the TileDB group}
 
 \item{\code{verbose}}{Print status messages}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-add_obsm"></a>}}
+\if{latex}{\out{\hypertarget{method-add_obsm}{}}}
+\subsection{Method \code{add_obsm()}}{
+Add a new observation aligned \code{\link{AnnotationMatrix}}
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{SCGroup$add_obsm(name, data)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{name}}{Name of the new observation annotation matrix}
+
+\item{\code{data}}{a \code{\link{matrix}}}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-add_varm"></a>}}
+\if{latex}{\out{\hypertarget{method-add_varm}{}}}
+\subsection{Method \code{add_varm()}}{
+Add a new variable aligned \code{\link{AnnotationMatrix}}
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{SCGroup$add_varm(name, data)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{name}}{Name of the new variable annotation matrix}
+
+\item{\code{data}}{a \code{\link{matrix}}}
 }
 \if{html}{\out{</div>}}
 }
