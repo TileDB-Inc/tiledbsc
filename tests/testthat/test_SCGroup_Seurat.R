@@ -40,10 +40,8 @@ test_that("Seurat Assay can be recreated from an existing SCGroup", {
   obs <- pbmc_small[[]]
 
   # factors are stored in tiledb as character vectors
-  factcols <- sapply(obs, is.factor)
-  obs[factcols] <- lapply(obs[factcols], as.character)
   expect_equal(
-    obs[obs_ids, ],
+    fac2char(obs)[obs_ids, ],
     scgroup$obs$to_dataframe()[obs_ids, ]
   )
 
