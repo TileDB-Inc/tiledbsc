@@ -56,6 +56,16 @@ SCGroup <- R6::R6Class(
         verbose = self$verbose
       )
 
+      obsm_uris <- private$list_obsm_uris()
+      if (!is_empty(obsm_uris)) {
+        invisible(lapply(basename(obsm_uris), self$add_obsm))
+      }
+
+      varm_uris <- private$list_varm_uris()
+      if (!is_empty(varm_uris)) {
+        invisible(lapply(basename(varm_uris), self$add_varm))
+      }
+
       return(self)
     },
 
@@ -193,6 +203,23 @@ SCGroup <- R6::R6Class(
         project = project,
         meta.data = obs_df
       )
+    }
+  ),
+
+  private = list(
+    # Discover obsm/varm URIs within the TileDB group
+    list_obsm_uris = function() {
+      array_uris <- self$list_objects(type = "ARRAY")$URI
+      if (is_empty(array_uris)) return(array_uris)
+      is_obsm <- string_starts_with(basename(array_uris), "obsm_")
+      array_uris[is_obsm]
+    },
+
+    list_varm_uris = function() {
+      array_uris <- self$list_objects(type = "ARRAY")$URI
+      if (is_empty(array_uris)) return(array_uris)
+      is_varm <- string_starts_with(basename(array_uris), "varm_")
+      array_uris[is_varm]
     }
   )
 )

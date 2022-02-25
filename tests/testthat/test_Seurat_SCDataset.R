@@ -27,4 +27,8 @@ test_that("SCDataset object can be created from a Seurat object", {
   scdataset2 <- SCDataset$new(uri = tdb_uri, verbose = TRUE)
   expect_true(inherits(scdataset2, "SCDataset"))
   expect_true(inherits(scdataset2$scgroups[[1]], "SCGroup"))
+
+  # obsm/varm with dimensionality reduction results
+  expect_length(scdataset2$scgroups[[1]]$obsm, 2)
+  expect_length(scdataset2$scgroups[[1]]$varm, 1)
 })
