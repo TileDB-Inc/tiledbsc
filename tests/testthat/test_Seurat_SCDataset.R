@@ -16,6 +16,13 @@ test_that("SCDataset object can be created from a Seurat object", {
   expect_length(scdataset$scgroups, 1)
   expect_true(inherits(scdataset$scgroups[[1]], "SCGroup"))
 
+  # check for dimensionality reduction results
+  expect_identical(
+    names(scdataset$scgroups[[1]]$obsm),
+    c("dimreduction_pca", "dimreduction_tsne")
+  )
+  expect_identical(names(scdataset$scgroups[[1]]$varm), "dimreduction_pca")
+
   # create a new SCDataset from an existing TileDB group
   scdataset2 <- SCDataset$new(uri = tdb_uri, verbose = TRUE)
   expect_true(inherits(scdataset2, "SCDataset"))
