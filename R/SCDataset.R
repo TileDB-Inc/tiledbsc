@@ -52,10 +52,21 @@ SCDataset <- R6::R6Class(
       return(self)
     },
 
-    #' @description Convert a Seurat object to a TileDB-backed sc_group.
+    #' @description Convert a Seurat object to a TileDB-backed `sc_dataset`.
+    #'
+    #' ## Assays
     #' Each `[SeuratObject::Assay`] is converted to a [`SCGroup`] and written to
     #' a nested TileDB group with a URI of `./scgroup_<assay>` where `<assay>`
-    #'  is the name of the Seurat assay.
+    #' is the name of the Seurat assay.
+    #'
+    #' ## Dimensionality Reductions
+    #'
+    #' Dimensionality reduction results are stored as `obsm` and `varm` arrays
+    #' within an `SCGroup`. The [`SeuratObject::DimReduc`] object's `key` slot
+    #' is used to determine which `SCGroup` to store the results in. The array
+    #' names are `(obsm|varm)_dimreduction_<name>`, where `<name>` is the name
+    #' of the dimensionality reduction method (e.g., `"pca"`).
+    #'
     #' @param object A [`SeuratObject::Seurat`] object.
     from_seurat = function(object) {
       stopifnot(inherits(object, "Seurat"))
