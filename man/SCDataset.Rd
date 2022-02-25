@@ -67,10 +67,22 @@ add to the dataset}
 \if{html}{\out{<a id="method-from_seurat"></a>}}
 \if{latex}{\out{\hypertarget{method-from_seurat}{}}}
 \subsection{Method \code{from_seurat()}}{
-Convert a Seurat object to a TileDB-backed sc_group.
+Convert a Seurat object to a TileDB-backed \code{sc_dataset}.
+\subsection{Assays}{
+
 Each \verb{[SeuratObject::Assay}] is converted to a \code{\link{SCGroup}} and written to
 a nested TileDB group with a URI of \verb{./scgroup_<assay>} where \verb{<assay>}
 is the name of the Seurat assay.
+}
+
+\subsection{Dimensionality Reductions}{
+
+Dimensionality reduction results are stored as \code{obsm} and \code{varm} arrays
+within an \code{SCGroup}. The \code{\link[SeuratObject:DimReduc-class]{SeuratObject::DimReduc}} object's \code{key} slot
+is used to determine which \code{SCGroup} to store the results in. The array
+names are \verb{(obsm|varm)_dimreduction_<name>}, where \verb{<name>} is the name
+of the dimensionality reduction method (e.g., \code{"pca"}).
+}
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{SCDataset$from_seurat(object)}\if{html}{\out{</div>}}
 }

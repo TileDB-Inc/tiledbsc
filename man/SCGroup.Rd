@@ -76,9 +76,9 @@ array group is created.
 \if{html}{\out{<a id="method-add_obsm"></a>}}
 \if{latex}{\out{\hypertarget{method-add_obsm}{}}}
 \subsection{Method \code{add_obsm()}}{
-Add a new observation aligned \code{\link{AnnotationMatrix}}
+Add an observation aligned \code{\link{AnnotationMatrix}}
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{SCGroup$add_obsm(name, data)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{SCGroup$add_obsm(name, data = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -86,7 +86,7 @@ Add a new observation aligned \code{\link{AnnotationMatrix}}
 \describe{
 \item{\code{name}}{Name of the new observation annotation matrix}
 
-\item{\code{data}}{a \code{\link{matrix}}}
+\item{\code{data}}{an optional \code{\link{matrix}} of annotation data to ingest.}
 }
 \if{html}{\out{</div>}}
 }
@@ -97,7 +97,7 @@ Add a new observation aligned \code{\link{AnnotationMatrix}}
 \subsection{Method \code{add_varm()}}{
 Add a new variable aligned \code{\link{AnnotationMatrix}}
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{SCGroup$add_varm(name, data)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{SCGroup$add_varm(name, data = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -105,7 +105,7 @@ Add a new variable aligned \code{\link{AnnotationMatrix}}
 \describe{
 \item{\code{name}}{Name of the new variable annotation matrix}
 
-\item{\code{data}}{a \code{\link{matrix}}}
+\item{\code{data}}{an optional \code{\link{matrix}} of annotation data to ingest.}
 }
 \if{html}{\out{</div>}}
 }
