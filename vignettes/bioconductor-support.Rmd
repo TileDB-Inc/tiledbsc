@@ -1,0 +1,72 @@
+---
+title: "Bioconductor Support"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Bioconductor Support}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Setup
+
+```{r setup}
+options(max.print = 500)
+
+library(tiledbsc)
+library(fs)
+library(tiledb)
+library(SummarizedExperiment)
+
+data_dir <- file.path(tempdir(), "vignette-data")
+dir.create(data_dir, showWarnings = FALSE)
+```
+
+## Convert Seurat data to an `sc_dataset`
+
+Our starting point is a `Seurat` object included in the *SeuratObject* package.
+
+```{r}
+data("pbmc_small", package = "SeuratObject")
+pbmc_small
+```
+
+We'll convert to this to TileDB-backed `sc_dataset`.
+
+```{r}
+scdataset <- SCDataset$new(uri = file.path(data_dir, "sc_dataset"))
+scdataset$from_seurat(pbmc_small)
+```
+
+Here we can see a listing of the arrays that were created.
+
+```{r}
+fs::dir_tree(scdataset$uri, recurse = 1)
+```
+
+## Load the `sc_dataset` as a `SummarizedExperiment`
+
+Conversion to a `SummarizedExperiment` happens at the `sc_group` level, so we must access the relevant `SCGroup` (in this case `"RNA"`) and then call `to_summarized_experiment()`.
+
+```{r}
+bioc_pbmc_small <- scdataset$scgroups$RNA$to_summarized_experiment()
+bioc_pbmc_small
+```
+
+# Session
+
+```{r}
+sessionInfo()
+```
+
+```{r cleanup, include=FALSE}
+tiledb::tiledb_vfs_remove_dir(data_dir)
+```
+
+<!-- links -->s
