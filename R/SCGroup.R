@@ -59,26 +59,32 @@ SCGroup <- R6::R6Class(
       return(self)
     },
 
-    #' @description Add a new observation aligned [`AnnotationMatrix`]
+    #' @description Add an observation aligned [`AnnotationMatrix`]
     #' @param name Name of the new observation annotation matrix
-    #' @param data a [`matrix`]
-    add_obsm = function(name, data) {
+    #' @param data an optional [`matrix`] of annotation data to ingest.
+    add_obsm = function(name, data = NULL) {
+      name <- sub("^obsm_", "", name)
       self$obsm[[name]] <- AnnotationMatrix$new(
         uri = file.path(self$uri, paste0("obsm_", name)),
         verbose = self$verbose
       )
-      self$obsm[[name]]$from_matrix(data, index_col = "obs_id")
+      if (!is.null(data)) {
+        self$obsm[[name]]$from_matrix(data, index_col = "obs_id")
+      }
     },
 
     #' @description Add a new variable aligned [`AnnotationMatrix`]
     #' @param name Name of the new variable annotation matrix
-    #' @param data a [`matrix`]
-    add_varm = function(name, data) {
+    #' @param data an optional [`matrix`] of annotation data to ingest.
+    add_varm = function(name, data = NULL) {
+      name <- sub("^varm_", "", name)
       self$varm[[name]] <- AnnotationMatrix$new(
         uri = file.path(self$uri, paste0("varm_", name)),
         verbose = self$verbose
       )
-      self$varm[[name]]$from_matrix(data, index_col = "var_id")
+      if (!is.null(data)) {
+        self$varm[[name]]$from_matrix(data, index_col = "var_id")
+      }
     },
 
     #' @description Convert a Seurat Assay to a TileDB-backed sc_group.
