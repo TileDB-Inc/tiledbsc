@@ -398,6 +398,29 @@ SCGroup <- R6::R6Class(
       )
     },
 
+    #' @description Convert to a [SummarizedExperiment::SummarizedExperiment]
+    #' object.
+    to_summarized_experiment = function() {
+      check_package("SummarizedExperiment")
+
+      assay_data <- dataframe_to_dgtmatrix(
+        self$X$to_dataframe(attrs = c("counts", "data")),
+        index_cols = c("var_id", "obs_id")
+      )
+
+      obs_ids <- colnames(assay_data[[1]])
+      obs_df <- self$obs$to_dataframe()[obs_ids, , drop = FALSE]
+
+      var_ids <- rownames(assay_data[[1]])
+      var_df <- self$var$to_dataframe()[var_ids, , drop = FALSE]
+
+      SummarizedExperiment::SummarizedExperiment(
+        assays = assay_data,
+        colData = obs_df,
+        rowData = var_df
+      )
+    },
+
     #' @description Retrieve [`AnnotationMatrix`] arrays in `obsm`/`varm`
     #' groups.
     #' @param prefix String prefix to filter the array names.

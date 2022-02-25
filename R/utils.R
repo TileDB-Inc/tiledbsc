@@ -46,3 +46,10 @@ n_unique <- function(x) {
 `%||%` <- function(x, y) {
   if (missing(x) || is.null(x) || length(x) == 0) y else x
 }
+
+check_package <- function(package) {
+  if (requireNamespace(package, quietly = TRUE)) {
+    return(invisible())
+  }
+  stop(paste0("Package '", package, "' must be installed"))
+}

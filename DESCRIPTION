@@ -42,6 +42,7 @@ Suggests:
     hdf5r,
     rmarkdown,
     knitr,
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
+    SummarizedExperiment
 VignetteBuilder: knitr
 Config/testthat/edition: 2
