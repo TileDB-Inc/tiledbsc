@@ -190,6 +190,58 @@ SCGroup <- R6::R6Class(
       return(assay_obj)
     },
 
+    #' @description Convert to a [`SeuratObject::DimReduc`] object.
+    #' @param reduction Name of the dimensionality reduction technique.
+    to_seurat_dimreduction = function(reduction = "pca") {
+
+      reduction <- match.arg(
+        arg = reduction,
+        choices = c("pca", "tsne", "umap"),
+        several.ok = FALSE
+      )
+
+      # TODO: DimReduc keys should be added to medtadata of obsm/varm array
+      keys <- c(pca = "PC_", tsne = "tSNE_", umap = "UMAP_")
+
+      # TODO: reduction technique used should be stored in the array metadata
+      dim_reductions <- Filter(
+        function(x) string_starts_with(x, "dimreduction"),
+        c(names(self$obsm), names(self$varm))
+      )
+
+      if (is_empty(dim_reductions)) {
+        stop("No observation or variable annotation matrices found")
+      }
+
+      # parse dim reduction technique from name
+      techniques <- vapply(
+        strsplit(dim_reductions, split = "_"),
+        FUN = function(x) tail(x, 1),
+        FUN.VALUE = character(1L)
+      )
+
+      dim_reductions <- dim_reductions[techniques %in% reduction]
+
+      if (is_empty(dim_reductions)) {
+        stop(sprintf("No %s dimensionality reduction results found", technique))
+      }
+
+      obs <- var <- new(Class = "matrix")
+      if (!is.null(self$obsm[[unique(dim_reductions)]])) {
+        obs <- self$obsm[[unique(dim_reductions)]]$to_matrix()
+      }
+      if (!is.null(self$varm[[unique(dim_reductions)]])) {
+        var <- self$varm[[unique(dim_reductions)]]$to_matrix()
+      }
+
+      SeuratObject::CreateDimReducObject(
+        embeddings = obs,
+        loadings = var,
+        key = keys[reduction],
+        assay = self$X$get_metadata("key")
+      )
+    },
+
     #' @description Convert to a [SeuratObject::Seurat] object.
     #' @param project [`SeuratObject::Project`] name for the `Seurat` object
     to_seurat_object = function(project = "SeuratProject") {
