@@ -56,6 +56,16 @@ SCGroup <- R6::R6Class(
         verbose = self$verbose
       )
 
+      self$obsm <- AnnotationMatrixGroup$new(
+        uri = paste0(self$uri, "/obsm"),
+        verbose = self$verbose
+      )
+
+      self$varm <- AnnotationMatrixGroup$new(
+        uri = paste0(self$uri, "/varm"),
+        verbose = self$verbose
+      )
+
       obsm_uris <- self$list_object_uris("ARRAY", prefix = "obsm_")
       if (!is_empty(obsm_uris)) {
         invisible(lapply(basename(obsm_uris), self$add_obsm))

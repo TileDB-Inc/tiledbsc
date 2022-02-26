@@ -1,4 +1,4 @@
-#' Single-cell Group Annotation Matrix
+#' Single-cell Annotation Matrix
 #'
 #' Base class for matrix-like data with rows aligned to the observations or
 #' features of an [`SCGroup_X`] object.
