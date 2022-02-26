@@ -40,6 +40,7 @@ SCDataset <- R6::R6Class(
       }
 
       # Collect user-specified and auto-discovered scgroup URIs
+      # TODO: Replace self$list_object_uris(prefix = "scgroup")
       scgroup_uris <- c(scgroup_uris, private$list_scgroup_uris())
 
       # Create SCGroup objects for each scgroup URI
