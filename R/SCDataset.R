@@ -92,17 +92,17 @@ SCDataset <- R6::R6Class(
 
           loadings <- SeuratObject::Loadings(reduction_object)
           if (!is_empty(loadings)) {
-            self$scgroups[[assay]]$add_varm(
-              name = reduction_name,
-              data = loadings
+            self$scgroups[[assay]]$varm$add_annotation_matrix(
+              data = loadings,
+              name = reduction_name
             )
           }
 
           embeddings <- SeuratObject::Embeddings(reduction_object)
           if (!is_empty(embeddings)) {
-            self$scgroups[[assay]]$add_obsm(
-              name = reduction_name,
-              data = embeddings
+            self$scgroups[[assay]]$obsm$add_annotation_matrix(
+              data = embeddings,
+              name = reduction_name
             )
           }
         }
