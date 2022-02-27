@@ -31,7 +31,8 @@ AnnotationMatrix <- R6::R6Class(
 
     #' @description Ingest annotation matrix
     #' @param x a [`matrix`] with charater vectors used for row/column names
-    #' @param index_col Name to use for the TileDB array's dimension name
+    #' @param index_col Name to use for the TileDB array's dimension that will
+    #' contain the matrix row names.
     from_matrix = function(x, index_col) {
       if (missing(index_col)) {
         stop("Must define 'index_col' to provide a dimension name")
