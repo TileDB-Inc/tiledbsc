@@ -194,7 +194,7 @@ SCGroup <- R6::R6Class(
 
     #' @description Convert to a [`SeuratObject::DimReduc`] object.
     #' @param reduction Name of the dimensionality reduction technique.
-    to_seurat_dimreduction = function(reduction = "pca") {
+    to_seurat_dimreduction = function(reduction = NULL) {
 
       reduction <- match.arg(
         arg = reduction,
@@ -205,40 +205,22 @@ SCGroup <- R6::R6Class(
       # TODO: DimReduc keys should be added to medtadata of obsm/varm array
       keys <- c(pca = "PC_", tsne = "tSNE_", umap = "UMAP_")
 
-      # TODO: reduction technique used should be stored in the array metadata
-      dim_reductions <- Filter(
-        function(x) string_starts_with(x, "dimreduction"),
-        c(names(self$obsm), names(self$varm))
+      # TODO: reduction technique could be stored in the array metadata
+      array_name <- paste0("dimreduction_", reduction)
+      arrays  <- list(
+        obs = self$obsm$arrays[[array_name]],
+        var = self$varm$arrays[[array_name]]
       )
 
-      if (is_empty(dim_reductions)) {
-        stop("No observation or variable annotation matrices found")
+      arrays <- Filter(Negate(is.null), arrays)
+      if (is_empty(arrays)) {
+        stop(sprintf("No obsm/varm arrays named '%s'", array_name))
       }
 
-      # parse dim reduction technique from name
-      techniques <- vapply(
-        strsplit(dim_reductions, split = "_"),
-        FUN = function(x) tail(x, 1),
-        FUN.VALUE = character(1L)
-      )
-
-      dim_reductions <- dim_reductions[techniques %in% reduction]
-
-      if (is_empty(dim_reductions)) {
-        stop(sprintf("No %s dimensionality reduction results found", technique))
-      }
-
-      obs <- var <- new(Class = "matrix")
-      if (!is.null(self$obsm[[unique(dim_reductions)]])) {
-        obs <- self$obsm[[unique(dim_reductions)]]$to_matrix()
-      }
-      if (!is.null(self$varm[[unique(dim_reductions)]])) {
-        var <- self$varm[[unique(dim_reductions)]]$to_matrix()
-      }
-
+      mats <- lapply(arrays, FUN = function(x) x$to_matrix())
       SeuratObject::CreateDimReducObject(
-        embeddings = obs,
-        loadings = var,
+        embeddings = mats[["obs"]] %||% new(Class = "matrix"),
+        loadings = mats[["var"]] %||% new(Class = "matrix"),
         key = keys[reduction],
         assay = self$X$get_metadata("key")
       )

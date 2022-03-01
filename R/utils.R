@@ -36,3 +36,8 @@ string_starts_with <- function(x, prefix) {
 n_unique <- function(x) {
   length(unique(x))
 }
+
+# Return y if x is NULL, else x
+`%||%` <- function(x, y) {
+  if (missing(x) || is.null(x) || length(x) == 0) y else x
+}
