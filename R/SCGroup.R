@@ -226,13 +226,18 @@ SCGroup <- R6::R6Class(
       technique <- technique %||% sub("_$", "", key)
       stopifnot(is_scalar_character(technique))
 
+      metadata <- list(
+        dimreduction_technique = technique,
+        dimreduction_key = key
+      )
       array_name <- paste0("dimreduction_", technique)
 
       loadings <- SeuratObject::Loadings(reduction_object)
       if (!is_empty(loadings)) {
         self$varm$add_annotation_matrix(
           data = loadings,
-          name = array_name
+          name = array_name,
+          metadata = metadata
         )
       }
 
@@ -240,15 +245,18 @@ SCGroup <- R6::R6Class(
       if (!is_empty(embeddings)) {
         self$obsm$add_annotation_matrix(
           data = embeddings,
-          name = array_name
+          name = array_name,
+          metadata = metadata
         )
       }
+
       return(self)
     },
 
     #' @description Convert to a [`SeuratObject::DimReduc`] object.
-    #' @param reduction Name of the dimensionality reduction technique.
-    to_seurat_dimreduction = function(reduction = NULL) {
+    #' @param technique Name of the dimensionality reduction technique.
+    to_seurat_dimreduction = function(technique = NULL) {
+
       reduction <- match.arg(
         arg = reduction,
         choices = c("pca", "tsne", "umap"),
