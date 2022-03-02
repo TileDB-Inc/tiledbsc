@@ -87,24 +87,7 @@ SCDataset <- R6::R6Class(
         for (reduction in reductions) {
           reduction_object <- Seurat::Reductions(object, slot = reduction)
           assay <- SeuratObject::DefaultAssay(reduction_object)
-          reduction_name <- paste0("dimreduction_", reduction)
-          if (self$verbose) message("Ingesting reduction: ", reduction_name)
-
-          loadings <- SeuratObject::Loadings(reduction_object)
-          if (!is_empty(loadings)) {
-            self$scgroups[[assay]]$varm$add_annotation_matrix(
-              data = loadings,
-              name = reduction_name
-            )
-          }
-
-          embeddings <- SeuratObject::Embeddings(reduction_object)
-          if (!is_empty(embeddings)) {
-            self$scgroups[[assay]]$obsm$add_annotation_matrix(
-              data = embeddings,
-              name = reduction_name
-            )
-          }
+          self$scgroups[[assay]]$from_seurat_dimreduction(reduction_object)
         }
       }
 
