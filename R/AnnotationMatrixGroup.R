@@ -64,7 +64,8 @@ AnnotationMatrixGroup <- R6::R6Class(
     #' must be aligned to the [`SCGroup_X`] dimension indicated by the
     #' group's `dimension_name`.
     #' @param name Name of the new variable annotation matrix.
-    add_annotation_matrix = function(data, name) {
+    #' @param metadata Named list of metadata to add.
+    add_annotation_matrix = function(data, name, metadata = NULL) {
       if (missing(name)) {
         stop("Must specify a `name` for the new AnnotationMatrix")
       }
@@ -81,7 +82,9 @@ AnnotationMatrixGroup <- R6::R6Class(
       )
 
       array$from_matrix(data, self$dimension_name)
+      if (!is.null(metadata)) array$add_metadata(metadata)
       self$arrays[[name]] <- array
+
       return(self)
     }
   )
