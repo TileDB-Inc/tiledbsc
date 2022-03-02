@@ -31,7 +31,33 @@ test_that("SCDataset object can be created from a Seurat object", {
   expect_true(inherits(scdataset2, "SCDataset"))
   expect_true(inherits(scdataset2$scgroups[[1]], "SCGroup"))
 
+  # check for dimensionality reduction results
+  scgroup <- scdataset$scgroups[["RNA"]]
+
   # obsm/varm with dimensionality reduction results
-  expect_length(scdataset2$scgroups[[1]]$obsm$arrays, 2)
-  expect_length(scdataset2$scgroups[[1]]$varm$arrays, 1)
+  expect_length(scgroup$obsm$arrays, 2)
+  expect_length(scgroup$varm$arrays, 1)
+
+  pca1 <- SeuratObject::Reductions(pbmc_small, slot = "pca")
+  pca2 <- scgroup$to_seurat_dimreduction(reduction = "pca")
+
+  var_ids <- Seurat::VariableFeatures(pbmc_small)
+  expect_identical(
+    SeuratObject::Loadings(pca2)[var_ids, ],
+    SeuratObject::Loadings(pca1)[var_ids, ]
+  )
+
+  obs_ids <- SeuratObject::Cells(pbmc_small)
+  expect_identical(
+    SeuratObject::Embeddings(pca2)[obs_ids, ],
+    SeuratObject::Embeddings(pca1)[obs_ids, ]
+  )
+
+  tsne1 <- SeuratObject::Reductions(pbmc_small, slot = "tsne")
+  tsne2 <- scgroup$to_seurat_dimreduction(reduction = "tsne")
+
+  expect_identical(
+    SeuratObject::Embeddings(tsne2)[obs_ids, ],
+    SeuratObject::Embeddings(tsne1)[obs_ids, ]
+  )
 })
