@@ -22,6 +22,7 @@ Base class for interacting with TileDB groups
 \itemize{
 \item \href{#method-new}{\code{TiledbGroup$new()}}
 \item \href{#method-list_objects}{\code{TiledbGroup$list_objects()}}
+\item \href{#method-list_object_uris}{\code{TiledbGroup$list_object_uris()}}
 \item \href{#method-get_metadata}{\code{TiledbGroup$get_metadata()}}
 \item \href{#method-add_metadata}{\code{TiledbGroup$add_metadata()}}
 \item \href{#method-clone}{\code{TiledbGroup$clone()}}
@@ -65,6 +66,30 @@ By default all object types are listed.}
 }
 \subsection{Returns}{
 A \code{data.frame} with columns \code{URI} and \code{TYPE}.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-list_object_uris"></a>}}
+\if{latex}{\out{\hypertarget{method-list_object_uris}{}}}
+\subsection{Method \code{list_object_uris()}}{
+List URIs for TileDB objects within the group.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{TiledbGroup$list_object_uris(type = NULL, prefix = NULL)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{type}}{The type of object to list, either \code{"ARRAY"}, or \code{"GROUP"}.
+By default all object types are listed.}
+
+\item{\code{prefix}}{Filter URIs whose basename contain an optional prefix.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A character vector of object URIs with names corresponding to the
+basename of the object.
 }
 }
 \if{html}{\out{<hr>}}

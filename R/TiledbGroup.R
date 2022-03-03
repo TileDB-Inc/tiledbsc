@@ -40,6 +40,23 @@ TiledbGroup <- R6::R6Class(
       return(objects)
     },
 
+    #' @description List URIs for TileDB objects within the group.
+    #' @param type The type of object to list, either `"ARRAY"`, or `"GROUP"`.
+    #' By default all object types are listed.
+    #' @param prefix Filter URIs whose basename contain an optional prefix.
+    #' @return A character vector of object URIs with names corresponding to the
+    #' basename of the object.
+    list_object_uris = function(type = NULL, prefix = NULL) {
+      uris <- self$list_objects(type = type)$URI
+      if (is_empty(uris)) return(uris)
+      names(uris) <- basename(uris)
+      if (!is.null(prefix)) {
+        stopifnot(is_scalar_character(prefix))
+        uris <- uris[string_starts_with(names(uris), prefix)]
+      }
+      uris
+    },
+
     #' @description Retrieve metadata from the TileDB group.
     #' @param key The name of the metadata attribute to retrieve.
     #' @param prefix Filter metadata using an optional prefix. Ignored if `key`

@@ -6,7 +6,7 @@
 #' - `X` ([`SCGroup_X`]): a labeled 2D sparse array
 #' - `obs` ([`SCGroup_Annotation`]): 1D labeled array with column labels for `X`
 #' - `var` ([`SCGroup_Annotation`]): 1D labeled array with row labels for `X`
-#' @importFrom SeuratObject CreateSeuratObject AddMetaData
+#' @importFrom SeuratObject AddMetaData Loadings Embeddings
 #' @importFrom SeuratObject GetAssayData CreateAssayObject SetAssayData
 #' @export
 SCGroup <- R6::R6Class(
@@ -56,29 +56,19 @@ SCGroup <- R6::R6Class(
         verbose = self$verbose
       )
 
+      self$obsm <- AnnotationMatrixGroup$new(
+        uri = file.path(self$uri, "obsm"),
+        dimension_name = "obs_id",
+        verbose = self$verbose
+      )
+
+      self$varm <- AnnotationMatrixGroup$new(
+        uri = file.path(self$uri, "varm"),
+        dimension_name = "var_id",
+        verbose = self$verbose
+      )
+
       return(self)
-    },
-
-    #' @description Add a new observation aligned [`AnnotationMatrix`]
-    #' @param name Name of the new observation annotation matrix
-    #' @param data a [`matrix`]
-    add_obsm = function(name, data) {
-      self$obsm[[name]] <- AnnotationMatrix$new(
-        uri = file.path(self$uri, paste0("obsm_", name)),
-        verbose = self$verbose
-      )
-      self$obsm[[name]]$from_matrix(data, index_col = "obs_id")
-    },
-
-    #' @description Add a new variable aligned [`AnnotationMatrix`]
-    #' @param name Name of the new variable annotation matrix
-    #' @param data a [`matrix`]
-    add_varm = function(name, data) {
-      self$varm[[name]] <- AnnotationMatrix$new(
-        uri = file.path(self$uri, paste0("varm_", name)),
-        verbose = self$verbose
-      )
-      self$varm[[name]]$from_matrix(data, index_col = "var_id")
     },
 
     #' @description Convert a Seurat Assay to a TileDB-backed sc_group.
@@ -172,6 +162,130 @@ SCGroup <- R6::R6Class(
       # set metadata
       SeuratObject::Key(assay_obj) <- self$X$get_metadata(key = "key")
       return(assay_obj)
+    },
+
+
+    #' @description Convert a [`SeuratObject::DimReduc`] object
+    #'
+    #' @details
+    #' ## On-Disk Format
+    #'
+    #' Seurat [`DimReduc`] objects contain a variety of slots to accommodate the
+    #' various types of results produced by each of the supported dimensional
+    #' reduction techniques. Each slot is stored as an [`AnnotationMatrix`]
+    #' object in the `obsm` or `varm` slot group for the assay, depending
+    #' whether the data is observation- or variable-aligned. The individual
+    #' arrays are named `dimreduction_<technique>`.
+    #'
+    #' ## Metadata
+    #'
+    #' - `dimreduction_technique`: Name of the dimensional reduction technique
+    #' used.
+    #' - `dimreduction_key`: String prefix used in the dimensional reduction
+    #' results column names (required by Seurat)
+    #' @param object A [`SeuratObject::DimReduc`] object
+    #' @param technique Name of the dimensional reduction technique. By default,
+    #' the `key` slot is used to determine the technique.
+
+    from_seurat_dimreduction = function(object, technique = NULL) {
+      stopifnot(
+        "Must provide a Seurat 'DimReduc' object" = inherits(object, "DimReduc")
+      )
+
+      assay <- SeuratObject::DefaultAssay(object)
+      key <- SeuratObject::Key(object)
+
+      technique <- technique %||% sub("_$", "", key)
+      stopifnot(is_scalar_character(technique))
+
+      metadata <- list(
+        dimreduction_technique = technique,
+        dimreduction_key = key
+      )
+      array_name <- paste0("dimreduction_", technique)
+
+      loadings <- SeuratObject::Loadings(object)
+      if (!is_empty(loadings)) {
+        self$varm$add_annotation_matrix(
+          data = loadings,
+          name = array_name,
+          metadata = metadata
+        )
+      }
+
+      embeddings <- SeuratObject::Embeddings(object)
+      if (!is_empty(embeddings)) {
+        self$obsm$add_annotation_matrix(
+          data = embeddings,
+          name = array_name,
+          metadata = metadata
+        )
+      }
+
+      return(self)
+    },
+
+    #' @description Convert to a [`SeuratObject::DimReduc`] object.
+    #' @param technique Name of the dimensionality reduction technique. Used to
+    #' identify which `obsm`/`varm` array will be retrieved. If `NULL`, we
+    #' default to the first `obsm/dimreduction_` array.
+    to_seurat_dimreduction = function(technique = NULL) {
+
+      prefix <- "dimreduction_"
+      array_name <- paste0(prefix, technique)
+
+      prefix <- "dimreduction_"
+      arrays  <- list(
+        obs = self$obsm$arrays[[array_name]],
+        var = self$varm$arrays[[array_name]]
+      )
+
+      # Identify all obsm/varm dimreduction_ arrays
+      groups <- list(obsm = self$obsm, varm = self$varm)
+      arrays <- lapply(groups,
+        function(x) names(x$list_object_uris(type = "ARRAY", prefix = prefix))
+      )
+      arrays <- Filter(Negate(is_empty), arrays)
+
+      if (is_empty(arrays)) {
+        stop("No obsm/varm dim reduction arrays found")
+      }
+      if (self$verbose) {
+        message(
+          sprintf("Found %i dim reduction arrays", length(unlist(arrays)))
+        )
+      }
+
+      # Parse out technique name from first dimreduction_ array
+      if (is.null(technique)) {
+        technique <- strsplit(unlist(arrays)[1], split = "_")[[1]][2]
+      }
+
+      # Retrieve the matching dim reduction arrays
+      array_name <- paste0(prefix, technique)
+      arrays <- lapply(groups, function(x) x$arrays[[array_name]])
+      arrays <- Filter(Negate(is.null), arrays)
+
+      if (is_empty(arrays)) {
+        stop(
+          sprintf(
+            "No dim reduction arrays found for technique '%s'",
+            technique
+          )
+        )
+      }
+
+      mats <- lapply(arrays, FUN = function(x) x$to_matrix())
+
+      # TODO: validate all keys match? For now just take the first one
+      key <- arrays[[1]]$get_metadata(key = "dimreduction_key")
+
+      SeuratObject::CreateDimReducObject(
+        embeddings = mats[["obsm"]] %||% new(Class = "matrix"),
+        loadings = mats[["varm"]] %||% new(Class = "matrix"),
+        key = key,
+        assay = self$X$get_metadata("key")
+      )
     },
 
     #' @description Convert to a [SeuratObject::Seurat] object.

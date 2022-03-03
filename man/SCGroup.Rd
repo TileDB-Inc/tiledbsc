@@ -34,10 +34,10 @@ which includes:
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-new}{\code{SCGroup$new()}}
-\item \href{#method-add_obsm}{\code{SCGroup$add_obsm()}}
-\item \href{#method-add_varm}{\code{SCGroup$add_varm()}}
 \item \href{#method-from_seurat_assay}{\code{SCGroup$from_seurat_assay()}}
 \item \href{#method-to_seurat_assay}{\code{SCGroup$to_seurat_assay()}}
+\item \href{#method-from_seurat_dimreduction}{\code{SCGroup$from_seurat_dimreduction()}}
+\item \href{#method-to_seurat_dimreduction}{\code{SCGroup$to_seurat_dimreduction()}}
 \item \href{#method-to_seurat_object}{\code{SCGroup$to_seurat_object()}}
 \item \href{#method-clone}{\code{SCGroup$clone()}}
 }
@@ -47,6 +47,7 @@ which includes:
 \itemize{
 \item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TiledbGroup" data-id="add_metadata">}\href{../../tiledbsc/html/TiledbGroup.html#method-add_metadata}{\code{tiledbsc::TiledbGroup$add_metadata()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TiledbGroup" data-id="get_metadata">}\href{../../tiledbsc/html/TiledbGroup.html#method-get_metadata}{\code{tiledbsc::TiledbGroup$get_metadata()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TiledbGroup" data-id="list_object_uris">}\href{../../tiledbsc/html/TiledbGroup.html#method-list_object_uris}{\code{tiledbsc::TiledbGroup$list_object_uris()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TiledbGroup" data-id="list_objects">}\href{../../tiledbsc/html/TiledbGroup.html#method-list_objects}{\code{tiledbsc::TiledbGroup$list_objects()}}\out{</span>}
 }
 \out{</details>}
@@ -68,44 +69,6 @@ array group is created.
 \item{\code{uri}}{URI of the TileDB group}
 
 \item{\code{verbose}}{Print status messages}
-}
-\if{html}{\out{</div>}}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-add_obsm"></a>}}
-\if{latex}{\out{\hypertarget{method-add_obsm}{}}}
-\subsection{Method \code{add_obsm()}}{
-Add a new observation aligned \code{\link{AnnotationMatrix}}
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{SCGroup$add_obsm(name, data)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{name}}{Name of the new observation annotation matrix}
-
-\item{\code{data}}{a \code{\link{matrix}}}
-}
-\if{html}{\out{</div>}}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-add_varm"></a>}}
-\if{latex}{\out{\hypertarget{method-add_varm}{}}}
-\subsection{Method \code{add_varm()}}{
-Add a new variable aligned \code{\link{AnnotationMatrix}}
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{SCGroup$add_varm(name, data)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{name}}{Name of the new variable annotation matrix}
-
-\item{\code{data}}{a \code{\link{matrix}}}
 }
 \if{html}{\out{</div>}}
 }
@@ -158,6 +121,66 @@ detected.}
 values}
 
 \item{\code{...}}{Arguments passed to \code{\link[SeuratObject:as.sparse]{SeuratObject::as.sparse}}}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-from_seurat_dimreduction"></a>}}
+\if{latex}{\out{\hypertarget{method-from_seurat_dimreduction}{}}}
+\subsection{Method \code{from_seurat_dimreduction()}}{
+Convert a \code{\link[SeuratObject:DimReduc-class]{SeuratObject::DimReduc}} object
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{SCGroup$from_seurat_dimreduction(object, technique = NULL)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{object}}{A \code{\link[SeuratObject:DimReduc-class]{SeuratObject::DimReduc}} object}
+
+\item{\code{technique}}{Name of the dimensional reduction technique. By default,
+the \code{key} slot is used to determine the technique.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Details}{
+\subsection{On-Disk Format}{
+
+Seurat \code{\link{DimReduc}} objects contain a variety of slots to accommodate the
+various types of results produced by each of the supported dimensional
+reduction techniques. Each slot is stored as an \code{\link{AnnotationMatrix}}
+object in the \code{obsm} or \code{varm} slot group for the assay, depending
+whether the data is observation- or variable-aligned. The individual
+arrays are named \verb{dimreduction_<technique>}.
+}
+
+\subsection{Metadata}{
+\itemize{
+\item \code{dimreduction_technique}: Name of the dimensional reduction technique
+used.
+\item \code{dimreduction_key}: String prefix used in the dimensional reduction
+results column names (required by Seurat)
+}
+}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-to_seurat_dimreduction"></a>}}
+\if{latex}{\out{\hypertarget{method-to_seurat_dimreduction}{}}}
+\subsection{Method \code{to_seurat_dimreduction()}}{
+Convert to a \code{\link[SeuratObject:DimReduc-class]{SeuratObject::DimReduc}} object.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{SCGroup$to_seurat_dimreduction(technique = NULL)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{technique}}{Name of the dimensionality reduction technique. Used to
+identify which \code{obsm}/\code{varm} array will be retrieved. If \code{NULL}, we
+default to the first \code{obsm/dimreduction_} array.}
 }
 \if{html}{\out{</div>}}
 }

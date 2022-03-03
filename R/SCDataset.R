@@ -3,6 +3,7 @@
 #' @description
 #' Class for representing a sc_dataset, which may contain of one or more
 #' [`SCGroup`]s.
+#' @importFrom SeuratObject CreateSeuratObject Reductions
 #' @export
 SCDataset <- R6::R6Class(
   classname = "SCDataset",
@@ -39,7 +40,10 @@ SCDataset <- R6::R6Class(
       }
 
       # Collect user-specified and auto-discovered scgroup URIs
-      scgroup_uris <- c(scgroup_uris, private$list_scgroup_uris())
+      scgroup_uris <- c(
+        scgroup_uris,
+        self$list_object_uris(prefix = "scgroup", type = "GROUP")
+      )
 
       # Create SCGroup objects for each scgroup URI
       if (!is_empty(scgroup_uris)) {
@@ -51,10 +55,21 @@ SCDataset <- R6::R6Class(
       return(self)
     },
 
-    #' @description Convert a Seurat object to a TileDB-backed sc_group.
+    #' @description Convert a Seurat object to a TileDB-backed `sc_dataset`.
+    #'
+    #' ## Assays
     #' Each `[SeuratObject::Assay`] is converted to a [`SCGroup`] and written to
     #' a nested TileDB group with a URI of `./scgroup_<assay>` where `<assay>`
-    #'  is the name of the Seurat assay.
+    #' is the name of the Seurat assay.
+    #'
+    #' ## Dimensionality Reductions
+    #'
+    #' Dimensionality reduction results are stored as `obsm` and `varm` arrays
+    #' within an `SCGroup`. The [`SeuratObject::DimReduc`] object's `key` slot
+    #' is used to determine which `SCGroup` to store the results in. The array
+    #' names are `(obsm|varm)_dimreduction_<name>`, where `<name>` is the name
+    #' of the dimensionality reduction method (e.g., `"pca"`).
+    #'
     #' @param object A [`SeuratObject::Seurat`] object.
     from_seurat = function(object) {
       stopifnot(inherits(object, "Seurat"))
@@ -67,6 +82,18 @@ SCDataset <- R6::R6Class(
         scgroup <- SCGroup$new(assay_uri, verbose = self$verbose)
         scgroup$from_seurat_assay(assay_object, obs = object[[]])
         self$scgroups[[assay]] <- scgroup
+      }
+
+      reductions <- SeuratObject::Reductions(object)
+      if (!is_empty(reductions)) {
+        for (reduction in reductions) {
+          reduction_object <- Seurat::Reductions(object, slot = reduction)
+          assay <- SeuratObject::DefaultAssay(reduction_object)
+          self$scgroups[[assay]]$from_seurat_dimreduction(
+            object = reduction_object,
+            technique = reduction
+          )
+        }
       }
 
       if (self$verbose) message("Finished converting Seurat object to TileDB")
@@ -103,16 +130,6 @@ SCDataset <- R6::R6Class(
     #' @return A vector of URIs for each [`SCGroup`] in the dataset.
     scgroup_uris = function() {
       vapply(self$scgroups, function(x) x$uri, FUN.VALUE = character(1L))
-    }
-  ),
-
-  private = list(
-    # Discover scgroup URIs within the TileDB group
-    list_scgroup_uris = function() {
-      group_uris <- self$list_objects(type = "GROUP")$URI
-      if (is_empty(group_uris)) return(group_uris)
-      is_scgroup <- string_starts_with(basename(group_uris), "scgroup_")
-      group_uris[is_scgroup]
     }
   )
 )

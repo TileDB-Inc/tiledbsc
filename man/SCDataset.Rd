@@ -32,6 +32,7 @@ Class for representing a sc_dataset, which may contain of one or more
 \itemize{
 \item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TiledbGroup" data-id="add_metadata">}\href{../../tiledbsc/html/TiledbGroup.html#method-add_metadata}{\code{tiledbsc::TiledbGroup$add_metadata()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TiledbGroup" data-id="get_metadata">}\href{../../tiledbsc/html/TiledbGroup.html#method-get_metadata}{\code{tiledbsc::TiledbGroup$get_metadata()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TiledbGroup" data-id="list_object_uris">}\href{../../tiledbsc/html/TiledbGroup.html#method-list_object_uris}{\code{tiledbsc::TiledbGroup$list_object_uris()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TiledbGroup" data-id="list_objects">}\href{../../tiledbsc/html/TiledbGroup.html#method-list_objects}{\code{tiledbsc::TiledbGroup$list_objects()}}\out{</span>}
 }
 \out{</details>}
@@ -67,10 +68,22 @@ add to the dataset}
 \if{html}{\out{<a id="method-from_seurat"></a>}}
 \if{latex}{\out{\hypertarget{method-from_seurat}{}}}
 \subsection{Method \code{from_seurat()}}{
-Convert a Seurat object to a TileDB-backed sc_group.
+Convert a Seurat object to a TileDB-backed \code{sc_dataset}.
+\subsection{Assays}{
+
 Each \verb{[SeuratObject::Assay}] is converted to a \code{\link{SCGroup}} and written to
 a nested TileDB group with a URI of \verb{./scgroup_<assay>} where \verb{<assay>}
 is the name of the Seurat assay.
+}
+
+\subsection{Dimensionality Reductions}{
+
+Dimensionality reduction results are stored as \code{obsm} and \code{varm} arrays
+within an \code{SCGroup}. The \code{\link[SeuratObject:DimReduc-class]{SeuratObject::DimReduc}} object's \code{key} slot
+is used to determine which \code{SCGroup} to store the results in. The array
+names are \verb{(obsm|varm)_dimreduction_<name>}, where \verb{<name>} is the name
+of the dimensionality reduction method (e.g., \code{"pca"}).
+}
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{SCDataset$from_seurat(object)}\if{html}{\out{</div>}}
 }
