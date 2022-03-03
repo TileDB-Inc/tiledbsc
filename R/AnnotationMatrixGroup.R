@@ -10,8 +10,6 @@ AnnotationMatrixGroup <- R6::R6Class(
 
   public = list(
     #' @field arrays Named list of [`AnnotationMatrix`] arrays in the group
-    # TODO: Should this be named annotation_matrices? or annot_mats to avoid
-    # having to pluralize matrix?
     arrays = list(),
     #' @field dimension_name Name of the dimension that is shared by all arrays
     #'  in the group.
