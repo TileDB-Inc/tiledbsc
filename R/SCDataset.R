@@ -3,7 +3,7 @@
 #' @description
 #' Class for representing a sc_dataset, which may contain of one or more
 #' [`SCGroup`]s.
-#' @importFrom SeuratObject Reductions Loadings Embeddings
+#' @importFrom SeuratObject CreateSeuratObject Reductions
 #' @export
 SCDataset <- R6::R6Class(
   classname = "SCDataset",
