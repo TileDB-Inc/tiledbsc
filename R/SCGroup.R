@@ -220,7 +220,7 @@ SCGroup <- R6::R6Class(
         "Must provide a Seurat 'DimReduc' object" = inherits(object, "DimReduc")
       )
 
-      assay <- SeuratObject::DefaultAssay(reduction_object)
+      assay <- SeuratObject::DefaultAssay(object)
       key <- SeuratObject::Key(object)
 
       technique <- technique %||% sub("_$", "", key)
@@ -232,7 +232,7 @@ SCGroup <- R6::R6Class(
       )
       array_name <- paste0("dimreduction_", technique)
 
-      loadings <- SeuratObject::Loadings(reduction_object)
+      loadings <- SeuratObject::Loadings(object)
       if (!is_empty(loadings)) {
         self$varm$add_annotation_matrix(
           data = loadings,
@@ -241,7 +241,7 @@ SCGroup <- R6::R6Class(
         )
       }
 
-      embeddings <- SeuratObject::Embeddings(reduction_object)
+      embeddings <- SeuratObject::Embeddings(object)
       if (!is_empty(embeddings)) {
         self$obsm$add_annotation_matrix(
           data = embeddings,
