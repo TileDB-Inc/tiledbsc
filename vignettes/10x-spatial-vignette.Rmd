@@ -22,8 +22,6 @@ knitr::opts_chunk$set(
 library(tiledbsc)
 library(tiledb)
 library(Seurat)
-library(ggplot2)
-library(patchwork)
 
 data_dir <- system.file("tests/testdata/visium", package = "tiledbsc")
 ```
@@ -95,10 +93,11 @@ Cells(brain)[1:10]
 Visualizations:
 
 ```{r}
-plot1 <- VlnPlot(brain, features = "nCount_Spatial", pt.size = 0.1) + NoLegend()
-plot2 <- SpatialFeaturePlot(brain, features = "nCount_Spatial") + theme(legend.position = "right")
+VlnPlot(brain, features = "nCount_Spatial", pt.size = 0.1) + NoLegend()
+```
 
-wrap_plots(plot1, plot2)
+```{r showWarnings=FALSE}
+SpatialFeaturePlot(brain, features = "nCount_Spatial")
 ```
 
 
