@@ -254,35 +254,64 @@ SCGroup <- R6::R6Class(
     },
 
     #' @description Convert to a [`SeuratObject::DimReduc`] object.
-    #' @param technique Name of the dimensionality reduction technique.
+    #' @param technique Name of the dimensionality reduction technique. Used to
+    #' identify which `obsm`/`varm` array will be retrieved. If `NULL`, we
+    #' default to the first `obsm/dimreduction_` array.
     to_seurat_dimreduction = function(technique = NULL) {
 
-      reduction <- match.arg(
-        arg = reduction,
-        choices = c("pca", "tsne", "umap"),
-        several.ok = FALSE
-      )
+      prefix <- "dimreduction_"
+      array_name <- paste0(prefix, technique)
 
-      # TODO: DimReduc keys should be added to medtadata of obsm/varm array
-      keys <- c(pca = "PC_", tsne = "tSNE_", umap = "UMAP_")
-
-      # TODO: reduction technique could be stored in the array metadata
-      array_name <- paste0("dimreduction_", reduction)
+      prefix <- "dimreduction_"
       arrays  <- list(
         obs = self$obsm$arrays[[array_name]],
         var = self$varm$arrays[[array_name]]
       )
 
-      arrays <- Filter(Negate(is.null), arrays)
+      # Identify all obsm/varm dimreduction_ arrays
+      groups <- list(obsm = self$obsm, varm = self$varm)
+      arrays <- lapply(groups,
+        function(x) names(x$list_object_uris(type = "ARRAY", prefix = prefix))
+      )
+      arrays <- Filter(Negate(is_empty), arrays)
+
       if (is_empty(arrays)) {
-        stop(sprintf("No obsm/varm arrays named '%s'", array_name))
+        stop("No obsm/varm dim reduction arrays found")
+      }
+      if (self$verbose) {
+        message(
+          sprintf("Found %i dim reduction arrays", length(unlist(arrays)))
+        )
+      }
+
+      # Parse out technique name from first dimreduction_ array
+      if (is.null(technique)) {
+        technique <- strsplit(unlist(arrays)[1], split = "_")[[1]][2]
+      }
+
+      # Retrieve the matching dim reduction arrays
+      array_name <- paste0(prefix, technique)
+      arrays <- lapply(groups, function(x) x$arrays[[array_name]])
+      arrays <- Filter(Negate(is.null), arrays)
+
+      if (is_empty(arrays)) {
+        stop(
+          sprintf(
+            "No dim reduction arrays found for technique '%s'",
+            technique
+          )
+        )
       }
 
       mats <- lapply(arrays, FUN = function(x) x$to_matrix())
+
+      # TODO: validate all keys match? For now just take the first one
+      key <- arrays[[1]]$get_metadata(key = "dimreduction_key")
+
       SeuratObject::CreateDimReducObject(
-        embeddings = mats[["obs"]] %||% new(Class = "matrix"),
-        loadings = mats[["var"]] %||% new(Class = "matrix"),
-        key = keys[reduction],
+        embeddings = mats[["obsm"]] %||% new(Class = "matrix"),
+        loadings = mats[["varm"]] %||% new(Class = "matrix"),
+        key = key,
         assay = self$X$get_metadata("key")
       )
     },
