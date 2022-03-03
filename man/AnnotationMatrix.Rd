@@ -2,11 +2,11 @@
 % Please edit documentation in R/AnnotationMatrix.R
 \name{AnnotationMatrix}
 \alias{AnnotationMatrix}
-\title{Single-cell Group Annotation Matrix}
+\title{Single-cell Annotation Matrix}
 \description{
-Single-cell Group Annotation Matrix
+Single-cell Annotation Matrix
 
-Single-cell Group Annotation Matrix
+Single-cell Annotation Matrix
 }
 \details{
 Base class for matrix-like data with rows aligned to the observations or
@@ -80,7 +80,8 @@ Ingest annotation matrix
 \describe{
 \item{\code{x}}{a \code{\link{matrix}} with charater vectors used for row/column names}
 
-\item{\code{index_col}}{Name to use for the TileDB array's dimension name}
+\item{\code{index_col}}{Name to use for the TileDB array's dimension that will
+contain the matrix row names.}
 }
 \if{html}{\out{</div>}}
 }
