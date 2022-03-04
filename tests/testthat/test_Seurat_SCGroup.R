@@ -68,7 +68,7 @@ test_that("Seurat Assay can be recreated from an existing SCGroup", {
   )
 })
 
-test_that("dimensional reduction data can be stored and retrieved", {# TEMP
+test_that("dimensional reduction data can be stored and retrieved", {
   scgroup <- SCGroup$new(uri = tdb_uri)
 
   # obsm/varm are empty

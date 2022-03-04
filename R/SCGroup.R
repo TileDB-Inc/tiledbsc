@@ -169,6 +169,66 @@ SCGroup <- R6::R6Class(
       return(assay_obj)
     },
 
+    #' @description Convert from a [`SeuratObject::Graph`] object.
+    #' @param name Name of the array to create/update. `graph_` is always
+    #' prepended. For a Seurat `Graph` this is typically in the form of
+    #' `<assay>_<(s)nn>`. Defaults to the name of the assay, which is extracted
+    #' from the graph object.
+    from_seurat_graph = function(object, name = NULL) {
+      stopifnot(
+        "Must provide a Seurat 'Graph' object" = inherits(object, "Graph")
+      )
+      browser()
+      prefix <- "graph_"
+      assay <- SeuratObject::DefaultAssay(object)
+
+      name <- name %||% assay
+      stopifnot(is_scalar_character(name))
+      array_name <- paste0(prefix, name)
+
+      tiledb::fromSparseMatrix(
+        obj = object,
+        uri = array_name,
+        cell_order = "ROW_MAJOR",
+        tile_order = "ROW_MAJOR",
+        filter = "ZSTD",
+        capacity = 10000L
+      )
+
+      mat <- as(object, "dgTMatrix")
+
+      tiledb::toSparseMatrix(uri = array_name,
+        array_name = array_name,
+        uri = file.path(self$uri, array_name),
+        verbose = self$verbose
+      )
+
+      tiledb::domain()
+
+      # Currently assuming that graph's are always aligned to the obs axis
+      object
+      loadings <- SeuratObject::Loadings(object)
+      if (!is_empty(loadings)) {
+        self$varm$add_annotation_matrix(
+          data = loadings,
+          name = array_name,
+          metadata = metadata
+        )
+      }
+
+      embeddings <- SeuratObject::Embeddings(object)
+      if (!is_empty(embeddings)) {
+        self$obsm$add_annotation_matrix(
+          data = embeddings,
+          name = array_name,
+          metadata = metadata
+        )
+      }
+
+      return(self)
+
+    },
+
 
     #' @description Convert a [`SeuratObject::DimReduc`] object
     #'
