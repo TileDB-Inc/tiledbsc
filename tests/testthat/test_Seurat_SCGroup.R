@@ -68,10 +68,8 @@ test_that("Seurat Assay can be recreated from an existing SCGroup", {
   )
 })
 
-test_that("dimensional reduction data can be stored and retrieved", {
-  tiledb::tiledb_vfs_remove_dir(tdb_uri) # TEMP
+test_that("dimensional reduction data can be stored and retrieved", {# TEMP
   scgroup <- SCGroup$new(uri = tdb_uri)
-  scgroup$from_seurat_assay(assay1, obs = pbmc_small[[]]) # TEMP
 
   # obsm/varm are empty
   expect_length(scgroup$obsm$arrays, 0L)
