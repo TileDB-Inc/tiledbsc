@@ -23,7 +23,7 @@ library(tiledbsc)
 library(tiledb)
 library(Seurat)
 
-data_dir <- system.file("tests/testdata/visium", package = "tiledbsc")
+data_dir <- system.file("inst/extdata/visium", package = "tiledbsc")
 ```
 
 ## Conversion
