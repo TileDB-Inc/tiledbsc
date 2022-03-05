@@ -1,4 +1,4 @@
-data_dir <- rprojroot::find_package_root_file("tests/testdata/visium")
+data_dir <- system.file("extdata/visium", package = "tiledbsc")
 h5_file <- file.path(data_dir, "filtered_feature_bc_matrix.h5")
 
 tdb_uri <- file.path(tempdir(), "assay-counts")

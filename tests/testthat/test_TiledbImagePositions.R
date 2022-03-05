@@ -1,4 +1,4 @@
-data_dir <- rprojroot::find_package_root_file("tests/testdata/visium")
+data_dir <- system.file("extdata/visium", package = "tiledbsc")
 spatial_dir <- file.path(data_dir, "spatial")
 pos_file <- file.path(spatial_dir, "tissue_positions_list.csv")
 

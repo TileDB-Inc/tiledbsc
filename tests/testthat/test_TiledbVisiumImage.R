@@ -1,4 +1,4 @@
-data_dir <- rprojroot::find_package_root_file("tests/testdata/visium")
+data_dir <- system.file("extdata/visium", package = "tiledbsc")
 spatial_dir <- file.path(data_dir, "spatial")
 img_file <- file.path(spatial_dir, "tissue_lowres_image.png")
 sf_file <- file.path(spatial_dir, "scalefactors_json.json")
