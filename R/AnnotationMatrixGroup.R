@@ -58,9 +58,9 @@ AnnotationMatrixGroup <- R6::R6Class(
     },
 
     #' @description Add a new [`AnnotationMatrix`] array to the group.
-    #' @param data an [`matrix`] of annotation data to ingest. The `matrix` rows
-    #' must be aligned to the [`SCGroup_X`] dimension indicated by the
-    #' group's `dimension_name`.
+    #' @param data a [`matrix`] of annotation data to ingest. The `matrix` rows
+    #' must be aligned to the [`SCGroup`] dimension indicated by the group's
+    #' `dimension_name`.
     #' @param name Name of the new variable annotation matrix.
     #' @param metadata Named list of metadata to add.
     add_annotation_matrix = function(data, name, metadata = NULL) {

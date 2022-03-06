@@ -1,18 +1,17 @@
-#' Single-cell Group: X Matrix
+#' Single-cell Assay Matrix
 #'
 #' @description
-#' The `X` matrix component of an [`SCGroup`].
+#' Base class for 2D sparse `matrix`-like data with string dimensions. An
+#' `AssayMatrix` may contain one or more "layers" (i.e., additional measurements
+#' that share the same dimensions and non-empty coordinates.
 #'
-#' A `SCGroup_X` object is a 2D sparse array with string dimensions `obs_id`
-#' and `var_id` that map to the dimensions of the `obs` and `var` arrays,
-#' respectively. An `X` matrix can contain or more "layers", which that all
-#' share the same labels/coordinates and non-empty cells.
+#' Used for the `X` field of [`SCGroup`].
 
 #' @importFrom Matrix sparseMatrix
 #' @export
 
-SCGroup_X <- R6::R6Class(
-  classname = "SCGroup_X",
+AssayMatrix <- R6::R6Class(
+  classname = "AssayMatrix",
   inherit = TiledbBase,
 
   public = list(

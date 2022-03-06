@@ -3,7 +3,7 @@
 #' @description
 #' Class for representing a group of TileDB arrays that consitute an `sc_group`,
 #' which includes:
-#' - `X` ([`SCGroup_X`]): a labeled 2D sparse array
+#' - `X` ([`AssayMatrix`]): a labeled 2D sparse array
 #' - `obs` ([`SCGroup_Annotation`]): 1D labeled array with column labels for `X`
 #' - `var` ([`SCGroup_Annotation`]): 1D labeled array with row labels for `X`
 #' @importFrom SeuratObject AddMetaData Loadings Embeddings
@@ -18,7 +18,9 @@ SCGroup <- R6::R6Class(
     obs = NULL,
     #' @field var [`SCGroup_Annotation`] object containing variable annotations
     var = NULL,
-    #' @field X [`SCGroup_X`] object containing assay data
+    #' @field X [`AssayMatrix`] object containing the matrix-like assay data
+    #' with string dimensions `obs_id` and `var_id` that align to the dimensions
+    #' of the `obs` and `var` arrays, respectively.
     X = NULL,
     #' @field obsm named list of [`AnnotationMatrix`] objects aligned with `obs`
     obsm = list(),
@@ -51,7 +53,7 @@ SCGroup <- R6::R6Class(
         verbose = self$verbose
       )
 
-      self$X <- SCGroup_X$new(
+      self$X <- AssayMatrix$new(
         uri = paste0(self$uri, "/X"),
         verbose = self$verbose
       )
