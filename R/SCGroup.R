@@ -4,8 +4,9 @@
 #' Class for representing a group of TileDB arrays that consitute an `sc_group`,
 #' which includes:
 #' - `X` ([`AssayMatrix`]): a labeled 2D sparse array
-#' - `obs` ([`SCGroup_Annotation`]): 1D labeled array with column labels for `X`
-#' - `var` ([`SCGroup_Annotation`]): 1D labeled array with row labels for `X`
+#' - `obs` ([`AnnotationDataframe`]): 1D labeled array with column labels for
+#'   `X`
+#' - `var` ([`AnnotationDataframe`]): 1D labeled array with row labels for `X`
 #' @importFrom SeuratObject AddMetaData Loadings Embeddings
 #' @importFrom SeuratObject GetAssayData CreateAssayObject SetAssayData
 #' @export
@@ -14,9 +15,11 @@ SCGroup <- R6::R6Class(
   inherit = TiledbGroup,
 
   public = list(
-    #' @field obs [`SCGroup_Annotation`] object containing observation annotations
+    #' @field obs [`AnnotationDataframe`] object containing observation-aligned
+    #' annotations
     obs = NULL,
-    #' @field var [`SCGroup_Annotation`] object containing variable annotations
+    #' @field var [`AnnotationDataframe`] object containing variable-aligned
+    #' annotations
     var = NULL,
     #' @field X [`AssayMatrix`] object containing the matrix-like assay data
     #' with string dimensions `obs_id` and `var_id` that align to the dimensions
@@ -43,12 +46,12 @@ SCGroup <- R6::R6Class(
         private$create_group()
       }
 
-      self$obs <- SCGroup_Annotation$new(
+      self$obs <- AnnotationDataframe$new(
         uri = paste0(self$uri, "/obs"),
         verbose = self$verbose
       )
 
-      self$var <- SCGroup_Annotation$new(
+      self$var <- AnnotationDataframe$new(
         uri = paste0(self$uri, "/var"),
         verbose = self$verbose
       )

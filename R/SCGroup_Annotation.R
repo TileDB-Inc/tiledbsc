@@ -1,14 +1,12 @@
-#' Single-cell Group Annotation Data Frame
+#' Single-cell Annotation Data Frame
 #'
-#' Base class for representing annotations for the [`SCGroup`] data matrix's
-#' observations and variables. Annotation data is stored as a `data.frame` with
-#' the number of rows equal to the length of the corresponding `X` dimension,
-#' and rownames matching the values of the corresponding `X` dimension's labels.
-#'
+#' Base class for data frames with rows aligned to the observations or features
+#' of an [`SCGroup`]. Used to store a heterogeneous collection of
+#' annotations/measurements.
 #' @export
 
-SCGroup_Annotation <- R6::R6Class(
-  classname = "SCGroup_Annotation",
+AnnotationDataframe <- R6::R6Class(
+  classname = "AnnotationDataframe",
   inherit = TiledbBase,
 
   public = list(

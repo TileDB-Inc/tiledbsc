@@ -15,7 +15,7 @@ AnnotationMatrix <- R6::R6Class(
     #' @field verbose Print status messages
     verbose = TRUE,
 
-    #' @description Create a new SCGroup_AnnotationMatrix object.
+    #' @description Create a new `AnnotationMatrix` object.
     #' @param uri URI of the TileDB array
     #' @param verbose Print status messages
     initialize = function(uri, verbose = TRUE) {
