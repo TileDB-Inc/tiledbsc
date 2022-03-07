@@ -23,52 +23,20 @@ library(tiledbsc)
 library(fs)
 library(tiledb)
 library(Seurat)
-library(SeuratData)
 
-dataset_name <- "pbmc3k"
-data_dir <- file.path(tempdir(), "vignette-data")
+data_dir <- file.path(tempdir(), "pbmc_small")
 dir.create(data_dir, showWarnings = FALSE)
 ```
 
 ## Load data
 
-```{r}
-dataset_pkg <- paste0(dataset_name, ".SeuratData")
-if (!requireNamespace(dataset_pkg, quietly = TRUE)) {
-  message(paste("Installing", dataset_name))
-  SeuratData::InstallData(dataset_name)
-}
-```
+Load the subsetted 10X genomics [PBMC dataset](https://mojaveazure.github.io/seurat-object/reference/pbmc_small.html) provided by SeuratObject.
 
 ```{r}
-pbmc.rna <- LoadData(dataset_name)
+data("pbmc_small", package = "SeuratObject")
+pbmc_small
 ```
 
-Feature-level annotations are empty for this dataset. To aid in testing we add an `ensembl_id` column containing Ensembl identifiers.
-
-```{r}
-suppressPackageStartupMessages(library(org.Hs.eg.db))
-
-var_df <- GetAssay(pbmc.rna)[[]]
-
-var_df$ensembl_id <- unname(
-  mapIds(
-    org.Hs.eg.db,
-    keys = rownames(var_df),
-    keytype = "SYMBOL",
-    column = "ENSEMBL",
-    multiVals = "first"
-  )
-)
-
-pbmc.rna[["RNA"]] <- AddMetaData(pbmc.rna[["RNA"]], var_df)
-```
-
-We'll also normalize the data so the `Assay`'s `counts` and `data` slots contain different values.
-
-```{r}
-pbmc.rna <- NormalizeData(pbmc.rna, normalization.method = "LogNormalize")
-```
 
 # Step-by-step Conversion from Seurat to a TileDB `sc_group`
 
@@ -95,7 +63,7 @@ Then we'll ingest the `counts` data from the `Assay`, which is returned from Seu
 
 ```{r}
 scgroup_x$from_matrix(
-  x = GetAssayData(object = pbmc.rna, slot = "counts")
+  x = GetAssayData(object = pbmc_small, slot = "counts")
 )
 ```
 
@@ -125,7 +93,7 @@ Ingest the `data.frame` containing the RNA assay's feature annotations into the 
 
 ```{r}
 scgroup_var$from_dataframe(
-  x = GetAssay(pbmc.rna, assay = "RNA")[[]]
+  x = GetAssay(pbmc_small, assay = "RNA")[[]]
 )
 ```
 
@@ -154,7 +122,7 @@ Ingest `data.frame` containing observation annotations into the `obs` component.
 
 ```{r}
 scgroup_obs$from_dataframe(
-  x = pbmc.rna[[]]
+  x = pbmc_small[[]]
 )
 ```
 
@@ -196,7 +164,7 @@ You can also use the `tiledb_array()` method to directly access the underlying a
 ```{r}
 obs_array <- scgroup_obs$tiledb_array(
   return_as = "tibble",
-  attrs = c("nCount_RNA", "nFeature_RNA", "seurat_annotations"),
+  attrs = c("nCount_RNA", "nFeature_RNA"),
   query_condition = parse_query_condition(nFeature_RNA < 2500)
 )
 
@@ -226,8 +194,8 @@ Because cell-level metadata is stored in the parent `Seurat` object, we need to 
 
 ```{r}
 scgroup$from_seurat_assay(
-  object = GetAssay(pbmc.rna, assay = "RNA"),
-  obs = pbmc.rna[[]]
+  object = GetAssay(pbmc_small, assay = "RNA"),
+  obs = pbmc_small[[]]
 )
 ```
 
@@ -261,10 +229,10 @@ scdataset_uri <- file.path(data_dir, "sc_dataset")
 scdataset <- SCDataset$new(uri = scdataset_uri)
 ```
 
-Then we can then pass the entire `pbmc.rna` object directly to `from_seurat()` and one `sc_group` will be created for each `Assay` object:
+Then we can then pass the entire `pbmc_small` object directly to `from_seurat()` and one `sc_group` will be created for each `Assay` object:
 
 ```{r}
-scdataset$from_seurat(object = pbmc.rna)
+scdataset$from_seurat(object = pbmc_small)
 ```
 
 You can see the group contains one `scgroup_RNA` directory, as well as all of its various components:
