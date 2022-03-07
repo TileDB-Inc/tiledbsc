@@ -10,7 +10,7 @@ Single-cell Annotation Matrix
 }
 \details{
 Base class for matrix-like data with rows aligned to the observations or
-features of an \code{\link{SCGroup_X}} object.
+features of an \code{\link{SCGroup}}.
 }
 \section{Super class}{
 \code{\link[tiledbsc:TiledbBase]{tiledbsc::TiledbBase}} -> \code{AnnotationMatrix}
@@ -51,7 +51,7 @@ features of an \code{\link{SCGroup_X}} object.
 \if{html}{\out{<a id="method-new"></a>}}
 \if{latex}{\out{\hypertarget{method-new}{}}}
 \subsection{Method \code{new()}}{
-Create a new SCGroup_AnnotationMatrix object.
+Create a new \code{AnnotationMatrix} object.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{AnnotationMatrix$new(uri, verbose = TRUE)}\if{html}{\out{</div>}}
 }

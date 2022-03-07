@@ -2,7 +2,7 @@ Package: tiledbsc
 Type: Package
 Title: TileDB-based Single Cell Tools
 Description: A collection of experimental functions for working with single cell data using TileDB.
-Version: 0.0.0.9018
+Version: 0.0.0.9019
 Authors@R: c(
     person(given = "Aaron",
            family = "Wolen",

@@ -7,9 +7,10 @@
 Class for representing a group of TileDB arrays that consitute an \code{sc_group},
 which includes:
 \itemize{
-\item \code{X} (\code{\link{SCGroup_X}}): a labeled 2D sparse array
-\item \code{obs} (\code{\link{SCGroup_Annotation}}): 1D labeled array with column labels for \code{X}
-\item \code{var} (\code{\link{SCGroup_Annotation}}): 1D labeled array with row labels for \code{X}
+\item \code{X} (\code{\link{AssayMatrix}}): a labeled 2D sparse array
+\item \code{obs} (\code{\link{AnnotationDataframe}}): 1D labeled array with column labels for
+\code{X}
+\item \code{var} (\code{\link{AnnotationDataframe}}): 1D labeled array with row labels for \code{X}
 }
 }
 \section{Super class}{
@@ -18,11 +19,15 @@ which includes:
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
-\item{\code{obs}}{\code{\link{SCGroup_Annotation}} object containing observation annotations}
+\item{\code{obs}}{\code{\link{AnnotationDataframe}} object containing observation-aligned
+annotations}
 
-\item{\code{var}}{\code{\link{SCGroup_Annotation}} object containing variable annotations}
+\item{\code{var}}{\code{\link{AnnotationDataframe}} object containing variable-aligned
+annotations}
 
-\item{\code{X}}{\code{\link{SCGroup_X}} object containing assay data}
+\item{\code{X}}{\code{\link{AssayMatrix}} object containing the matrix-like assay data
+with string dimensions \code{obs_id} and \code{var_id} that align to the dimensions
+of the \code{obs} and \code{var} arrays, respectively.}
 
 \item{\code{obsm}}{named list of \code{\link{AnnotationMatrix}} objects aligned with \code{obs}}
 

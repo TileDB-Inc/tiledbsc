@@ -76,9 +76,9 @@ Add a new \code{\link{AnnotationMatrix}} array to the group.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{data}}{an \code{\link{matrix}} of annotation data to ingest. The \code{matrix} rows
-must be aligned to the \code{\link{SCGroup_X}} dimension indicated by the
-group's \code{dimension_name}.}
+\item{\code{data}}{a \code{\link{matrix}} of annotation data to ingest. The \code{matrix} rows
+must be aligned to the \code{\link{SCGroup}} dimension indicated by the group's
+\code{dimension_name}.}
 
 \item{\code{name}}{Name of the new variable annotation matrix.}
 
