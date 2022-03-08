@@ -40,10 +40,10 @@ AssayMatrix <- R6::R6Class(
     #' @param attr Name of the attribute within the TileDB array that will
     #' store the Matrix data
     from_matrix = function(x, attr = "counts") {
-     if (inherits(x, "dgCMatrix")) {
-        message("Converting to dgTMatrix")
-        x <- as(x, "dgTMatrix")
-      }
+      if (inherits(x, "dgCMatrix")) {
+          message("Converting to dgTMatrix")
+          x <- as(x, "dgTMatrix")
+        }
       stopifnot("'x' must be a dgTMatrix" = inherits(x, "dgTMatrix"))
       stopifnot(is_scalar_character(attr))
       self$from_dataframe(
