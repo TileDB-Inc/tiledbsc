@@ -8,9 +8,9 @@ teardown({
   tiledb::tiledb_vfs_remove_dir(tdb_uri)
 })
 
-test_that("A TiledbImagePositions object can be created", {
-  tdb <<- TiledbImagePositions$new(tdb_uri, pos_file)
-  expect_true(inherits(tdb, "TiledbImagePositions"))
+test_that("A TileDBImagePositions object can be created", {
+  tdb <<- TileDBImagePositions$new(tdb_uri, pos_file)
+  expect_true(inherits(tdb, "TileDBImagePositions"))
 })
 
 test_that("Image positions can be retrieved", {

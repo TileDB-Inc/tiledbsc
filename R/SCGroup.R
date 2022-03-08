@@ -12,7 +12,7 @@
 #' @export
 SCGroup <- R6::R6Class(
   classname = "SCGroup",
-  inherit = TiledbGroup,
+  inherit = TileDBGroup,
 
   public = list(
     #' @field obs [`AnnotationDataframe`] object containing observation-aligned

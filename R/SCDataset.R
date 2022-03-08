@@ -7,7 +7,7 @@
 #' @export
 SCDataset <- R6::R6Class(
   classname = "SCDataset",
-  inherit = TiledbGroup,
+  inherit = TileDBGroup,
 
   public = list(
     #' @field scgroups Named list of [`SCGroup`]s in the dataset

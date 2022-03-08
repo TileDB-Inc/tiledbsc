@@ -8,8 +8,8 @@
 #' @importClassesFrom Seurat VisiumV1
 #' @export
 
-TiledbVisiumImage <- R6::R6Class(
-  classname = "TiledbVisiumImage",
+TileDBVisiumImage <- R6::R6Class(
+  classname = "TileDBVisiumImage",
 
   #' @field uri URI of the TileDB array
   #' @field image_array URI of the TileDB array image data
@@ -21,7 +21,7 @@ TiledbVisiumImage <- R6::R6Class(
     positions_array = NULL,
     verbose = TRUE,
 
-    #' @description Create a new TiledbImage object. A new array is created if
+    #' @description Create a new TileDBImage object. A new array is created if
     #' an `image_path` is provided, otherwise an existing array is opened at
     #' the specified URI.
     #' @param uri URI of the TileDB group
@@ -54,7 +54,7 @@ TiledbVisiumImage <- R6::R6Class(
         tiledb::tiledb_group_create(uri)
 
         # build the image array
-        self$image_array <- TiledbImage$new(
+        self$image_array <- TileDBImage$new(
           uri = image_array_uri,
           image_path = image_path,
           verbose = verbose
@@ -67,7 +67,7 @@ TiledbVisiumImage <- R6::R6Class(
         )
 
         # build the image positions array
-        self$positions_array <- TiledbImagePositions$new(
+        self$positions_array <- TileDBImagePositions$new(
           uri = positions_array_uri,
           image_positions_path = image_positions_path,
           verbose = verbose
@@ -75,13 +75,13 @@ TiledbVisiumImage <- R6::R6Class(
 
       } else {
         # open the image array
-        self$image_array <- TiledbImage$new(
+        self$image_array <- TileDBImage$new(
           uri = image_array_uri,
           verbose = verbose
         )
 
         # open the image positions array
-        self$positions_array <- TiledbImagePositions$new(
+        self$positions_array <- TileDBImagePositions$new(
           uri = positions_array_uri,
           verbose = verbose
         )

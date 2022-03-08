@@ -42,7 +42,7 @@ Use `tiledbsc`'s conversion function to create a TileDB array containing the sam
 ```{r}
 tdb_10x_uri <- tools::file_path_sans_ext(h5_file)
 
-tdb_assay <- TiledbAssay$new(uri = tdb_10x_uri, file_path = h5_file)
+tdb_assay <- TileDBAssay$new(uri = tdb_10x_uri, file_path = h5_file)
 ```
 
 This created a new directory in your current working directory named `r tdb_10x_uri`, which contains the TileDB array.

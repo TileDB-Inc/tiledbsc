@@ -1,14 +1,14 @@
 #' TileDB Array Base Class
 #' @export
-TiledbArray <- R6::R6Class(
-  classname = "TiledbArray",
+TileDBArray <- R6::R6Class(
+  classname = "TileDBArray",
   #' @field uri The URI of the TileDB array
   #' @field verbose Whether to print verbose output
   public = list(
     uri = NULL,
     verbose = TRUE,
 
-    #' @description Create a new TiledbArray object.
+    #' @description Create a new TileDBArray object.
     #' @param uri URI for the TileDB array
     #' @param verbose Print status messages
     initialize = function(uri, verbose = TRUE) {
@@ -18,7 +18,7 @@ TiledbArray <- R6::R6Class(
       return(self)
     },
 
-    #' @description Return a [`tiledbarray`] object
+    #' @description Return a [`TileDBArray`] object
     #' @param ... Optional arguments to pass to `tiledb::tiledb_array()`
     #' @return A [`tiledb::tiledb_array`] object.
     tiledb_array = function(...) {

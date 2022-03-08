@@ -1,9 +1,9 @@
 #' TileDB Image Position Data
 #' @export
 
-TiledbImagePositions <- R6::R6Class(
-  classname = "TiledbImagePositions",
-  inherit = TiledbArray,
+TileDBImagePositions <- R6::R6Class(
+  classname = "TileDBImagePositions",
+  inherit = TileDBArray,
 
   #' @field uri URI of the TileDB array
   #' @field verbose Print status messages
@@ -11,7 +11,7 @@ TiledbImagePositions <- R6::R6Class(
     uri = NULL,
     verbose = TRUE,
 
-    #' @description Create a new TiledbImagePositions object. A new array is
+    #' @description Create a new TileDBImagePositions object. A new array is
     #' created if an `image_positions_path` is provided, otherwise an existing
     #' array is opened at the specified URI.
     #' @param uri URI of the TileDB array

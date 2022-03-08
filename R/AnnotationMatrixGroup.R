@@ -6,7 +6,7 @@
 #' @export
 AnnotationMatrixGroup <- R6::R6Class(
   classname = "AnnotationMatrixGroup",
-  inherit = TiledbGroup,
+  inherit = TileDBGroup,
 
   public = list(
     #' @field arrays Named list of [`AnnotationMatrix`] arrays in the group

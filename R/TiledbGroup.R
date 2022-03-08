@@ -1,7 +1,7 @@
 #' Base class for interacting with TileDB groups
 #' @export
-TiledbGroup <- R6::R6Class(
-  classname = "TiledbGroup",
+TileDBGroup <- R6::R6Class(
+  classname = "TileDBGroup",
 
   public = list(
     #' @field uri The URI of the TileDB group
@@ -9,7 +9,7 @@ TiledbGroup <- R6::R6Class(
     #' @field verbose Whether to print verbose output
     verbose = TRUE,
 
-    #' @description Create a new TiledbGroup object.
+    #' @description Create a new TileDBGroup object.
     #' @param uri TileDB array URI
     #' @param verbose Print status messages
     initialize = function(uri, verbose = TRUE) {

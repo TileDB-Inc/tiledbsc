@@ -4,9 +4,9 @@
 #' @importFrom Matrix sparseMatrix
 #' @export
 
-TiledbAssay <- R6::R6Class(
-  classname = "TiledbAssay",
-  inherit = TiledbArray,
+TileDBAssay <- R6::R6Class(
+  classname = "TileDBAssay",
+  inherit = TileDBArray,
 
   #' @field uri URI of the TileDB array
   #' @field verbose Print status messages
@@ -14,7 +14,7 @@ TiledbAssay <- R6::R6Class(
     uri = NULL,
     verbose = TRUE,
 
-    #' @description Create a new TiledbAssay object. A new array is created if
+    #' @description Create a new TileDBAssay object. A new array is created if
     #' an `file_path` is provided, otherwise an existing array is opened at
     #' the specified URI.
     #' @param uri URI of the TileDB array
