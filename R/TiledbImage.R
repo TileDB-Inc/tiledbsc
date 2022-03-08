@@ -30,7 +30,7 @@ TiledbImage <- R6::R6Class(
         stopifnot(file.exists(image_path))
         private$build_array(image_path)
       } else {
-        private$verify_array_exists()
+        private$array_exists()
       }
     },
 

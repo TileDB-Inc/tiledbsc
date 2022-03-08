@@ -26,7 +26,7 @@ TiledbImagePositions <- R6::R6Class(
         stopifnot(file.exists(image_positions_path))
         private$build_array(image_positions_path)
       } else {
-        private$verify_array_exists()
+        private$array_exists()
       }
       return(self)
     },

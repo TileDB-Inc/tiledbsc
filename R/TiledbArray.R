@@ -14,7 +14,7 @@ TiledbArray <- R6::R6Class(
     initialize = function(uri, verbose = TRUE) {
       self$uri <- uri
       self$verbose <- verbose
-      private$verify_array_exists()
+      private$array_exists()
       return(self)
     },
 
@@ -120,12 +120,16 @@ TiledbArray <- R6::R6Class(
     ingest_data = function() return(NULL),
 
     # @description Check if the array exists.
-    verify_array_exists = function() {
-      stopifnot(
-        `No array found at URI` = tiledb::tiledb_vfs_is_dir(
-          self$uri
-        )
-      )
+    # @return TRUE if the array exists, FALSE otherwise.
+    array_exists = function() {
+      result <- tiledb::tiledb_object_type(self$uri) == "ARRAY"
+      if (result) {
+        msg <- sprintf("Found existing TileDB array at '%s'", self$uri)
+      } else {
+        msg <- sprintf("No TileDB array found at '%s'", self$uri)
+      }
+      if (self$verbose) message(msg)
+      result
     }
   )
 )

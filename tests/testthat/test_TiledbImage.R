@@ -15,14 +15,6 @@ test_that("Can't be instantiated without a URI", {
   )
 })
 
-test_that("Can't be instantiated if the array doesn't exist", {
-  expect_error(
-    TiledbImage$new(uri = "non-existent-array"),
-    "No array found at URI"
-  )
-})
-
-
 tdb_img <- TiledbImage$new(
   uri = tdb_uri,
   image_path = img_file,
