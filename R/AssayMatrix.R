@@ -20,20 +20,6 @@ AssayMatrix <- R6::R6Class(
     #' @field verbose Print status messages
     verbose = TRUE,
 
-    #' @description Create a new SCObject_X object.
-    #' @param uri URI of the TileDB array
-    #' @param verbose Print status messages
-    initialize = function(uri, verbose = TRUE) {
-      self$uri <- uri
-      self$verbose <- verbose
-
-      if (tiledb::tiledb_vfs_is_dir(uri)) {
-        message(glue::glue("Found existing array at '{uri}'"))
-      } else {
-        message(glue::glue("No array currently exists at '{uri}'"))
-      }
-    },
-
     #' @description Ingest assay data from a sparse matrix
     #' @param x a [`Matrix::dgCMatrix-class`] or [`Matrix::dgTMatrix-class`]
     #' with string dimensions

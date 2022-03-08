@@ -15,20 +15,6 @@ AnnotationMatrix <- R6::R6Class(
     #' @field verbose Print status messages
     verbose = TRUE,
 
-    #' @description Create a new `AnnotationMatrix` object.
-    #' @param uri URI of the TileDB array
-    #' @param verbose Print status messages
-    initialize = function(uri, verbose = TRUE) {
-      self$uri <- uri
-      self$verbose <- verbose
-
-      if (tiledb::tiledb_vfs_is_dir(uri)) {
-        message(glue::glue("Found existing array at '{uri}'"))
-      } else {
-        message(glue::glue("No array currently exists at '{uri}'"))
-      }
-    },
-
     #' @description Ingest annotation matrix
     #' @param x a [`matrix`] with charater vectors used for row/column names
     #' @param index_col Name to use for the TileDB array's dimension that will
