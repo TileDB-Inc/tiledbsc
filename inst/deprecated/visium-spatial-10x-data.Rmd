@@ -23,7 +23,7 @@ library(tiledbsc)
 library(tiledb)
 library(Seurat)
 
-data_dir <- system.file("tests/testdata/visium", package = "tiledbsc")
+data_dir <- system.file("extdata/visium", package = "tiledbsc")
 ```
 
 ## Conversion
@@ -31,7 +31,7 @@ data_dir <- system.file("tests/testdata/visium", package = "tiledbsc")
 Setup a URI for the new TileDB array group.
 
 ```{r}
-tdb_uri <- file.path(data_dir, "tiledb-visium-dataset")
+tdb_uri <- file.path(tempdir(), "tiledb-visium-dataset")
 
 if (tiledb::tiledb_vfs_is_dir(tdb_uri)) {
   tiledb::tiledb_vfs_remove_dir(tdb_uri)

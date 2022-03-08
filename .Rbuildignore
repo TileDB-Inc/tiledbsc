@@ -3,5 +3,6 @@
 ^doc$
 ^Meta$
 ^dev$
+^.lintr
 ^.vscode
 ^.devcontainer

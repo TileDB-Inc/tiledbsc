@@ -2,7 +2,7 @@ Package: tiledbsc
 Type: Package
 Title: TileDB-based Single Cell Tools
 Description: A collection of experimental functions for working with single cell data using TileDB.
-Version: 0.0.0.9017
+Version: 0.0.0.9018
 Authors@R: c(
     person(given = "Aaron",
            family = "Wolen",
@@ -34,6 +34,7 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2
 Suggests:
     fs,
+    hdf5r,
     rmarkdown,
     knitr,
     testthat (>= 3.0.0)
