@@ -7,7 +7,7 @@
 
 AnnotationMatrix <- R6::R6Class(
   classname = "AnnotationMatrix",
-  inherit = TiledbBase,
+  inherit = TiledbArray,
 
   public = list(
     #' @field uri URI of the TileDB array

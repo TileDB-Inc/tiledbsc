@@ -12,7 +12,7 @@
 
 AssayMatrix <- R6::R6Class(
   classname = "AssayMatrix",
-  inherit = TiledbBase,
+  inherit = TiledbArray,
 
   public = list(
     #' @field uri URI of the TileDB array

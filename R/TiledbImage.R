@@ -8,7 +8,7 @@
 
 TiledbImage <- R6::R6Class(
   classname = "TiledbImage",
-  inherit = TiledbBase,
+  inherit = TiledbArray,
 
   #' @field uri URI of the TileDB array
   #' @field verbose Print status messages

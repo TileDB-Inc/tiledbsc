@@ -7,7 +7,7 @@
 
 AnnotationDataframe <- R6::R6Class(
   classname = "AnnotationDataframe",
-  inherit = TiledbBase,
+  inherit = TiledbArray,
 
   public = list(
     #' @field uri URI of the TileDB array
