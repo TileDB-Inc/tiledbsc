@@ -108,9 +108,9 @@ TiledbGroup <- R6::R6Class(
     group_exists = function() {
       result <- tiledb::tiledb_object_type(self$uri) == "GROUP"
       if (result) {
-        msg <- glue::glue("Found existing TileDB group at '{self$uri}'")
+        msg <- sprintf("Found existing TileDB group at '%s'", self$uri)
       } else {
-        msg <- glue::glue("No TileDB group currently exists at '{self$uri}'")
+        msg <- sprintf("No TileDB group currently exists at '%s'", self$uri)
       }
       if (self$verbose) message(msg)
       result
@@ -128,7 +128,7 @@ TiledbGroup <- R6::R6Class(
 
     create_group = function() {
       if (self$verbose) {
-        message(glue::glue("Creating new TileDB group at '{self$uri}'"))
+        message(sprintf("Creating new TileDB group at '%s'", self$uri))
       }
       tiledb::tiledb_group_create(self$uri)
     }
