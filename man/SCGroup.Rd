@@ -7,22 +7,27 @@
 Class for representing a group of TileDB arrays that consitute an \code{sc_group},
 which includes:
 \itemize{
-\item \code{X} (\code{\link{SCGroup_X}}): a labeled 2D sparse array
-\item \code{obs} (\code{\link{SCGroup_Annotation}}): 1D labeled array with column labels for \code{X}
-\item \code{var} (\code{\link{SCGroup_Annotation}}): 1D labeled array with row labels for \code{X}
+\item \code{X} (\code{\link{AssayMatrix}}): a labeled 2D sparse array
+\item \code{obs} (\code{\link{AnnotationDataframe}}): 1D labeled array with column labels for
+\code{X}
+\item \code{var} (\code{\link{AnnotationDataframe}}): 1D labeled array with row labels for \code{X}
 }
 }
 \section{Super class}{
-\code{\link[tiledbsc:TiledbGroup]{tiledbsc::TiledbGroup}} -> \code{SCGroup}
+\code{\link[tiledbsc:TileDBGroup]{tiledbsc::TileDBGroup}} -> \code{SCGroup}
 }
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
-\item{\code{obs}}{\code{\link{SCGroup_Annotation}} object containing observation annotations}
+\item{\code{obs}}{\code{\link{AnnotationDataframe}} object containing observation-aligned
+annotations}
 
-\item{\code{var}}{\code{\link{SCGroup_Annotation}} object containing variable annotations}
+\item{\code{var}}{\code{\link{AnnotationDataframe}} object containing variable-aligned
+annotations}
 
-\item{\code{X}}{\code{\link{SCGroup_X}} object containing assay data}
+\item{\code{X}}{\code{\link{AssayMatrix}} object containing the matrix-like assay data
+with string dimensions \code{obs_id} and \code{var_id} that align to the dimensions
+of the \code{obs} and \code{var} arrays, respectively.}
 
 \item{\code{obsm}}{named list of \code{\link{AnnotationMatrix}} objects aligned with \code{obs}}
 
@@ -45,10 +50,10 @@ which includes:
 \if{html}{
 \out{<details open ><summary>Inherited methods</summary>}
 \itemize{
-\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TiledbGroup" data-id="add_metadata">}\href{../../tiledbsc/html/TiledbGroup.html#method-add_metadata}{\code{tiledbsc::TiledbGroup$add_metadata()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TiledbGroup" data-id="get_metadata">}\href{../../tiledbsc/html/TiledbGroup.html#method-get_metadata}{\code{tiledbsc::TiledbGroup$get_metadata()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TiledbGroup" data-id="list_object_uris">}\href{../../tiledbsc/html/TiledbGroup.html#method-list_object_uris}{\code{tiledbsc::TiledbGroup$list_object_uris()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TiledbGroup" data-id="list_objects">}\href{../../tiledbsc/html/TiledbGroup.html#method-list_objects}{\code{tiledbsc::TiledbGroup$list_objects()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBGroup" data-id="add_metadata">}\href{../../tiledbsc/html/TileDBGroup.html#method-add_metadata}{\code{tiledbsc::TileDBGroup$add_metadata()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBGroup" data-id="get_metadata">}\href{../../tiledbsc/html/TileDBGroup.html#method-get_metadata}{\code{tiledbsc::TileDBGroup$get_metadata()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBGroup" data-id="list_object_uris">}\href{../../tiledbsc/html/TileDBGroup.html#method-list_object_uris}{\code{tiledbsc::TileDBGroup$list_object_uris()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBGroup" data-id="list_objects">}\href{../../tiledbsc/html/TileDBGroup.html#method-list_objects}{\code{tiledbsc::TileDBGroup$list_objects()}}\out{</span>}
 }
 \out{</details>}
 }

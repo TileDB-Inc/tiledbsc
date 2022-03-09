@@ -28,6 +28,10 @@ data_dir <- file.path(tempdir(), "pbmc_small")
 dir.create(data_dir, showWarnings = FALSE)
 ```
 
+## Overview
+
+This vignette will cover the creation of an **sc_dataset** from a `Seurat` object. 
+
 ## Load data
 
 Load the subsetted 10X genomics [PBMC dataset](https://mojaveazure.github.io/seurat-object/reference/pbmc_small.html) provided by SeuratObject.
@@ -37,118 +41,118 @@ data("pbmc_small", package = "SeuratObject")
 pbmc_small
 ```
 
+## Convert a `Seurat` object to a TileDB-backed `sc_dataset`
 
-# Step-by-step Conversion from Seurat to a TileDB `sc_group`
+The `SCDataset` class provides a method for converting an entire `Seurat` object to an `sc_dataset`. This is the recommended way to perform the conversion since it can handle multiple `Assay` objects and will (eventually) convert all of the standard slots that comprise a `Seurat` object.
 
-Create URIs for each of the 3 arrays that will make up the new `sc_group`:
+This first step is to create a new `SCDataset` object and provide a URI where the dataset should be created:
 
 ```{r}
-sc_group_uris <- sapply(c("X", "obs", "var"), \(x) file.path(data_dir, x))
-sc_group_uris
+scdataset <- SCDataset$new(uri = file.path(tempdir(), "sc_dataset"))
 ```
 
-## Assay data
-
-Single-cell data stored in the `Assay` slot of the `Seurat` object is stored in the `X` array of an `sc_group`.
-
-Create a new instance of `SCGroup_X` and specify its location.
+Next, we'll pass the entire `pbmc_small` object directly to `from_seurat()` and one `sc_group` will be created for each `Assay` object:
 
 ```{r}
-scgroup_x <- SCGroup_X$new(uri = sc_group_uris[["X"]])
+scdataset$from_seurat(object = pbmc_small)
 ```
 
-Then we'll ingest the `counts` data from the `Assay`, which is returned from Seurat as a `dgCMatrix`, into the `X` array using the `SCGroup_X`'s `from_matrix()` method.
-
-*Note: `SCGroup_X` class supports ingesting multiple transformations of the assay into the same array as a COO-formatted data frame. We are only ingesting a single transformation for demonstration purposes.*
+Examining the directory structure, you can see the top-level `sc_dataset` directory now contains a single `scgroup_RNA` sub-directory, corresponding to `pbmc_small`'s only assay, `"RNA"`:
 
 ```{r}
-scgroup_x$from_matrix(
-  x = GetAssayData(object = pbmc_small, slot = "counts")
+fs::dir_tree(scdataset$uri, recurse = 1)
+```
+
+Internally, the `SCGroup` class is used to convert each Seurat `Assay` object to an `sc_group`, which creates and populates the various sub-components, including:
+
+- the `counts`, `data`, and `scale.data` matrices are each stored in separate attribute of the `X` array
+- the `data.frame` containing feature-level metadata is ingested into the `var` array
+
+Separately, any dimensional reductions are extracted and stored in corresponding `obsm`/`varm` arrays.
+
+
+To close the loop we can then read the on-disk `sc_dataset` back into memory as a `Seurat` object.
+
+```{r}
+scdataset$to_seurat(project = "SCDataset Example")
+```
+
+
+## Convert a Seurat `Assay` to TileDB-backed `sc_group`
+
+Conversions can happen at multiple levels of the API. For example, we can operate directly on a Seurat `Assay` using `SCGroup`. The workflow is largely the same:
+
+
+```{r}
+scgroup <- SCGroup$new(uri = file.path(tempdir(), "sc_group"))
+fs::dir_tree(scgroup$uri)
+```
+
+Then we'll pass `RNA` assay from `pbmc_small` to the `from_seurat_assay()` method of the `SCGroup` class. 
+
+*Note: Because cell-level metadata is stored in the parent `Seurat` object, we need to provide this data separately.*
+
+```{r}
+scgroup$from_seurat_assay(
+  object = GetAssay(pbmc_small, assay = "RNA"),
+  obs = pbmc_small[[]]
 )
 ```
 
-Examine the contents of the newly created `X` array.
+Examine the directory structure of the `sc_group` we can see the `X`, `var`, and `obs` arrays have all been created.
 
 ```{r}
-fs::dir_tree(scgroup_x$uri)
+fs::dir_tree(scgroup$uri, recurse = FALSE)
 ```
 
-Data stored in the `X` array can then be loaded back into R in the same `dGTMatrix` format:
+## Accessing individual components
+
+Any of the underlying TileDB arrays can be accessed directly from an `sc_dataset` object by navigating its internal classes.
+
+As an example, let's access the cell-level metadata. Recall from the [`matrix-api spec`][matrix-api-spec] that cell-level metadata is stored in the `obs` array of an `SCGroup`. Therefore, we must first access a specific `SCGroup` within the `SCDataset`'s `scgroups` slot. Let's generate a list of the available `scgroups`:
 
 ```{r}
-scgroup_x$to_matrix(attr = "counts")
+names(scdataset$scgroups)
 ```
 
-## Feature (variable) annotations
+Easy choice. `"RNA"` can then be used to index the corresponding `SCGroup`:
 
-Both `var` and `obs` annotations are handled by the same `SCGroup_Annotation` class.
-
-Create one instance of `SCGroup_Annotation` for the variable annotations:
 
 ```{r}
-scgroup_var <- SCGroup_Annotation$new(uri = sc_group_uris[["var"]])
+scdataset$scgroups$RNA
 ```
 
-Ingest the `data.frame` containing the RNA assay's feature annotations into the `var` array.
+We can see we have access to a variety of fields and methods, but `obs` is the one we're after.
 
 ```{r}
-scgroup_var$from_dataframe(
-  x = GetAssay(pbmc_small, assay = "RNA")[[]]
-)
+scdataset$scgroups$RNA$obs$to_dataframe()
 ```
 
-Examine the contents of the newly created `var` array.
+This is a `AnnotationDataframe` object, which includes a method for reading the data into R as a `data.frame`:
+
 
 ```{r}
-fs::dir_tree(scgroup_var$uri)
+head(scdataset$scgroups$RNA$obs$to_dataframe())
 ```
 
-Retrieve the feature annotations from the `var` array:
-
-```{r}
-# return only the first 10 rows
-scgroup_var$to_dataframe()[1:10, , drop = FALSE]
-```
-
-## Observation (sample) annotations
-
-Create a second instance of `SCGroup_Annotation` for the observation annotations:
-
-```{r}
-scgroup_obs <- SCGroup_Annotation$new(uri = sc_group_uris[["obs"]])
-```
-
-Ingest `data.frame` containing observation annotations into the `obs` component.
-
-```{r}
-scgroup_obs$from_dataframe(
-  x = pbmc_small[[]]
-)
-```
-
-Retrieve the observation annotations from the `obs` array:
-
-```{r}
-# return only the first 10 rows
-scgroup_obs$to_dataframe()[1:10, ]
-```
 
 # Array Access
 
 ## Helpers
 
-The `SCGroup` classes include a number of helper functions for interacting with the underying arrays.
+All of the array-based classes include a number of helper functions for interacting with the underlying arrays.
 
 Print the schema of an array:
 
 ```{r}
+scgroup_obs <- scdataset$scgroups$RNA$obs
 scgroup_obs$schema()
 ```
 
 List the names of the array's dimensions (i.e., indexed columns)
 
 ```{r}
-scgroup_x$dimnames()
+scgroup_obs$dimnames()
 ```
 
 and attributes (i.e., non-indexed columns):
@@ -172,81 +176,6 @@ obs_array[]
 ```
 
 
-# Convert a Seurat `Assay` to TileDB-backed `sc_group`
-
-Now we'll use the higher-level `SCGroup` class to handle the conversion from a Seurat `Assay` object to a TileDB `sc_group`.
-
-First, create the empty TileDB group:
-
-```{r}
-scgroup_uri <- file.path(data_dir, "sc_group")
-scgroup <- SCGroup$new(uri = scgroup_uri)
-
-fs::dir_tree(scgroup_uri)
-```
-
-Then we'll pass `RNA` assay from `pmbc.rna` to the `from_seurat_assay()` method of the `SCGroup` class, which will create and populate the `X` and `var` with the corresponding data from the `Assay` object:
-
-- the `counts`, `data`, and `scale.data` matrices are each stored in separate attribute of the `X` array
-- the `data.frame` containing feature-level metadata is ingested into the `var` array
-
-Because cell-level metadata is stored in the parent `Seurat` object, we need to provide this data separately.
-
-```{r}
-scgroup$from_seurat_assay(
-  object = GetAssay(pbmc_small, assay = "RNA"),
-  obs = pbmc_small[[]]
-)
-```
-
-Examine the directory structure of the `sc_group` we can see the `X`, `var`, and `obs` arrays have all been created.
-
-```{r}
-fs::dir_tree(scgroup_uri)
-```
-
-Any of the underlying TileDB arrays can be accessed directly from the `sc_group` object. For example, let's access the `obs` array and return the cell-level metadata using `to_dataframe()`:
-
-```{r}
-head(scgroup$obs$to_dataframe())
-```
-
-
-From the TileDB `sc_group` we can load the data back into memory as a _Seurat_ `Assay` object:
-
-```{r}
-scgroup$to_seurat_assay()
-```
-
-# Convert a `Seurat` object to a TileDB-backed `sc_dataset`
-
-Finally, we'll use the top-level `SCDataset` class to convert an entire `Seurat` object to an `sc_dataset`. This is the recommended way to perform a conversion since it can handle multiple `Assay` objects and will eventually convert all the standard slots that comprise a `Seurat` object.
-
-As before with the `SCGroup` above, we first need to create a new `SCDataset` object:
-
-```{r}
-scdataset_uri <- file.path(data_dir, "sc_dataset")
-scdataset <- SCDataset$new(uri = scdataset_uri)
-```
-
-Then we can then pass the entire `pbmc_small` object directly to `from_seurat()` and one `sc_group` will be created for each `Assay` object:
-
-```{r}
-scdataset$from_seurat(object = pbmc_small)
-```
-
-You can see the group contains one `scgroup_RNA` directory, as well as all of its various components:
-
-```{r}
-fs::dir_tree(scdataset$uri)
-```
-
-To close the loop we can then read the on-disk `sc_dataset` back into memory as a `Seurat` object.
-
-```{r}
-scdataset$to_seurat(project = "SCDataset Example")
-```
-
 # Session
 
 ```{r}
@@ -259,3 +188,4 @@ tiledb::tiledb_vfs_remove_dir(data_dir)
 
 <!-- links -->
 [tiledb-r]: https://tiledb-inc.github.io/TileDB-R/
+[matrix-api-spec]: https://github.com/single-cell-data/matrix-api/blob/main/specification.md

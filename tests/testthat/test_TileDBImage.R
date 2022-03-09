@@ -10,20 +10,12 @@ teardown({
 
 test_that("Can't be instantiated without a URI", {
   expect_error(
-    TiledbImage$new(),
+    TileDBImage$new(),
     "argument \"uri\" is missing, with no default"
   )
 })
 
-test_that("Can't be instantiated if the array doesn't exist", {
-  expect_error(
-    TiledbImage$new(uri = "non-existent-array"),
-    "No array found at URI"
-  )
-})
-
-
-tdb_img <- TiledbImage$new(
+tdb_img <- TileDBImage$new(
   uri = tdb_uri,
   image_path = img_file,
   verbose = FALSE
@@ -37,9 +29,9 @@ test_that("A tiledb object can be retrieved", {
   testthat::expect_s4_class(tdb_img$tiledb_array(), "tiledb_array")
 })
 
-test_that("TiledbImage can be instantiated with existing array", {
-  tdb_img <- TiledbImage$new(uri = tdb_uri)
-  expect_true(inherits(tdb_img, "TiledbImage"))
+test_that("TileDBImage can be instantiated with existing array", {
+  tdb_img <- TileDBImage$new(uri = tdb_uri)
+  expect_true(inherits(tdb_img, "TileDBImage"))
 })
 
 test_that("Image metadata can be retrieved", {

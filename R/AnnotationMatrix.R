@@ -1,33 +1,19 @@
 #' Single-cell Annotation Matrix
 #'
 #' Base class for matrix-like data with rows aligned to the observations or
-#' features of an [`SCGroup_X`] object.
+#' features of an [`SCGroup`].
 #'
 #' @export
 
 AnnotationMatrix <- R6::R6Class(
   classname = "AnnotationMatrix",
-  inherit = TiledbBase,
+  inherit = TileDBArray,
 
   public = list(
     #' @field uri URI of the TileDB array
     uri = NULL,
     #' @field verbose Print status messages
     verbose = TRUE,
-
-    #' @description Create a new SCGroup_AnnotationMatrix object.
-    #' @param uri URI of the TileDB array
-    #' @param verbose Print status messages
-    initialize = function(uri, verbose = TRUE) {
-      self$uri <- uri
-      self$verbose <- verbose
-
-      if (tiledb::tiledb_vfs_is_dir(uri)) {
-        message(glue::glue("Found existing array at '{uri}'"))
-      } else {
-        message(glue::glue("No array currently exists at '{uri}'"))
-      }
-    },
 
     #' @description Ingest annotation matrix
     #' @param x a [`matrix`] with charater vectors used for row/column names

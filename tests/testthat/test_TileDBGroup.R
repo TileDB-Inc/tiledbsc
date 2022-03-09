@@ -5,7 +5,7 @@ test_that("a new TileDB group can be created", {
   expect_false(dir.exists(grp_uri))
 
  testthat::expect_message(
-    TiledbGroup$new(uri = grp_uri, verbose = TRUE),
+    TileDBGroup$new(uri = grp_uri, verbose = TRUE),
     "No TileDB group currently exists at"
   )
 
@@ -15,7 +15,7 @@ test_that("a new TileDB group can be created", {
 
 test_that("arrays within a group can be discovered", {
   grp_uri <- file.path(withr::local_tempdir(), "new-group")
-  grp <- TiledbGroup$new(uri = grp_uri, verbose = FALSE)
+  grp <- TileDBGroup$new(uri = grp_uri, verbose = FALSE)
 
   a1 <- create_empty_test_array(file.path(grp_uri, "a1"))
   a2 <- create_empty_test_array(file.path(grp_uri, "a2"))
@@ -28,7 +28,7 @@ test_that("arrays within a group can be discovered", {
 
 test_that("metadata can be set and retrieved from a group", {
   grp_uri <- file.path(withr::local_tempdir(), "metadata-group")
-  grp <- TiledbGroup$new(uri = grp_uri, verbose = TRUE)
+  grp <- TileDBGroup$new(uri = grp_uri, verbose = TRUE)
 
   md <- list(foo = "bar")
   grp$add_metadata(md)

@@ -1,24 +1,24 @@
 #' TileDB Array Base Class
 #' @export
-TiledbBase <- R6::R6Class(
-  classname = "TiledbBase",
+TileDBArray <- R6::R6Class(
+  classname = "TileDBArray",
   #' @field uri The URI of the TileDB array
   #' @field verbose Whether to print verbose output
   public = list(
     uri = NULL,
     verbose = TRUE,
 
-    #' @description Create a new TiledbBase object.
+    #' @description Create a new TileDBArray object.
     #' @param uri URI for the TileDB array
     #' @param verbose Print status messages
     initialize = function(uri, verbose = TRUE) {
       self$uri <- uri
       self$verbose <- verbose
-      private$verify_array_exists()
+      private$array_exists()
       return(self)
     },
 
-    #' @description Return a [`tiledbarray`] object
+    #' @description Return a [`TileDBArray`] object
     #' @param ... Optional arguments to pass to `tiledb::tiledb_array()`
     #' @return A [`tiledb::tiledb_array`] object.
     tiledb_array = function(...) {
@@ -120,12 +120,16 @@ TiledbBase <- R6::R6Class(
     ingest_data = function() return(NULL),
 
     # @description Check if the array exists.
-    verify_array_exists = function() {
-      stopifnot(
-        `No array found at URI` = tiledb::tiledb_vfs_is_dir(
-          self$uri
-        )
-      )
+    # @return TRUE if the array exists, FALSE otherwise.
+    array_exists = function() {
+      result <- tiledb::tiledb_object_type(self$uri) == "ARRAY"
+      if (result) {
+        msg <- sprintf("Found existing TileDB array at '%s'", self$uri)
+      } else {
+        msg <- sprintf("No TileDB array found at '%s'", self$uri)
+      }
+      if (self$verbose) message(msg)
+      result
     }
   )
 )

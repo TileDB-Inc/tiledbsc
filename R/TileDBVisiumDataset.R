@@ -8,7 +8,7 @@
 #' @export
 TiledbVisiumDataset <- R6::R6Class(
   classname = "TiledbVisiumDataset",
-  inherit = TiledbVisiumImage,
+  inherit = TileDBVisiumImage,
 
   #' @field uri URI of the TileDB array
   #' @field assay_array Access the TileDB array containing the assay data
@@ -58,14 +58,14 @@ TiledbVisiumDataset <- R6::R6Class(
         tiledb::tiledb_group_create(uri)
 
         # build the count array
-        self$assay_array <- TiledbAssay$new(
+        self$assay_array <- TileDBAssay$new(
           uri = assay_array_uri,
           file_path = count_path,
           verbose = verbose
         )
 
         # build the image array
-        self$image_array <- TiledbImage$new(
+        self$image_array <- TileDBImage$new(
           uri = image_array_uri,
           image_path = image_path,
           verbose = verbose
@@ -78,22 +78,22 @@ TiledbVisiumDataset <- R6::R6Class(
         )
 
         # build the image positions array
-        self$positions_array <- TiledbImagePositions$new(
+        self$positions_array <- TileDBImagePositions$new(
           uri = positions_array_uri,
           image_positions_path = image_positions_path,
           verbose = verbose
         )
 
       } else {
-        self$assay_array <- TiledbAssay$new(
+        self$assay_array <- TileDBAssay$new(
           assay_array_uri,
           verbose = verbose
         )
-        self$image_array <- TiledbImage$new(
+        self$image_array <- TileDBImage$new(
           image_array_uri,
           verbose = verbose
         )
-        self$positions_array <- TiledbImagePositions$new(
+        self$positions_array <- TileDBImagePositions$new(
           positions_array_uri,
           verbose = verbose
         )

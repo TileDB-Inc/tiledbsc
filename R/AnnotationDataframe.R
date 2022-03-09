@@ -1,35 +1,19 @@
-#' Single-cell Group Annotation Data Frame
+#' Single-cell Annotation Data Frame
 #'
-#' Base class for representing annotations for the [`SCGroup_X`] data matrix's
-#' observations and variables. Annotation data is stored as a `data.frame` with
-#' the number of rows equal to the length of the corresponding `X` dimension,
-#' and rownames matching the values of the corresponding `X` dimension's labels.
-#'
+#' Base class for data frames with rows aligned to the observations or features
+#' of an [`SCGroup`]. Used to store a heterogeneous collection of
+#' annotations/measurements.
 #' @export
 
-SCGroup_Annotation <- R6::R6Class(
-  classname = "SCGroup_Annotation",
-  inherit = TiledbBase,
+AnnotationDataframe <- R6::R6Class(
+  classname = "AnnotationDataframe",
+  inherit = TileDBArray,
 
   public = list(
     #' @field uri URI of the TileDB array
     uri = NULL,
     #' @field verbose Print status messages
     verbose = TRUE,
-
-    #' @description Create a new SCObject_Annotation object.
-    #' @param uri URI of the TileDB array
-    #' @param verbose Print status messages
-    initialize = function(uri, verbose = TRUE) {
-      self$uri <- uri
-      self$verbose <- verbose
-
-      if (tiledb::tiledb_vfs_is_dir(uri)) {
-        message(glue::glue("Found existing array at '{uri}'"))
-      } else {
-        message(glue::glue("No array currently exists at '{uri}'"))
-      }
-    },
 
     #' @description Ingest annotation data
     #' @param x a [`data.frame`]

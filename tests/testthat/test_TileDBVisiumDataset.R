@@ -21,7 +21,7 @@ test_that("A TiledbVisiumDataset object can be created", {
     image_positions_path = pos_file,
     verbose = interactive()
   )
-  expect_true(inherits(tdb, "TiledbVisiumImage"))
+  expect_true(inherits(tdb, "TileDBVisiumImage"))
 })
 
 test_that("TiledbVisiumDataset can be instantiated with existing array", {

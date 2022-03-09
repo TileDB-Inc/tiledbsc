@@ -10,10 +10,10 @@ Single-cell Annotation Matrix
 }
 \details{
 Base class for matrix-like data with rows aligned to the observations or
-features of an \code{\link{SCGroup_X}} object.
+features of an \code{\link{SCGroup}}.
 }
 \section{Super class}{
-\code{\link[tiledbsc:TiledbBase]{tiledbsc::TiledbBase}} -> \code{AnnotationMatrix}
+\code{\link[tiledbsc:TileDBArray]{tiledbsc::TileDBArray}} -> \code{AnnotationMatrix}
 }
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
@@ -27,7 +27,6 @@ features of an \code{\link{SCGroup_X}} object.
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-new}{\code{AnnotationMatrix$new()}}
 \item \href{#method-from_matrix}{\code{AnnotationMatrix$from_matrix()}}
 \item \href{#method-to_matrix}{\code{AnnotationMatrix$to_matrix()}}
 \item \href{#method-clone}{\code{AnnotationMatrix$clone()}}
@@ -36,35 +35,17 @@ features of an \code{\link{SCGroup_X}} object.
 \if{html}{
 \out{<details ><summary>Inherited methods</summary>}
 \itemize{
-\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TiledbBase" data-id="add_metadata">}\href{../../tiledbsc/html/TiledbBase.html#method-add_metadata}{\code{tiledbsc::TiledbBase$add_metadata()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TiledbBase" data-id="attributes">}\href{../../tiledbsc/html/TiledbBase.html#method-attributes}{\code{tiledbsc::TiledbBase$attributes()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TiledbBase" data-id="attrnames">}\href{../../tiledbsc/html/TiledbBase.html#method-attrnames}{\code{tiledbsc::TiledbBase$attrnames()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TiledbBase" data-id="dimensions">}\href{../../tiledbsc/html/TiledbBase.html#method-dimensions}{\code{tiledbsc::TiledbBase$dimensions()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TiledbBase" data-id="dimnames">}\href{../../tiledbsc/html/TiledbBase.html#method-dimnames}{\code{tiledbsc::TiledbBase$dimnames()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TiledbBase" data-id="get_metadata">}\href{../../tiledbsc/html/TiledbBase.html#method-get_metadata}{\code{tiledbsc::TiledbBase$get_metadata()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TiledbBase" data-id="schema">}\href{../../tiledbsc/html/TiledbBase.html#method-schema}{\code{tiledbsc::TiledbBase$schema()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TiledbBase" data-id="tiledb_array">}\href{../../tiledbsc/html/TiledbBase.html#method-tiledb_array}{\code{tiledbsc::TiledbBase$tiledb_array()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="add_metadata">}\href{../../tiledbsc/html/TileDBArray.html#method-add_metadata}{\code{tiledbsc::TileDBArray$add_metadata()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="attributes">}\href{../../tiledbsc/html/TileDBArray.html#method-attributes}{\code{tiledbsc::TileDBArray$attributes()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="attrnames">}\href{../../tiledbsc/html/TileDBArray.html#method-attrnames}{\code{tiledbsc::TileDBArray$attrnames()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="dimensions">}\href{../../tiledbsc/html/TileDBArray.html#method-dimensions}{\code{tiledbsc::TileDBArray$dimensions()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="dimnames">}\href{../../tiledbsc/html/TileDBArray.html#method-dimnames}{\code{tiledbsc::TileDBArray$dimnames()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="get_metadata">}\href{../../tiledbsc/html/TileDBArray.html#method-get_metadata}{\code{tiledbsc::TileDBArray$get_metadata()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="initialize">}\href{../../tiledbsc/html/TileDBArray.html#method-initialize}{\code{tiledbsc::TileDBArray$initialize()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="schema">}\href{../../tiledbsc/html/TileDBArray.html#method-schema}{\code{tiledbsc::TileDBArray$schema()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="tiledb_array">}\href{../../tiledbsc/html/TileDBArray.html#method-tiledb_array}{\code{tiledbsc::TileDBArray$tiledb_array()}}\out{</span>}
 }
 \out{</details>}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\if{latex}{\out{\hypertarget{method-new}{}}}
-\subsection{Method \code{new()}}{
-Create a new SCGroup_AnnotationMatrix object.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AnnotationMatrix$new(uri, verbose = TRUE)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{uri}}{URI of the TileDB array}
-
-\item{\code{verbose}}{Print status messages}
-}
-\if{html}{\out{</div>}}
-}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-from_matrix"></a>}}

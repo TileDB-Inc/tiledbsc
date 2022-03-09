@@ -7,18 +7,18 @@ teardown({
   tiledb::tiledb_vfs_remove_dir(tdb_uri)
 })
 
-test_that("A TiledbAssay object can be created from a 10X H5 file", {
-  tdb <<- TiledbAssay$new(
+test_that("A TileDBAssay object can be created from a 10X H5 file", {
+  tdb <<- TileDBAssay$new(
     uri = tdb_uri,
     file_path = h5_file,
     verbose = interactive()
   )
-  expect_true(inherits(tdb, "TiledbAssay"))
+  expect_true(inherits(tdb, "TileDBAssay"))
 })
 
-test_that("TiledbAssay can be instantiated with existing array", {
-  tdb <- TiledbAssay$new(uri = tdb_uri)
-  expect_true(inherits(tdb, "TiledbAssay"))
+test_that("TileDBAssay can be instantiated with existing array", {
+  tdb <- TileDBAssay$new(uri = tdb_uri)
+  expect_true(inherits(tdb, "TileDBAssay"))
 })
 
 test_that("A sparse matrix can be created from the object", {

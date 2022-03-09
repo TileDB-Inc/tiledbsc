@@ -8,7 +8,7 @@ Class for representing a TileDB group containing one or more
 \code{\link{AnnotationMatrix}} arrays that share a common dimension name.
 }
 \section{Super class}{
-\code{\link[tiledbsc:TiledbGroup]{tiledbsc::TiledbGroup}} -> \code{AnnotationMatrixGroup}
+\code{\link[tiledbsc:TileDBGroup]{tiledbsc::TileDBGroup}} -> \code{AnnotationMatrixGroup}
 }
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
@@ -31,10 +31,10 @@ in the group.}
 \if{html}{
 \out{<details open ><summary>Inherited methods</summary>}
 \itemize{
-\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TiledbGroup" data-id="add_metadata">}\href{../../tiledbsc/html/TiledbGroup.html#method-add_metadata}{\code{tiledbsc::TiledbGroup$add_metadata()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TiledbGroup" data-id="get_metadata">}\href{../../tiledbsc/html/TiledbGroup.html#method-get_metadata}{\code{tiledbsc::TiledbGroup$get_metadata()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TiledbGroup" data-id="list_object_uris">}\href{../../tiledbsc/html/TiledbGroup.html#method-list_object_uris}{\code{tiledbsc::TiledbGroup$list_object_uris()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TiledbGroup" data-id="list_objects">}\href{../../tiledbsc/html/TiledbGroup.html#method-list_objects}{\code{tiledbsc::TiledbGroup$list_objects()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBGroup" data-id="add_metadata">}\href{../../tiledbsc/html/TileDBGroup.html#method-add_metadata}{\code{tiledbsc::TileDBGroup$add_metadata()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBGroup" data-id="get_metadata">}\href{../../tiledbsc/html/TileDBGroup.html#method-get_metadata}{\code{tiledbsc::TileDBGroup$get_metadata()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBGroup" data-id="list_object_uris">}\href{../../tiledbsc/html/TileDBGroup.html#method-list_object_uris}{\code{tiledbsc::TileDBGroup$list_object_uris()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBGroup" data-id="list_objects">}\href{../../tiledbsc/html/TileDBGroup.html#method-list_objects}{\code{tiledbsc::TileDBGroup$list_objects()}}\out{</span>}
 }
 \out{</details>}
 }
@@ -76,9 +76,9 @@ Add a new \code{\link{AnnotationMatrix}} array to the group.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{data}}{an \code{\link{matrix}} of annotation data to ingest. The \code{matrix} rows
-must be aligned to the \code{\link{SCGroup_X}} dimension indicated by the
-group's \code{dimension_name}.}
+\item{\code{data}}{a \code{\link{matrix}} of annotation data to ingest. The \code{matrix} rows
+must be aligned to the \code{\link{SCGroup}} dimension indicated by the group's
+\code{dimension_name}.}
 
 \item{\code{name}}{Name of the new variable annotation matrix.}
 

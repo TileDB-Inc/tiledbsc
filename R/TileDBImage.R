@@ -6,9 +6,9 @@
 #' @importFrom tools file_ext
 #' @export
 
-TiledbImage <- R6::R6Class(
-  classname = "TiledbImage",
-  inherit = TiledbBase,
+TileDBImage <- R6::R6Class(
+  classname = "TileDBImage",
+  inherit = TileDBArray,
 
   #' @field uri URI of the TileDB array
   #' @field verbose Print status messages
@@ -16,7 +16,7 @@ TiledbImage <- R6::R6Class(
     uri = NULL,
     verbose = TRUE,
 
-    #' @description Create a new TiledbImage object. A new array is created if
+    #' @description Create a new TileDBImage object. A new array is created if
     #' an `image_path` is provided, otherwise an existing array is opened at
     #' the specified URI.
     #' @param uri URI of the TileDB array
@@ -30,7 +30,7 @@ TiledbImage <- R6::R6Class(
         stopifnot(file.exists(image_path))
         private$build_array(image_path)
       } else {
-        private$verify_array_exists()
+        private$array_exists()
       }
     },
 

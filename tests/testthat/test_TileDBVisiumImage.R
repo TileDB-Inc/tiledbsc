@@ -12,27 +12,20 @@ teardown({
 
 test_that("Can't be instantiated without a URI", {
   expect_error(
-    TiledbVisiumImage$new(),
+    TileDBVisiumImage$new(),
     "argument \"uri\" is missing, with no default"
   )
 })
 
-test_that("Can't be instantiated if the array doesn't exist", {
-  expect_error(
-    TiledbVisiumImage$new(uri = "non-existent-array"),
-    "No array found at URI"
-  )
-})
-
-test_that("A TiledbVisiumImage object can be created", {
-  tdb <<- TiledbVisiumImage$new(
+test_that("A TileDBVisiumImage object can be created", {
+  tdb <<- TileDBVisiumImage$new(
     uri = tdb_uri,
     image_path = img_file,
     scale_factors_path = sf_file,
     image_positions_path = pos_file,
     verbose = interactive()
   )
-  expect_true(inherits(tdb, "TiledbVisiumImage"))
+  expect_true(inherits(tdb, "TileDBVisiumImage"))
 })
 
 test_that("A Seurat VisiumV1 object can be created from the object", {

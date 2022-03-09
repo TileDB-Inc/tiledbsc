@@ -1,19 +1,18 @@
-#' Single-cell Group: X Matrix
+#' Single-cell Assay Matrix
 #'
 #' @description
-#' The `X` matrix component of an [`SCGroup`].
+#' Base class for 2D sparse `matrix`-like data with string dimensions. An
+#' `AssayMatrix` may contain one or more "layers" (i.e., additional measurements
+#' that share the same dimensions and non-empty coordinates.
 #'
-#' A `SCGroup_X` object is a 2D sparse array with string dimensions `obs_id`
-#' and `var_id` that map to the dimensions of the `obs` and `var` arrays,
-#' respectively. An `X` matrix can contain or more "layers", which that all
-#' share the same labels/coordinates and non-empty cells.
+#' Used for the `X` field of [`SCGroup`].
 
 #' @importFrom Matrix sparseMatrix
 #' @export
 
-SCGroup_X <- R6::R6Class(
-  classname = "SCGroup_X",
-  inherit = TiledbBase,
+AssayMatrix <- R6::R6Class(
+  classname = "AssayMatrix",
+  inherit = TileDBArray,
 
   public = list(
     #' @field uri URI of the TileDB array
@@ -21,30 +20,16 @@ SCGroup_X <- R6::R6Class(
     #' @field verbose Print status messages
     verbose = TRUE,
 
-    #' @description Create a new SCObject_X object.
-    #' @param uri URI of the TileDB array
-    #' @param verbose Print status messages
-    initialize = function(uri, verbose = TRUE) {
-      self$uri <- uri
-      self$verbose <- verbose
-
-      if (tiledb::tiledb_vfs_is_dir(uri)) {
-        message(glue::glue("Found existing array at '{uri}'"))
-      } else {
-        message(glue::glue("No array currently exists at '{uri}'"))
-      }
-    },
-
     #' @description Ingest assay data from a sparse matrix
     #' @param x a [`Matrix::dgCMatrix-class`] or [`Matrix::dgTMatrix-class`]
     #' with string dimensions
     #' @param attr Name of the attribute within the TileDB array that will
     #' store the Matrix data
     from_matrix = function(x, attr = "counts") {
-     if (inherits(x, "dgCMatrix")) {
-        message("Converting to dgTMatrix")
-        x <- as(x, "dgTMatrix")
-      }
+      if (inherits(x, "dgCMatrix")) {
+          message("Converting to dgTMatrix")
+          x <- as(x, "dgTMatrix")
+        }
       stopifnot("'x' must be a dgTMatrix" = inherits(x, "dgTMatrix"))
       stopifnot(is_scalar_character(attr))
       self$from_dataframe(

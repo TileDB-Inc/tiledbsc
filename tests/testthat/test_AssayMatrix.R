@@ -10,18 +10,18 @@ teardown({
 data("pbmc_small", package = "SeuratObject")
 pbmc_small_rna <- Seurat::GetAssay(pbmc_small, assay = "RNA")
 
-test_that("SCGroup_X object can be created from a dgCMatrix", {
+test_that("AssayMatrix object can be created from a dgCMatrix", {
   x_uri <- file.path(tdb_uri, "X")
   mat <- Seurat::GetAssayData(pbmc_small_rna)
 
-  scgroup_x <- SCGroup_X$new(uri = x_uri, verbose = FALSE)
-  expect_true(inherits(scgroup_x, "SCGroup_X"))
+  assaymat <- AssayMatrix$new(uri = x_uri, verbose = FALSE)
+  expect_true(inherits(assaymat, "AssayMatrix"))
 
-  scgroup_x$from_matrix(mat, attr = "counts")
+  assaymat$from_matrix(mat, attr = "counts")
   expect_true(dir.exists(x_uri))
-  expect_s4_class(scgroup_x$tiledb_array(), "tiledb_array")
+  expect_s4_class(assaymat$tiledb_array(), "tiledb_array")
 
-  mat2 <- scgroup_x$to_matrix()
+  mat2 <- assaymat$to_matrix()
   expect_equal(sort(rownames(mat2)), sort(rownames(mat)))
   expect_equal(sort(colnames(mat2)), sort(colnames(mat)))
 
