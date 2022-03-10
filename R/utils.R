@@ -23,9 +23,14 @@ has_character_rownames <- function(x) {
   typeof(attr(x, "row.names")) == "character"
 }
 
+is_matrix <- function(x) {
+  is.matrix(x) || inherits(x, "Matrix")
+}
+
 has_dimnames <- function(x) {
-  stopifnot(is.matrix(x))
-  !is.null(dimnames(x))
+  stopifnot(is_matrix(x))
+  dims <- dimnames(x) %||% list(NULL)
+  all(!vapply(dims, is.null, logical(1L)))
 }
 
 string_starts_with <- function(x, prefix) {
