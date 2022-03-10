@@ -29,6 +29,10 @@ SCGroup <- R6::R6Class(
     obsm = list(),
     #' @field varm named list of [`AnnotationMatrix`] objects aligned with `var`
     varm = list(),
+    #' @field obsp named list of [`AnnotationPairwiseMatrix`] objects aligned with `obs`
+    obsp = list(),
+    #' @field varp named list of [`AnnotationPairwiseMatrix`] objects aligned with `var`
+    varp = list(),
 
     #' @description Create a new SCGroup object. The existing array group is
     #'   opened at the specified array `uri` if one is present, otherwise a new
@@ -69,6 +73,18 @@ SCGroup <- R6::R6Class(
 
       self$varm <- AnnotationMatrixGroup$new(
         uri = file.path(self$uri, "varm"),
+        dimension_name = "var_id",
+        verbose = self$verbose
+      )
+
+      self$obsp <- AnnotationPairwiseMatrixGroup$new(
+        uri = file.path(self$uri, "obsp"),
+        dimension_name = "obs_id",
+        verbose = self$verbose
+      )
+
+      self$varp <- AnnotationPairwiseMatrixGroup$new(
+        uri = file.path(self$uri, "varp"),
         dimension_name = "var_id",
         verbose = self$verbose
       )
@@ -178,7 +194,7 @@ SCGroup <- R6::R6Class(
       stopifnot(
         "Must provide a Seurat 'Graph' object" = inherits(object, "Graph")
       )
-      browser()
+
       prefix <- "graph_"
       assay <- SeuratObject::DefaultAssay(object)
 
@@ -186,49 +202,12 @@ SCGroup <- R6::R6Class(
       stopifnot(is_scalar_character(name))
       array_name <- paste0(prefix, name)
 
-      tiledb::fromSparseMatrix(
-        obj = object,
-        uri = array_name,
-        cell_order = "ROW_MAJOR",
-        tile_order = "ROW_MAJOR",
-        filter = "ZSTD",
-        capacity = 10000L
+      # Currently assuming that graphs are always aligned to the obs axis
+      self$obsp$add_matrix(
+        data = as(object, "dgTMatrix"),
+        name = array_name
       )
-
-      mat <- as(object, "dgTMatrix")
-
-      tiledb::toSparseMatrix(uri = array_name,
-        array_name = array_name,
-        uri = file.path(self$uri, array_name),
-        verbose = self$verbose
-      )
-
-      tiledb::domain()
-
-      # Currently assuming that graph's are always aligned to the obs axis
-      object
-      loadings <- SeuratObject::Loadings(object)
-      if (!is_empty(loadings)) {
-        self$varm$add_annotation_matrix(
-          data = loadings,
-          name = array_name,
-          metadata = metadata
-        )
-      }
-
-      embeddings <- SeuratObject::Embeddings(object)
-      if (!is_empty(embeddings)) {
-        self$obsm$add_annotation_matrix(
-          data = embeddings,
-          name = array_name,
-          metadata = metadata
-        )
-      }
-
-      return(self)
-
     },
-
 
     #' @description Convert a [`SeuratObject::DimReduc`] object
     #'
