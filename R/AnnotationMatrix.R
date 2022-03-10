@@ -24,9 +24,9 @@ AnnotationMatrix <- R6::R6Class(
         stop("Must define 'index_col' to provide a dimension name")
       }
       stopifnot(
-        "Annotation data must be a matrix" = is.matrix(x),
-        "Annotation matrix must have defined dim names" = has_dimnames(x)
+        "'index_col' must be a scalar character" = is_scalar_character(index_col)
       )
+      private$validate_matrix(x)
 
       # convert to a data frame containing the index column
       x <- as.data.frame(x)
@@ -54,10 +54,11 @@ AnnotationMatrix <- R6::R6Class(
 
   private = list(
 
-    # @description Create an empty 1D TileDB array suitable for storing aligned
+    # @description Create an empty TileDB array suitable for storing aligned
     # matrix annotation data.
     # @param x A [`data.frame`]
-    # @param index_col Character vector with column name to use as index
+    # @param index_cols Character vector with column name(s) to use for the
+    # TileDB array's dimensions
     # @param cell_order,tile_order Configure the TileDB array's global cell
     # ordering by specifying the tile (default: `"HILBERT"`) and cell
     # (default: `"ROW_MAJOR"`) ordering. See
@@ -66,27 +67,26 @@ AnnotationMatrix <- R6::R6Class(
     # @param capacity Capacity of sparse fragments (default: 10000)
     create_empty_array = function(
       x,
-      index_col,
+      index_cols,
       cell_order = "HILBERT",
       tile_order = "ROW_MAJOR",
       capacity = 10000) {
 
       stopifnot(
-        "'index_col' must be a scalar character" = is_scalar_character(index_col),
-        "'index_col' must be a valid column name" = index_col %in% colnames(x)
+        "Index column(s) must match columns in the data frame" = index_cols %in% colnames(x)
       )
       if (self$verbose) {
         msg <- sprintf(
-          "Creating new annotation matrix array with index '%s' at '%s'",
-          self$uri,
-          index_col
+          "Creating new annotation matrix array with index [%s] at '%s'",
+          paste0(index_cols, collapse = ", "),
+          self$uri
         )
         message(msg)
       }
       tiledb::fromDataFrame(
         obj = x,
         uri = self$uri,
-        col_index = index_col,
+        col_index = index_cols,
         cell_order = cell_order,
         tile_order = tile_order,
         capacity = capacity,
@@ -103,6 +103,13 @@ AnnotationMatrix <- R6::R6Class(
       tdb_array <- tiledb::tiledb_array(self$uri, query_type = "WRITE")
       tdb_array[] <- x
       tiledb::tiledb_array_close(tdb_array)
+    },
+
+    validate_matrix = function(x) {
+      stopifnot(
+        "Annotation data must be a matrix" = is.matrix(x),
+        "Annotation matrix must have defined dim names" = has_dimnames(x)
+      )
     }
   )
 )
