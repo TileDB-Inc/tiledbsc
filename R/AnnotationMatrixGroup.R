@@ -49,7 +49,7 @@ AnnotationMatrixGroup <- R6::R6Class(
 
       # Create AnnotationMatrix objects for each array URI
       if (!is_empty(array_uris)) {
-        arrays <- lapply(array_uris, AnnotationMatrix$new, verbose = self$verbose)
+        arrays <- private$get_existing_arrays(array_uris)
         names(arrays) <- basename(array_uris)
         self$arrays <- arrays
       }
@@ -84,6 +84,12 @@ AnnotationMatrixGroup <- R6::R6Class(
       self$arrays[[name]] <- array
 
       return(self)
+    }
+  ),
+
+  private = list(
+    get_existing_arrays = function(uris) {
+      lapply(uris, AnnotationMatrix$new, verbose = self$verbose)
     }
   )
 )
