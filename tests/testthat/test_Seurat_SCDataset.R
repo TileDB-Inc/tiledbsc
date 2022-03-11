@@ -6,7 +6,6 @@ teardown({
   tiledb::tiledb_vfs_remove_dir(tdb_uri)
 })
 
-data("pbmc_small", package = "SeuratObject")
 
 test_that("SCDataset can be created from a Seurat object", {
   scdataset <- SCDataset$new(uri = tdb_uri, verbose = TRUE)

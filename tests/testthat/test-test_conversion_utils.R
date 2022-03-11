@@ -1,4 +1,3 @@
-data("pbmc_small", package = "SeuratObject")
 
 test_that("conversion of dgTMatrix to COO data frame", {
   mat <- as(GetAssayData(pbmc_small, "counts"), "dgTMatrix")

@@ -7,11 +7,10 @@ teardown({
   tiledb::tiledb_vfs_remove_dir(tdb_uri)
 })
 
-data("pbmc_small", package = "SeuratObject")
-pbmc_small_rna <- Seurat::GetAssay(pbmc_small, assay = "RNA")
 
 test_that("AssayMatrix object can be created from a dgCMatrix", {
   x_uri <- file.path(tdb_uri, "X")
+  pbmc_small_rna <- Seurat::GetAssay(pbmc_small, assay = "RNA")
   mat <- Seurat::GetAssayData(pbmc_small_rna)
 
   assaymat <- AssayMatrix$new(uri = x_uri, verbose = FALSE)

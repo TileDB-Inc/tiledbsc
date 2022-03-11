@@ -1,3 +1,6 @@
+# Load pbmc_small from SeuratObject
+data("pbmc_small", package = "SeuratObject")
+
 # Locate test files
 # data_dir <- testthat::test_path("testdata", "visium")
 data_dir <- system.file("tests/testdata", package = "tiledbsc")

@@ -2,7 +2,6 @@ test_that("graph data can be stored and retrieved", {
   uri <- withr::local_tempdir("test-scgroup-graph")
   scgroup <- SCGroup$new(uri = uri)
 
-  data("pbmc_small", package = "SeuratObject")
   scgroup$from_seurat_assay(
     Seurat::GetAssay(pbmc_small, "RNA"),
     obs = pbmc_small[[]]
