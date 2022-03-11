@@ -135,6 +135,19 @@ SCDataset <- R6::R6Class(
           object[[assay]] <- assays[[assay]]
         }
       }
+
+      # graphs
+      graph_arrays <- lapply(self$scgroups,
+        function(x) x$get_annotation_pairwise_matrix_arrays(prefix = "graph_")
+      )
+      if (!is_empty(graph_arrays)) {
+        graph_arrays <- unlist(graph_arrays)
+        graphs <- lapply(graph_arrays, function(x) x$to_seurat_graph())
+        # TODO: Bit of a hack to recreate the graph names
+        names(graphs) <- sub("\\.(obs|var)p\\.graph", "", names(graphs))
+        object@graphs <- graphs
+      }
+
       return(object)
     },
 
