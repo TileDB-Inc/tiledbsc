@@ -253,7 +253,7 @@ SCGroup <- R6::R6Class(
 
       # Identify all obsm/varm dimreduction_ arrays
       prefix <- "dimreduction_"
-      arrays <- self$list_annotation_matrix_arrays(prefix)
+      arrays <- private$get_annotation_matrix_arrays(prefix)
 
       if (is_empty(arrays)) {
         stop("No obsm/varm dim reduction arrays found")
@@ -261,12 +261,13 @@ SCGroup <- R6::R6Class(
 
       # Use the first array's technique if none is specified
       if (is.null(technique)) {
-        technique <- strsplit(unlist(arrays)[[1]], split = "_")[[1]][2]
+        technique <- strsplit(names(unlist(arrays)), split = "_")[[1]][2]
       }
       array_name <- paste0(prefix, technique)
 
       # Retrieve the dim reduction arrays with specified technique
-      technique_arrays <- self$list_annotation_matrix_arrays(array_name)
+      technique_arrays <- private$get_annotation_matrix_arrays(array_name)
+
       if (is_empty(technique_arrays)) {
         stop(
           sprintf(
@@ -284,15 +285,11 @@ SCGroup <- R6::R6Class(
         )
       }
 
-      arrays <- mapply(
-        function(group, array) self[[group]]$arrays[[array]],
-        group = names(arrays),
-        array = unlist(arrays)
-      )
-      mats <- lapply(arrays, function(x) x$to_matrix())
+      # TODO: validate we're only returning 1 array per dimension
+      mats <- lapply(arrays, function(x) x[[1]]$to_matrix())
 
       # TODO: validate all keys match? For now just take the first one
-      key <- arrays[[1]]$get_metadata(key = "dimreduction_key")
+      key <- unlist(arrays)[[1]]$get_metadata(key = "dimreduction_key")
 
       SeuratObject::CreateDimReducObject(
         embeddings = mats[["obsm"]] %||% new(Class = "matrix"),
@@ -317,25 +314,25 @@ SCGroup <- R6::R6Class(
       )
     },
 
-    #' @description List names of [`AnnotationMatrix`] arrats in `obsm`/`varm`
+    #' @description Retrieve [`AnnotationMatrix`] arrays in `obsm`/`varm`
     #' groups.
     #' @param prefix String prefix to filter the array names.
-    #' @return A list with slots `"obsp"`/`"varp"` containing array names, or
-    # an empty list if no arrays are found.
-    list_annotation_matrix_arrays = function(prefix = NULL) {
-      private$list_annotation_group_arrays(
+    #' @return A list with `"obsm"`/`"varm"` slots containing arrays matching
+    #' the prefix.
+    get_annotation_matrix_arrays = function(prefix = NULL) {
+      private$get_annotation_group_arrays(
         array_groups = list(obsm = self$obsm, varm = self$varm),
         prefix = prefix
       )
     },
 
-    #' @description List names of [`AnnotationPairwiseMatrix`] arrays in
+    #' @description Retrieve [`AnnotationPairwiseMatrix`] arrays in
     #' `obsp`/`varp` groups.
     #' @param prefix String prefix to filter the array names.
-    #' @return A list with slots `"obsp"`/`"varp"` containing array names, or
-    # an empty list if no arrays are found.
-    list_annotation_pairwise_matrix_arrays = function(prefix = NULL) {
-      private$list_annotation_group_arrays(
+    #' @return A list with `"obsp"`/`"varp"` slots containing arrays matching
+    #' the prefix.
+    get_annotation_pairwise_matrix_arrays = function(prefix = NULL) {
+      private$get_annotation_group_arrays(
         array_groups = list(obsp = self$obsp, varp = self$varp),
         prefix = prefix
       )
@@ -343,10 +340,8 @@ SCGroup <- R6::R6Class(
   ),
 
   private = list(
-    list_annotation_group_arrays = function(array_groups, prefix = NULL) {
-      arrays <- lapply(array_groups,
-        function(x) names(x$list_object_uris(type = "ARRAY", prefix = prefix))
-      )
+    get_annotation_group_arrays = function(array_groups, prefix = NULL) {
+      arrays <- lapply(array_groups, function(x) x$get_arrays(prefix = prefix))
       Filter(Negate(is_empty), arrays)
     }
   )
