@@ -38,11 +38,36 @@ AnnotationPairwiseMatrix <- R6::R6Class(
       private$ingest_data(x)
     },
 
-    #' @description Retrieve the annotation data from TileDB
+    #' @description Read annotation data from TileDB into a matrix
     #' @return A [`matrix`]
     to_matrix = function() {
       if (self$verbose) message("Reading annotation matrix into memory")
       self$tiledb_array(return_as = "matrix")[]
+    },
+
+    #' @description Read annotation data from TileDB into a data frame
+    #' @return A [`data.frame`]
+    to_dataframe = function() {
+      if (self$verbose) message("Reading annotation matrix into memory")
+      self$tiledb_array(return_as = "data.frame")[]
+    },
+
+    #' @description Read annotation data from TileDB into a sparse matrix
+    #' @return A [`Matrix::dgTMatrix-class`].
+    to_sparse_matrix = function() {
+      dataframe_to_dgtmatrix(
+        self$to_dataframe(),
+        index_cols = self$dimnames()
+      )[[1]]
+    },
+
+    #` @description Read annotation data from TileDB into Seurat Graph
+    #` @return A [`SeuratObject::Graph-class`]
+    to_seurat_graph = function() {
+      assay <- self$get_metadata(key = "assay_used")
+      object <- SeuratObject::as.Graph(self$to_sparse_matrix())
+      SeuratObject::DefaultAssay(object) <- assay
+      object
     }
   )
 )
