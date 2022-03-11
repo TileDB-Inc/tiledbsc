@@ -1,6 +1,6 @@
 test_that("graph data can be stored and retrieved", {
   uri <- withr::local_tempdir("test-scgroup-graph")
-  scgroup <- SCGroup$new(uri = tdb_uri)
+  scgroup <- SCGroup$new(uri = uri)
 
   data("pbmc_small", package = "SeuratObject")
   scgroup$from_seurat_assay(
@@ -13,10 +13,10 @@ test_that("graph data can be stored and retrieved", {
   expect_length(scgroup$varp$arrays, 0L)
 
   graph1 <- SeuratObject::Graphs(pbmc_small, slot = "RNA_snn")
-  scgroup$from_seurat_graph(graph1)
+  scgroup$obsp$add_seurat_graph(graph1, technique = "snn")
 
   # obsp/varp are discovered
-  scgroup <- SCGroup$new(uri = tdb_uri)
+  scgroup <- SCGroup$new(uri = uri)
   expect_length(scgroup$obsp$arrays, 1L)
   expect_length(scgroup$varp$arrays, 0L)
 

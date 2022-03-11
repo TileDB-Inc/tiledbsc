@@ -10,11 +10,48 @@ AnnotationPairwiseMatrixGroup <- R6::R6Class(
 
   public = list(
 
-    #' @description Add a new [`AnnotationMatrix`] array to the group.
+
+    #' @description Convert a [`SeuratObject::Graph`] object to
+    #' [`AnnotationPairwiseMatrix`].
+    #'
+    #' @details
+    #' ## On-Disk Format
+    #'
+    #' Arrays are named `graph_<technique>`.
+    #'
+    #' ## Metadata
+    #'
+    #' - `assay_used`: Name of the assay used to generate the graph.
+    #' - `graph_technique`: Name of the technique used to generate the graph.
+    #' used.
+    #'
+    #' @param technique Name of the technique used to generate the graph
+    #' (typically, `nn` or `snn`).
+    add_seurat_graph = function(object, technique) {
+      stopifnot(
+        "Must provide a Seurat 'Graph' object" = inherits(object, "Graph"),
+        "'technique' must be a scalar character" = is_scalar_character(technique)
+      )
+
+      prefix <- "graph_"
+      assay <- SeuratObject::DefaultAssay(object)
+      array_name <- paste0(prefix, technique)
+
+      self$add_matrix(
+        data = as(object, "dgTMatrix"),
+        name = array_name,
+        metadata = list(
+          assay_used = assay,
+          graph_technique = technique
+        )
+      )
+    },
+
+    #' @description Add a new [`AnnotationPairwiseMatrix`] array to the group.
     #' @param data a [`matrix`] of annotation data to ingest. The `matrix` rows
     #' must be aligned to the [`SCGroup`] dimension indicated by the group's
     #' `dimension_name`.
-    #' @param name Name of the new variable annotation matrix.
+    #' @param name Name of the new pairwise annotation matrix.
     #' @param metadata Named list of metadata to add.
     add_matrix = function(data, name, metadata = NULL) {
       if (missing(name)) {

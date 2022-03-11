@@ -185,30 +185,6 @@ SCGroup <- R6::R6Class(
       return(assay_obj)
     },
 
-    #' @description Convert from a [`SeuratObject::Graph`] object.
-    #' @param name Name of the array to create/update. `graph_` is always
-    #' prepended. For a Seurat `Graph` this is typically in the form of
-    #' `<assay>_<(s)nn>`. Defaults to the name of the assay, which is extracted
-    #' from the graph object.
-    from_seurat_graph = function(object, name = NULL) {
-      stopifnot(
-        "Must provide a Seurat 'Graph' object" = inherits(object, "Graph")
-      )
-
-      prefix <- "graph_"
-      assay <- SeuratObject::DefaultAssay(object)
-
-      name <- name %||% assay
-      stopifnot(is_scalar_character(name))
-      array_name <- paste0(prefix, name)
-
-      # Currently assuming that graphs are always aligned to the obs axis
-      self$obsp$add_matrix(
-        data = as(object, "dgTMatrix"),
-        name = array_name
-      )
-    },
-
     #' @description Convert a [`SeuratObject::DimReduc`] object
     #'
     #' @details
