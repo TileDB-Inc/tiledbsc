@@ -253,7 +253,7 @@ SCGroup <- R6::R6Class(
 
       # Identify all obsm/varm dimreduction_ arrays
       prefix <- "dimreduction_"
-      arrays <- private$get_annotation_matrix_arrays(prefix)
+      arrays <- self$get_annotation_matrix_arrays(prefix)
 
       if (is_empty(arrays)) {
         stop("No obsm/varm dim reduction arrays found")
@@ -266,7 +266,7 @@ SCGroup <- R6::R6Class(
       array_name <- paste0(prefix, technique)
 
       # Retrieve the dim reduction arrays with specified technique
-      technique_arrays <- private$get_annotation_matrix_arrays(array_name)
+      technique_arrays <- self$get_annotation_matrix_arrays(array_name)
 
       if (is_empty(technique_arrays)) {
         stop(
