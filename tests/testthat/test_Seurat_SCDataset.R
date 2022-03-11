@@ -37,11 +37,15 @@ test_that("SCDataset can be created from a Seurat object", {
   expect_true(inherits(scdataset2$scgroups[[1]], "SCGroup"))
 
   # check for auxillary arrays
-  scgroup <- scdataset$scgroups[["RNA"]]
+  scgroup <- scdataset2$scgroups[["RNA"]]
 
   expect_length(scgroup$obsm$arrays, 2)
   expect_length(scgroup$varm$arrays, 1)
   expect_length(scgroup$obsp$arrays, 1)
-})
 
-# TODO: Retrieve graphs
+  pbmc_small2 <- scdataset2$to_seurat()
+  expect_identical(
+    SeuratObject::Graphs(pbmc_small2),
+    SeuratObject::Graphs(pbmc_small)
+  )
+})
