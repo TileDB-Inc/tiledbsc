@@ -254,12 +254,6 @@ SCGroup <- R6::R6Class(
       prefix <- "dimreduction_"
       array_name <- paste0(prefix, technique)
 
-      prefix <- "dimreduction_"
-      arrays  <- list(
-        obs = self$obsm$arrays[[array_name]],
-        var = self$varm$arrays[[array_name]]
-      )
-
       # Identify all obsm/varm dimreduction_ arrays
       groups <- list(obsm = self$obsm, varm = self$varm)
       arrays <- lapply(groups,
