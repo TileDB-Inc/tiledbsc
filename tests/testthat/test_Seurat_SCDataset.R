@@ -8,7 +8,7 @@ teardown({
 
 data("pbmc_small", package = "SeuratObject")
 
-test_that("SCDataset object can be created from a Seurat object", {
+test_that("SCDataset can be created from a Seurat object", {
   scdataset <- SCDataset$new(uri = tdb_uri, verbose = TRUE)
   expect_true(inherits(scdataset, "SCDataset"))
 
@@ -26,15 +26,23 @@ test_that("SCDataset object can be created from a Seurat object", {
     "dimreduction_pca"
   )
 
+  # check for graph results
+  expect_identical(
+    names(scdataset$scgroups[[1]]$obsp$arrays),
+    c("graph_snn")
+  )
+
   # create a new SCDataset from an existing TileDB group
   scdataset2 <- SCDataset$new(uri = tdb_uri, verbose = TRUE)
   expect_true(inherits(scdataset2, "SCDataset"))
   expect_true(inherits(scdataset2$scgroups[[1]], "SCGroup"))
 
-  # check for dimensionality reduction results
+  # check for auxillary arrays
   scgroup <- scdataset$scgroups[["RNA"]]
 
-  # obsm/varm with dimensionality reduction results
   expect_length(scgroup$obsm$arrays, 2)
   expect_length(scgroup$varm$arrays, 1)
+  expect_length(scgroup$obsp$arrays, 1)
 })
+
+# TODO: Retrieve graphs

@@ -75,7 +75,6 @@ SCDataset <- R6::R6Class(
       stopifnot(inherits(object, "Seurat"))
 
       assays <- SeuratObject::Assays(object)
-
       for (assay in assays) {
         assay_object <- Seurat::GetAssay(object, assay)
         assay_uri <- file.path(self$uri, paste0("scgroup_", assay))
@@ -92,6 +91,19 @@ SCDataset <- R6::R6Class(
           self$scgroups[[assay]]$from_seurat_dimreduction(
             object = reduction_object,
             technique = reduction
+          )
+        }
+      }
+
+      graphs <- SeuratObject::Graphs(object)
+      if (!is_empty(graphs)) {
+        for (graph in graphs) {
+          graph_object <- SeuratObject::Graphs(object, slot = graph)
+          assay <- SeuratObject::DefaultAssay(graph_object)
+          technique <- sub(paste0(assay, "_"), "", graph, fixed = TRUE)
+          self$scgroups[[assay]]$obsp$add_seurat_graph(
+            object = graph_object,
+            technique = technique
           )
         }
       }
