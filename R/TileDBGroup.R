@@ -74,6 +74,19 @@ TileDBGroup <- R6::R6Class(
       uris
     },
 
+    #' @description Retrieve arrays within the group that meet the specified
+    #' criteria.
+    #' @param prefix String prefix to filter the array names.
+    #' @returns A named list of arrays.
+    # TODO: Add support for filtering by array metadata
+    get_arrays = function(prefix = NULL) {
+      if (is.null(prefix)) return(self$arrays)
+      stopifnot(is_scalar_character(prefix))
+      arrays <- names(self$arrays)
+      arrays <- Filter(function(x) string_starts_with(x, prefix), arrays)
+      self$arrays[arrays]
+    },
+
     #' @description Retrieve metadata from the TileDB group.
     #' @param key The name of the metadata attribute to retrieve.
     #' @param prefix Filter metadata using an optional prefix. Ignored if `key`
