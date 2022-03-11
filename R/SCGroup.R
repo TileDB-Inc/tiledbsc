@@ -251,45 +251,45 @@ SCGroup <- R6::R6Class(
     #' default to the first `obsm/dimreduction_` array.
     to_seurat_dimreduction = function(technique = NULL) {
 
-      prefix <- "dimreduction_"
-      array_name <- paste0(prefix, technique)
-
       # Identify all obsm/varm dimreduction_ arrays
-      groups <- list(obsm = self$obsm, varm = self$varm)
-      arrays <- lapply(groups,
-        function(x) names(x$list_object_uris(type = "ARRAY", prefix = prefix))
-      )
-      arrays <- Filter(Negate(is_empty), arrays)
+      prefix <- "dimreduction_"
+      arrays <- self$list_annotation_matrix_arrays(prefix)
 
       if (is_empty(arrays)) {
         stop("No obsm/varm dim reduction arrays found")
       }
-      if (self$verbose) {
-        message(
-          sprintf("Found %i dim reduction arrays", length(unlist(arrays)))
-        )
-      }
 
-      # Parse out technique name from first dimreduction_ array
+      # Use the first array's technique if none is specified
       if (is.null(technique)) {
-        technique <- strsplit(unlist(arrays)[1], split = "_")[[1]][2]
+        technique <- strsplit(unlist(arrays)[[1]], split = "_")[[1]][2]
       }
-
-      # Retrieve the matching dim reduction arrays
       array_name <- paste0(prefix, technique)
-      arrays <- lapply(groups, function(x) x$arrays[[array_name]])
-      arrays <- Filter(Negate(is.null), arrays)
 
-      if (is_empty(arrays)) {
+      # Retrieve the dim reduction arrays with specified technique
+      technique_arrays <- self$list_annotation_matrix_arrays(array_name)
+      if (is_empty(technique_arrays)) {
         stop(
           sprintf(
             "No dim reduction arrays found for technique '%s'",
             technique
           )
         )
+      } else {
+        arrays <- technique_arrays
       }
 
-      mats <- lapply(arrays, FUN = function(x) x$to_matrix())
+      if (self$verbose) {
+        message(
+          sprintf("Found %i dim reduction arrays", length(unlist(arrays)))
+        )
+      }
+
+      arrays <- mapply(
+        function(group, array) self[[group]]$arrays[[array]],
+        group = names(arrays),
+        array = unlist(arrays)
+      )
+      mats <- lapply(arrays, function(x) x$to_matrix())
 
       # TODO: validate all keys match? For now just take the first one
       key <- arrays[[1]]$get_metadata(key = "dimreduction_key")
@@ -315,6 +315,39 @@ SCGroup <- R6::R6Class(
         project = project,
         meta.data = obs_df
       )
+    },
+
+    #' @description List names of [`AnnotationMatrix`] arrats in `obsm`/`varm`
+    #' groups.
+    #' @param prefix String prefix to filter the array names.
+    #' @return A list with slots `"obsp"`/`"varp"` containing array names, or
+    # an empty list if no arrays are found.
+    list_annotation_matrix_arrays = function(prefix = NULL) {
+      private$list_annotation_group_arrays(
+        array_groups = list(obsm = self$obsm, varm = self$varm),
+        prefix = prefix
+      )
+    },
+
+    #' @description List names of [`AnnotationPairwiseMatrix`] arrays in
+    #' `obsp`/`varp` groups.
+    #' @param prefix String prefix to filter the array names.
+    #' @return A list with slots `"obsp"`/`"varp"` containing array names, or
+    # an empty list if no arrays are found.
+    list_annotation_pairwise_matrix_arrays = function(prefix = NULL) {
+      private$list_annotation_group_arrays(
+        array_groups = list(obsp = self$obsp, varp = self$varp),
+        prefix = prefix
+      )
+    }
+  ),
+
+  private = list(
+    list_annotation_group_arrays = function(array_groups, prefix = NULL) {
+      arrays <- lapply(array_groups,
+        function(x) names(x$list_object_uris(type = "ARRAY", prefix = prefix))
+      )
+      Filter(Negate(is_empty), arrays)
     }
   )
 )
