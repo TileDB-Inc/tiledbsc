@@ -10,20 +10,17 @@ test_that("annotation matrix can be stored and retrieved", {
     "must have defined dim names"
   )
 
-  dimnames(mat) <- list(
-    paste0("R", seq_len(nrow(mat))),
-    paste0("C", seq_len(ncol(mat)))
-  )
+  rlabs <- paste0("R", seq_len(nrow(mat)))
+  clabs <- paste0("C", seq_len(ncol(mat)))
+  dimnames(mat) <- list(rlabs, clabs)
 
   annotmat$from_matrix(mat, index_col = "obs_id")
-  expect_true(dir.exists(uri))
+  expect_true(dir.exists(annotmat$uri))
   expect_s4_class(annotmat$tiledb_array(), "tiledb_array")
 
   mat2 <- annotmat$to_matrix()
   expect_equal(sort(rownames(mat2)), sort(rownames(mat)))
   expect_equal(sort(colnames(mat2)), sort(colnames(mat)))
 
-  rlabs <- rownames(mat2)
-  clabs <- colnames(mat2)
   expect_identical(mat[rlabs, clabs], mat2[rlabs, clabs])
 })

@@ -32,6 +32,10 @@ of the \code{obs} and \code{var} arrays, respectively.}
 \item{\code{obsm}}{named list of \code{\link{AnnotationMatrix}} objects aligned with \code{obs}}
 
 \item{\code{varm}}{named list of \code{\link{AnnotationMatrix}} objects aligned with \code{var}}
+
+\item{\code{obsp}}{named list of \code{\link{AnnotationPairwiseMatrix}} objects aligned with \code{obs}}
+
+\item{\code{varp}}{named list of \code{\link{AnnotationPairwiseMatrix}} objects aligned with \code{var}}
 }
 \if{html}{\out{</div>}}
 }
@@ -44,6 +48,8 @@ of the \code{obs} and \code{var} arrays, respectively.}
 \item \href{#method-from_seurat_dimreduction}{\code{SCGroup$from_seurat_dimreduction()}}
 \item \href{#method-to_seurat_dimreduction}{\code{SCGroup$to_seurat_dimreduction()}}
 \item \href{#method-to_seurat_object}{\code{SCGroup$to_seurat_object()}}
+\item \href{#method-get_annotation_matrix_arrays}{\code{SCGroup$get_annotation_matrix_arrays()}}
+\item \href{#method-get_annotation_pairwise_matrix_arrays}{\code{SCGroup$get_annotation_pairwise_matrix_arrays()}}
 \item \href{#method-clone}{\code{SCGroup$clone()}}
 }
 }
@@ -51,6 +57,7 @@ of the \code{obs} and \code{var} arrays, respectively.}
 \out{<details open ><summary>Inherited methods</summary>}
 \itemize{
 \item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBGroup" data-id="add_metadata">}\href{../../tiledbsc/html/TileDBGroup.html#method-add_metadata}{\code{tiledbsc::TileDBGroup$add_metadata()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBGroup" data-id="get_arrays">}\href{../../tiledbsc/html/TileDBGroup.html#method-get_arrays}{\code{tiledbsc::TileDBGroup$get_arrays()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBGroup" data-id="get_metadata">}\href{../../tiledbsc/html/TileDBGroup.html#method-get_metadata}{\code{tiledbsc::TileDBGroup$get_metadata()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBGroup" data-id="list_object_uris">}\href{../../tiledbsc/html/TileDBGroup.html#method-list_object_uris}{\code{tiledbsc::TileDBGroup$list_object_uris()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBGroup" data-id="list_objects">}\href{../../tiledbsc/html/TileDBGroup.html#method-list_objects}{\code{tiledbsc::TileDBGroup$list_objects()}}\out{</span>}
@@ -205,6 +212,50 @@ Convert to a \link[SeuratObject:Seurat-class]{SeuratObject::Seurat} object.
 \item{\code{project}}{\code{\link[SeuratObject:Project]{SeuratObject::Project}} name for the \code{Seurat} object}
 }
 \if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-get_annotation_matrix_arrays"></a>}}
+\if{latex}{\out{\hypertarget{method-get_annotation_matrix_arrays}{}}}
+\subsection{Method \code{get_annotation_matrix_arrays()}}{
+Retrieve \code{\link{AnnotationMatrix}} arrays in \code{obsm}/\code{varm}
+groups.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{SCGroup$get_annotation_matrix_arrays(prefix = NULL)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{prefix}}{String prefix to filter the array names.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A list with \code{"obsm"}/\code{"varm"} slots containing arrays matching
+the prefix.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-get_annotation_pairwise_matrix_arrays"></a>}}
+\if{latex}{\out{\hypertarget{method-get_annotation_pairwise_matrix_arrays}{}}}
+\subsection{Method \code{get_annotation_pairwise_matrix_arrays()}}{
+Retrieve \code{\link{AnnotationPairwiseMatrix}} arrays in
+\code{obsp}/\code{varp} groups.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{SCGroup$get_annotation_pairwise_matrix_arrays(prefix = NULL)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{prefix}}{String prefix to filter the array names.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A list with \code{"obsp"}/\code{"varp"} slots containing arrays matching
+the prefix.
 }
 }
 \if{html}{\out{<hr>}}

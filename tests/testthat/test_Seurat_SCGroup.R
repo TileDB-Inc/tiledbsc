@@ -1,13 +1,12 @@
 setup({
   tdb_uri <<- file.path(tempdir(), "test-scgroup")
+  assay1 <<- Seurat::GetAssay(pbmc_small, "RNA")
 })
 
 teardown({
   tiledb::tiledb_vfs_remove_dir(tdb_uri)
 })
 
-data("pbmc_small", package = "SeuratObject")
-assay1 <- Seurat::GetAssay(pbmc_small, "RNA")
 
 test_that("SCGroup object can be created from a Seurat assay", {
 
@@ -69,9 +68,7 @@ test_that("Seurat Assay can be recreated from an existing SCGroup", {
 })
 
 test_that("dimensional reduction data can be stored and retrieved", {
-  tiledb::tiledb_vfs_remove_dir(tdb_uri) # TEMP
   scgroup <- SCGroup$new(uri = tdb_uri)
-  scgroup$from_seurat_assay(assay1, obs = pbmc_small[[]]) # TEMP
 
   # obsm/varm are empty
   expect_length(scgroup$obsm$arrays, 0L)

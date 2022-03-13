@@ -75,7 +75,6 @@ SCDataset <- R6::R6Class(
       stopifnot(inherits(object, "Seurat"))
 
       assays <- SeuratObject::Assays(object)
-
       for (assay in assays) {
         assay_object <- Seurat::GetAssay(object, assay)
         assay_uri <- file.path(self$uri, paste0("scgroup_", assay))
@@ -92,6 +91,19 @@ SCDataset <- R6::R6Class(
           self$scgroups[[assay]]$from_seurat_dimreduction(
             object = reduction_object,
             technique = reduction
+          )
+        }
+      }
+
+      graphs <- SeuratObject::Graphs(object)
+      if (!is_empty(graphs)) {
+        for (graph in graphs) {
+          graph_object <- SeuratObject::Graphs(object, slot = graph)
+          assay <- SeuratObject::DefaultAssay(graph_object)
+          technique <- sub(paste0(assay, "_"), "", graph, fixed = TRUE)
+          self$scgroups[[assay]]$obsp$add_seurat_graph(
+            object = graph_object,
+            technique = technique
           )
         }
       }
@@ -123,6 +135,19 @@ SCDataset <- R6::R6Class(
           object[[assay]] <- assays[[assay]]
         }
       }
+
+      # graphs
+      graph_arrays <- lapply(self$scgroups,
+        function(x) x$get_annotation_pairwise_matrix_arrays(prefix = "graph_")
+      )
+      if (!is_empty(graph_arrays)) {
+        graph_arrays <- unlist(graph_arrays)
+        graphs <- lapply(graph_arrays, function(x) x$to_seurat_graph())
+        # TODO: Bit of a hack to recreate the graph names
+        names(graphs) <- sub("\\.(obs|var)p\\.graph", "", names(graphs))
+        object@graphs <- graphs
+      }
+
       return(object)
     },
 

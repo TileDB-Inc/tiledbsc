@@ -3,6 +3,8 @@
 export(AnnotationDataframe)
 export(AnnotationMatrix)
 export(AnnotationMatrixGroup)
+export(AnnotationPairwiseMatrix)
+export(AnnotationPairwiseMatrixGroup)
 export(AssayMatrix)
 export(SCDataset)
 export(SCGroup)

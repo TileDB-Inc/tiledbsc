@@ -6,14 +6,20 @@ TileDBGroup <- R6::R6Class(
   public = list(
     #' @field uri The URI of the TileDB group
     uri = NULL,
+    #' @field arrays Named list of arrays in the group
+    arrays = list(),
+    #' @field dimension_name Optional name of the dimension shared by all
+    #' arrays within the group (typically `obs_id` or `var_id`).
+    dimension_name = NULL,
     #' @field verbose Whether to print verbose output
     verbose = TRUE,
 
     #' @description Create a new TileDBGroup object.
     #' @param uri TileDB array URI
     #' @param verbose Print status messages
-    initialize = function(uri, verbose = TRUE) {
+    initialize = function(uri, dimension_name = NULL, verbose = TRUE) {
       self$uri <- uri
+      self$dimension_name <- dimension_name
       self$verbose <- verbose
 
       # Until TileDB supports group metadata, we need to create an array
@@ -24,6 +30,17 @@ TileDBGroup <- R6::R6Class(
         private$create_group()
         private$create_metadata_array()
       }
+
+      # Create objects for each array URI (except the metadata array)
+      array_uris <- self$list_object_uris(type = "ARRAY")
+      array_uris <- array_uris[!grepl("__tiledb_group_metadata", array_uris)]
+
+      if (!is_empty(array_uris)) {
+        arrays <- private$get_existing_arrays(array_uris)
+        names(arrays) <- basename(array_uris)
+        self$arrays <- arrays
+      }
+
       return(self)
     },
 
@@ -55,6 +72,19 @@ TileDBGroup <- R6::R6Class(
         uris <- uris[string_starts_with(names(uris), prefix)]
       }
       uris
+    },
+
+    #' @description Retrieve arrays within the group that meet the specified
+    #' criteria.
+    #' @param prefix String prefix to filter the array names.
+    #' @returns A named list of arrays.
+    # TODO: Add support for filtering by array metadata
+    get_arrays = function(prefix = NULL) {
+      if (is.null(prefix)) return(self$arrays)
+      stopifnot(is_scalar_character(prefix))
+      arrays <- names(self$arrays)
+      arrays <- Filter(function(x) string_starts_with(x, prefix), arrays)
+      self$arrays[arrays]
     },
 
     #' @description Retrieve metadata from the TileDB group.
@@ -131,6 +161,10 @@ TileDBGroup <- R6::R6Class(
         message(sprintf("Creating new TileDB group at '%s'", self$uri))
       }
       tiledb::tiledb_group_create(self$uri)
+    },
+
+    get_existing_arrays = function(uris) {
+      lapply(uris, TileDBArray$new, verbose = self$verbose)
     }
   )
 )

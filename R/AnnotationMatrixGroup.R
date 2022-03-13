@@ -9,53 +9,6 @@ AnnotationMatrixGroup <- R6::R6Class(
   inherit = TileDBGroup,
 
   public = list(
-    #' @field arrays Named list of [`AnnotationMatrix`] arrays in the group
-    arrays = list(),
-    #' @field dimension_name Name of the dimension that is shared by all arrays
-    #'  in the group.
-    dimension_name = character(1L),
-
-    #' @description Create a new AnnotationMatrix group object. The existing
-    #'   array group is opened at the specified `uri` if one is present,
-    #'   otherwise a new array group is created. The `arrays` field is populated
-    #'   with `AnnotationMatrix` objects for each `AnnotationMatrix` object
-    #'   discovered within the TileDB group.
-    #'
-    #' @param uri URI of the TileDB group
-    #' @param dimension_name Name of the dimension shared by all arrays within
-    #'  the group (typically `obs_id` or `var_id`).
-    #' @param verbose Print status messages
-    initialize = function(
-      uri,
-      dimension_name,
-      verbose = TRUE) {
-
-      if (missing(uri)) {
-        stop("A `uri` for the group must be specified")
-      }
-      if (missing(dimension_name)) {
-        stop("Must define a `dimension_name` for the group")
-      }
-      self$uri <- uri
-      self$dimension_name <- dimension_name
-      self$verbose <- verbose
-
-      if (!private$group_exists()) {
-        private$create_group()
-      }
-
-      array_uris <- self$list_object_uris(type = "ARRAY")
-      # TODO: Verify that all arrays have the same dimension name
-
-      # Create AnnotationMatrix objects for each array URI
-      if (!is_empty(array_uris)) {
-        arrays <- lapply(array_uris, AnnotationMatrix$new, verbose = self$verbose)
-        names(arrays) <- basename(array_uris)
-        self$arrays <- arrays
-      }
-
-      return(self)
-    },
 
     #' @description Add a new [`AnnotationMatrix`] array to the group.
     #' @param data a [`matrix`] of annotation data to ingest. The `matrix` rows
@@ -84,6 +37,12 @@ AnnotationMatrixGroup <- R6::R6Class(
       self$arrays[[name]] <- array
 
       return(self)
+    }
+  ),
+
+  private = list(
+    get_existing_arrays = function(uris) {
+      lapply(uris, AnnotationMatrix$new, verbose = self$verbose)
     }
   )
 )
