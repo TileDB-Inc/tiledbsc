@@ -150,4 +150,20 @@ test_that("an assay with empty counts slot can be converted", {
 
   scgroup <- SCGroup$new(uri, verbose = FALSE)
   expect_silent(scgroup$from_seurat_assay(assay))
+  expect_match(tiledb::tiledb_object_type(scgroup$X$uri), "ARRAY")
+
+  assay2 <- scgroup$to_seurat_assay()
+
+  rlabs <- rownames(assay)
+  clabs <- colnames(assay)
+
+  expect_identical(
+    SeuratObject::GetAssayData(assay2, "data")[rlabs, clabs],
+    SeuratObject::GetAssayData(assay, "data")[rlabs, clabs]
+  )
+
+  expect_identical(
+    SeuratObject::GetAssayData(assay2, "counts"),
+    SeuratObject::GetAssayData(assay, "counts")
+  )
 })

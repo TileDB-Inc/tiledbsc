@@ -158,26 +158,54 @@ SCGroup <- R6::R6Class(
       check_matrix = FALSE,
       ...) {
 
+      # TODO: Add param to control which attributes are retrieved
+      x_attrs <- self$X$attrnames()
+      stopifnot(
+        "X must contain have attributes 'counts' or 'data'"
+          = sum(x_attrs %in% c("counts", "data")) > 0
+      )
+
       assay_data <- dataframe_to_dgtmatrix(
-        self$X$to_dataframe(attrs = c("counts", "data")),
+        self$X$to_dataframe(attrs = x_attrs),
         index_cols = c("var_id", "obs_id")
       )
 
       # Seurat doesn't allow us to supply data for both the `counts` and `data`
-      # slots simultaneously, so we have to update the `data` slot separately
-      assay_obj <- SeuratObject::CreateAssayObject(
-        counts = assay_data$counts,
-        min.cells = min_cells,
-        min.features = min_features,
-        check.matrix = check_matrix
-      )
+      # slots simultaneously, so we have to update the `data` slot separately.
 
-      # Unable to add a dgTMatrix to the data slot, so we have to convert
-      assay_obj <- SeuratObject::SetAssayData(
-        object = assay_obj,
-        slot = "data",
-        new.data = as(assay_data$data, "dgCMatrix")
-      )
+      if (is.null(assay_data$counts)) {
+        # CreateAssayObject only accepts a dgTMatrix matrix for `counts`, 'data'
+        # and 'scale.data' must be coerced to a dgCMatrix and base::matrix,
+        # respectively. Bug?
+        assay_obj <- SeuratObject::CreateAssayObject(
+          data = as(assay_data$data, "dgCMatrix"),
+          min.cells = min_cells,
+          min.features = min_features,
+          check.matrix = check_matrix
+        )
+      } else {
+        assay_obj <- SeuratObject::CreateAssayObject(
+          counts = assay_data$counts,
+          min.cells = min_cells,
+          min.features = min_features,
+          check.matrix = check_matrix
+        )
+        if (!is.null(assay_data$data)) {
+          assay_obj <- SeuratObject::SetAssayData(
+            object = assay_obj,
+            slot = "data",
+            new.data = as(assay_data$data, "dgCMatrix")
+          )
+        }
+      }
+
+      if (!is.null(assay_data$scale.data)) {
+        assay_obj <- SeuratObject::SetAssayData(
+          object = assay_obj,
+          slot = "scale.data",
+          new.data = as.matrix(assay_data$scale.data)
+        )
+      }
 
       # variable annotations
       var_df <- self$var$to_dataframe()
