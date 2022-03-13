@@ -1,8 +1,8 @@
 #' Single-cell Annotation Pairwise Matrix
 #'
 #' Base class for matrix-like data storing pairwise relationships with rows and
-#' columns aligned to either the observations or features of an [`SCGroup_X`]
-#' object.
+#' columns aligned to either the observations or features of `X`
+#' ([`AssayMatrix`]).
 #'
 #' @export
 
