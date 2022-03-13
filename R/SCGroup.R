@@ -126,6 +126,9 @@ SCGroup <- R6::R6Class(
       )
       assay_mats <- lapply(assay_mats, FUN = as, Class = "dgTMatrix")
 
+      # exclude empty matrices
+      assay_mats <- Filter(Negate(is_empty), assay_mats)
+
       # TODO: decide on a consistent naming convention for array dimensions
       index_cols <- c("var_id", "obs_id")
       self$X$from_dataframe(
