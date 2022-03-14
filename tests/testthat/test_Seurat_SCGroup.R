@@ -136,3 +136,34 @@ test_that("creation from a Seurat Assay without scale.data", {
     SeuratObject::GetAssayData(assay1, "scale.data")
   )
 })
+
+
+test_that("an assay with empty counts slot can be converted", {
+  uri <- withr::local_tempdir("assay-with-empty-counts")
+  assay <- SeuratObject::SetAssayData(
+    pbmc_small[["RNA"]],
+    slot = "counts",
+    new.data = new(Class = "matrix")
+  )
+
+  expect_true(is_empty(SeuratObject::GetAssayData(assay, "counts")))
+
+  scgroup <- SCGroup$new(uri, verbose = FALSE)
+  expect_silent(scgroup$from_seurat_assay(assay))
+  expect_match(tiledb::tiledb_object_type(scgroup$X$uri), "ARRAY")
+
+  assay2 <- scgroup$to_seurat_assay()
+
+  rlabs <- rownames(assay)
+  clabs <- colnames(assay)
+
+  expect_identical(
+    SeuratObject::GetAssayData(assay2, "data")[rlabs, clabs],
+    SeuratObject::GetAssayData(assay, "data")[rlabs, clabs]
+  )
+
+  expect_identical(
+    SeuratObject::GetAssayData(assay2, "counts"),
+    SeuratObject::GetAssayData(assay, "counts")
+  )
+})

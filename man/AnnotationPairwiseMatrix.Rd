@@ -10,8 +10,8 @@ Single-cell Annotation Pairwise Matrix
 }
 \details{
 Base class for matrix-like data storing pairwise relationships with rows and
-columns aligned to either the observations or features of an \code{\link{SCGroup_X}}
-object.
+columns aligned to either the observations or features of \code{X}
+(\code{\link{AssayMatrix}}).
 }
 \section{Super classes}{
 \code{\link[tiledbsc:TileDBArray]{tiledbsc::TileDBArray}} -> \code{\link[tiledbsc:AnnotationMatrix]{tiledbsc::AnnotationMatrix}} -> \code{AnnotationPairwiseMatrix}

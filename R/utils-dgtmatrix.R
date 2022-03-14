@@ -17,11 +17,11 @@ dgtmatrix_to_dataframe <- function(x, index_cols = c("i", "j"), value_cols = NUL
   }
 
   if (is.null(value_cols)) {
-     if (is.null(names(x))) {
-       value_cols <- paste0("value", seq_along(x))
-     } else {
-       value_cols <- names(x)
-     }
+    if (is.null(names(x))) {
+      value_cols <- paste0("value", seq_along(x))
+    } else {
+      value_cols <- names(x)
+    }
   }
 
   stopifnot(length(index_cols) == 2, length(value_cols) == length(x))
