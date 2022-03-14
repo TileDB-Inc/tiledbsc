@@ -107,7 +107,7 @@ test_that("dimensional reduction data can be stored and retrieved", {
     SeuratObject::Embeddings(pca1)[obs_ids, ]
   )
 
-  # tnse results only include cell-aligned Embeddings
+  # tsne results only include cell-aligned Embeddings
   tsne1 <- SeuratObject::Reductions(pbmc_small, slot = "tsne")
   scgroup$from_seurat_dimreduction(tsne1, technique = "tsne")
   tsne2 <- scgroup$to_seurat_dimreduction(technique = "tsne")
