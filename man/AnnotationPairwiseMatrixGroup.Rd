@@ -67,6 +67,8 @@ Convert a \code{\link[SeuratObject:Graph-class]{SeuratObject::Graph}} object to
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
+\item{\code{object}}{A \code{\link[SeuratObject:Graph-class]{SeuratObject::Graph}} object.}
+
 \item{\code{technique}}{Name of the technique used to generate the graph
 (typically, \code{nn} or \code{snn}).}
 }

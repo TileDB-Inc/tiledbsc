@@ -51,6 +51,9 @@ Create a new TileDBGroup object.
 \describe{
 \item{\code{uri}}{TileDB array URI}
 
+\item{\code{dimension_name}}{Optional name of the dimension shared by all
+arrays.}
+
 \item{\code{verbose}}{Print status messages}
 }
 \if{html}{\out{</div>}}
