@@ -6,3 +6,7 @@ inst/doc
 /doc/
 /Meta/
 /dev/
+
+# Vim swapfiles:
+.*.sw?
+.sw?
