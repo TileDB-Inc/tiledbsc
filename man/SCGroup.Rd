@@ -45,8 +45,9 @@ of the \code{obs} and \code{var} arrays, respectively.}
 \item \href{#method-new}{\code{SCGroup$new()}}
 \item \href{#method-from_seurat_assay}{\code{SCGroup$from_seurat_assay()}}
 \item \href{#method-to_seurat_assay}{\code{SCGroup$to_seurat_assay()}}
-\item \href{#method-from_seurat_dimreduction}{\code{SCGroup$from_seurat_dimreduction()}}
-\item \href{#method-to_seurat_dimreduction}{\code{SCGroup$to_seurat_dimreduction()}}
+\item \href{#method-add_seurat_dimreduction}{\code{SCGroup$add_seurat_dimreduction()}}
+\item \href{#method-get_seurat_dimreduction}{\code{SCGroup$get_seurat_dimreduction()}}
+\item \href{#method-get_seurat_dimreductions_list}{\code{SCGroup$get_seurat_dimreductions_list()}}
 \item \href{#method-to_seurat_object}{\code{SCGroup$to_seurat_object()}}
 \item \href{#method-get_annotation_matrix_arrays}{\code{SCGroup$get_annotation_matrix_arrays()}}
 \item \href{#method-get_annotation_pairwise_matrix_arrays}{\code{SCGroup$get_annotation_pairwise_matrix_arrays()}}
@@ -138,12 +139,12 @@ values}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-from_seurat_dimreduction"></a>}}
-\if{latex}{\out{\hypertarget{method-from_seurat_dimreduction}{}}}
-\subsection{Method \code{from_seurat_dimreduction()}}{
+\if{html}{\out{<a id="method-add_seurat_dimreduction"></a>}}
+\if{latex}{\out{\hypertarget{method-add_seurat_dimreduction}{}}}
+\subsection{Method \code{add_seurat_dimreduction()}}{
 Convert a \code{\link[SeuratObject:DimReduc-class]{SeuratObject::DimReduc}} object
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{SCGroup$from_seurat_dimreduction(object, technique = NULL)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{SCGroup$add_seurat_dimreduction(object, technique = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -179,12 +180,12 @@ results column names (required by Seurat)
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-to_seurat_dimreduction"></a>}}
-\if{latex}{\out{\hypertarget{method-to_seurat_dimreduction}{}}}
-\subsection{Method \code{to_seurat_dimreduction()}}{
+\if{html}{\out{<a id="method-get_seurat_dimreduction"></a>}}
+\if{latex}{\out{\hypertarget{method-get_seurat_dimreduction}{}}}
+\subsection{Method \code{get_seurat_dimreduction()}}{
 Convert to a \code{\link[SeuratObject:DimReduc-class]{SeuratObject::DimReduc}} object.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{SCGroup$to_seurat_dimreduction(technique = NULL)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{SCGroup$get_seurat_dimreduction(technique = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -196,6 +197,16 @@ default to the first \code{obsm/dimreduction_} array.}
 }
 \if{html}{\out{</div>}}
 }
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-get_seurat_dimreductions_list"></a>}}
+\if{latex}{\out{\hypertarget{method-get_seurat_dimreductions_list}{}}}
+\subsection{Method \code{get_seurat_dimreductions_list()}}{
+Retrieve a list of all \code{\link[SeuratObject:DimReduc-class]{SeuratObject::DimReduc}} objects.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{SCGroup$get_seurat_dimreductions_list()}\if{html}{\out{</div>}}
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-to_seurat_object"></a>}}
