@@ -43,7 +43,23 @@ test_that("SCDataset can be created from a Seurat object", {
   expect_length(scgroup$varm$arrays, 1)
   expect_length(scgroup$obsp$arrays, 1)
 
+  # validate restored aux data
   pbmc_small2 <- scdataset2$to_seurat()
+
+  reductions <- SeuratObject::Reductions(pbmc_small)
+  for (r in reductions) {
+    reduc1 <- SeuratObject::Reductions(pbmc_small, r)
+    reduc2 <- SeuratObject::Reductions(pbmc_small2, r)
+
+    load1 <- SeuratObject::Loadings(reduc1)
+    load2 <- SeuratObject::Loadings(reduc2)
+    expect_identical(load2[rownames(load1), ], load1)
+
+    embed1 <- SeuratObject::Embeddings(reduc1)
+    embed2 <- SeuratObject::Embeddings(reduc2)
+    expect_identical(embed2[rownames(embed1), ], embed1)
+  }
+
   expect_identical(
     SeuratObject::Graphs(pbmc_small2),
     SeuratObject::Graphs(pbmc_small)

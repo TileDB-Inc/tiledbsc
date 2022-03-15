@@ -238,7 +238,7 @@ SCGroup <- R6::R6Class(
     #' @param technique Name of the dimensional reduction technique. By default,
     #' the `key` slot is used to determine the technique.
 
-    from_seurat_dimreduction = function(object, technique = NULL) {
+    add_seurat_dimreduction = function(object, technique = NULL) {
       stopifnot(
         "Must provide a Seurat 'DimReduc' object" = inherits(object, "DimReduc")
       )
@@ -280,7 +280,7 @@ SCGroup <- R6::R6Class(
     #' @param technique Name of the dimensionality reduction technique. Used to
     #' identify which `obsm`/`varm` array will be retrieved. If `NULL`, we
     #' default to the first `obsm/dimreduction_` array.
-    to_seurat_dimreduction = function(technique = NULL) {
+    get_seurat_dimreduction = function(technique = NULL) {
 
       # Identify all obsm/varm dimreduction_ arrays
       prefix <- "dimreduction_"
@@ -327,6 +327,19 @@ SCGroup <- R6::R6Class(
         loadings = mats[["varm"]] %||% new(Class = "matrix"),
         key = key,
         assay = self$X$get_metadata("key")
+      )
+    },
+
+    #' @description Retrieve a list of all [`SeuratObject::DimReduc`] objects.
+    get_seurat_dimreductions_list = function() {
+      arrays <-self$get_annotation_matrix_arrays(prefix = "dimreduction_")
+      array_names <- names(unlist(arrays))
+      techniques <- unique(sub("(obs|var)m\\.dimreduction_", "", array_names))
+      sapply(
+        techniques,
+        function(x) self$get_seurat_dimreduction(x),
+        simplify = FALSE,
+        USE.NAMES = TRUE
       )
     },
 

@@ -108,10 +108,14 @@ A \code{\link[Matrix:dgTMatrix-class]{Matrix::dgTMatrix}}.
 \if{html}{\out{<a id="method-to_seurat_graph"></a>}}
 \if{latex}{\out{\hypertarget{method-to_seurat_graph}{}}}
 \subsection{Method \code{to_seurat_graph()}}{
+Read annotation data from TileDB into Seurat Graph
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{AnnotationPairwiseMatrix$to_seurat_graph()}\if{html}{\out{</div>}}
 }
 
+\subsection{Returns}{
+A \code{\link[SeuratObject:Graph-class]{SeuratObject::Graph}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-clone"></a>}}

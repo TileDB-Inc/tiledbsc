@@ -88,7 +88,7 @@ SCDataset <- R6::R6Class(
         for (reduction in reductions) {
           reduction_object <- Seurat::Reductions(object, slot = reduction)
           assay <- SeuratObject::DefaultAssay(reduction_object)
-          self$scgroups[[assay]]$from_seurat_dimreduction(
+          self$scgroups[[assay]]$add_seurat_dimreduction(
             object = reduction_object,
             technique = reduction
           )
@@ -135,6 +135,16 @@ SCDataset <- R6::R6Class(
           object[[assay]] <- assays[[assay]]
         }
       }
+
+      # dimreductions
+      # Retrieve list of all techniques used in any scgroup's obsm/varm
+      # dimensionality reduction arrays. The association between assay and
+      # dimreduction is maintained by the DimReduc's `assay.used` slot.
+      dimreductions <- lapply(
+        self$scgroups,
+        function(x) x$get_seurat_dimreductions_list()
+      )
+      object@reductions <- Reduce(base::c, dimreductions)
 
       # graphs
       graph_arrays <- lapply(self$scgroups,

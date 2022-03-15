@@ -16,6 +16,8 @@ TileDBGroup <- R6::R6Class(
 
     #' @description Create a new TileDBGroup object.
     #' @param uri TileDB array URI
+    #' @param dimension_name Optional name of the dimension shared by all
+    #' arrays.
     #' @param verbose Print status messages
     initialize = function(uri, dimension_name = NULL, verbose = TRUE) {
       self$uri <- uri
