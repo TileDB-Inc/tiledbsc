@@ -136,6 +136,16 @@ SCDataset <- R6::R6Class(
         }
       }
 
+      # dimreductions
+      # Retrieve list of all techniques used in any scgroup's obsm/varm
+      # dimensionality reduction arrays. The association between assay and
+      # dimreduction is maintained by the DimReduc's `assay.used` slot.
+      dimreductions <- lapply(
+        self$scgroups,
+        function(x) x$get_seurat_dimreductions_list()
+      )
+      object@reductions <- Reduce(base::c, dimreductions)
+
       # graphs
       graph_arrays <- lapply(self$scgroups,
         function(x) x$get_annotation_pairwise_matrix_arrays(prefix = "graph_")
