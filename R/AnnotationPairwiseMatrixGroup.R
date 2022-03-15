@@ -52,6 +52,7 @@ AnnotationPairwiseMatrixGroup <- R6::R6Class(
     #' - `graph_technique`: Name of the technique used to generate the graph.
     #' used.
     #'
+    #' @param object A [`SeuratObject::Graph`] object.
     #' @param technique Name of the technique used to generate the graph
     #' (typically, `nn` or `snn`).
     add_seurat_graph = function(object, technique) {
