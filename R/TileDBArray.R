@@ -110,17 +110,17 @@ TileDBArray <- R6::R6Class(
   ),
 
   private = list(
-    # @description Top-level function to create and populate the new array.
+    #' @description Top-level function to create and populate the new array.
     build_array = function() return(NULL),
 
-    # @description Create empty TileDB array.
+    #' @description Create empty TileDB array.
     create_empty_array = function() return(NULL),
 
-    # @description Ingest data into the TileDB array.
+    #' @description Ingest data into the TileDB array.
     ingest_data = function() return(NULL),
 
-    # @description Check if the array exists.
-    # @return TRUE if the array exists, FALSE otherwise.
+    #' @description Check if the array exists.
+    #' @return TRUE if the array exists, FALSE otherwise.
     array_exists = function() {
       result <- tiledb::tiledb_object_type(self$uri) == "ARRAY"
       if (result) {

@@ -54,17 +54,17 @@ AnnotationMatrix <- R6::R6Class(
 
   private = list(
 
-    # @description Create an empty TileDB array suitable for storing aligned
-    # matrix annotation data.
-    # @param x A [`data.frame`]
-    # @param index_cols Character vector with column name(s) to use for the
-    # TileDB array's dimensions
-    # @param cell_order,tile_order Configure the TileDB array's global cell
-    # ordering by specifying the tile (default: `"HILBERT"`) and cell
-    # (default: `"ROW_MAJOR"`) ordering. See
-    # [the docs](https://docs.tiledb.com/main/basic-concepts/terminology) for
-    #' more information.
-    # @param capacity Capacity of sparse fragments (default: 10000)
+    #' @description Create an empty TileDB array suitable for storing aligned
+    #' matrix annotation data.
+    #' @param x A [`data.frame`]
+    #' @param index_cols Character vector with column name(s) to use for the
+    #' TileDB array's dimensions
+    #' @param cell_order,tile_order Configure the TileDB array's global cell
+    #' ordering by specifying the tile (default: `"HILBERT"`) and cell
+    #' (default: `"ROW_MAJOR"`) ordering. See
+    #' [the docs](https://docs.tiledb.com/main/basic-concepts/terminology) for
+    #'' more information.
+    #' @param capacity Capacity of sparse fragments (default: 10000)
     create_empty_array = function(
       x,
       index_cols,
@@ -94,8 +94,8 @@ AnnotationMatrix <- R6::R6Class(
       )
     },
 
-    # @description Ingest annotation data into the TileDB array.
-    # @param x A [`data.frame`] containing annotation data
+    #' @description Ingest annotation data into the TileDB array.
+    #' @param x A [`data.frame`] containing annotation data
     ingest_data = function(x) {
       if (self$verbose) {
         message("Ingesting annotation matrix data into ", self$uri)

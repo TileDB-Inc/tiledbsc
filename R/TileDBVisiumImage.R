@@ -125,7 +125,7 @@ TileDBVisiumImage <- R6::R6Class(
   ),
 
   private = list(
-    # @description Read scale factors from a JSON file.
+    #' @description Read scale factors from a JSON file.
     read_scale_factors = function(file_path) {
       stopifnot(
         "Scaling factors file not found" = file.exists(file_path),

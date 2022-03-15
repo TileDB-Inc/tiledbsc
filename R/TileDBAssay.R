@@ -60,23 +60,23 @@ TileDBAssay <- R6::R6Class(
   ),
 
   private = list(
-    # @description Top-level function to create and populate the new array.
+    #' @description Top-level function to create and populate the new array.
     build_array = function(file_path) {
       assay_data <- private$read_assay_data(file_path)
       private$create_empty_array(attr_type = typeof(assay_data@x))
       private$ingest_data(assay_data)
     },
 
-    # @description Create an empty TileDB array suitable for storing pixel
-    # data.
-    # @param attr_type Should the data attribute type be 'integer' or
-    # 'double'.
-    # @param cell_order,tile_order Configure the TileDB array's global cell
-    # ordering by specifying the tile (default: `"HILBERT"`) and cell
-    # (default: `"ROW_MAJOR"`) ordering. See
-    # [the docs](https://docs.tiledb.com/main/basic-concepts/terminology) for
-    # more information.
-    # @param capacity Capacity of sparse fragments (default: 10000)
+    #' @description Create an empty TileDB array suitable for storing pixel
+    #' data.
+    #' @param attr_type Should the data attribute type be 'integer' or
+    #' 'double'.
+    #' @param cell_order,tile_order Configure the TileDB array's global cell
+    #' ordering by specifying the tile (default: `"HILBERT"`) and cell
+    #' (default: `"ROW_MAJOR"`) ordering. See
+    #' [the docs](https://docs.tiledb.com/main/basic-concepts/terminology) for
+    #' more information.
+    #' @param capacity Capacity of sparse fragments (default: 10000)
     create_empty_array = function(
       attr_type = "integer",
       cell_order = "HILBERT",
@@ -133,8 +133,8 @@ TileDBAssay <- R6::R6Class(
       tiledb::tiledb_array_create(uri = self$uri, schema = tdb_schema)
     },
 
-    # @description Ingest assay data into the TileDB array.
-    # @param assay_data A [`Matrix::dgTMatrix-class`] containing the assay data.
+    #' @description Ingest assay data into the TileDB array.
+    #' @param assay_data A [`Matrix::dgTMatrix-class`] containing the assay data.
     ingest_data = function(assay_data) {
       stopifnot(
         "Assay data must be a dgTMatrix" = inherits(assay_data, "dgTMatrix")
@@ -152,8 +152,8 @@ TileDBAssay <- R6::R6Class(
       tdb_array[] <- tbl_data
     },
 
-    # @description Read assay data from a 10X HDF5 file.
-    # @return A [`Matrix::dgTMatrix-class`].
+    #' @description Read assay data from a 10X HDF5 file.
+    #' @return A [`Matrix::dgTMatrix-class`].
     read_assay_data = function(file_path) {
 
       if (self$verbose) message("Loading assay data from ", file_path)

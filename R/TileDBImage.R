@@ -57,7 +57,7 @@ TileDBImage <- R6::R6Class(
   ),
 
   private = list(
-    # @description Top-level function to create and populate the new array.
+    #' @description Top-level function to create and populate the new array.
     build_array = function(image_path) {
       image_data <- private$read_image_data(image_path)
       image_array <- private$create_empty_array(
@@ -68,10 +68,10 @@ TileDBImage <- R6::R6Class(
       private$ingest_data(image_data)
     },
 
-    # @description Create an empty TileDB array suitable for storing pixel
-    # data.
-    # @param height,width Height and width of the image channels.
-    # @param attrs Names of the TileDB attributes.
+    #' @description Create an empty TileDB array suitable for storing pixel
+    #' data.
+    #' @param height,width Height and width of the image channels.
+    #' @param attrs Names of the TileDB attributes.
     create_empty_array = function(height, width, attrs) {
 
       # expecting names to accommodate a 2D array with 3 attributes
@@ -114,8 +114,8 @@ TileDBImage <- R6::R6Class(
       tiledb::tiledb_array_create(self$uri, schema = tdb_schema)
     },
 
-    # @description Ingest image data into the TileDB array.
-    # @param image_data 3D array containing the image pixel data.
+    #' @description Ingest image data into the TileDB array.
+    #' @param image_data 3D array containing the image pixel data.
     ingest_data = function(image_data) {
       stopifnot(
         "Image data must be an array" = is.array(image_data)
@@ -136,9 +136,9 @@ TileDBImage <- R6::R6Class(
       self$add_metadata(metadata = attr(image_data, which = "info"))
     },
 
-    # @description Read image data from a file and return a 3D array with
-    # proper names assigned to the Z dimension, and any additional metadata
-    # stored as attributes.
+    #' @description Read image data from a file and return a 3D array with
+    #' proper names assigned to the Z dimension, and any additional metadata
+    #' stored as attributes.
     read_image_data = function(image_path) {
 
       if (self$verbose) message("Loading image data from ", image_path)

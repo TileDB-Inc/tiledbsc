@@ -41,7 +41,7 @@ TileDBImagePositions <- R6::R6Class(
   ),
 
   private = list(
-    # @description Top-level function to create and populate the new array.
+    #' @description Top-level function to create and populate the new array.
     build_array = function(image_positions_path) {
       tbl_positions <- private$read_image_positions_data(image_positions_path)
       tiledb::fromDataFrame(
@@ -52,7 +52,7 @@ TileDBImagePositions <- R6::R6Class(
       )
     },
 
-    # @description Read image positions data from a CSV file.
+    #' @description Read image positions data from a CSV file.
     read_image_positions_data = function(image_positions_path) {
 
       if (self$verbose) {

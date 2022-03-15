@@ -89,16 +89,16 @@ AssayMatrix <- R6::R6Class(
 
   private = list(
 
-    # @description Create an empty TileDB array suitable for storing pixel
-    # data.
-    # @param x A [`data.frame`]
-    # @param index_cols Character vector with column names to use as index
-    # @param cell_order,tile_order Configure the TileDB array's global cell
-    # ordering by specifying the tile (default: `"HILBERT"`) and cell
-    # (default: `"ROW_MAJOR"`) ordering. See
-    # [the docs](https://docs.tiledb.com/main/basic-concepts/terminology) for
+    #' @description Create an empty TileDB array suitable for storing pixel
+    #' data.
+    #' @param x A [`data.frame`]
+    #' @param index_cols Character vector with column names to use as index
+    #' @param cell_order,tile_order Configure the TileDB array's global cell
+    #' ordering by specifying the tile (default: `"HILBERT"`) and cell
+    #' (default: `"ROW_MAJOR"`) ordering. See
+    #' [the docs](https://docs.tiledb.com/main/basic-concepts/terminology) for
     #' more information.
-    # @param capacity Capacity of sparse fragments (default: 10000)
+    #' @param capacity Capacity of sparse fragments (default: 10000)
     create_empty_array = function(
       x,
       index_cols,
@@ -117,9 +117,9 @@ AssayMatrix <- R6::R6Class(
       )
     },
 
-    # @description Ingest assay data into the TileDB array.
-    # @param x A [`data.frame`] containing the assay data.
-    # @param index_cols Character vector with column names to use as index
+    #' @description Ingest assay data into the TileDB array.
+    #' @param x A [`data.frame`] containing the assay data.
+    #' @param index_cols Character vector with column names to use as index
     ingest_data = function(x, index_cols) {
       stopifnot(
         "Assay data must be a data.frame" = is.data.frame(x)

@@ -131,8 +131,8 @@ TileDBGroup <- R6::R6Class(
   ),
 
   private = list(
-    # @field URI of the array where group metadata is stored
-    # TODO: Remove once TileDB supports group metadata
+    #' @field URI of the array where group metadata is stored
+    #' TODO: Remove once TileDB supports group metadata
     metadata_uri = NULL,
 
     group_exists = function() {
