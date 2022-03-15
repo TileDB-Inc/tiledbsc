@@ -167,3 +167,19 @@ test_that("an assay with empty counts slot can be converted", {
     SeuratObject::GetAssayData(assay, "counts")
   )
 })
+
+test_that("an assay with empty feature metdata can be converted", {
+  uri <- withr::local_tempdir("assay-without-feature-metadata")
+  tiledb::tiledb_vfs_remove_dir(uri)
+
+  assay <- SeuratObject::CreateAssayObject(
+    counts = Seurat::GetAssayData(pbmc_small[["RNA"]], "counts")
+  )
+  SeuratObject::Key(assay) <- "RNA"
+  expect_true(is_empty(assay[[]]))
+
+  scgroup <- SCGroup$new(uri, verbose = FALSE)
+  expect_silent(scgroup$from_seurat_assay(assay))
+  assay2 <- scgroup$to_seurat_assay()
+  expect_identical(assay2[[]][rownames(assay), ], assay[[]])
+})
