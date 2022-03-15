@@ -31,6 +31,7 @@ columns aligned to either the observations or features of \code{X}
 \out{<details ><summary>Inherited methods</summary>}
 \itemize{
 \item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="add_metadata">}\href{../../tiledbsc/html/TileDBArray.html#method-add_metadata}{\code{tiledbsc::TileDBArray$add_metadata()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="array_exists">}\href{../../tiledbsc/html/TileDBArray.html#method-array_exists}{\code{tiledbsc::TileDBArray$array_exists()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="attributes">}\href{../../tiledbsc/html/TileDBArray.html#method-attributes}{\code{tiledbsc::TileDBArray$attributes()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="attrnames">}\href{../../tiledbsc/html/TileDBArray.html#method-attrnames}{\code{tiledbsc::TileDBArray$attrnames()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="dimensions">}\href{../../tiledbsc/html/TileDBArray.html#method-dimensions}{\code{tiledbsc::TileDBArray$dimensions()}}\out{</span>}
