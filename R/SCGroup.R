@@ -330,6 +330,19 @@ SCGroup <- R6::R6Class(
       )
     },
 
+    #' @description Retrieve a list of all [`SeuratObject::DimReduc`] objects.
+    get_seurat_dimreductions_list = function() {
+      arrays <-self$get_annotation_matrix_arrays(prefix = "dimreduction_")
+      array_names <- names(unlist(arrays))
+      techniques <- unique(sub("(obs|var)m\\.dimreduction_", "", array_names))
+      sapply(
+        techniques,
+        function(x) self$to_seurat_dimreduction(x),
+        simplify = FALSE,
+        USE.NAMES = TRUE
+      )
+    },
+
     #' @description Convert to a [SeuratObject::Seurat] object.
     #' @param project [`SeuratObject::Project`] name for the `Seurat` object
     to_seurat_object = function(project = "SeuratProject") {
