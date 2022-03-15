@@ -12,6 +12,9 @@ SCDataset <- R6::R6Class(
   public = list(
     #' @field scgroups Named list of [`SCGroup`]s in the dataset
     scgroups = list(),
+    #' @field commandsArray SeuratCommand history as named list of string, persisted to storage for
+    #'   later readback
+    commandsArray = NULL,
 
     #' @description Create a new SCDataset object. The existing array group is
     #'   opened at the specified array `uri` if one is present, otherwise a new
@@ -51,6 +54,9 @@ SCDataset <- R6::R6Class(
         names(scgroups) <- sub("scgroup_", "", basename(scgroup_uris), fixed = TRUE)
         self$scgroups <- scgroups
       }
+
+      commands_uri <- file.path(self$uri, "commands")
+      self$commandsArray <- CommandsArray$new(commands_uri, verbose = self$verbose)
 
       return(self)
     },
@@ -108,6 +114,17 @@ SCDataset <- R6::R6Class(
         }
       }
 
+      commandNames <- SeuratObject::Command(object)
+      commandObjects <- lapply(commandNames, function(commandName) {
+        SeuratObject::Command(object, commandName)
+      })
+      names(commandObjects) <- commandNames
+      commandsAsJSON <- lapply(commandObjects, function(command) {
+        # map from 'json' object to string
+        as.character(SeuratCommand_to_JSON(command))
+      })
+      self$commandsArray$from_named_list_of_JSON(commandsAsJSON)
+
       if (self$verbose) message("Finished converting Seurat object to TileDB")
     },
 
@@ -157,6 +174,15 @@ SCDataset <- R6::R6Class(
         names(graphs) <- sub("\\.(obs|var)p\\.graph", "", names(graphs))
         object@graphs <- graphs
       }
+
+      # command history
+      commandsAsJSON <- self$commandsArray$to_named_list_of_JSON()
+      str(commandsAsJSON)
+      commandObjects <- lapply(commandsAsJSON, function(commandAsJSON) {
+        SeuratCommand_from_JSON(commandAsJSON)
+      })
+      # TODO: correct?
+      object@commands <- commandObjects
 
       return(object)
     },
