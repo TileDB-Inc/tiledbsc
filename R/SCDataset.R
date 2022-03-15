@@ -88,7 +88,7 @@ SCDataset <- R6::R6Class(
         for (reduction in reductions) {
           reduction_object <- Seurat::Reductions(object, slot = reduction)
           assay <- SeuratObject::DefaultAssay(reduction_object)
-          self$scgroups[[assay]]$from_seurat_dimreduction(
+          self$scgroups[[assay]]$add_seurat_dimreduction(
             object = reduction_object,
             technique = reduction
           )

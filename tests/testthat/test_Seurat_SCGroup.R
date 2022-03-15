@@ -75,7 +75,7 @@ test_that("dimensional reduction data can be stored and retrieved", {
   expect_length(scgroup$varm$arrays, 0L)
 
   pca1 <- SeuratObject::Reductions(pbmc_small, slot = "pca")
-  scgroup$from_seurat_dimreduction(pca1, technique = "pca")
+  scgroup$add_seurat_dimreduction(pca1, technique = "pca")
 
   # obsm/varm are discovered
   scgroup <- SCGroup$new(uri = tdb_uri)
@@ -93,7 +93,7 @@ test_that("dimensional reduction data can be stored and retrieved", {
   )
 
   # validate recreated dimreduction data
-  pca2 <- scgroup$to_seurat_dimreduction()
+  pca2 <- scgroup$get_seurat_dimreduction()
 
   var_ids <- rownames(SeuratObject::Loadings(pca1))
   expect_identical(
@@ -109,8 +109,8 @@ test_that("dimensional reduction data can be stored and retrieved", {
 
   # tsne results only include cell-aligned Embeddings
   tsne1 <- SeuratObject::Reductions(pbmc_small, slot = "tsne")
-  scgroup$from_seurat_dimreduction(tsne1, technique = "tsne")
-  tsne2 <- scgroup$to_seurat_dimreduction(technique = "tsne")
+  scgroup$add_seurat_dimreduction(tsne1, technique = "tsne")
+  tsne2 <- scgroup$get_seurat_dimreduction(technique = "tsne")
 
   expect_identical(
     SeuratObject::Embeddings(tsne2)[obs_ids, ],
