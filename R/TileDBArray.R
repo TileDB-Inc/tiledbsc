@@ -14,8 +14,21 @@ TileDBArray <- R6::R6Class(
     initialize = function(uri, verbose = TRUE) {
       self$uri <- uri
       self$verbose <- verbose
-      private$array_exists()
+      self$array_exists()
       return(self)
+    },
+
+    #' @description Check if the array exists.
+    #' @return TRUE if the array exists, FALSE otherwise.
+    array_exists = function() {
+      result <- tiledb::tiledb_object_type(self$uri) == "ARRAY"
+      if (result) {
+        msg <- sprintf("Found existing TileDB array at '%s'", self$uri)
+      } else {
+        msg <- sprintf("No TileDB array found at '%s'", self$uri)
+      }
+      if (self$verbose) message(msg)
+      result
     },
 
     #' @description Return a [`TileDBArray`] object
@@ -117,19 +130,6 @@ TileDBArray <- R6::R6Class(
     create_empty_array = function() return(NULL),
 
     # @description Ingest data into the TileDB array.
-    ingest_data = function() return(NULL),
-
-    # @description Check if the array exists.
-    # @return TRUE if the array exists, FALSE otherwise.
-    array_exists = function() {
-      result <- tiledb::tiledb_object_type(self$uri) == "ARRAY"
-      if (result) {
-        msg <- sprintf("Found existing TileDB array at '%s'", self$uri)
-      } else {
-        msg <- sprintf("No TileDB array found at '%s'", self$uri)
-      }
-      if (self$verbose) message(msg)
-      result
-    }
+    ingest_data = function() return(NULL)
   )
 )
