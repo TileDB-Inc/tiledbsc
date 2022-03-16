@@ -137,6 +137,26 @@ test_that("creation from a Seurat Assay without scale.data", {
   )
 })
 
+test_that("an assay with scale.data containing all features", {
+  uri <- withr::local_tempdir()
+
+  SeuratObject::VariableFeatures(assay1) <- character()
+  assay1 <- Seurat::ScaleData(assay1)
+  expect_identical(
+    dim(SeuratObject::GetAssayData(assay1, "counts")),
+    dim(SeuratObject::GetAssayData(assay1, "scale.data"))
+  )
+
+  scgroup <- SCGroup$new(uri = uri, verbose = FALSE)
+  testthat::expect_silent(scgroup$from_seurat_assay(assay1))
+
+  assay2 <- scgroup$to_seurat_assay()
+  testthat::expect_equal(
+    SeuratObject::GetAssayData(assay2, "scale.data"),
+    SeuratObject::GetAssayData(assay1, "scale.data")
+  )
+})
+
 
 test_that("an assay with empty counts slot can be converted", {
   uri <- withr::local_tempdir("assay-with-empty-counts")
