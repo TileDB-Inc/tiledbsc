@@ -21,6 +21,7 @@ TileDB Array Base Class
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-new}{\code{TileDBArray$new()}}
+\item \href{#method-array_exists}{\code{TileDBArray$array_exists()}}
 \item \href{#method-tiledb_array}{\code{TileDBArray$tiledb_array()}}
 \item \href{#method-get_metadata}{\code{TileDBArray$get_metadata()}}
 \item \href{#method-add_metadata}{\code{TileDBArray$add_metadata()}}
@@ -49,6 +50,19 @@ Create a new TileDBArray object.
 \item{\code{verbose}}{Print status messages}
 }
 \if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-array_exists"></a>}}
+\if{latex}{\out{\hypertarget{method-array_exists}{}}}
+\subsection{Method \code{array_exists()}}{
+Check if the array exists.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{TileDBArray$array_exists()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+TRUE if the array exists, FALSE otherwise.
 }
 }
 \if{html}{\out{<hr>}}

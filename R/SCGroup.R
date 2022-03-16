@@ -134,11 +134,16 @@ SCGroup <- R6::R6Class(
       self$X$from_dataframe(
         dgtmatrix_to_dataframe(assay_mats, index_cols)
       )
+
       # TODO: Seurat Assay metadata should be stored in separate empty array
       # until metadata support is added to TileDB groups
       self$X$add_metadata(list(key = SeuratObject::Key(object)))
 
-      self$var$from_dataframe(object[[]])
+      var_df <- object[[]]
+      if (!is_empty(var_df)) {
+        self$var$from_dataframe(var_df)
+      }
+
       if (!is.null(obs)) self$obs$from_dataframe(obs)
       if (self$verbose) message("Finished converting Seurat object to TileDB")
     },
@@ -208,8 +213,10 @@ SCGroup <- R6::R6Class(
       }
 
       # variable annotations
-      var_df <- self$var$to_dataframe()
-      assay_obj <- SeuratObject::AddMetaData(assay_obj, var_df)
+      if (self$var$array_exists()) {
+        var_df <- self$var$to_dataframe()
+        assay_obj <- SeuratObject::AddMetaData(assay_obj, var_df)
+      }
 
       # set metadata
       SeuratObject::Key(assay_obj) <- self$X$get_metadata(key = "key")
