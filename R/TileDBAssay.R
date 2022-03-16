@@ -29,7 +29,7 @@ TileDBAssay <- R6::R6Class(
         stopifnot(file.exists(file_path))
         private$build_array(file_path)
       } else {
-        private$array_exists()
+        self$array_exists()
       }
     },
 

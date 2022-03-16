@@ -48,12 +48,12 @@ dgtmatrix_to_dataframe <- function(x, index_cols = c("i", "j"), value_cols = NUL
   nmats <- length(x)
   for (i in seq_len(nmats)) {
     value_col <- value_cols[i]
-    if (any(dim(x[[1]]) != dim(x[[i]]))) {
+    if (are_layerable(x[[1]], x[[i]])) {
+      index_data[[value_col]] <- x[[i]][row_labels, col_labels]@x
+    } else {
       value_tbl <- as.data.frame.table(as.matrix(x[[i]]))
       colnames(value_tbl) <- c(index_cols, value_col)
       index_data <- merge(index_data, value_tbl, by = index_cols, all.x = TRUE)
-    } else {
-      index_data[[value_col]] <- x[[i]][row_labels, col_labels]@x
     }
   }
   return(index_data)
@@ -88,4 +88,14 @@ dataframe_to_dgtmatrix <- function(x, index_cols = c("i", "j")) {
       repr = "T"
     )
   )
+}
+
+# Matrices with identical dimension names and non-empty coordinates can be
+# stored as different layers (i.e., attributes of the same array)
+#' @importFrom Matrix nnzero
+are_layerable <- function(x, y) {
+  stopifnot(is_matrix(x) && is_matrix(y))
+  dimnames_match <- identical(dimnames(x), dimnames(y))
+  nonemptycells_match <- Matrix::nnzero(x) == Matrix::nnzero(y)
+  dimnames_match && nonemptycells_match
 }
