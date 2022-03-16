@@ -31,7 +31,8 @@ test_that("SCDataset can be created from a Seurat object", {
     c("graph_snn")
   )
 
-  # TODO: check for commands
+  # check for commands
+  command_names <- Seurat::Command(object=pbmc_small)
 
   # create a new SCDataset from an existing TileDB group
   scdataset2 <- SCDataset$new(uri = tdb_uri, verbose = TRUE)
@@ -67,5 +68,8 @@ test_that("SCDataset can be created from a Seurat object", {
     SeuratObject::Graphs(pbmc_small)
   )
 
-  # TODO: check for commands
+  # check for commands
+  command_names2 <- Seurat::Command(object=pbmc_small2)
+  expect_identical(command_names, command_names2)
+
 })

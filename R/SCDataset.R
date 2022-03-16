@@ -12,7 +12,8 @@ SCDataset <- R6::R6Class(
   public = list(
     #' @field scgroups Named list of [`SCGroup`]s in the dataset
     scgroups = list(),
-    #' @field commandsArray SeuratCommand history as named list of string, persisted to storage for
+
+    #' @field commandsArray SeuratCommand history, persisted to storage for
     #'   later readback
     commandsArray = NULL,
 
@@ -115,15 +116,9 @@ SCDataset <- R6::R6Class(
       }
 
       commandNames <- SeuratObject::Command(object)
-      commandObjects <- lapply(commandNames, function(commandName) {
-        SeuratObject::Command(object, commandName)
-      })
-      names(commandObjects) <- commandNames
-      commandsAsJSON <- lapply(commandObjects, function(command) {
-        # map from 'json' object to string
-        as.character(SeuratCommand_to_JSON(command))
-      })
-      self$commandsArray$from_named_list_of_JSON(commandsAsJSON)
+      namedListOfCommands <- lapply(commandNames, SeuratObject::Command, object=object)
+      names(namedListOfCommands) <- commandNames
+      self$commandsArray$from_named_list_of_commands(namedListOfCommands)
 
       if (self$verbose) message("Finished converting Seurat object to TileDB")
     },
@@ -176,13 +171,8 @@ SCDataset <- R6::R6Class(
       }
 
       # command history
-      commandsAsJSON <- self$commandsArray$to_named_list_of_JSON()
-      str(commandsAsJSON)
-      commandObjects <- lapply(commandsAsJSON, function(commandAsJSON) {
-        SeuratCommand_from_JSON(commandAsJSON)
-      })
-      # TODO: correct?
-      object@commands <- commandObjects
+      namedListOfCommands <- self$commandsArray$to_named_list_of_commands()
+      object@commands <- namedListOfCommands
 
       return(object)
     },

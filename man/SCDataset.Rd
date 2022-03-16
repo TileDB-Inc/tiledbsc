@@ -15,7 +15,7 @@ Class for representing a sc_dataset, which may contain of one or more
 \describe{
 \item{\code{scgroups}}{Named list of \code{\link{SCGroup}}s in the dataset}
 
-\item{\code{commandsArray}}{SeuratCommand history as named list of string, persisted to storage for
+\item{\code{commandsArray}}{SeuratCommand history, persisted to storage for
 later readback}
 }
 \if{html}{\out{</div>}}
