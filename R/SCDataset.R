@@ -56,8 +56,10 @@ SCDataset <- R6::R6Class(
         self$scgroups <- scgroups
       }
 
-      commands_uri <- file.path(self$uri, "commands")
-      self$commandsArray <- CommandsArray$new(commands_uri, verbose = self$verbose)
+      self$commandsArray <- CommandsArray$new(
+        uri = file.path(self$uri, "commands"),
+        verbose = self$verbose
+      )
 
       return(self)
     },
@@ -116,9 +118,11 @@ SCDataset <- R6::R6Class(
       }
 
       commandNames <- SeuratObject::Command(object)
-      namedListOfCommands <- lapply(commandNames, SeuratObject::Command, object=object)
-      names(namedListOfCommands) <- commandNames
-      self$commandsArray$from_named_list_of_commands(namedListOfCommands)
+      if (!is_empty(commandNames)) {
+        namedListOfCommands <- lapply(commandNames, SeuratObject::Command,  object=object)
+        names(namedListOfCommands) <- commandNames
+        self$commandsArray$from_named_list_of_commands(namedListOfCommands)
+      }
 
       if (self$verbose) message("Finished converting Seurat object to TileDB")
     },
