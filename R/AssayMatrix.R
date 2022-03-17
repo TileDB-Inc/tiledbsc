@@ -32,11 +32,12 @@ AssayMatrix <- R6::R6Class(
           message("Converting to dgTMatrix")
           x <- as(x, "dgTMatrix")
         }
-      stopifnot("'x' must be a dgTMatrix" = inherits(x, "dgTMatrix"))
-      if (missing(index_cols)) {
-        stop("Must provide 'index_cols' to name the index columns")
-      }
-      stopifnot(is_scalar_character(value_col))
+      stopifnot(
+        "'x' must be a dgTMatrix" = inherits(x, "dgTMatrix"),
+        "Must provide 'index_cols' to name the index columns" = !missing(index_cols),
+        "'value_col' must be scalar" = is_scalar_character(value_col)
+      )
+
       self$from_dataframe(
         dgtmatrix_to_dataframe(x, index_cols = index_cols, value_cols = value_col),
         index_cols = index_cols
@@ -49,10 +50,8 @@ AssayMatrix <- R6::R6Class(
     #' character with a column name, designating one or more index columns. All
     #' other columns are ingested as attributes.
     from_dataframe = function(x, index_cols) {
-      if (missing(index_cols)) {
-        stop("Must provide 'index_cols' to identify the index columns")
-      }
       stopifnot(
+        "Must provide 'index_cols' to identify the index columns" = !missing(index_cols),
         "'x' must be a data.frame" = is.data.frame(x),
         length(index_cols) == 2,
         all(index_cols %in% colnames(x))
