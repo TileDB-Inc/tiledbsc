@@ -7,7 +7,8 @@
 Class for representing a group of TileDB arrays that consitute an \code{sc_group},
 which includes:
 \itemize{
-\item \code{X} (\code{\link{AssayMatrix}}): a labeled 2D sparse array
+\item \code{X} (\code{\link{AssayMatrixGroup}}): a group of one or more labeled 2D sparse arrays
+that share the same dimensions.
 \item \code{obs} (\code{\link{AnnotationDataframe}}): 1D labeled array with column labels for
 \code{X}
 \item \code{var} (\code{\link{AnnotationDataframe}}): 1D labeled array with row labels for \code{X}

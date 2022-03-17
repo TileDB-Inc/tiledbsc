@@ -3,7 +3,8 @@
 #' @description
 #' Class for representing a group of TileDB arrays that consitute an `sc_group`,
 #' which includes:
-#' - `X` ([`AssayMatrix`]): a labeled 2D sparse array
+#' - `X` ([`AssayMatrixGroup`]): a group of one or more labeled 2D sparse arrays
+#'   that share the same dimensions.
 #' - `obs` ([`AnnotationDataframe`]): 1D labeled array with column labels for
 #'   `X`
 #' - `var` ([`AnnotationDataframe`]): 1D labeled array with row labels for `X`
