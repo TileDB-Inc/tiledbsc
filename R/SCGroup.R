@@ -21,10 +21,10 @@ SCGroup <- R6::R6Class(
     #' @field var [`AnnotationDataframe`] object containing variable-aligned
     #' annotations
     var = NULL,
-    #' @field X [`AssayMatrix`] object containing the matrix-like assay data
-    #' with string dimensions `obs_id` and `var_id` that align to the dimensions
-    #' of the `obs` and `var` arrays, respectively.
-    X = NULL,
+    #' @field X named list of [`AssayMatrix`] object containing matrix-like
+    #' assay data with string dimensions `obs_id` and `var_id` that align to the
+    #' dimensions of the `obs` and `var` arrays, respectively.
+    X = list(),
     #' @field obsm named list of [`AnnotationMatrix`] objects aligned with `obs`
     obsm = list(),
     #' @field varm named list of [`AnnotationMatrix`] objects aligned with `var`
@@ -60,8 +60,9 @@ SCGroup <- R6::R6Class(
         verbose = self$verbose
       )
 
-      self$X <- AssayMatrix$new(
+      self$X <- AssayMatrixGroup$new(
         uri = paste0(self$uri, "/X"),
+        dimension_name = c("obs_id", "var_id"),
         verbose = self$verbose
       )
 
@@ -124,19 +125,18 @@ SCGroup <- R6::R6Class(
         MoreArgs = list(object = object),
         SIMPLIFY = FALSE
       )
-      assay_mats <- lapply(assay_mats, FUN = as, Class = "dgTMatrix")
 
-      # exclude empty matrices
+      # create a list of non-empty dgTMatrix objects
+      assay_mats <- lapply(assay_mats, FUN = as, Class = "dgTMatrix")
       assay_mats <- Filter(Negate(is_empty), assay_mats)
 
-      # TODO: decide on a consistent naming convention for array dimensions
-      index_cols <- c("var_id", "obs_id")
-      self$X$from_dataframe(
-        dgtmatrix_to_dataframe(assay_mats, index_cols)
-      )
+      for (assay in names(assay_mats)) {
+        self$X$add_assay_matrix(
+          data = assay_mats[[assay]],
+          name = assay
+        )
+      }
 
-      # TODO: Seurat Assay metadata should be stored in separate empty array
-      # until metadata support is added to TileDB groups
       self$X$add_metadata(list(key = SeuratObject::Key(object)))
 
       var_df <- object[[]]
