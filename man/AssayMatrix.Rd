@@ -54,7 +54,7 @@ Used for the \code{X} field of \code{\link{SCGroup}}.
 \subsection{Method \code{from_matrix()}}{
 Ingest assay data from a sparse matrix
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AssayMatrix$from_matrix(x, attr = "counts")}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{AssayMatrix$from_matrix(x, index_cols, value_col = "value")}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -63,8 +63,11 @@ Ingest assay data from a sparse matrix
 \item{\code{x}}{a \code{\link[Matrix:dgCMatrix-class]{Matrix::dgCMatrix}} or \code{\link[Matrix:dgTMatrix-class]{Matrix::dgTMatrix}}
 with string dimensions}
 
-\item{\code{attr}}{Name of the attribute within the TileDB array that will
-store the Matrix data}
+\item{\code{index_cols}}{Names to use for the TileDB array's dimensions that
+will contain the matrix row/column names.}
+
+\item{\code{value_col}}{Name to use for the TileDB array's attribute that will
+contain the matrix values.}
 }
 \if{html}{\out{</div>}}
 }
@@ -75,7 +78,7 @@ store the Matrix data}
 \subsection{Method \code{from_dataframe()}}{
 Ingest assay data from a COO-formatted data frame
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AssayMatrix$from_dataframe(x, index_cols = c("var_id", "obs_id"))}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{AssayMatrix$from_dataframe(x, index_cols)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
