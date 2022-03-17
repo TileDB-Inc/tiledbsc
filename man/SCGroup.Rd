@@ -7,7 +7,8 @@
 Class for representing a group of TileDB arrays that consitute an \code{sc_group},
 which includes:
 \itemize{
-\item \code{X} (\code{\link{AssayMatrix}}): a labeled 2D sparse array
+\item \code{X} (\code{\link{AssayMatrixGroup}}): a group of one or more labeled 2D sparse arrays
+that share the same dimensions.
 \item \code{obs} (\code{\link{AnnotationDataframe}}): 1D labeled array with column labels for
 \code{X}
 \item \code{var} (\code{\link{AnnotationDataframe}}): 1D labeled array with row labels for \code{X}
@@ -25,9 +26,9 @@ annotations}
 \item{\code{var}}{\code{\link{AnnotationDataframe}} object containing variable-aligned
 annotations}
 
-\item{\code{X}}{\code{\link{AssayMatrix}} object containing the matrix-like assay data
-with string dimensions \code{obs_id} and \code{var_id} that align to the dimensions
-of the \code{obs} and \code{var} arrays, respectively.}
+\item{\code{X}}{named list of \code{\link{AssayMatrix}} object containing matrix-like
+assay data with string dimensions \code{obs_id} and \code{var_id} that align to the
+dimensions of the \code{obs} and \code{var} arrays, respectively.}
 
 \item{\code{obsm}}{named list of \code{\link{AnnotationMatrix}} objects aligned with \code{obs}}
 
@@ -113,6 +114,7 @@ cell/sample-level observations.}
 Convert to a \code{\link[SeuratObject:Assay-class]{SeuratObject::Assay}} object.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{SCGroup$to_seurat_assay(
+  layers = c("counts", "data", "scale.data"),
   min_cells = 0,
   min_features = 0,
   check_matrix = FALSE,
@@ -123,6 +125,10 @@ Convert to a \code{\link[SeuratObject:Assay-class]{SeuratObject::Assay}} object.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
+\item{\code{layers}}{A vector of assay layer names to retrieve. These must
+correspond to the one or more of the data-containing slots in a
+\code{\link[SeuratObject:Assay-class]{SeuratObject::Assay}} object (i.e., \code{counts}, \code{data}, or \code{scale.data}).}
+
 \item{\code{min_cells}}{Include features detected in at least this many cells.
 Will subset the counts matrix as well. To reintroduce excluded features,
 create a new object with a lower cutoff.}

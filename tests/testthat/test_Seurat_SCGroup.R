@@ -19,9 +19,9 @@ test_that("SCGroup object can be created from a Seurat assay", {
   )
 
   scgroup$from_seurat_assay(assay1, obs = pbmc_small[[]])
-  expect_s4_class(scgroup$X$tiledb_array(), "tiledb_array")
   expect_s4_class(scgroup$obs$tiledb_array(), "tiledb_array")
   expect_s4_class(scgroup$var$tiledb_array(), "tiledb_array")
+  expect_true(inherits(scgroup$X, "AssayMatrixGroup"))
 })
 
 test_that("Seurat Assay can be recreated from an existing SCGroup", {
@@ -150,14 +150,13 @@ test_that("an assay with scale.data containing all features", {
   scgroup <- SCGroup$new(uri = uri, verbose = FALSE)
   testthat::expect_silent(scgroup$from_seurat_assay(assay1))
 
-  # TODO: Currently only ingesting scale.data values for non-empty coords from counts/data
-  # var_ids <- rownames(assay1)
-  # obs_ids <- colnames(assay1)
-  # assay2 <- scgroup$to_seurat_assay()
-  # testthat::expect_equal(
-  #   SeuratObject::GetAssayData(assay2, "scale.data")[var_ids, obs_ids],
-  #   SeuratObject::GetAssayData(assay1, "scale.data")[var_ids, obs_ids]
-  # )
+  var_ids <- rownames(assay1)
+  obs_ids <- colnames(assay1)
+  assay2 <- scgroup$to_seurat_assay()
+  testthat::expect_equal(
+    SeuratObject::GetAssayData(assay2, "scale.data")[var_ids, obs_ids],
+    SeuratObject::GetAssayData(assay1, "scale.data")[var_ids, obs_ids]
+  )
 })
 
 
@@ -173,7 +172,7 @@ test_that("an assay with empty counts slot can be converted", {
 
   scgroup <- SCGroup$new(uri, verbose = FALSE)
   expect_silent(scgroup$from_seurat_assay(assay))
-  expect_match(tiledb::tiledb_object_type(scgroup$X$uri), "ARRAY")
+  expect_match(tiledb::tiledb_object_type(scgroup$X$uri), "GROUP")
 
   assay2 <- scgroup$to_seurat_assay()
 

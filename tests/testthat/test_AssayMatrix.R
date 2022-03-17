@@ -1,23 +1,12 @@
-setup({
-  tdb_uri <<- file.path(tempdir(), "test-scgroup-x")
-  dir.create(tdb_uri)
-})
-
-teardown({
-  tiledb::tiledb_vfs_remove_dir(tdb_uri)
-})
-
-
 test_that("AssayMatrix object can be created from a dgCMatrix", {
-  x_uri <- file.path(tdb_uri, "X")
-  pbmc_small_rna <- Seurat::GetAssay(pbmc_small, assay = "RNA")
-  mat <- Seurat::GetAssayData(pbmc_small_rna)
+  uri <- withr::local_tempdir("assay-matrix")
+  mat <- Seurat::GetAssayData(pbmc_small[["RNA"]], "counts")
 
-  assaymat <- AssayMatrix$new(uri = x_uri, verbose = FALSE)
+  assaymat <- AssayMatrix$new(uri = uri, verbose = FALSE)
   expect_true(inherits(assaymat, "AssayMatrix"))
 
-  assaymat$from_matrix(mat, attr = "counts")
-  expect_true(dir.exists(x_uri))
+  assaymat$from_matrix(mat, index_cols = c("i", "j"), value_col = "counts")
+  expect_true(dir.exists(uri))
   expect_s4_class(assaymat$tiledb_array(), "tiledb_array")
 
   mat2 <- assaymat$to_matrix()
@@ -29,5 +18,20 @@ test_that("AssayMatrix object can be created from a dgCMatrix", {
   rlabs <- rownames(mat2)
   clabs <- colnames(mat2)
   expect_equal(mat1[rlabs, clabs], mat2[rlabs, clabs])
+})
 
+
+test_that("matrices can be added to an AssayMatrixGroup", {
+  uri <- withr::local_tempdir("assay-matrix-group")
+  mat <- Seurat::GetAssayData(pbmc_small[["RNA"]], "counts")
+  fs::dir_delete(uri)
+
+  assaymats <- AssayMatrixGroup$new(uri = uri, dimension_name = c("obs_id", "var_id"))
+  expect_length(assaymats$arrays, 0)
+
+  assaymats$add_assay_matrix(
+    data = Seurat::GetAssayData(pbmc_small[["RNA"]], "counts"),
+    name = "counts"
+  )
+  expect_true(inherits(assaymats$arrays[["counts"]], "AssayMatrix"))
 })

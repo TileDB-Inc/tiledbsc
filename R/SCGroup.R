@@ -3,7 +3,8 @@
 #' @description
 #' Class for representing a group of TileDB arrays that consitute an `sc_group`,
 #' which includes:
-#' - `X` ([`AssayMatrix`]): a labeled 2D sparse array
+#' - `X` ([`AssayMatrixGroup`]): a group of one or more labeled 2D sparse arrays
+#'   that share the same dimensions.
 #' - `obs` ([`AnnotationDataframe`]): 1D labeled array with column labels for
 #'   `X`
 #' - `var` ([`AnnotationDataframe`]): 1D labeled array with row labels for `X`
@@ -21,10 +22,10 @@ SCGroup <- R6::R6Class(
     #' @field var [`AnnotationDataframe`] object containing variable-aligned
     #' annotations
     var = NULL,
-    #' @field X [`AssayMatrix`] object containing the matrix-like assay data
-    #' with string dimensions `obs_id` and `var_id` that align to the dimensions
-    #' of the `obs` and `var` arrays, respectively.
-    X = NULL,
+    #' @field X named list of [`AssayMatrix`] object containing matrix-like
+    #' assay data with string dimensions `obs_id` and `var_id` that align to the
+    #' dimensions of the `obs` and `var` arrays, respectively.
+    X = list(),
     #' @field obsm named list of [`AnnotationMatrix`] objects aligned with `obs`
     obsm = list(),
     #' @field varm named list of [`AnnotationMatrix`] objects aligned with `var`
@@ -60,8 +61,9 @@ SCGroup <- R6::R6Class(
         verbose = self$verbose
       )
 
-      self$X <- AssayMatrix$new(
+      self$X <- AssayMatrixGroup$new(
         uri = paste0(self$uri, "/X"),
+        dimension_name = c("obs_id", "var_id"),
         verbose = self$verbose
       )
 
@@ -124,19 +126,18 @@ SCGroup <- R6::R6Class(
         MoreArgs = list(object = object),
         SIMPLIFY = FALSE
       )
-      assay_mats <- lapply(assay_mats, FUN = as, Class = "dgTMatrix")
 
-      # exclude empty matrices
+      # create a list of non-empty dgTMatrix objects
+      assay_mats <- lapply(assay_mats, FUN = as, Class = "dgTMatrix")
       assay_mats <- Filter(Negate(is_empty), assay_mats)
 
-      # TODO: decide on a consistent naming convention for array dimensions
-      index_cols <- c("var_id", "obs_id")
-      self$X$from_dataframe(
-        dgtmatrix_to_dataframe(assay_mats, index_cols)
-      )
+      for (assay in names(assay_mats)) {
+        self$X$add_assay_matrix(
+          data = assay_mats[[assay]],
+          name = assay
+        )
+      }
 
-      # TODO: Seurat Assay metadata should be stored in separate empty array
-      # until metadata support is added to TileDB groups
       self$X$add_metadata(list(key = SeuratObject::Key(object)))
 
       var_df <- object[[]]
@@ -149,6 +150,9 @@ SCGroup <- R6::R6Class(
     },
 
     #' @description Convert to a [`SeuratObject::Assay`] object.
+    #' @param layers A vector of assay layer names to retrieve. These must
+    #' correspond to the one or more of the data-containing slots in a
+    #' [`SeuratObject::Assay`] object (i.e., `counts`, `data`, or `scale.data`).
     #' @param min_cells Include features detected in at least this many cells.
     #' Will subset the counts matrix as well. To reintroduce excluded features,
     #' create a new object with a lower cutoff.
@@ -158,57 +162,63 @@ SCGroup <- R6::R6Class(
     #' values
     #' @param ... Arguments passed to [`SeuratObject::as.sparse`]
     to_seurat_assay = function(
+      layers = c("counts", "data", "scale.data"),
       min_cells = 0,
       min_features = 0,
       check_matrix = FALSE,
       ...) {
 
-      # TODO: Add param to control which attributes are retrieved
-      x_attrs <- self$X$attrnames()
-      stopifnot(
-        "X must contain have attributes 'counts' or 'data'"
-          = sum(x_attrs %in% c("counts", "data")) > 0
+      layers <- match.arg(
+        arg = layers,
+        choices = c("counts", "data", "scale.data"),
+        several.ok = TRUE
       )
+      matching_layers <- intersect(names(self$X$arrays), layers)
+      if (is_empty(matching_layers)) {
+        stop("Did not find any matching 'X' layers")
+      }
 
-      assay_data <- dataframe_to_dgtmatrix(
-        self$X$to_dataframe(attrs = x_attrs),
-        index_cols = c("var_id", "obs_id")
+      assay_mats <- sapply(
+        X = matching_layers,
+        FUN = function(x) self$X$arrays[[x]]$to_matrix(),
+        simplify = FALSE,
+        USE.NAMES = TRUE
       )
 
       # Seurat doesn't allow us to supply data for both the `counts` and `data`
       # slots simultaneously, so we have to update the `data` slot separately.
 
-      if (is.null(assay_data$counts)) {
+      if (is.null(assay_mats$counts)) {
         # CreateAssayObject only accepts a dgTMatrix matrix for `counts`, 'data'
         # and 'scale.data' must be coerced to a dgCMatrix and base::matrix,
         # respectively. Bug?
         assay_obj <- SeuratObject::CreateAssayObject(
-          data = as(assay_data$data, "dgCMatrix"),
+          data = as(assay_mats$data, "dgCMatrix"),
           min.cells = min_cells,
           min.features = min_features,
           check.matrix = check_matrix
         )
       } else {
         assay_obj <- SeuratObject::CreateAssayObject(
-          counts = assay_data$counts,
+          counts = assay_mats$counts,
           min.cells = min_cells,
           min.features = min_features,
           check.matrix = check_matrix
         )
-        if (!is.null(assay_data$data)) {
+        if (!is.null(assay_mats$data)) {
           assay_obj <- SeuratObject::SetAssayData(
             object = assay_obj,
             slot = "data",
-            new.data = as(assay_data$data, "dgCMatrix")
+            new.data = as(assay_mats$data, "dgCMatrix")
           )
         }
       }
 
-      if (!is.null(assay_data$scale.data)) {
+      if (!is.null(assay_mats$scale.data)) {
         assay_obj <- SeuratObject::SetAssayData(
           object = assay_obj,
           slot = "scale.data",
-          new.data = as.matrix(assay_data$scale.data)
+          new.data = as.matrix(assay_mats$scale.data)
         )
       }
 

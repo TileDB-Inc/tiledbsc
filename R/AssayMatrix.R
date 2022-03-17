@@ -23,17 +23,24 @@ AssayMatrix <- R6::R6Class(
     #' @description Ingest assay data from a sparse matrix
     #' @param x a [`Matrix::dgCMatrix-class`] or [`Matrix::dgTMatrix-class`]
     #' with string dimensions
-    #' @param attr Name of the attribute within the TileDB array that will
-    #' store the Matrix data
-    from_matrix = function(x, attr = "counts") {
+    #' @param index_cols Names to use for the TileDB array's dimensions that
+    #' will contain the matrix row/column names.
+    #' @param value_col Name to use for the TileDB array's attribute that will
+    #' contain the matrix values.
+    from_matrix = function(x, index_cols, value_col = "value") {
       if (inherits(x, "dgCMatrix")) {
           message("Converting to dgTMatrix")
           x <- as(x, "dgTMatrix")
         }
-      stopifnot("'x' must be a dgTMatrix" = inherits(x, "dgTMatrix"))
-      stopifnot(is_scalar_character(attr))
+      stopifnot(
+        "'x' must be a dgTMatrix" = inherits(x, "dgTMatrix"),
+        "Must provide 'index_cols' to name the index columns" = !missing(index_cols),
+        "'value_col' must be scalar" = is_scalar_character(value_col)
+      )
+
       self$from_dataframe(
-        dgtmatrix_to_dataframe(x, index_cols = c("var_id", "obs_id"), value_cols = attr)
+        dgtmatrix_to_dataframe(x, index_cols = index_cols, value_cols = value_col),
+        index_cols = index_cols
       )
     },
 
@@ -42,8 +49,9 @@ AssayMatrix <- R6::R6Class(
     #' @param index_cols A column index, either numeric with a column index, or
     #' character with a column name, designating one or more index columns. All
     #' other columns are ingested as attributes.
-    from_dataframe = function(x, index_cols = c("var_id", "obs_id")) {
+    from_dataframe = function(x, index_cols) {
       stopifnot(
+        "Must provide 'index_cols' to identify the index columns" = !missing(index_cols),
         "'x' must be a data.frame" = is.data.frame(x),
         length(index_cols) == 2,
         all(index_cols %in% colnames(x))

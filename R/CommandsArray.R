@@ -67,15 +67,15 @@ CommandsArray <- R6::R6Class(
 
   private = list(
 
-    #' @description Create an empty TileDB array suitable for storing command-history
-    #' data.
-    #' @param x a named list of strings
-    #' @param cell_order,tile_order Configure the TileDB array's global cell
-    #' ordering by specifying the tile (default: `"ROW_MAJOR"`) and cell
-    #' (default: `"ROW_MAJOR"`) ordering. See
-    #' [the docs](https://docs.tiledb.com/main/basic-concepts/terminology) for
-    #' more information.
-    #' @param capacity Capacity of sparse fragments (default: 10000)
+    # @description Create an empty TileDB array suitable for storing
+    # command-history data.
+    # @param x a named list of strings
+    # @param cell_order,tile_order Configure the TileDB array's global cell
+    # ordering by specifying the tile (default: `"ROW_MAJOR"`) and cell
+    # (default: `"ROW_MAJOR"`) ordering. See
+    # [the docs](https://docs.tiledb.com/main/basic-concepts/terminology) for
+    # more information.
+    # @param capacity Capacity of sparse fragments (default: 10000)
     create_empty_array = function(
       x,
       cell_order = "ROW_MAJOR",
@@ -128,6 +128,7 @@ CommandsArray <- R6::R6Class(
 
 # Coerce a Seurat Command to a data.frame, using JSON serialization of the
 # command's parameters
+#' @importFrom methods slot
 as.data.frame.SeuratCommand <- function(x, row.names = FALSE, optional = FALSE, ...) {
     data.frame(
         name = slot(x, "name"),
