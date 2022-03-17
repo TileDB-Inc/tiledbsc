@@ -17,7 +17,7 @@ CommandsArray <- R6::R6Class(
     #' @param x a named list of Seurat Command objects
     from_named_list_of_commands = function(x) {
       stopifnot(
-        "CommandsArray input must be named list of Seurat Command" = is.list(x) && !is.null(names(x))
+        "CommandsArray input must be named list of Seurat Command" = is.list(x) && is_named_list(x)
       )
       for (command in x) {
         stopifnot(
