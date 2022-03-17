@@ -13,6 +13,10 @@ SCDataset <- R6::R6Class(
     #' @field scgroups Named list of [`SCGroup`]s in the dataset
     scgroups = list(),
 
+    #' @field commandsArray SeuratCommand history, persisted to storage for
+    #'   later readback
+    commandsArray = NULL,
+
     #' @description Create a new SCDataset object. The existing array group is
     #'   opened at the specified array `uri` if one is present, otherwise a new
     #'   array group is created. The `scgroups` field is populated with
@@ -51,6 +55,9 @@ SCDataset <- R6::R6Class(
         names(scgroups) <- sub("scgroup_", "", basename(scgroup_uris), fixed = TRUE)
         self$scgroups <- scgroups
       }
+
+      commands_uri <- file.path(self$uri, "commands")
+      self$commandsArray <- CommandsArray$new(commands_uri, verbose = self$verbose)
 
       return(self)
     },
@@ -108,6 +115,11 @@ SCDataset <- R6::R6Class(
         }
       }
 
+      commandNames <- SeuratObject::Command(object)
+      namedListOfCommands <- lapply(commandNames, SeuratObject::Command, object=object)
+      names(namedListOfCommands) <- commandNames
+      self$commandsArray$from_named_list_of_commands(namedListOfCommands)
+
       if (self$verbose) message("Finished converting Seurat object to TileDB")
     },
 
@@ -157,6 +169,10 @@ SCDataset <- R6::R6Class(
         names(graphs) <- sub("\\.(obs|var)p\\.graph", "", names(graphs))
         object@graphs <- graphs
       }
+
+      # command history
+      namedListOfCommands <- self$commandsArray$to_named_list_of_commands()
+      object@commands <- namedListOfCommands
 
       return(object)
     },
