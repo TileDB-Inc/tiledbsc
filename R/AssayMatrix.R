@@ -25,7 +25,7 @@ AssayMatrix <- R6::R6Class(
     #' with string dimensions
     #' @param index_cols Names to use for the TileDB array's dimensions that
     #' will contain the matrix row/column names.
-    #' @param value_name Name to use for the TileDB array's attribute that will
+    #' @param value_col Name to use for the TileDB array's attribute that will
     #' contain the matrix values.
     from_matrix = function(x, index_cols, value_col = "value") {
       if (inherits(x, "dgCMatrix")) {
