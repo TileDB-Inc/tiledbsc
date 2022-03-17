@@ -173,7 +173,7 @@ test_that("an assay with empty counts slot can be converted", {
 
   scgroup <- SCGroup$new(uri, verbose = FALSE)
   expect_silent(scgroup$from_seurat_assay(assay))
-  expect_match(tiledb::tiledb_object_type(scgroup$X$uri), "ARRAY")
+  expect_match(tiledb::tiledb_object_type(scgroup$X$uri), "GROUP")
 
   assay2 <- scgroup$to_seurat_assay()
 
