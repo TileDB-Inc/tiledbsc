@@ -31,12 +31,15 @@ test_that("SCDataset can be created from a Seurat object", {
     c("graph_snn")
   )
 
+  # check for commands
+  command_names <- Seurat::Command(object=pbmc_small)
+
   # create a new SCDataset from an existing TileDB group
   scdataset2 <- SCDataset$new(uri = tdb_uri, verbose = TRUE)
   expect_true(inherits(scdataset2, "SCDataset"))
   expect_true(inherits(scdataset2$scgroups[[1]], "SCGroup"))
 
-  # check for auxillary arrays
+  # check for auxiliary arrays
   scgroup <- scdataset2$scgroups[["RNA"]]
 
   expect_length(scgroup$obsm$arrays, 2)
@@ -64,4 +67,9 @@ test_that("SCDataset can be created from a Seurat object", {
     SeuratObject::Graphs(pbmc_small2),
     SeuratObject::Graphs(pbmc_small)
   )
+
+  # check for commands
+  command_names2 <- Seurat::Command(object=pbmc_small2)
+  expect_identical(command_names, command_names2)
+
 })

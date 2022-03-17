@@ -2,7 +2,7 @@ Package: tiledbsc
 Type: Package
 Title: TileDB-based Single Cell Tools
 Description: A collection of experimental functions for working with single cell data using TileDB.
-Version: 0.0.0.9023
+Version: 0.0.0.9024
 Authors@R: c(
     person(given = "Aaron",
            family = "Wolen",
@@ -14,6 +14,10 @@ Authors@R: c(
            email = "dirk@tiledb.com",
            role = "aut",
            comment = c(ORCID = "0000-0001-6419-907X")),
+    person(given = "John",
+           family = "Kerl",
+           email = "john.kerl@tiledb.com",
+           role = "aut"),
     person(given = "TileDB, Inc.",
            role = c("cph", "fnd"))
     )
@@ -27,7 +31,8 @@ Imports:
     Seurat,
     SeuratObject,
     png,
-    withr
+    withr,
+    jsonlite
 Remotes:
     tiledb-inc/tiledb-r
 Roxygen: list(markdown = TRUE)

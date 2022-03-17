@@ -11,7 +11,13 @@
     if (value_type == "integer") {
         dtype <- "INT32"
     } else if (value_type == "double") {
+      # typeof doesn't distinguish between "character" and "POSIXct"; class does.
+      # Also note POSIXct class is "POSIXct" "POSIXt" (two elements); hence the [[1]].
+      if (class(value)[[1]] == "POSIXct") {
+        dtype <- "DATETIME_MS"
+      } else {
         dtype <- "FLOAT64"
+      }
     } else if (value_type == "character") {
         dtype <- "ASCII"
     } else {
