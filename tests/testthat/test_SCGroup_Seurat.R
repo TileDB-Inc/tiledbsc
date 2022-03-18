@@ -67,6 +67,27 @@ test_that("Seurat Assay can be recreated from an existing SCGroup", {
   )
 })
 
+test_that("obs and var are created when even no annotations are present", {
+  uri <- withr::local_tempdir("assay-with-no-annotations")
+
+  assay <- SeuratObject::CreateAssayObject(
+    counts = Seurat::GetAssayData(pbmc_small[["RNA"]], "counts")
+  )
+  expect_true(is_empty(assay[[]]))
+  SeuratObject::Key(assay) <- "RNA"
+
+  scgroup <- SCGroup$new(uri = uri)
+  scgroup$from_seurat_assay(assay)
+
+  obs <- scgroup$obs$to_dataframe()
+  expect_length(obs, 0)
+  expect_true(all(rownames(obs) %in% colnames(assay)))
+
+  var <- scgroup$var$to_dataframe()
+  expect_length(var, 0)
+  expect_true(all(rownames(var) %in% rownames(assay)))
+})
+
 test_that("dimensional reduction data can be stored and retrieved", {
   scgroup <- SCGroup$new(uri = tdb_uri)
 
