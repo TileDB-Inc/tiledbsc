@@ -223,5 +223,5 @@ test_that("an assay with empty feature metdata can be converted", {
   scgroup <- SCGroup$new(uri, verbose = FALSE)
   expect_silent(scgroup$from_seurat_assay(assay))
   assay2 <- scgroup$to_seurat_assay()
-  expect_identical(assay2[[]][rownames(assay), ], assay[[]])
+  expect_identical(assay2[[]][rownames(assay),], assay[[]])
 })

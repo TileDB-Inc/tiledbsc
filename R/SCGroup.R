@@ -182,10 +182,9 @@ SCGroup <- R6::R6Class(
         USE.NAMES = TRUE
       )
 
-      # # Ensure assay matrices all contain the same observations
-      # obs_ids <- self$obs$tiledb_array(attrs = self$obs$attrnames()[1])[]$index
-      # assay_mats <- lapply(assay_mats, pad_matrix, colnames = obs_ids)
-
+      # Ensure assay matrices all contain the same observations
+      obs_ids <- self$obs$tiledb_array(attrs = NA_character_)[]$obs_id
+      assay_mats <- lapply(assay_mats, pad_matrix, colnames = obs_ids)
 
       # Seurat doesn't allow us to supply data for both the `counts` and `data`
       # slots simultaneously, so we have to update the `data` slot separately.
@@ -225,7 +224,7 @@ SCGroup <- R6::R6Class(
       }
 
       # variable annotations
-      if (self$var$array_exists()) {
+      if (!is_empty(self$var$attrnames())) {
         var_df <- self$var$to_dataframe()
         assay_obj <- SeuratObject::AddMetaData(assay_obj, var_df)
       }
