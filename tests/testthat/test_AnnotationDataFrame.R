@@ -24,7 +24,7 @@ test_that("annotation dataframe can be stored and retrieved", {
 test_that("an empty dataframe can be stored and retrieved", {
   uri <- withr::local_tempdir("annot-df-empty")
   df <- data.frame(row.names = letters)
-  expect_length(df2, 0)
+  expect_length(df, 0)
 
   annotdf <- AnnotationDataframe$new(uri)
   annotdf$from_dataframe(df, index_col = "index")
