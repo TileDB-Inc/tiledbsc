@@ -27,7 +27,7 @@ LazyData: true
 Imports:
     tools,
     Matrix,
-    tiledb (>= 0.11.0.10),
+    tiledb (>= 0.11.0.15),
     Seurat,
     SeuratObject,
     png,
