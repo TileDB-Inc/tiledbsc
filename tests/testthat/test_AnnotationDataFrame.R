@@ -20,3 +20,16 @@ test_that("annotation dataframe can be stored and retrieved", {
   clabs <- colnames(mtcars)
   expect_identical(mtcars2[rlabs, clabs], mtcars[rlabs, clabs])
 })
+
+test_that("an empty dataframe can be stored and retrieved", {
+  uri <- withr::local_tempdir("annot-df-empty")
+  df <- data.frame(row.names = letters)
+  expect_length(df2, 0)
+
+  annotdf <- AnnotationDataframe$new(uri)
+  annotdf$from_dataframe(df, index_col = "index")
+
+  df2 <- annotdf$to_dataframe()
+  expect_length(df2, 0)
+  expect_equal(sort(rownames(df2)), sort(rownames(df)))
+})
