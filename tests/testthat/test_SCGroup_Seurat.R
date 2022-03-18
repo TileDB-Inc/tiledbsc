@@ -192,7 +192,6 @@ test_that("an assay with empty counts slot can be converted", {
 
 test_that("an assay with empty feature metdata can be converted", {
   uri <- withr::local_tempdir("assay-without-feature-metadata")
-  tiledb::tiledb_vfs_remove_dir(uri)
 
   assay <- SeuratObject::CreateAssayObject(
     counts = Seurat::GetAssayData(pbmc_small[["RNA"]], "counts")
