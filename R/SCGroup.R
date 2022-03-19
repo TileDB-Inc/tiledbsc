@@ -8,7 +8,7 @@
 #' - `obs` ([`AnnotationDataframe`]): 1D labeled array with column labels for
 #'   `X`
 #' - `var` ([`AnnotationDataframe`]): 1D labeled array with row labels for `X`
-#' @importFrom SeuratObject AddMetaData Loadings Embeddings
+#' @importFrom SeuratObject AddMetaData Loadings Embeddings VariableFeatures
 #' @importFrom SeuratObject GetAssayData CreateAssayObject SetAssayData
 #' @export
 SCGroup <- R6::R6Class(
@@ -117,6 +117,14 @@ SCGroup <- R6::R6Class(
         obs <- data.frame(row.names = colnames(object))
       }
       self$obs$from_dataframe(obs, index_col = "obs_id")
+
+      if (!is_empty(SeuratObject::VariableFeatures(object))) {
+        object <- SeuratObject::AddMetaData(
+          object = object,
+          metadata = rownames(object) %in% SeuratObject::VariableFeatures(object),
+          col.name = "highly_variable"
+        )
+      }
       self$var$from_dataframe(object[[]], index_col = "var_id")
 
       assay_slots <- c("counts", "data")
