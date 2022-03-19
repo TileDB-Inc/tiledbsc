@@ -54,6 +54,12 @@ test_that("Seurat Assay can be recreated from an existing SCGroup", {
     assay1[[]][var_ids, -5]
   )
 
+  # validate variable features
+  expect_identical(
+    SeuratObject::VariableFeatures(assay2),
+    sort(SeuratObject::VariableFeatures(assay1))
+  )
+
   # validate raw counts matrix
   expect_identical(
     SeuratObject::GetAssayData(assay2, "counts")[var_ids, obs_ids],
