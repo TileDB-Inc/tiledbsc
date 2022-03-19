@@ -50,6 +50,7 @@ dimensions of the \code{obs} and \code{var} arrays, respectively.}
 \item \href{#method-get_seurat_dimreduction}{\code{SCGroup$get_seurat_dimreduction()}}
 \item \href{#method-get_seurat_dimreductions_list}{\code{SCGroup$get_seurat_dimreductions_list()}}
 \item \href{#method-to_seurat_object}{\code{SCGroup$to_seurat_object()}}
+\item \href{#method-to_summarized_experiment}{\code{SCGroup$to_summarized_experiment()}}
 \item \href{#method-get_annotation_matrix_arrays}{\code{SCGroup$get_annotation_matrix_arrays()}}
 \item \href{#method-get_annotation_pairwise_matrix_arrays}{\code{SCGroup$get_annotation_pairwise_matrix_arrays()}}
 \item \href{#method-clone}{\code{SCGroup$clone()}}
@@ -134,9 +135,8 @@ Convert to a \code{\link[SeuratObject:Assay-class]{SeuratObject::Assay}} object.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{layers}}{A vector of assay layer names to retrieve. These must
-correspond to the one or more of the data-containing slots in a
-\code{\link[SeuratObject:Assay-class]{SeuratObject::Assay}} object (i.e., \code{counts}, \code{data}, or \code{scale.data}).}
+\item{\code{layers}}{A vector of assay layer names to retrieve. Must match one
+or more of the available \code{X} \code{\link{AssayMatrix}} layers.}
 
 \item{\code{min_cells}}{Include features detected in at least this many cells.
 Will subset the counts matrix as well. To reintroduce excluded features,
@@ -239,6 +239,36 @@ Convert to a \link[SeuratObject:Seurat-class]{SeuratObject::Seurat} object.
 }
 \if{html}{\out{</div>}}
 }
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-to_summarized_experiment"></a>}}
+\if{latex}{\out{\hypertarget{method-to_summarized_experiment}{}}}
+\subsection{Method \code{to_summarized_experiment()}}{
+Convert to a \link[SummarizedExperiment:RangedSummarizedExperiment-class]{SummarizedExperiment::SummarizedExperiment}
+object.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{SCGroup$to_summarized_experiment(layers = c("counts", "data", "scale.data"))}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{layers}}{A vector of assay layer names to retrieve. Must match one
+or more of the available \code{X} \code{\link{AssayMatrix}} layers. If \code{layers} is
+\emph{named} (e.g., \code{c(logdata = "counts")}) the assays will adopt the names
+of the layers vector.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Details}{
+\subsection{Layers}{
+
+Note that \code{SummarizedExperiment::Assays()} requires that all assays share
+identical dimensions, so the conversion will fail if \code{scale.data} created
+with a subset of features is included.
+}
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-get_annotation_matrix_arrays"></a>}}
