@@ -234,6 +234,12 @@ SCGroup <- R6::R6Class(
       # variable annotations
       if (!is_empty(self$var$attrnames())) {
         var_df <- self$var$to_dataframe()
+        # highly variable features
+        if ("highly_variable" %in% colnames(var_df)) {
+          var_features <- rownames(var_df)[as.logical(var_df$highly_variable)]
+          SeuratObject::VariableFeatures(assay_obj) <- var_features
+          var_df$highly_variable <- NULL
+        }
         assay_obj <- SeuratObject::AddMetaData(assay_obj, var_df)
       }
 
