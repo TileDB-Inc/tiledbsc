@@ -71,5 +71,22 @@ test_that("SCDataset can be created from a Seurat object", {
   # check for commands
   command_names2 <- Seurat::Command(object=pbmc_small2)
   expect_identical(command_names, command_names2)
+})
 
+test_that("a dataset containing an assay with empty cells is fully retrieved", {
+  uri <- withr::local_tempdir("assay-with-empty-cells")
+
+  cell_ids <- SeuratObject::Cells(pbmc_small)
+
+  # remove all counts for a subset of cells
+  counts2 <- Seurat::GetAssayData(pbmc_small[["RNA"]], "counts")
+  counts2[, 1:10] <- 0
+  pbmc_small[["RNA2"]] <- SeuratObject::CreateAssayObject(counts = counts2)
+
+  scdataset <- SCDataset$new(uri, verbose = FALSE)
+  scdataset$from_seurat(pbmc_small)
+
+  # Should not trigger error:
+  # Cannot add a different number of cells than already present
+  expect_silent(scdataset$to_seurat())
 })

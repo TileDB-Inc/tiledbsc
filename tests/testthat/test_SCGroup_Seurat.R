@@ -67,6 +67,27 @@ test_that("Seurat Assay can be recreated from an existing SCGroup", {
   )
 })
 
+test_that("obs and var are created when even no annotations are present", {
+  uri <- withr::local_tempdir("assay-with-no-annotations")
+
+  assay <- SeuratObject::CreateAssayObject(
+    counts = Seurat::GetAssayData(pbmc_small[["RNA"]], "counts")
+  )
+  expect_true(is_empty(assay[[]]))
+  SeuratObject::Key(assay) <- "RNA"
+
+  scgroup <- SCGroup$new(uri = uri)
+  scgroup$from_seurat_assay(assay)
+
+  obs <- scgroup$obs$to_dataframe()
+  expect_length(obs, 0)
+  expect_true(all(rownames(obs) %in% colnames(assay)))
+
+  var <- scgroup$var$to_dataframe()
+  expect_length(var, 0)
+  expect_true(all(rownames(var) %in% rownames(assay)))
+})
+
 test_that("dimensional reduction data can be stored and retrieved", {
   scgroup <- SCGroup$new(uri = tdb_uri)
 
@@ -192,7 +213,6 @@ test_that("an assay with empty counts slot can be converted", {
 
 test_that("an assay with empty feature metdata can be converted", {
   uri <- withr::local_tempdir("assay-without-feature-metadata")
-  tiledb::tiledb_vfs_remove_dir(uri)
 
   assay <- SeuratObject::CreateAssayObject(
     counts = Seurat::GetAssayData(pbmc_small[["RNA"]], "counts")
@@ -203,5 +223,5 @@ test_that("an assay with empty feature metdata can be converted", {
   scgroup <- SCGroup$new(uri, verbose = FALSE)
   expect_silent(scgroup$from_seurat_assay(assay))
   assay2 <- scgroup$to_seurat_assay()
-  expect_identical(assay2[[]][rownames(assay), ], assay[[]])
+  expect_identical(assay2[[]][rownames(assay),], assay[[]])
 })

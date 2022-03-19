@@ -55,13 +55,16 @@ annotations/measurements.
 \subsection{Method \code{from_dataframe()}}{
 Ingest annotation data
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AnnotationDataframe$from_dataframe(x)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{AnnotationDataframe$from_dataframe(x, index_col)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{x}}{a \code{\link{data.frame}}}
+
+\item{\code{index_col}}{Name to use for the TileDB array's dimension that will
+contain the data.frame row names.}
 }
 \if{html}{\out{</div>}}
 }
@@ -78,7 +81,6 @@ Retrieve the annotation data from TileDB
 \subsection{Returns}{
 A \code{\link{data.frame}} with row names containing values from the index
 dimension
-data.
 }
 }
 \if{html}{\out{<hr>}}

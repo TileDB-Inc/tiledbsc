@@ -99,3 +99,26 @@ are_layerable <- function(x, y) {
   nonemptycells_match <- Matrix::nnzero(x) == Matrix::nnzero(y)
   dimnames_match && nonemptycells_match
 }
+
+
+#' Pad a sparse Matrix with additional columns
+#' @param x A dgTMatrix
+#' @param colnames A vector of column names to add to the matrix.
+#' @param returns A padded matrix containing all columns in `colnames`.
+#' @importFrom Matrix sparseMatrix
+#' @noRd
+pad_matrix <- function(x, colnames) {
+  stopifnot(
+    inherits(x, "Matrix"),
+    is.character(colnames) && !is_empty(colnames)
+  )
+  new_colnames <- setdiff(colnames, colnames(x))
+  if (is_empty(new_colnames)) return(x)
+  pad <- Matrix::sparseMatrix(
+    i = integer(0L),
+    j = integer(0L),
+    dims = c(nrow(x), length(new_colnames)),
+    dimnames = list(rownames(x), new_colnames)
+  )
+  cbind(x, pad)
+}

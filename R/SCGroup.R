@@ -113,7 +113,11 @@ SCGroup <- R6::R6Class(
             = all(rownames(obs) %in% colnames(object))
         )
         obs <- obs[colnames(object), , drop = FALSE]
+      } else {
+        obs <- data.frame(row.names = colnames(object))
       }
+      self$obs$from_dataframe(obs, index_col = "obs_id")
+      self$var$from_dataframe(object[[]], index_col = "var_id")
 
       assay_slots <- c("counts", "data")
       if (seurat_assay_has_scale_data(object)) {
@@ -139,13 +143,6 @@ SCGroup <- R6::R6Class(
       }
 
       self$X$add_metadata(list(key = SeuratObject::Key(object)))
-
-      var_df <- object[[]]
-      if (!is_empty(var_df)) {
-        self$var$from_dataframe(var_df)
-      }
-
-      if (!is.null(obs)) self$obs$from_dataframe(obs)
       if (self$verbose) message("Finished converting Seurat object to TileDB")
     },
 
@@ -185,6 +182,10 @@ SCGroup <- R6::R6Class(
         USE.NAMES = TRUE
       )
 
+      # Ensure assay matrices all contain the same observations
+      obs_ids <- self$obs$tiledb_array(attrs = NA_character_)[]$obs_id
+      assay_mats <- lapply(assay_mats, pad_matrix, colnames = obs_ids)
+
       # Seurat doesn't allow us to supply data for both the `counts` and `data`
       # slots simultaneously, so we have to update the `data` slot separately.
 
@@ -223,7 +224,7 @@ SCGroup <- R6::R6Class(
       }
 
       # variable annotations
-      if (self$var$array_exists()) {
+      if (!is_empty(self$var$attrnames())) {
         var_df <- self$var$to_dataframe()
         assay_obj <- SeuratObject::AddMetaData(assay_obj, var_df)
       }
