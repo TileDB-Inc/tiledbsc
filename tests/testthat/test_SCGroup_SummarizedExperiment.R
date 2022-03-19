@@ -43,3 +43,21 @@ test_that("a SummarizedExperiment can be created from an existing SCGroup", {
     as.matrix(SeuratObject::GetAssayData(assay, "data")[var_ids, obs_ids])
   )
 })
+
+
+test_that("a SingleCellExperiment can be created from an existing SCGroup", {
+  uri <- file.path(withr::local_tempdir(), "singlecellexperiment")
+
+  # start with scdataset so the scgroup includes annot matrices
+  scdataset <- SCDataset$new(uri = uri)
+  scdataset$from_seurat(pbmc_small)
+
+  scgroup <- SCGroup$new(scdataset$scgroups$RNA$uri)
+  sce <- scgroup$to_single_cell_experiment(layers = c("counts", "data"))
+  expect_s4_class(sce, "SingleCellExperiment")
+
+  expect_identical(
+    names(SingleCellExperiment::reducedDims(sce)),
+    SeuratObject::Reductions(pbmc_small)
+  )
+})

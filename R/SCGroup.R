@@ -415,6 +415,36 @@ SCGroup <- R6::R6Class(
       )
     },
 
+    #' @description Convert to a Bioconductor
+    #' [SingleCellExperiment::SingleCellExperiment] object.
+    #' @param layers A vector of assay layer names to retrieve. Must match one
+    #' or more of the available `X` [`AssayMatrix`] layers. If `layers` is
+    #' *named* (e.g., `c(logdata = "counts")`) the assays will adopt the names
+    #' of the layers vector.
+    to_single_cell_experiment = function(
+      layers = c("counts", "data")
+    ) {
+      check_package("SingleCellExperiment")
+      sce_obj <- as(
+        object = self$to_summarized_experiment(layers),
+        Class = "SingleCellExperiment"
+      )
+
+      # obs-aligned dimreductions
+      dimreductions <- self$obsm$get_arrays(prefix = "dimreduction_")
+      if (!is_empty(dimreductions)) {
+        names(dimreductions) <- sub("^dimreduction_", "", names(dimreductions))
+        # TODO: Why aren't the dimreduction matrices rownames sorted?
+        dimreductions <- lapply(
+          dimreductions,
+          function(x) x$to_matrix()[colnames(sce_obj), ]
+        )
+        SingleCellExperiment::reducedDims(sce_obj) <- dimreductions
+      }
+
+      sce_obj
+    },
+
     #' @description Retrieve [`AnnotationMatrix`] arrays in `obsm`/`varm`
     #' groups.
     #' @param prefix String prefix to filter the array names.
