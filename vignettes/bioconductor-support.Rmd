@@ -55,8 +55,14 @@ fs::dir_tree(scdataset$uri, recurse = 1)
 Conversion to a `SummarizedExperiment` happens at the `sc_group` level, so we must access the relevant `SCGroup` (in this case `"RNA"`) and then call `to_summarized_experiment()`.
 
 ```{r}
-bioc_pbmc_small <- scdataset$scgroups$RNA$to_summarized_experiment()
-bioc_pbmc_small
+pbmc_se <- scdataset$scgroups$RNA$to_summarized_experiment(layers = "data")
+pbmc_se
+```
+
+You can also utilize the `layers` argument to rename assays within the `SummarizedExperiment` object.
+
+```{r}
+scdataset$scgroups$RNA$to_summarized_experiment(layers = c(logdata = "data"))
 ```
 
 # Session
