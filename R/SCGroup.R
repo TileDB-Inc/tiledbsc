@@ -52,41 +52,41 @@ SCGroup <- R6::R6Class(
       }
 
       self$obs <- AnnotationDataframe$new(
-        uri = paste0(self$uri, "/obs"),
+        uri = file_path(self$uri, "obs"),
         verbose = self$verbose
       )
 
       self$var <- AnnotationDataframe$new(
-        uri = paste0(self$uri, "/var"),
+        uri = file_path(self$uri, "var"),
         verbose = self$verbose
       )
 
       self$X <- AssayMatrixGroup$new(
-        uri = paste0(self$uri, "/X"),
+        uri = file_path(self$uri, "X"),
         dimension_name = c("obs_id", "var_id"),
         verbose = self$verbose
       )
 
       self$obsm <- AnnotationMatrixGroup$new(
-        uri = file.path(self$uri, "obsm"),
+        uri = file_path(self$uri, "obsm"),
         dimension_name = "obs_id",
         verbose = self$verbose
       )
 
       self$varm <- AnnotationMatrixGroup$new(
-        uri = file.path(self$uri, "varm"),
+        uri = file_path(self$uri, "varm"),
         dimension_name = "var_id",
         verbose = self$verbose
       )
 
       self$obsp <- AnnotationPairwiseMatrixGroup$new(
-        uri = file.path(self$uri, "obsp"),
+        uri = file_path(self$uri, "obsp"),
         dimension_name = "obs_id",
         verbose = self$verbose
       )
 
       self$varp <- AnnotationPairwiseMatrixGroup$new(
-        uri = file.path(self$uri, "varp"),
+        uri = file_path(self$uri, "varp"),
         dimension_name = "var_id",
         verbose = self$verbose
       )

@@ -27,7 +27,7 @@ AssayMatrixGroup <- R6::R6Class(
       }
 
       # create the new array
-      array_uri <- file.path(self$uri, name)
+      array_uri <- file_path(self$uri, name)
       array <- AssayMatrix$new(
         uri = array_uri,
         verbose = self$verbose
