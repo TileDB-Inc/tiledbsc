@@ -42,7 +42,27 @@ n_unique <- function(x) {
   length(unique(x))
 }
 
+# rename(iris, c(petal_length = "Petal.Length", species = "Species", hi = "YO"))
+rename <- function(x, names) {
+  stopifnot(
+    "'x' must be named" = is_named(x),
+    "'names' must be a named character vector" = is_named(names),
+    "All 'names' must be in 'x'" = all(names %in% names(x))
+  )
+
+  name_index <- match(names, names(x))
+  names(x)[name_index] <- names(names)
+  x
+}
+
 # Return y if x is NULL, else x
 `%||%` <- function(x, y) {
   if (missing(x) || is.null(x) || length(x) == 0) y else x
+}
+
+check_package <- function(package) {
+  if (requireNamespace(package, quietly = TRUE)) {
+    return(invisible())
+  }
+  stop(paste0("Package '", package, "' must be installed"))
 }

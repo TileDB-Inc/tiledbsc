@@ -163,9 +163,8 @@ SCGroup <- R6::R6Class(
 
     #' @description Convert to a [`SeuratObject::Assay`] object.
     #'
-    #' @param layers A vector of assay layer names to retrieve. These must
-    #' correspond to the one or more of the data-containing slots in a
-    #' [`SeuratObject::Assay`] object (i.e., `counts`, `data`, or `scale.data`).
+    #' @param layers A vector of assay layer names to retrieve. Must match one
+    #' or more of the available `X` [`AssayMatrix`] layers.
     #' @param min_cells Include features detected in at least this many cells.
     #' Will subset the counts matrix as well. To reintroduce excluded features,
     #' create a new object with a lower cutoff.
@@ -181,30 +180,11 @@ SCGroup <- R6::R6Class(
       check_matrix = FALSE,
       ...) {
 
-      layers <- match.arg(
-        arg = layers,
-        choices = c("counts", "data", "scale.data"),
-        several.ok = TRUE
-      )
-      matching_layers <- intersect(names(self$X$arrays), layers)
-      if (is_empty(matching_layers)) {
-        stop("Did not find any matching 'X' layers")
-      }
-
-      assay_mats <- sapply(
-        X = matching_layers,
-        FUN = function(x) self$X$arrays[[x]]$to_matrix(),
-        simplify = FALSE,
-        USE.NAMES = TRUE
-      )
-
-      # Ensure assay matrices all contain the same observations
-      obs_ids <- self$obs$tiledb_array(attrs = NA_character_)[]$obs_id
-      assay_mats <- lapply(assay_mats, pad_matrix, colnames = obs_ids)
+      layers <- private$check_layers(layers)
+      assay_mats <- private$get_assay_matrices(layers)
 
       # Seurat doesn't allow us to supply data for both the `counts` and `data`
       # slots simultaneously, so we have to update the `data` slot separately.
-
       if (is.null(assay_mats$counts)) {
         # CreateAssayObject only accepts a dgTMatrix matrix for `counts`, 'data'
         # and 'scale.data' must be coerced to a dgCMatrix and base::matrix,
@@ -398,6 +378,43 @@ SCGroup <- R6::R6Class(
       )
     },
 
+    #' @description Convert to a [SummarizedExperiment::SummarizedExperiment]
+    #' object.
+    #' @details
+    #' ## Layers
+    #' Note that `SummarizedExperiment::Assays()` requires that all assays share
+    #' identical dimensions, so the conversion will fail if `scale.data` created
+    #' with a subset of features is included.
+    #'
+    #' @param layers A vector of assay layer names to retrieve. Must match one
+    #' or more of the available `X` [`AssayMatrix`] layers. If `layers` is
+    #' *named* (e.g., `c(logdata = "counts")`) the assays will adopt the names
+    #' of the layers vector.
+    to_summarized_experiment = function(
+      layers = c("counts", "data", "scale.data")
+    ) {
+      check_package("SummarizedExperiment")
+      layers <- private$check_layers(layers)
+      assay_mats <- private$get_assay_matrices(layers)
+
+      # switch to bioc assay names
+      if (is_named(layers)) {
+        assay_mats <- rename(assay_mats, layers)
+      }
+
+      # retrieve annotations
+      obs_id <- colnames(assay_mats[[1]])
+      obs_df <- self$obs$to_dataframe()[obs_id, , drop = FALSE]
+      var_id <- rownames(assay_mats[[1]])
+      var_df <- self$var$to_dataframe()[var_id, , drop = FALSE]
+
+      SummarizedExperiment::SummarizedExperiment(
+        assays = assay_mats,
+        colData = obs_df,
+        rowData = var_df
+      )
+    },
+
     #' @description Retrieve [`AnnotationMatrix`] arrays in `obsm`/`varm`
     #' groups.
     #' @param prefix String prefix to filter the array names.
@@ -424,9 +441,36 @@ SCGroup <- R6::R6Class(
   ),
 
   private = list(
+    # Validate layers argument
+    check_layers = function(layers) {
+      available_layers <- names(self$X$arrays)
+      matching_layers <- layers[layers %in% available_layers]
+      if (is_empty(matching_layers)) {
+        stop("Did not find any matching 'X' layers")
+      }
+      matching_layers
+    },
+
     get_annotation_group_arrays = function(array_groups, prefix = NULL) {
       arrays <- lapply(array_groups, function(x) x$get_arrays(prefix = prefix))
       Filter(Negate(is_empty), arrays)
+    },
+
+    # Retrieve one or more of the X assay matrices.
+    #
+    # Returns a named list of `dgTMatrix objects`, each of which is padded if
+    # it doesn't contain the full set of obs identifiers (i.e., cell/sample
+    # names).
+    get_assay_matrices = function(layers) {
+      assay_mats <- lapply(
+        setNames(layers, layers),
+        function(x) self$X$arrays[[x]]$to_matrix()
+      )
+
+      # Ensure assay matrices all contain the same observations
+      obs_ids <- self$obs$tiledb_array(attrs = NA_character_)[]$obs_id
+      assay_mats <- lapply(assay_mats, pad_matrix, colnames = obs_ids)
+      assay_mats
     }
   )
 )
