@@ -386,27 +386,21 @@ SCGroup <- R6::R6Class(
     #' identical dimensions, so the conversion will fail if `scale.data` created
     #' with a subset of features is included.
     #'
-    #' @param layers A vector of assay layer names to retrieve. These must
-    #' correspond to the one or more of the data-containing slots in a
-    #' [`SeuratObject::Assay`] object (i.e., `counts`, `data`, or `scale.data`).
+    #' @param layers A vector of assay layer names to retrieve. Must match one
+    #' or more of the available `X` [`AssayMatrix`] layers. If `layers` is
+    #' *named* (e.g., `c(logdata = "counts")`) the assays will adopt the names
+    #' of the layers vector.
     to_summarized_experiment = function(
       layers = c("counts", "data", "scale.data")
     ) {
       check_package("SummarizedExperiment")
-
-      # Adopted from Seurat::as.SingleCellExperiment.Seurat
-      name_key <- c(
-        counts = "counts",
-        logcounts = "data",
-        scaledata = "scale.data"
-      )
-
       layers <- private$check_layers(layers)
       assay_mats <- private$get_assay_matrices(layers)
 
       # switch to bioc assay names
-      name_key <- name_key[name_key %in% names(assay_mats)]
-      assay_mats <- rename(assay_mats, name_key)
+      if (is_named(layers)) {
+        assay_mats <- rename(assay_mats, layers)
+      }
 
       # retrieve annotations
       obs_id <- colnames(assay_mats[[1]])

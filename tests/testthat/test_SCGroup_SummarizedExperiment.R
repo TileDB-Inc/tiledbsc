@@ -36,8 +36,8 @@ test_that("a SummarizedExperiment can be created from an existing SCGroup", {
     as.matrix(SeuratObject::GetAssayData(assay, "counts")[var_ids, obs_ids])
   )
 
-  # validate normalized data matrix
-  se_obj <- scgroup$to_summarized_experiment(layers = "data")
+  # validate normalized data matrix (and layer renaming)
+  se_obj <- scgroup$to_summarized_experiment(layers = c(logcounts = "data"))
   expect_identical(
     as.matrix(SummarizedExperiment::assays(se_obj)$logcounts[var_ids, obs_ids]),
     as.matrix(SeuratObject::GetAssayData(assay, "data")[var_ids, obs_ids])
