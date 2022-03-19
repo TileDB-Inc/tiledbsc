@@ -3,12 +3,11 @@
 test_that("a SummarizedExperiment can be created from an existing SCGroup", {
   uri <- file.path(withr::local_tempdir(), "scgroup")
 
-  data("pbmc_small", package = "SeuratObject")
   assay <- Seurat::GetAssay(pbmc_small, "RNA")
   scgroup <- SCGroup$new(uri = uri)
   scgroup$from_seurat_assay(assay, obs = pbmc_small[[]])
 
-  se_obj <- scgroup$to_summarized_experiment()
+  se_obj <- scgroup$to_summarized_experiment(layers = "counts")
   expect_s4_class(se_obj, "SummarizedExperiment")
 
   # use feature/sample names to ensure objects being compared are sorted
@@ -25,9 +24,10 @@ test_that("a SummarizedExperiment can be created from an existing SCGroup", {
 
   # validate feature metadata
   # (manually remove vst.variable column because logicals are returned as ints)
+  cols <- colnames(assay[[]])[-5]
   expect_equal(
-    as.data.frame(SummarizedExperiment::rowData(se_obj))[var_ids, -5],
-    assay[[]][var_ids, -5]
+    as.data.frame(SummarizedExperiment::rowData(se_obj))[var_ids, cols],
+    assay[[]][var_ids, cols]
   )
 
   # validate raw counts matrix
@@ -37,8 +37,9 @@ test_that("a SummarizedExperiment can be created from an existing SCGroup", {
   )
 
   # validate normalized data matrix
+  se_obj <- scgroup$to_summarized_experiment(layers = "data")
   expect_identical(
-    as.matrix(SummarizedExperiment::assays(se_obj)$data[var_ids, obs_ids]),
+    as.matrix(SummarizedExperiment::assays(se_obj)$logcounts[var_ids, obs_ids]),
     as.matrix(SeuratObject::GetAssayData(assay, "data")[var_ids, obs_ids])
   )
 })

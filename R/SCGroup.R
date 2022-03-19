@@ -381,22 +381,36 @@ SCGroup <- R6::R6Class(
 
     #' @description Convert to a [SummarizedExperiment::SummarizedExperiment]
     #' object.
-    to_summarized_experiment = function() {
+    #' @param layers A vector of assay layer names to retrieve. These must
+    #' correspond to the one or more of the data-containing slots in a
+    #' [`SeuratObject::Assay`] object (i.e., `counts`, `data`, or `scale.data`).
+    to_summarized_experiment = function(
+      layers = c("counts", "data", "scale.data")
+    ) {
       check_package("SummarizedExperiment")
 
-      assay_data <- dataframe_to_dgtmatrix(
-        self$X$to_dataframe(attrs = c("counts", "data")),
-        index_cols = c("var_id", "obs_id")
+      # Adopted from Seurat::as.SingleCellExperiment.Seurat
+      name_key <- c(
+        counts = "counts",
+        logcounts = "data",
+        scaledata = "scale.data"
       )
 
-      obs_ids <- colnames(assay_data[[1]])
-      obs_df <- self$obs$to_dataframe()[obs_ids, , drop = FALSE]
+      layers <- private$check_layers(layers)
+      assay_mats <- private$get_assay_matrices(layers)
 
-      var_ids <- rownames(assay_data[[1]])
-      var_df <- self$var$to_dataframe()[var_ids, , drop = FALSE]
+      # switch to bioc assay names
+      name_key <- name_key[name_key %in% names(assay_mats)]
+      assay_mats <- rename(assay_mats, name_key)
+
+      # retrieve annotations
+      obs_id <- colnames(assay_mats[[1]])
+      obs_df <- self$obs$to_dataframe()[obs_id, , drop = FALSE]
+      var_id <- rownames(assay_mats[[1]])
+      var_df <- self$var$to_dataframe()[var_id, , drop = FALSE]
 
       SummarizedExperiment::SummarizedExperiment(
-        assays = assay_data,
+        assays = assay_mats,
         colData = obs_df,
         rowData = var_df
       )
