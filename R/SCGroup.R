@@ -181,20 +181,11 @@ SCGroup <- R6::R6Class(
       check_matrix = FALSE,
       ...) {
 
-      assay_mats <- sapply(
-        X = private$check_layers(layers),
-        FUN = function(x) self$X$arrays[[x]]$to_matrix(),
-        simplify = FALSE,
-        USE.NAMES = TRUE
-      )
-
-      # Ensure assay matrices all contain the same observations
-      obs_ids <- self$obs$tiledb_array(attrs = NA_character_)[]$obs_id
-      assay_mats <- lapply(assay_mats, pad_matrix, colnames = obs_ids)
+      layers <- private$check_layers(layers)
+      assay_mats <- private$get_assay_matrices(layers)
 
       # Seurat doesn't allow us to supply data for both the `counts` and `data`
       # slots simultaneously, so we have to update the `data` slot separately.
-
       if (is.null(assay_mats$counts)) {
         # CreateAssayObject only accepts a dgTMatrix matrix for `counts`, 'data'
         # and 'scale.data' must be coerced to a dgCMatrix and base::matrix,
@@ -437,11 +428,6 @@ SCGroup <- R6::R6Class(
   ),
 
   private = list(
-    get_annotation_group_arrays = function(array_groups, prefix = NULL) {
-      arrays <- lapply(array_groups, function(x) x$get_arrays(prefix = prefix))
-      Filter(Negate(is_empty), arrays)
-    },
-
     # Validate layers argument
     check_layers = function(layers) {
       layers <- match.arg(
@@ -454,6 +440,28 @@ SCGroup <- R6::R6Class(
         stop("Did not find any matching 'X' layers")
       }
       matching_layers
+    },
+
+    get_annotation_group_arrays = function(array_groups, prefix = NULL) {
+      arrays <- lapply(array_groups, function(x) x$get_arrays(prefix = prefix))
+      Filter(Negate(is_empty), arrays)
+    },
+
+    # Retrieve one or more of the X assay matrices.
+    #
+    # Returns a named list of `dgTMatrix objects`, each of which is padded if
+    # it doesn't contain the full set of obs identifiers (i.e., cell/sample
+    # names).
+    get_assay_matrices = function(layers) {
+      assay_mats <- lapply(
+        setNames(layers, layers),
+        function(x) self$X$arrays[[x]]$to_matrix()
+      )
+
+      # Ensure assay matrices all contain the same observations
+      obs_ids <- self$obs$tiledb_array(attrs = NA_character_)[]$obs_id
+      assay_mats <- lapply(assay_mats, pad_matrix, colnames = obs_ids)
+      assay_mats
     }
   )
 )
