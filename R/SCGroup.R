@@ -381,6 +381,12 @@ SCGroup <- R6::R6Class(
 
     #' @description Convert to a [SummarizedExperiment::SummarizedExperiment]
     #' object.
+    #' @details
+    #' ## Layers
+    #' Note that `SummarizedExperiment::Assays()` requires that all assays share
+    #' identical dimensions, so the conversion will fail if `scale.data` created
+    #' with a subset of features is included.
+    #'
     #' @param layers A vector of assay layer names to retrieve. These must
     #' correspond to the one or more of the data-containing slots in a
     #' [`SeuratObject::Assay`] object (i.e., `counts`, `data`, or `scale.data`).
