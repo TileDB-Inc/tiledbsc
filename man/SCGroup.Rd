@@ -106,6 +106,15 @@ cell/sample-level observations.}
 }
 \if{html}{\out{</div>}}
 }
+\subsection{Details}{
+\subsection{On-Disk Format}{
+
+Variable features in the \code{var.features} slot are maintained by creating a
+\code{highly_variable} attribute in \code{var} that records \code{1} or \code{0} for each
+feature indicating whether it was a variable feature or not.
+}
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-to_seurat_assay"></a>}}

@@ -8,7 +8,7 @@
 #' - `obs` ([`AnnotationDataframe`]): 1D labeled array with column labels for
 #'   `X`
 #' - `var` ([`AnnotationDataframe`]): 1D labeled array with row labels for `X`
-#' @importFrom SeuratObject AddMetaData Loadings Embeddings
+#' @importFrom SeuratObject AddMetaData Loadings Embeddings VariableFeatures
 #' @importFrom SeuratObject GetAssayData CreateAssayObject SetAssayData
 #' @export
 SCGroup <- R6::R6Class(
@@ -95,6 +95,13 @@ SCGroup <- R6::R6Class(
     },
 
     #' @description Convert a Seurat Assay to a TileDB-backed sc_group.
+    #'
+    #' @details
+    #' ## On-Disk Format
+    #'
+    #' Variable features in the `var.features` slot are maintained by creating a
+    #' `highly_variable` attribute in `var` that records `1` or `0` for each
+    #' feature indicating whether it was a variable feature or not.
     #' @param object A [`SeuratObject::Assay`] object
     #' @param obs An optional `data.frame` containing annotations for
     #' cell/sample-level observations.
@@ -117,6 +124,14 @@ SCGroup <- R6::R6Class(
         obs <- data.frame(row.names = colnames(object))
       }
       self$obs$from_dataframe(obs, index_col = "obs_id")
+
+      if (!is_empty(SeuratObject::VariableFeatures(object))) {
+        object <- SeuratObject::AddMetaData(
+          object = object,
+          metadata = rownames(object) %in% SeuratObject::VariableFeatures(object),
+          col.name = "highly_variable"
+        )
+      }
       self$var$from_dataframe(object[[]], index_col = "var_id")
 
       assay_slots <- c("counts", "data")
@@ -147,6 +162,7 @@ SCGroup <- R6::R6Class(
     },
 
     #' @description Convert to a [`SeuratObject::Assay`] object.
+    #'
     #' @param layers A vector of assay layer names to retrieve. These must
     #' correspond to the one or more of the data-containing slots in a
     #' [`SeuratObject::Assay`] object (i.e., `counts`, `data`, or `scale.data`).
@@ -226,6 +242,12 @@ SCGroup <- R6::R6Class(
       # variable annotations
       if (!is_empty(self$var$attrnames())) {
         var_df <- self$var$to_dataframe()
+        # highly variable features
+        if ("highly_variable" %in% colnames(var_df)) {
+          var_features <- rownames(var_df)[as.logical(var_df$highly_variable)]
+          SeuratObject::VariableFeatures(assay_obj) <- var_features
+          var_df$highly_variable <- NULL
+        }
         assay_obj <- SeuratObject::AddMetaData(assay_obj, var_df)
       }
 
