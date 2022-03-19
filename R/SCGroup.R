@@ -95,6 +95,13 @@ SCGroup <- R6::R6Class(
     },
 
     #' @description Convert a Seurat Assay to a TileDB-backed sc_group.
+    #'
+    #' @details
+    #' ## On-Disk Format
+    #'
+    #' Variable features in the `var.features` slot are maintained by creating a
+    #' `highly_variable` attribute in `var` that records `1` or `0` for each
+    #' feature indicating whether it was a variable feature or not.
     #' @param object A [`SeuratObject::Assay`] object
     #' @param obs An optional `data.frame` containing annotations for
     #' cell/sample-level observations.
@@ -155,6 +162,7 @@ SCGroup <- R6::R6Class(
     },
 
     #' @description Convert to a [`SeuratObject::Assay`] object.
+    #'
     #' @param layers A vector of assay layer names to retrieve. These must
     #' correspond to the one or more of the data-containing slots in a
     #' [`SeuratObject::Assay`] object (i.e., `counts`, `data`, or `scale.data`).
