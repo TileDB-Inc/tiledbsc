@@ -163,9 +163,8 @@ SCGroup <- R6::R6Class(
 
     #' @description Convert to a [`SeuratObject::Assay`] object.
     #'
-    #' @param layers A vector of assay layer names to retrieve. These must
-    #' correspond to the one or more of the data-containing slots in a
-    #' [`SeuratObject::Assay`] object (i.e., `counts`, `data`, or `scale.data`).
+    #' @param layers A vector of assay layer names to retrieve. Must match one
+    #' or more of the available `X` [`AssayMatrix`] layers.
     #' @param min_cells Include features detected in at least this many cells.
     #' Will subset the counts matrix as well. To reintroduce excluded features,
     #' create a new object with a lower cutoff.
@@ -450,12 +449,8 @@ SCGroup <- R6::R6Class(
   private = list(
     # Validate layers argument
     check_layers = function(layers) {
-      layers <- match.arg(
-        arg = layers,
-        choices = c("counts", "data", "scale.data"),
-        several.ok = TRUE
-      )
-      matching_layers <- intersect(names(self$X$arrays), layers)
+      available_layers <- names(self$X$arrays)
+      matching_layers <- layers[layers %in% available_layers]
       if (is_empty(matching_layers)) {
         stop("Did not find any matching 'X' layers")
       }
