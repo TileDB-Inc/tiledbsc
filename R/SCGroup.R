@@ -181,18 +181,8 @@ SCGroup <- R6::R6Class(
       check_matrix = FALSE,
       ...) {
 
-      layers <- match.arg(
-        arg = layers,
-        choices = c("counts", "data", "scale.data"),
-        several.ok = TRUE
-      )
-      matching_layers <- intersect(names(self$X$arrays), layers)
-      if (is_empty(matching_layers)) {
-        stop("Did not find any matching 'X' layers")
-      }
-
       assay_mats <- sapply(
-        X = matching_layers,
+        X = private$check_layers(layers),
         FUN = function(x) self$X$arrays[[x]]$to_matrix(),
         simplify = FALSE,
         USE.NAMES = TRUE
@@ -450,6 +440,20 @@ SCGroup <- R6::R6Class(
     get_annotation_group_arrays = function(array_groups, prefix = NULL) {
       arrays <- lapply(array_groups, function(x) x$get_arrays(prefix = prefix))
       Filter(Negate(is_empty), arrays)
+    },
+
+    # Validate layers argument
+    check_layers = function(layers) {
+      layers <- match.arg(
+        arg = layers,
+        choices = c("counts", "data", "scale.data"),
+        several.ok = TRUE
+      )
+      matching_layers <- intersect(names(self$X$arrays), layers)
+      if (is_empty(matching_layers)) {
+        stop("Did not find any matching 'X' layers")
+      }
+      matching_layers
     }
   )
 )
