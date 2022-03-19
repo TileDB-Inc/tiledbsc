@@ -26,7 +26,7 @@ TileDBGroup <- R6::R6Class(
 
       # Until TileDB supports group metadata, we need to create an array
       # to store the metadata.
-      private$metadata_uri <- file.path(self$uri, "__tiledb_group_metadata")
+      private$metadata_uri <- file_path(self$uri, "__tiledb_group_metadata")
 
       if (!private$group_exists()) {
         private$create_group()

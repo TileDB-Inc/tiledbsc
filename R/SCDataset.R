@@ -57,7 +57,7 @@ SCDataset <- R6::R6Class(
       }
 
       self$commandsArray <- CommandsArray$new(
-        uri = file.path(self$uri, "commands"),
+        uri = file_path(self$uri, "commands"),
         verbose = self$verbose
       )
 
@@ -86,7 +86,7 @@ SCDataset <- R6::R6Class(
       assays <- SeuratObject::Assays(object)
       for (assay in assays) {
         assay_object <- Seurat::GetAssay(object, assay)
-        assay_uri <- file.path(self$uri, paste0("scgroup_", assay))
+        assay_uri <- file_path(self$uri, paste0("scgroup_", assay))
         scgroup <- SCGroup$new(assay_uri, verbose = self$verbose)
         scgroup$from_seurat_assay(assay_object, obs = object[[]])
         self$scgroups[[assay]] <- scgroup

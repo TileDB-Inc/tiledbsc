@@ -26,7 +26,7 @@ AnnotationPairwiseMatrixGroup <- R6::R6Class(
 
       # TODO: Verify that the matrix is aligned to the group's dimension
       # create the new array
-      array_uri <- file.path(self$uri, name)
+      array_uri <- file_path(self$uri, name)
       array <- AnnotationPairwiseMatrix$new(
         uri = array_uri,
         verbose = self$verbose
