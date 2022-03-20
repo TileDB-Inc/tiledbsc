@@ -175,8 +175,10 @@ SCDataset <- R6::R6Class(
       }
 
       # command history
-      namedListOfCommands <- self$commandsArray$to_named_list_of_commands()
-      object@commands <- namedListOfCommands
+      if (self$commandsArray$array_exists()) {
+        namedListOfCommands <- self$commandsArray$to_named_list_of_commands()
+        object@commands <- namedListOfCommands
+      }
 
       return(object)
     },
