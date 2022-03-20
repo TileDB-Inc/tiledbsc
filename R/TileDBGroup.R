@@ -24,6 +24,12 @@ TileDBGroup <- R6::R6Class(
       class(self)[1]
     },
 
+    #' @description Check if the group exists.
+    #' @return TRUE if the group exists, FALSE otherwise.
+    group_exists = function() {
+      tiledb::tiledb_object_type(self$uri) == "GROUP"
+    },
+
     #' @description List the TileDB objects within the group.
     #' @param type The type of object to list, either `"ARRAY"`, or `"GROUP"`.
     #' By default all object types are listed.
@@ -136,10 +142,14 @@ TileDBGroup <- R6::R6Class(
       # to store the metadata.
       private$metadata_uri <- file_path(self$uri, "__tiledb_group_metadata")
 
-      if (!private$group_exists()) {
+      if (self$group_exists()) {
+        msg <- sprintf("Found existing %s at '%s'", self$class(), self$uri)
+      } else {
+        msg <- sprintf("No %s currently exists at '%s'", self$class(), self$uri)
         private$create_group()
         private$create_metadata_array()
       }
+      if (self$verbose) message(msg)
 
       # Create objects for each array URI (except the metadata array)
       array_uris <- self$list_object_uris(type = "ARRAY")
@@ -152,17 +162,6 @@ TileDBGroup <- R6::R6Class(
       }
 
       invisible(self)
-    },
-
-    group_exists = function() {
-      result <- tiledb::tiledb_object_type(self$uri) == "GROUP"
-      if (result) {
-        msg <- sprintf("Found existing %s at '%s'", self$class(), self$uri)
-      } else {
-        msg <- sprintf("No %s currently exists at '%s'", self$class(), self$uri)
-      }
-      if (self$verbose) message(msg)
-      result
     },
 
     # TODO: Remove once TileDB supports group metadata
