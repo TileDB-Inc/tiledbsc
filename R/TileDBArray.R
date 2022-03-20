@@ -28,6 +28,12 @@ TileDBArray <- R6::R6Class(
       class(self)[1]
     },
 
+    #' @description Print summary of the array.
+    print = function() {
+      cat(glue::glue("<{self$class()}>"), sep = "\n")
+      private$array_print()
+    },
+
     #' @description Check if the array exists.
     #' @return TRUE if the array exists, FALSE otherwise.
     array_exists = function() {
@@ -140,6 +146,14 @@ TileDBArray <- R6::R6Class(
     create_empty_array = function() return(NULL),
 
     # @description Ingest data into the TileDB array.
-    ingest_data = function() return(NULL)
+    ingest_data = function() return(NULL),
+
+    array_print = function() {
+      cat("  uri:", self$uri, "\n")
+      if (self$array_exists()) {
+        cat("  dimensions:", string_collapse(self$dimnames()), "\n")
+        cat("  attributes:", string_collapse(self$attrnames()), "\n")
+      }
+    }
   )
 )
