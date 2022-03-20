@@ -45,7 +45,11 @@ AnnotationDataframe <- R6::R6Class(
     #' @return A [`data.frame`] with row names containing values from the index
     #'    dimension
     to_dataframe = function() {
-      if (self$verbose) message("Reading annotation data into memory")
+      if (self$verbose) {
+        message(
+          sprintf("Reading %s into memory from '%s'", self$class(), self$uri)
+        )
+      }
       df <- self$tiledb_array(return_as = "data.frame")[]
       dimname <- self$dimnames()
 

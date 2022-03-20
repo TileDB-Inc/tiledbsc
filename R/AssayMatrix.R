@@ -69,7 +69,11 @@ AssayMatrix <- R6::R6Class(
     #' all attributes are retrieved.
     #' @return A [`Matrix::dgTMatrix-class`].
     to_dataframe = function(attrs = NULL) {
-      if (self$verbose) message("Reading assay data into memory")
+      if (self$verbose) {
+        message(
+          sprintf("Reading %s into memory from '%s'", self$class(), self$uri)
+        )
+      }
       self$tiledb_array(attrs = attrs, return_as = "data.frame")[]
     },
 
