@@ -157,8 +157,16 @@ SCGroup <- R6::R6Class(
         )
       }
 
-      self$X$add_metadata(list(key = SeuratObject::Key(object)))
-      if (self$verbose) message("Finished converting Seurat object to TileDB")
+      assay_key <- SeuratObject::Key(object)
+      self$X$add_metadata(list(key = assay_key))
+      if (self$verbose) {
+        msg <- sprintf(
+          "Finished converting Seurat Assay with key [%s] to %s",
+          assay_key,
+          self$class()
+        )
+        message(msg)
+      }
     },
 
     #' @description Convert to a [`SeuratObject::Assay`] object.

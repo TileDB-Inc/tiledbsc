@@ -65,7 +65,8 @@ AnnotationDataframe <- R6::R6Class(
 
       if (self$verbose) {
         msg <- sprintf(
-          "Creating new annotation dataframe array with index [%s] at '%s'",
+          "Creating new %s array with index [%s] at '%s'",
+          self$class(),
           index_col,
           self$uri
         )

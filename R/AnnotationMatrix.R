@@ -77,7 +77,8 @@ AnnotationMatrix <- R6::R6Class(
       )
       if (self$verbose) {
         msg <- sprintf(
-          "Creating new annotation matrix array with index [%s] at '%s'",
+          "Creating new %s with index [%s] at '%s'",
+          self$class(),
           paste0(index_cols, collapse = ", "),
           self$uri
         )
