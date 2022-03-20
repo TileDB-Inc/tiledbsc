@@ -19,6 +19,11 @@ TileDBGroup <- R6::R6Class(
       self
     },
 
+    #' @description Print the name of the R6 class.
+    class = function() {
+      class(self)[1]
+    },
+
     #' @description List the TileDB objects within the group.
     #' @param type The type of object to list, either `"ARRAY"`, or `"GROUP"`.
     #' By default all object types are listed.
@@ -144,9 +149,9 @@ TileDBGroup <- R6::R6Class(
     group_exists = function() {
       result <- tiledb::tiledb_object_type(self$uri) == "GROUP"
       if (result) {
-        msg <- sprintf("Found existing TileDB group at '%s'", self$uri)
+        msg <- sprintf("Found existing %s at '%s'", self$class(), self$uri)
       } else {
-        msg <- sprintf("No TileDB group currently exists at '%s'", self$uri)
+        msg <- sprintf("No %s currently exists at '%s'", self$class(), self$uri)
       }
       if (self$verbose) message(msg)
       result
@@ -164,7 +169,7 @@ TileDBGroup <- R6::R6Class(
 
     create_group = function() {
       if (self$verbose) {
-        message(sprintf("Creating new TileDB group at '%s'", self$uri))
+        message(sprintf("Creating new %s at '%s'", self$class(), self$uri))
       }
       tiledb::tiledb_group_create(self$uri)
     },
