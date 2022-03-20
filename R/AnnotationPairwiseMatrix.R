@@ -45,14 +45,22 @@ AnnotationPairwiseMatrix <- R6::R6Class(
     #' @description Read annotation data from TileDB into a matrix
     #' @return A [`matrix`]
     to_matrix = function() {
-      if (self$verbose) message("Reading annotation matrix into memory")
+      if (self$verbose) {
+        message(
+          sprintf("Reading %s into matrix from '%s'", self$class(), self$uri)
+        )
+      }
       self$tiledb_array(return_as = "matrix")[]
     },
 
     #' @description Read annotation data from TileDB into a data frame
     #' @return A [`data.frame`]
     to_dataframe = function() {
-      if (self$verbose) message("Reading annotation matrix into memory")
+      if (self$verbose) {
+        message(
+          sprintf("Reading %s into dataframe from '%s'", self$class(), self$uri)
+        )
+      }
       self$tiledb_array(return_as = "data.frame")[]
     },
 

@@ -43,7 +43,11 @@ AnnotationMatrix <- R6::R6Class(
     #' @description Retrieve the annotation data from TileDB
     #' @return A [`matrix`]
     to_matrix = function() {
-      if (self$verbose) message("Reading annotation matrix into memory")
+      if (self$verbose) {
+        message(
+          sprintf("Reading %s into memory from '%s'", self$class(), self$uri)
+        )
+      }
 
       df <- self$tiledb_array(return_as = "data.frame")[]
       index_col <- self$dimnames()
