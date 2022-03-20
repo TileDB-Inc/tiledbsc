@@ -8,46 +8,15 @@ TileDBGroup <- R6::R6Class(
     uri = NULL,
     #' @field arrays Named list of arrays in the group
     arrays = list(),
-    #' @field dimension_name Optional name of the dimension shared by all
-    #' arrays within the group (typically `obs_id` or `var_id`).
-    dimension_name = NULL,
     #' @field verbose Whether to print verbose output
     verbose = TRUE,
 
     #' @description Create a new TileDBGroup object.
     #' @param uri TileDB array URI
-    #' @param dimension_name Optional name of the dimension shared by all
-    #' arrays.
     #' @param verbose Print status messages
-    initialize = function(uri, dimension_name = NULL, verbose = TRUE) {
-      if (missing(uri)) stop("A `uri` must be specified")
-      self$uri <- uri
-      self$dimension_name <- dimension_name
-      self$verbose <- verbose
-
-      # Until TileDB supports group metadata, we need to create an array
-      # to store the metadata.
-      private$metadata_uri <- file_path(self$uri, "__tiledb_group_metadata")
-
-      if (!private$group_exists()) {
-        private$create_group()
-        private$create_metadata_array()
-      }
-
-      # Create objects for each array URI (except the metadata array)
-      array_uris <- self$list_object_uris(type = "ARRAY")
-      array_uris <- array_uris[!grepl("__tiledb_group_metadata", array_uris)]
-
-      if (!is_empty(array_uris)) {
-        arrays <- private$get_existing_arrays(array_uris)
-        names(arrays) <- basename(array_uris)
-        self$arrays <- arrays
-      }
-
-      # Child-class specific initialization methods
-      private$class_initialize()
-
-      return(self)
+    initialize = function(uri, verbose = TRUE) {
+      private$tiledb_group_initialize(uri, verbose)
+      self
     },
 
     #' @description List the TileDB objects within the group.
@@ -141,8 +110,34 @@ TileDBGroup <- R6::R6Class(
     # TODO: Remove once TileDB supports group metadata
     metadata_uri = NULL,
 
-    # This where child-class specific initialization procedures are defined
-    class_initialize = function() {
+    # TileDB group initialization procedures shared by all child classes.
+    # By default child classes will inherit TiledbGroup$initialize wholesale but
+    # it's also possible to override the initialize method with additional
+    # arguments and simply include a call to private$tiledb_group_initialize().
+    tiledb_group_initialize = function(uri, verbose) {
+      if (missing(uri)) stop("A `uri` must be specified")
+      self$uri <- uri
+      self$verbose <- verbose
+
+      # Until TileDB supports group metadata, we need to create an array
+      # to store the metadata.
+      private$metadata_uri <- file_path(self$uri, "__tiledb_group_metadata")
+
+      if (!private$group_exists()) {
+        private$create_group()
+        private$create_metadata_array()
+      }
+
+      # Create objects for each array URI (except the metadata array)
+      array_uris <- self$list_object_uris(type = "ARRAY")
+      array_uris <- array_uris[!grepl("__tiledb_group_metadata", array_uris)]
+
+      if (!is_empty(array_uris)) {
+        arrays <- private$get_existing_arrays(array_uris)
+        names(arrays) <- basename(array_uris)
+        self$arrays <- arrays
+      }
+
       invisible(self)
     },
 
