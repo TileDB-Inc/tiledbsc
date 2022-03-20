@@ -113,7 +113,11 @@ AssayMatrix <- R6::R6Class(
       cell_order = "HILBERT",
       tile_order = "ROW_MAJOR",
       capacity = 10000) {
-      if (self$verbose) message("Creating new array at ", self$uri)
+      if (self$verbose) {
+        message(
+          sprintf("Creating new %s at '%s'", self$class(), self$uri)
+        )
+      }
       tiledb::fromDataFrame(
         obj = x,
         uri = self$uri,

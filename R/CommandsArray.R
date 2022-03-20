@@ -109,7 +109,11 @@ CommandsArray <- R6::R6Class(
         ))
       )
 
-      if (self$verbose) message("Creating new array at ", self$uri)
+      if (self$verbose) {
+        message(
+          sprintf("Creating new %s at '%s'", self$class(), self$uri)
+        )
+      }
       tiledb::tiledb_array_create(uri = self$uri, schema = tdb_schema)
     },
 
