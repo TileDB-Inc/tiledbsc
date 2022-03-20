@@ -48,15 +48,23 @@ SCGroup <- R6::R6Class(
       verbose = TRUE) {
       private$tiledb_group_initialize(uri, verbose)
 
-      self$obs <- AnnotationDataframe$new(
-        uri = file_path(self$uri, "obs"),
-        verbose = self$verbose
-      )
+      if ("obs" %in% names(self$arrays)) {
+        self$obs <- self$get_array("obs")
+      } else {
+        self$obs <- AnnotationDataframe$new(
+          uri = file_path(self$uri, "obs"),
+          verbose = self$verbose
+        )
+      }
 
-      self$var <- AnnotationDataframe$new(
-        uri = file_path(self$uri, "var"),
-        verbose = self$verbose
-      )
+      if ("var" %in% names(self$arrays)) {
+        self$var <- self$get_array("var")
+      } else {
+        self$var <- AnnotationDataframe$new(
+          uri = file_path(self$uri, "var"),
+          verbose = self$verbose
+        )
+      }
 
       self$X <- AssayMatrixGroup$new(
         uri = file_path(self$uri, "X"),
@@ -510,6 +518,10 @@ SCGroup <- R6::R6Class(
       obs_ids <- self$obs$tiledb_array(attrs = NA_character_)[]$obs_id
       assay_mats <- lapply(assay_mats, pad_matrix, colnames = obs_ids)
       assay_mats
+    },
+
+    get_existing_arrays = function(uris) {
+      lapply(uris, AnnotationDataframe$new, verbose = self$verbose)
     }
   )
 )
