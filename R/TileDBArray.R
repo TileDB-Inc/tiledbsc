@@ -113,6 +113,13 @@ TileDBArray <- R6::R6Class(
       )
     },
 
+    #' @description Get number of fragments in the array
+    fragment_count = function() {
+      tiledb::tiledb_fragment_info_get_num(
+        tiledb::tiledb_fragment_info(self$uri)
+      )
+    },
+
     #' @description Retrieve attribute names
     #' @return A character vector with the array's attribute names
     attrnames = function() {
