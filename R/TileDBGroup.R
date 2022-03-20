@@ -24,6 +24,13 @@ TileDBGroup <- R6::R6Class(
       class(self)[1]
     },
 
+
+    #' @description Print summary of the group.
+    print = function() {
+      cat(glue::glue("<{self$class()}>"), sep = "\n")
+      private$group_print()
+    },
+
     #' @description Check if the group exists.
     #' @return TRUE if the group exists, FALSE otherwise.
     group_exists = function() {
@@ -190,6 +197,20 @@ TileDBGroup <- R6::R6Class(
 
     get_existing_arrays = function(uris) {
       lapply(uris, TileDBArray$new, verbose = self$verbose)
+    },
+
+    group_print = function() {
+      cat("  uri:", self$uri, "\n")
+      if (self$group_exists()) {
+        arrays <- names(self$arrays)
+        if (!is_empty(arrays)) {
+          cat("  arrays:", string_collapse(arrays), "\n")
+        }
+        groups <- basename(self$list_objects(type = "GROUP")$URI)
+        if (!is_empty(groups)) {
+          cat("  groups:", string_collapse(groups), "\n")
+        }
+      }
     }
   )
 )
