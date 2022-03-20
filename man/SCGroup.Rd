@@ -51,6 +51,7 @@ dimensions of the \code{obs} and \code{var} arrays, respectively.}
 \item \href{#method-get_seurat_dimreductions_list}{\code{SCGroup$get_seurat_dimreductions_list()}}
 \item \href{#method-to_seurat_object}{\code{SCGroup$to_seurat_object()}}
 \item \href{#method-to_summarized_experiment}{\code{SCGroup$to_summarized_experiment()}}
+\item \href{#method-to_single_cell_experiment}{\code{SCGroup$to_single_cell_experiment()}}
 \item \href{#method-get_annotation_matrix_arrays}{\code{SCGroup$get_annotation_matrix_arrays()}}
 \item \href{#method-get_annotation_pairwise_matrix_arrays}{\code{SCGroup$get_annotation_pairwise_matrix_arrays()}}
 \item \href{#method-clone}{\code{SCGroup$clone()}}
@@ -269,6 +270,27 @@ with a subset of features is included.
 }
 }
 
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-to_single_cell_experiment"></a>}}
+\if{latex}{\out{\hypertarget{method-to_single_cell_experiment}{}}}
+\subsection{Method \code{to_single_cell_experiment()}}{
+Convert to a Bioconductor
+\link[SingleCellExperiment:SingleCellExperiment]{SingleCellExperiment::SingleCellExperiment} object.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{SCGroup$to_single_cell_experiment(layers = c("counts", "data"))}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{layers}}{A vector of assay layer names to retrieve. Must match one
+or more of the available \code{X} \code{\link{AssayMatrix}} layers. If \code{layers} is
+\emph{named} (e.g., \code{c(logdata = "counts")}) the assays will adopt the names
+of the layers vector.}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-get_annotation_matrix_arrays"></a>}}
