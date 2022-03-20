@@ -34,6 +34,8 @@ SCGroup <- R6::R6Class(
     obsp = list(),
     #' @field varp named list of [`AnnotationPairwiseMatrix`] objects aligned with `var`
     varp = list(),
+    #' @field misc Named list of miscellaneous objects.
+    misc = list(),
 
     #' @description Create a new SCGroup object. The existing array group is
     #'   opened at the specified array `uri` if one is present, otherwise a new
@@ -86,7 +88,10 @@ SCGroup <- R6::R6Class(
         verbose = self$verbose
       )
 
-      self
+      self$misc <- TileDBGroup$new(
+        uri = file_path(self$uri, "misc"),
+        verbose = self$verbose
+      )
     },
 
     #' @description Convert a Seurat Assay to a TileDB-backed sc_group.
