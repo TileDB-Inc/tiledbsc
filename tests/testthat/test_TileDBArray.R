@@ -1,6 +1,6 @@
 test_that("TileDBArray helper functions", {
 
-  uri <- withr::local_tempdir(pattern = "test-array-")
+  uri <- withr::local_tempdir(pattern = "test-array")
 
   expect_message(
     TileDBArray$new(uri = uri, verbose = TRUE),
