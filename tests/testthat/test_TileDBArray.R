@@ -4,7 +4,7 @@ test_that("TileDBArray helper functions", {
 
   expect_message(
     TileDBArray$new(uri = uri, verbose = TRUE),
-    "No TileDB array found at"
+    "No TileDBArray found at"
   )
 
   # create an array
@@ -14,7 +14,7 @@ test_that("TileDBArray helper functions", {
 
   expect_message(
     tdb <- TileDBArray$new(uri = uri, verbose = TRUE),
-    "Found existing TileDB array at"
+    "Found existing TileDBArray at"
   )
   expect_identical(tdb$uri, uri)
   expect_is(tdb$tiledb_array(), "tiledb_array")
