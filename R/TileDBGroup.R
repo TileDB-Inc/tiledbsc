@@ -143,13 +143,20 @@ TileDBGroup <- R6::R6Class(
       private$metadata_uri <- file_path(self$uri, "__tiledb_group_metadata")
 
       if (self$group_exists()) {
-        msg <- sprintf("Found existing %s at '%s'", self$class(), self$uri)
+        if (self$verbose) {
+          message(
+            sprintf("Found existing %s at '%s'", self$class(), self$uri)
+          )
+        }
       } else {
-        msg <- sprintf("No %s currently exists at '%s'", self$class(), self$uri)
+        if (self$verbose) {
+          message(
+            sprintf("No %s currently exists at '%s'", self$class(), self$uri)
+          )
+        }
         private$create_group()
         private$create_metadata_array()
       }
-      if (self$verbose) message(msg)
 
       # Create objects for each array URI (except the metadata array)
       array_uris <- self$list_object_uris(type = "ARRAY")
