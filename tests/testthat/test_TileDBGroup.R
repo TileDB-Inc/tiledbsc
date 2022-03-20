@@ -1,6 +1,6 @@
 
 test_that("a new TileDB group can be created", {
-  grp_uri <- withr::local_tempdir("new-group6")
+  grp_uri <- withr::local_tempdir("new-group")
 
   expect_message(
     TileDBGroup$new(uri = grp_uri, verbose = TRUE),
