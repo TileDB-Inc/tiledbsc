@@ -41,6 +41,7 @@ SCDataset <- R6::R6Class(
 
       if (!private$group_exists()) {
         private$create_group()
+        private$create_metadata_array()
       }
 
       # Collect user-specified and auto-discovered scgroup URIs
