@@ -20,6 +20,7 @@ TileDBGroup <- R6::R6Class(
     #' arrays.
     #' @param verbose Print status messages
     initialize = function(uri, dimension_name = NULL, verbose = TRUE) {
+      if (missing(uri)) stop("A `uri` must be specified")
       self$uri <- uri
       self$dimension_name <- dimension_name
       self$verbose <- verbose
@@ -42,6 +43,9 @@ TileDBGroup <- R6::R6Class(
         names(arrays) <- basename(array_uris)
         self$arrays <- arrays
       }
+
+      # Child-class specific initialization methods
+      private$class_initialize()
 
       return(self)
     },
@@ -136,6 +140,11 @@ TileDBGroup <- R6::R6Class(
     # @field URI of the array where group metadata is stored
     # TODO: Remove once TileDB supports group metadata
     metadata_uri = NULL,
+
+    # This where child-class specific initialization procedures are defined
+    class_initialize = function() {
+      invisible(self)
+    },
 
     group_exists = function() {
       result <- tiledb::tiledb_object_type(self$uri) == "GROUP"

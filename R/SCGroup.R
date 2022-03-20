@@ -35,65 +35,6 @@ SCGroup <- R6::R6Class(
     #' @field varp named list of [`AnnotationPairwiseMatrix`] objects aligned with `var`
     varp = list(),
 
-    #' @description Create a new SCGroup object. The existing array group is
-    #'   opened at the specified array `uri` if one is present, otherwise a new
-    #'   array group is created.
-    #'
-    #' @param uri URI of the TileDB group
-    #' @param verbose Print status messages
-    initialize = function(
-      uri,
-      verbose = TRUE) {
-      self$uri <- uri
-      self$verbose <- verbose
-
-      if (!private$group_exists()) {
-        private$create_group()
-      }
-
-      self$obs <- AnnotationDataframe$new(
-        uri = file_path(self$uri, "obs"),
-        verbose = self$verbose
-      )
-
-      self$var <- AnnotationDataframe$new(
-        uri = file_path(self$uri, "var"),
-        verbose = self$verbose
-      )
-
-      self$X <- AssayMatrixGroup$new(
-        uri = file_path(self$uri, "X"),
-        dimension_name = c("obs_id", "var_id"),
-        verbose = self$verbose
-      )
-
-      self$obsm <- AnnotationMatrixGroup$new(
-        uri = file_path(self$uri, "obsm"),
-        dimension_name = "obs_id",
-        verbose = self$verbose
-      )
-
-      self$varm <- AnnotationMatrixGroup$new(
-        uri = file_path(self$uri, "varm"),
-        dimension_name = "var_id",
-        verbose = self$verbose
-      )
-
-      self$obsp <- AnnotationPairwiseMatrixGroup$new(
-        uri = file_path(self$uri, "obsp"),
-        dimension_name = "obs_id",
-        verbose = self$verbose
-      )
-
-      self$varp <- AnnotationPairwiseMatrixGroup$new(
-        uri = file_path(self$uri, "varp"),
-        dimension_name = "var_id",
-        verbose = self$verbose
-      )
-
-      return(self)
-    },
-
     #' @description Convert a Seurat Assay to a TileDB-backed sc_group.
     #'
     #' @details
@@ -471,6 +412,51 @@ SCGroup <- R6::R6Class(
   ),
 
   private = list(
+    # SCGroup-specific initializations
+    class_initialize = function() {
+      self$obs <- AnnotationDataframe$new(
+        uri = file_path(self$uri, "obs"),
+        verbose = self$verbose
+      )
+
+      self$var <- AnnotationDataframe$new(
+        uri = file_path(self$uri, "var"),
+        verbose = self$verbose
+      )
+
+      self$X <- AssayMatrixGroup$new(
+        uri = file_path(self$uri, "X"),
+        dimension_name = c("obs_id", "var_id"),
+        verbose = self$verbose
+      )
+
+      self$obsm <- AnnotationMatrixGroup$new(
+        uri = file_path(self$uri, "obsm"),
+        dimension_name = "obs_id",
+        verbose = self$verbose
+      )
+
+      self$varm <- AnnotationMatrixGroup$new(
+        uri = file_path(self$uri, "varm"),
+        dimension_name = "var_id",
+        verbose = self$verbose
+      )
+
+      self$obsp <- AnnotationPairwiseMatrixGroup$new(
+        uri = file_path(self$uri, "obsp"),
+        dimension_name = "obs_id",
+        verbose = self$verbose
+      )
+
+      self$varp <- AnnotationPairwiseMatrixGroup$new(
+        uri = file_path(self$uri, "varp"),
+        dimension_name = "var_id",
+        verbose = self$verbose
+      )
+
+      return(self)
+    },
+
     # Validate layers argument
     check_layers = function(layers) {
       available_layers <- names(self$X$arrays)
