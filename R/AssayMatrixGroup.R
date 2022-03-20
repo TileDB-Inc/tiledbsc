@@ -6,13 +6,13 @@
 #' @export
 AssayMatrixGroup <- R6::R6Class(
   classname = "AssayMatrixGroup",
-  inherit = TileDBGroup,
+  inherit = AnnotationGroup,
 
   public = list(
 
     #' @description Add a new [`AssayMatrix`] array to the group.
     #' @param data a [`matrix`] of annotation data to ingest. The `matrix` rows
-    #' must be aligned to the [`SCGroup`] dimension indicated by the group's
+    #' must be aligned to the dimension indicated by the group's
     #' `dimension_name`.
     #' @param name Name for the new array, nested with the group's URI.
     #' @param value_col Name to use for the TileDB array's attribute that will

@@ -6,22 +6,22 @@
 #' @export
 AnnotationPairwiseMatrixGroup <- R6::R6Class(
   classname = "AnnotationPairwiseMatrixGroup",
-  inherit = AnnotationMatrixGroup,
+  inherit = AnnotationGroup,
 
   public = list(
 
     #' @description Add a new [`AnnotationPairwiseMatrix`] array to the group.
     #' @param data a [`matrix`] of annotation data to ingest. The `matrix` rows
-    #' must be aligned to the [`SCGroup`] dimension indicated by the group's
+    #' must be aligned to the dimension indicated by the group's
     #' `dimension_name`.
     #' @param name Name of the new pairwise annotation matrix.
     #' @param metadata Named list of metadata to add.
     add_matrix = function(data, name, metadata = NULL) {
       if (missing(name)) {
-        stop("Must specify a `name` for the new AnnotationMatrix")
+        stop("Must specify a `name` for the new AnnotationPairwiseMatrix")
       }
       if (missing(data)) {
-        stop("Must provide a `matrix` to ingest into the new AnnotationMatrix")
+        stop("Must provide a `matrix` to ingest into the new AnnotationPairwiseMatrix")
       }
 
       # TODO: Verify that the matrix is aligned to the group's dimension
