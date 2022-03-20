@@ -17,6 +17,45 @@ SCDataset <- R6::R6Class(
     #'   later readback
     commandsArray = NULL,
 
+    #' @description Create a new SCDataset object. The existing array group is
+    #'   opened at the specified array `uri` if one is present, otherwise a new
+    #'   array group is created. The `scgroups` field is populated with
+    #'   `SCGroup` objects for each URI passed explicitly to `scgroup_uris`, as
+    #'   well `SCGroup` objects discovered within the `SCdataset` object's
+    #'   TileDB group.
+    #'
+    #' @param uri URI of the TileDB group
+    #' @param scgroup_uris Optional vector of URIs for existing [`SCGroup`]s to
+    #'  add to the dataset
+    #' @param verbose Print status messages
+    initialize = function(
+      uri,
+      scgroup_uris = NULL,
+      verbose = TRUE) {
+      private$tiledb_group_initialize(uri, verbose)
+
+      # Collect user-specified and auto-discovered scgroup URIs
+      scgroup_uris <- c(
+        scgroup_uris,
+        self$list_object_uris(prefix = "scgroup", type = "GROUP")
+      )
+
+      # Create SCGroup objects for each scgroup URI
+      if (!is_empty(scgroup_uris)) {
+        scgroups <- lapply(scgroup_uris, SCGroup$new, verbose = self$verbose)
+        names(scgroups) <- sub("scgroup_", "", basename(scgroup_uris), fixed = TRUE)
+        self$scgroups <- scgroups
+      }
+
+      self$commandsArray <- CommandsArray$new(
+        uri = file_path(self$uri, "commands"),
+        verbose = self$verbose
+      )
+
+      self
+    },
+
+
     #' @description Convert a Seurat object to a TileDB-backed `sc_dataset`.
     #'
     #' ## Assays
@@ -140,29 +179,6 @@ SCDataset <- R6::R6Class(
     #' @return A vector of URIs for each [`SCGroup`] in the dataset.
     scgroup_uris = function() {
       vapply(self$scgroups, function(x) x$uri, FUN.VALUE = character(1L))
-    }
-  ),
-
-  private = list(
-    # SCDataset-specific initializations
-    class_initialize = function() {
-
-      # auto-discovered scgroup URIs
-      scgroup_uris <- self$list_object_uris(prefix = "scgroup", type = "GROUP")
-
-      # Create SCGroup objects for each scgroup URI
-      if (!is_empty(scgroup_uris)) {
-        scgroups <- lapply(scgroup_uris, SCGroup$new, verbose = self$verbose)
-        names(scgroups) <- sub("scgroup_", "", basename(scgroup_uris), fixed = TRUE)
-        self$scgroups <- scgroups
-      }
-
-      self$commandsArray <- CommandsArray$new(
-        uri = file_path(self$uri, "commands"),
-        verbose = self$verbose
-      )
-
-      return(self)
     }
   )
 )
