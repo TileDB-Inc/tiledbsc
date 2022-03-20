@@ -32,7 +32,8 @@ Imports:
     SeuratObject,
     png,
     withr,
-    jsonlite
+    jsonlite,
+    glue
 Remotes:
     tiledb-inc/tiledb-r
 Roxygen: list(markdown = TRUE)
