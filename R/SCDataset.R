@@ -12,6 +12,8 @@ SCDataset <- R6::R6Class(
   public = list(
     #' @field scgroups Named list of [`SCGroup`]s in the dataset
     scgroups = list(),
+    #' @field misc Named list of miscellaneous objects.
+    misc = list(),
 
     #' @field commandsArray SeuratCommand history, persisted to storage for
     #'   later readback
@@ -46,6 +48,11 @@ SCDataset <- R6::R6Class(
         names(scgroups) <- sub("scgroup_", "", basename(scgroup_uris), fixed = TRUE)
         self$scgroups <- scgroups
       }
+
+      self$misc <- TileDBGroup$new(
+        uri = file_path(self$uri, "misc"),
+        verbose = self$verbose
+      )
 
       self$commandsArray <- CommandsArray$new(
         uri = file_path(self$uri, "commands"),
