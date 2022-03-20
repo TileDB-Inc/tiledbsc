@@ -15,10 +15,6 @@ SCDataset <- R6::R6Class(
     #' @field misc Named list of miscellaneous objects.
     misc = list(),
 
-    #' @field commandsArray SeuratCommand history, persisted to storage for
-    #'   later readback
-    commandsArray = NULL,
-
     #' @description Create a new SCDataset object. The existing array group is
     #'   opened at the specified array `uri` if one is present, otherwise a new
     #'   array group is created. The `scgroups` field is populated with
@@ -54,10 +50,13 @@ SCDataset <- R6::R6Class(
         verbose = self$verbose
       )
 
-      self$commandsArray <- CommandsArray$new(
-        uri = file_path(self$uri, "commands"),
-        verbose = self$verbose
-      )
+      # Special handling of Seurat commands array
+      if ("commands" %in% names(self$misc$arrays)) {
+        self$misc$arrays$commands <- CommandsArray$new(
+          uri = self$misc$arrays$commands$uri,
+          verbose = self$verbose
+        )
+      }
 
       self
     },
@@ -120,10 +119,19 @@ SCDataset <- R6::R6Class(
       if (!is_empty(commandNames)) {
         namedListOfCommands <- lapply(commandNames, SeuratObject::Command,  object=object)
         names(namedListOfCommands) <- commandNames
-        self$commandsArray$from_named_list_of_commands(namedListOfCommands)
+
+        commandsArray <- CommandsArray$new(
+          uri = file_path(self$misc$uri, "commands"),
+          verbose = self$verbose
+        )
+        commandsArray$from_named_list_of_commands(namedListOfCommands)
+        self$misc$arrays[["commands"]] <- commandsArray
       }
 
-      if (self$verbose) message("Finished converting Seurat object to TileDB")
+      if (self$verbose) {
+        msg <- sprintf("Finished converting Seurat object to %s", self$class())
+        message(msg)
+      }
     },
 
     #' @description Convert to a [SeuratObject::Seurat] object.
@@ -174,9 +182,9 @@ SCDataset <- R6::R6Class(
       }
 
       # command history
-      if (self$commandsArray$array_exists()) {
-        namedListOfCommands <- self$commandsArray$to_named_list_of_commands()
-        object@commands <- namedListOfCommands
+      if ("commands" %in% names(self$misc$arrays)) {
+        commands_array <- self$misc$arrays$commands
+        object@commands <- commands_array$to_named_list_of_commands()
       }
 
       return(object)
