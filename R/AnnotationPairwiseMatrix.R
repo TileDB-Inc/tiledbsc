@@ -34,7 +34,11 @@ AnnotationPairwiseMatrix <- R6::R6Class(
         value_col = value_col
       )
 
-      private$create_empty_array(x, index_cols)
+      if (!self$array_exists()) {
+        private$create_empty_array(x, index_cols)
+      } else {
+        message(sprintf("Updating existing %s at '%s'", self$class(), self$uri))
+      }
       private$ingest_data(x)
     },
 

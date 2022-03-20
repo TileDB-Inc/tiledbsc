@@ -36,7 +36,11 @@ CommandsArray <- R6::R6Class(
       # Convert from list of dataframes to single dataframe.
       command_dataframe <- do.call("rbind", command_dataframes)
 
-      private$create_empty_array(command_dataframe)
+      if (!self$array_exists()) {
+        private$create_empty_array(command_dataframe)
+      } else {
+        message(sprintf("Updating existing %s at '%s'", self$class(), self$uri))
+      }
       private$ingest_data(command_dataframe)
     },
 

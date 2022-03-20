@@ -69,6 +69,13 @@ test_that("SCDataset can be created from a Seurat object", {
   command_names <- Seurat::Command(object=pbmc_small)
   command_names2 <- Seurat::Command(object=pbmc_small2)
   expect_identical(command_names, command_names2)
+
+  # calling from_seurat again will update the existing data
+  scdataset2$from_seurat(pbmc_small)
+  expect_identical(
+    scdataset2$scgroups$RNA$obs$fragment_count(),
+    2
+  )
 })
 
 test_that("a dataset containing an assay with empty cells is fully retrieved", {
