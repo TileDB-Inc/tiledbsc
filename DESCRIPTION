@@ -44,6 +44,7 @@ Suggests:
     rmarkdown,
     knitr,
     testthat (>= 3.0.0),
-    SummarizedExperiment
+    SummarizedExperiment,
+    SingleCellExperiment
 VignetteBuilder: knitr
 Config/testthat/edition: 2
