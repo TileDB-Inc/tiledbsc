@@ -199,17 +199,25 @@ TileDBGroup <- R6::R6Class(
       lapply(uris, TileDBArray$new, verbose = self$verbose)
     },
 
+    format_arrays = function() {
+      arrays <- names(self$arrays)
+      if (!is_empty(arrays)) {
+        cat("  arrays:", string_collapse(arrays), "\n")
+      }
+    },
+
+    format_groups = function() {
+      groups <- basename(self$list_objects(type = "GROUP")$URI)
+      if (!is_empty(groups)) {
+        cat("  groups:", string_collapse(groups), "\n")
+      }
+    },
+
     group_print = function() {
       cat("  uri:", self$uri, "\n")
       if (self$group_exists()) {
-        arrays <- names(self$arrays)
-        if (!is_empty(arrays)) {
-          cat("  arrays:", string_collapse(arrays), "\n")
-        }
-        groups <- basename(self$list_objects(type = "GROUP")$URI)
-        if (!is_empty(groups)) {
-          cat("  groups:", string_collapse(groups), "\n")
-        }
+        private$format_arrays()
+        private$format_groups()
       }
     }
   )

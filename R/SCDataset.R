@@ -195,5 +195,26 @@ SCDataset <- R6::R6Class(
     scgroup_uris = function() {
       vapply(self$scgroups, function(x) x$uri, FUN.VALUE = character(1L))
     }
+  ),
+
+  private = list(
+
+    # Override to include SCGroups using `scgroup_uris`
+    format_groups = function() {
+      uris <- self$scgroup_uris()
+      if (!is_empty(uris)) {
+        remote <- string_starts_with(uris, "s3://") | string_starts_with(uris, "tiledb://")
+        names(uris) <- ifelse(remote, paste0(names(uris), "*"), names(uris))
+        cat("  scgroups:", string_collapse(names(uris)), "\n")
+      }
+    },
+
+    group_print = function() {
+      cat("  uri:", self$uri, "\n")
+      if (self$group_exists()) {
+        private$format_arrays()
+        private$format_groups()
+      }
+    }
   )
 )
