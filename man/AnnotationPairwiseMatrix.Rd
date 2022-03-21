@@ -88,9 +88,17 @@ A \code{\link{matrix}}
 \subsection{Method \code{to_dataframe()}}{
 Read annotation data from TileDB into a data frame
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AnnotationPairwiseMatrix$to_dataframe()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{AnnotationPairwiseMatrix$to_dataframe(attrs = NULL)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{attrs}}{Specify one or more attributes to retrieve. If \code{NULL},
+all attributes are retrieved.}
+}
+\if{html}{\out{</div>}}
+}
 \subsection{Returns}{
 A \code{\link{data.frame}}
 }

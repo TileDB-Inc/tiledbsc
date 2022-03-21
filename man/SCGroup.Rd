@@ -166,7 +166,7 @@ values}
 \subsection{Method \code{add_seurat_dimreduction()}}{
 Convert a \code{\link[SeuratObject:DimReduc-class]{SeuratObject::DimReduc}} object
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{SCGroup$add_seurat_dimreduction(object, technique = NULL)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{SCGroup$add_seurat_dimreduction(object, technique = NULL, metadata = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
