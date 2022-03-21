@@ -37,6 +37,8 @@ dimensions of the \code{obs} and \code{var} arrays, respectively.}
 \item{\code{obsp}}{named list of \code{\link{AnnotationPairwiseMatrix}} objects aligned with \code{obs}}
 
 \item{\code{varp}}{named list of \code{\link{AnnotationPairwiseMatrix}} objects aligned with \code{var}}
+
+\item{\code{misc}}{Named list of miscellaneous objects.}
 }
 \if{html}{\out{</div>}}
 }
@@ -58,13 +60,17 @@ dimensions of the \code{obs} and \code{var} arrays, respectively.}
 }
 }
 \if{html}{
-\out{<details open ><summary>Inherited methods</summary>}
+\out{<details ><summary>Inherited methods</summary>}
 \itemize{
 \item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBGroup" data-id="add_metadata">}\href{../../tiledbsc/html/TileDBGroup.html#method-add_metadata}{\code{tiledbsc::TileDBGroup$add_metadata()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBGroup" data-id="class">}\href{../../tiledbsc/html/TileDBGroup.html#method-class}{\code{tiledbsc::TileDBGroup$class()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBGroup" data-id="get_array">}\href{../../tiledbsc/html/TileDBGroup.html#method-get_array}{\code{tiledbsc::TileDBGroup$get_array()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBGroup" data-id="get_arrays">}\href{../../tiledbsc/html/TileDBGroup.html#method-get_arrays}{\code{tiledbsc::TileDBGroup$get_arrays()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBGroup" data-id="get_metadata">}\href{../../tiledbsc/html/TileDBGroup.html#method-get_metadata}{\code{tiledbsc::TileDBGroup$get_metadata()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBGroup" data-id="group_exists">}\href{../../tiledbsc/html/TileDBGroup.html#method-group_exists}{\code{tiledbsc::TileDBGroup$group_exists()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBGroup" data-id="list_object_uris">}\href{../../tiledbsc/html/TileDBGroup.html#method-list_object_uris}{\code{tiledbsc::TileDBGroup$list_object_uris()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBGroup" data-id="list_objects">}\href{../../tiledbsc/html/TileDBGroup.html#method-list_objects}{\code{tiledbsc::TileDBGroup$list_objects()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBGroup" data-id="print">}\href{../../tiledbsc/html/TileDBGroup.html#method-print}{\code{tiledbsc::TileDBGroup$print()}}\out{</span>}
 }
 \out{</details>}
 }

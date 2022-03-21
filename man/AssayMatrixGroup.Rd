@@ -7,8 +7,8 @@
 Class for representing a TileDB group containing one or more
 \code{\link{AssayMatrix}} arrays that share the same dimensions.
 }
-\section{Super class}{
-\code{\link[tiledbsc:TileDBGroup]{tiledbsc::TileDBGroup}} -> \code{AssayMatrixGroup}
+\section{Super classes}{
+\code{\link[tiledbsc:TileDBGroup]{tiledbsc::TileDBGroup}} -> \code{\link[tiledbsc:AnnotationGroup]{tiledbsc::AnnotationGroup}} -> \code{AssayMatrixGroup}
 }
 \section{Methods}{
 \subsection{Public methods}{
@@ -21,11 +21,15 @@ Class for representing a TileDB group containing one or more
 \out{<details ><summary>Inherited methods</summary>}
 \itemize{
 \item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBGroup" data-id="add_metadata">}\href{../../tiledbsc/html/TileDBGroup.html#method-add_metadata}{\code{tiledbsc::TileDBGroup$add_metadata()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBGroup" data-id="class">}\href{../../tiledbsc/html/TileDBGroup.html#method-class}{\code{tiledbsc::TileDBGroup$class()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBGroup" data-id="get_array">}\href{../../tiledbsc/html/TileDBGroup.html#method-get_array}{\code{tiledbsc::TileDBGroup$get_array()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBGroup" data-id="get_arrays">}\href{../../tiledbsc/html/TileDBGroup.html#method-get_arrays}{\code{tiledbsc::TileDBGroup$get_arrays()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBGroup" data-id="get_metadata">}\href{../../tiledbsc/html/TileDBGroup.html#method-get_metadata}{\code{tiledbsc::TileDBGroup$get_metadata()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBGroup" data-id="initialize">}\href{../../tiledbsc/html/TileDBGroup.html#method-initialize}{\code{tiledbsc::TileDBGroup$initialize()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBGroup" data-id="group_exists">}\href{../../tiledbsc/html/TileDBGroup.html#method-group_exists}{\code{tiledbsc::TileDBGroup$group_exists()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBGroup" data-id="list_object_uris">}\href{../../tiledbsc/html/TileDBGroup.html#method-list_object_uris}{\code{tiledbsc::TileDBGroup$list_object_uris()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBGroup" data-id="list_objects">}\href{../../tiledbsc/html/TileDBGroup.html#method-list_objects}{\code{tiledbsc::TileDBGroup$list_objects()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBGroup" data-id="print">}\href{../../tiledbsc/html/TileDBGroup.html#method-print}{\code{tiledbsc::TileDBGroup$print()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="AnnotationGroup" data-id="initialize">}\href{../../tiledbsc/html/AnnotationGroup.html#method-initialize}{\code{tiledbsc::AnnotationGroup$initialize()}}\out{</span>}
 }
 \out{</details>}
 }
@@ -47,7 +51,7 @@ Add a new \code{\link{AssayMatrix}} array to the group.
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{data}}{a \code{\link{matrix}} of annotation data to ingest. The \code{matrix} rows
-must be aligned to the \code{\link{SCGroup}} dimension indicated by the group's
+must be aligned to the dimension indicated by the group's
 \code{dimension_name}.}
 
 \item{\code{name}}{Name for the new array, nested with the group's URI.}
