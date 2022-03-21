@@ -68,7 +68,7 @@ SCGroup <- R6::R6Class(
 
       self$X <- AssayMatrixGroup$new(
         uri = file_path(self$uri, "X"),
-        dimension_name = c("obs_id", "var_id"),
+        dimension_name = c("var_id", "obs_id"),
         verbose = self$verbose
       )
 
