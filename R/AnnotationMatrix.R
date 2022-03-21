@@ -68,7 +68,7 @@ AnnotationMatrix <- R6::R6Class(
     # @param index_cols Character vector with column name(s) to use for the
     # TileDB array's dimensions
     # @param cell_order,tile_order Configure the TileDB array's global cell
-    # ordering by specifying the tile (default: `"HILBERT"`) and cell
+    # ordering by specifying the tile (default: `"ROW_MAJOR"`) and cell
     # (default: `"ROW_MAJOR"`) ordering. See
     # [the docs](https://docs.tiledb.com/main/basic-concepts/terminology) for
     #' more information.
@@ -76,7 +76,7 @@ AnnotationMatrix <- R6::R6Class(
     create_empty_array = function(
       x,
       index_cols,
-      cell_order = "HILBERT",
+      cell_order = "ROW_MAJOR",
       tile_order = "ROW_MAJOR",
       capacity = 10000) {
 

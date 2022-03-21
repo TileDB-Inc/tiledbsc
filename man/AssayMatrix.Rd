@@ -108,7 +108,7 @@ Retrieve the assay data from TileDB
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{attrs}}{Specify one or more layer attributes to retrieve. If \code{NULL},
+\item{\code{attrs}}{Specify one or more attributes to retrieve. If \code{NULL},
 all attributes are retrieved.}
 }
 \if{html}{\out{</div>}}

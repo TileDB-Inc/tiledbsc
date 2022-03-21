@@ -78,9 +78,17 @@ contain the data.frame row names.}
 \subsection{Method \code{to_dataframe()}}{
 Retrieve the annotation data from TileDB
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AnnotationDataframe$to_dataframe()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{AnnotationDataframe$to_dataframe(attrs = NULL)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{attrs}}{A character vector of the attribute names to retrieve. By
+default, all attributes are retrieved.}
+}
+\if{html}{\out{</div>}}
+}
 \subsection{Returns}{
 A \code{\link{data.frame}} with row names containing values from the index
 dimension
