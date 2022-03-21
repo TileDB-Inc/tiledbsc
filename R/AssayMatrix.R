@@ -74,7 +74,7 @@ AssayMatrix <- R6::R6Class(
           sprintf("Reading %s into memory from '%s'", self$class(), self$uri)
         )
       }
-      attrs <- attrs %||% NA_character_
+      attrs <- attrs %||% character()
       self$tiledb_array(attrs = attrs, return_as = "data.frame")[]
     },
 
