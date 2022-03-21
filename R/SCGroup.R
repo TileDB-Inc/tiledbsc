@@ -277,23 +277,32 @@ SCGroup <- R6::R6Class(
     #' @param object A [`SeuratObject::DimReduc`] object
     #' @param technique Name of the dimensional reduction technique. By default,
     #' the `key` slot is used to determine the technique.
+    #' @importFrom utils modifyList
 
-    add_seurat_dimreduction = function(object, technique = NULL) {
+    add_seurat_dimreduction = function(object, technique = NULL, metadata = NULL) {
       stopifnot(
         "Must provide a Seurat 'DimReduc' object" = inherits(object, "DimReduc")
       )
+      if (!is.null(metadata)) {
+        stopifnot(
+          "'metadata' must be a named list of key-value pairs" = is_named_list(metadata)
+        )
+      }
 
       assay <- SeuratObject::DefaultAssay(object)
       key <- SeuratObject::Key(object)
 
       technique <- technique %||% sub("_$", "", key)
       stopifnot(is_scalar_character(technique))
-
-      metadata <- list(
-        dimreduction_technique = technique,
-        dimreduction_key = key
-      )
       array_name <- paste0("dimreduction_", technique)
+
+      metadata <- utils::modifyList(
+        x = metadata %||% list(),
+        val = list(
+          dimreduction_technique = technique,
+          dimreduction_key = key
+        )
+      )
 
       loadings <- SeuratObject::Loadings(object)
       if (!is_empty(loadings)) {

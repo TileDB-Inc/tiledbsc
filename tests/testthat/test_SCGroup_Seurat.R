@@ -99,8 +99,9 @@ test_that("dimensional reduction data can be stored and retrieved", {
   expect_length(scgroup$obsm$arrays, 0L)
   expect_length(scgroup$varm$arrays, 0L)
 
+  user_md <- list(foo = "bar")
   pca1 <- SeuratObject::Reductions(pbmc_small, slot = "pca")
-  scgroup$add_seurat_dimreduction(pca1, technique = "pca")
+  scgroup$add_seurat_dimreduction(pca1, technique = "pca", metadata = user_md)
 
   # obsm/varm are discovered
   scgroup <- SCGroup$new(uri = tdb_uri)
@@ -115,6 +116,10 @@ test_that("dimensional reduction data can be stored and retrieved", {
   expect_identical(
     scgroup$obsm$arrays[[1]]$get_metadata(key = "dimreduction_key"),
     "PC_"
+  )
+  expect_identical(
+    scgroup$obsm$arrays[[1]]$get_metadata(key = "foo"),
+    "bar"
   )
 
   # validate recreated dimreduction data

@@ -33,7 +33,8 @@ Imports:
     png,
     withr,
     jsonlite,
-    glue
+    glue,
+    utils
 Remotes:
     tiledb-inc/tiledb-r
 Roxygen: list(markdown = TRUE)
