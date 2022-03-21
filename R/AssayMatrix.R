@@ -65,7 +65,7 @@ AssayMatrix <- R6::R6Class(
     },
 
     #' @description Retrieve the assay data from TileDB
-    #' @param attrs Specify one or more layer attributes to retrieve. If `NULL`,
+    #' @param attrs Specify one or more attributes to retrieve. If `NULL`,
     #' all attributes are retrieved.
     #' @return A [`Matrix::dgTMatrix-class`].
     to_dataframe = function(attrs = NULL) {
