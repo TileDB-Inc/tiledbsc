@@ -142,6 +142,10 @@ SCGroup <- R6::R6Class(
       }
       self$var$from_dataframe(object[[]], index_col = "var_id")
 
+      # Add obs/var to the scgroup's arrays list
+      # TODO: Necessary? Could obs/var be active bindings that point to arrays?
+      self$arrays[c("obs", "var")] <- list(obs = self$obs, var = self$var)
+
       assay_slots <- c("counts", "data")
       if (seurat_assay_has_scale_data(object)) {
         assay_slots <- c(assay_slots, "scale.data")
