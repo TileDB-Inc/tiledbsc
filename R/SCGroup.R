@@ -277,6 +277,7 @@ SCGroup <- R6::R6Class(
     #' @param object A [`SeuratObject::DimReduc`] object
     #' @param technique Name of the dimensional reduction technique. By default,
     #' the `key` slot is used to determine the technique.
+    #' @param metadata Named list of metadata to add.
     #' @importFrom utils modifyList
 
     add_seurat_dimreduction = function(object, technique = NULL, metadata = NULL) {

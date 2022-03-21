@@ -176,6 +176,8 @@ Convert a \code{\link[SeuratObject:DimReduc-class]{SeuratObject::DimReduc}} obje
 
 \item{\code{technique}}{Name of the dimensional reduction technique. By default,
 the \code{key} slot is used to determine the technique.}
+
+\item{\code{metadata}}{Named list of metadata to add.}
 }
 \if{html}{\out{</div>}}
 }
