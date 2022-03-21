@@ -42,15 +42,18 @@ AnnotationDataframe <- R6::R6Class(
     },
 
     #' @description Retrieve the annotation data from TileDB
+    #' @param attrs A character vector of the attribute names to retrieve. By
+    #' default, all attributes are retrieved.
     #' @return A [`data.frame`] with row names containing values from the index
     #'    dimension
-    to_dataframe = function() {
+    to_dataframe = function(attrs = NULL) {
       if (self$verbose) {
         message(
           sprintf("Reading %s into memory from '%s'", self$class(), self$uri)
         )
       }
-      df <- self$tiledb_array(return_as = "data.frame")[]
+      attrs <- attrs %||% character()
+      df <- self$tiledb_array(attrs = attrs, return_as = "data.frame")[]
       dimname <- self$dimnames()
 
       data.frame(
