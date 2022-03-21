@@ -14,21 +14,30 @@ TileDBArray <- R6::R6Class(
     initialize = function(uri, verbose = TRUE) {
       self$uri <- uri
       self$verbose <- verbose
-      self$array_exists()
+      if (self$array_exists()) {
+        msg <- sprintf("Found existing %s at '%s'", self$class(), self$uri)
+      } else {
+        msg <- sprintf("No %s found at '%s'", self$class(), self$uri)
+      }
+      if (self$verbose) message(msg)
       return(self)
+    },
+
+    #' @description Print the name of the R6 class.
+    class = function() {
+      class(self)[1]
+    },
+
+    #' @description Print summary of the array.
+    print = function() {
+      cat(glue::glue("<{self$class()}>"), sep = "\n")
+      private$array_print()
     },
 
     #' @description Check if the array exists.
     #' @return TRUE if the array exists, FALSE otherwise.
     array_exists = function() {
-      result <- tiledb::tiledb_object_type(self$uri) == "ARRAY"
-      if (result) {
-        msg <- sprintf("Found existing TileDB array at '%s'", self$uri)
-      } else {
-        msg <- sprintf("No TileDB array found at '%s'", self$uri)
-      }
-      if (self$verbose) message(msg)
-      result
+      tiledb::tiledb_object_type(self$uri) == "ARRAY"
     },
 
     #' @description Return a [`TileDBArray`] object
@@ -110,6 +119,13 @@ TileDBArray <- R6::R6Class(
       )
     },
 
+    #' @description Get number of fragments in the array
+    fragment_count = function() {
+      tiledb::tiledb_fragment_info_get_num(
+        tiledb::tiledb_fragment_info(self$uri)
+      )
+    },
+
     #' @description Retrieve attribute names
     #' @return A character vector with the array's attribute names
     attrnames = function() {
@@ -130,6 +146,14 @@ TileDBArray <- R6::R6Class(
     create_empty_array = function() return(NULL),
 
     # @description Ingest data into the TileDB array.
-    ingest_data = function() return(NULL)
+    ingest_data = function() return(NULL),
+
+    array_print = function() {
+      cat("  uri:", self$uri, "\n")
+      if (self$array_exists()) {
+        cat("  dimensions:", string_collapse(self$dimnames()), "\n")
+        cat("  attributes:", string_collapse(self$attrnames()), "\n")
+      }
+    }
   )
 )

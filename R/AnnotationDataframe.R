@@ -33,17 +33,27 @@ AnnotationDataframe <- R6::R6Class(
 
       # convert rownames to a column
       x[[index_col]] <- rownames(x)
-
-      private$create_empty_array(x, index_col)
+      if (!self$array_exists()) {
+        private$create_empty_array(x, index_col)
+      } else {
+        message(sprintf("Updating existing %s at '%s'", self$class(), self$uri))
+      }
       private$ingest_data(x)
     },
 
     #' @description Retrieve the annotation data from TileDB
+    #' @param attrs A character vector of the attribute names to retrieve. By
+    #' default, all attributes are retrieved.
     #' @return A [`data.frame`] with row names containing values from the index
     #'    dimension
-    to_dataframe = function() {
-      if (self$verbose) message("Reading annotation data into memory")
-      df <- self$tiledb_array(return_as = "data.frame")[]
+    to_dataframe = function(attrs = NULL) {
+      if (self$verbose) {
+        message(
+          sprintf("Reading %s into memory from '%s'", self$class(), self$uri)
+        )
+      }
+      attrs <- attrs %||% character()
+      df <- self$tiledb_array(attrs = attrs, return_as = "data.frame")[]
       dimname <- self$dimnames()
 
       data.frame(
@@ -65,7 +75,8 @@ AnnotationDataframe <- R6::R6Class(
 
       if (self$verbose) {
         msg <- sprintf(
-          "Creating new annotation dataframe array with index [%s] at '%s'",
+          "Creating new %s array with index [%s] at '%s'",
+          self$class(),
           index_col,
           self$uri
         )

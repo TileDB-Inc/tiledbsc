@@ -38,6 +38,11 @@ string_starts_with <- function(x, prefix) {
   grepl(prefix, x)
 }
 
+#' @importFrom glue glue_collapse
+string_collapse <- function(x, sep = ", ") {
+  glue::glue_collapse(x, sep = ", ", width = getOption("width", Inf))
+}
+
 n_unique <- function(x) {
   length(unique(x))
 }

@@ -56,16 +56,25 @@ AssayMatrix <- R6::R6Class(
         length(index_cols) == 2,
         all(index_cols %in% colnames(x))
       )
-      private$create_empty_array(x, index_cols)
+      if (!self$array_exists()) {
+        private$create_empty_array(x, index_cols)
+      } else {
+        message(sprintf("Updating existing %s at '%s'", self$class(), self$uri))
+      }
       private$ingest_data(x, index_cols)
     },
 
     #' @description Retrieve the assay data from TileDB
-    #' @param attrs Specify one or more layer attributes to retrieve. If `NULL`,
+    #' @param attrs Specify one or more attributes to retrieve. If `NULL`,
     #' all attributes are retrieved.
     #' @return A [`Matrix::dgTMatrix-class`].
     to_dataframe = function(attrs = NULL) {
-      if (self$verbose) message("Reading assay data into memory")
+      if (self$verbose) {
+        message(
+          sprintf("Reading %s into memory from '%s'", self$class(), self$uri)
+        )
+      }
+      attrs <- attrs %||% character()
       self$tiledb_array(attrs = attrs, return_as = "data.frame")[]
     },
 
@@ -113,7 +122,11 @@ AssayMatrix <- R6::R6Class(
       cell_order = "HILBERT",
       tile_order = "ROW_MAJOR",
       capacity = 10000) {
-      if (self$verbose) message("Creating new array at ", self$uri)
+      if (self$verbose) {
+        message(
+          sprintf("Creating new %s at '%s'", self$class(), self$uri)
+        )
+      }
       tiledb::fromDataFrame(
         obj = x,
         uri = self$uri,

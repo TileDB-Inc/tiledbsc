@@ -2,7 +2,7 @@ Package: tiledbsc
 Type: Package
 Title: TileDB-based Single Cell Tools
 Description: A collection of experimental functions for working with single cell data using TileDB.
-Version: 0.0.0.9030
+Version: 0.0.0.9031
 Authors@R: c(
     person(given = "Aaron",
            family = "Wolen",
@@ -32,7 +32,9 @@ Imports:
     SeuratObject,
     png,
     withr,
-    jsonlite
+    jsonlite,
+    glue,
+    utils
 Remotes:
     tiledb-inc/tiledb-r
 Roxygen: list(markdown = TRUE)
@@ -43,6 +45,7 @@ Suggests:
     rmarkdown,
     knitr,
     testthat (>= 3.0.0),
-    SummarizedExperiment
+    SummarizedExperiment,
+    SingleCellExperiment
 VignetteBuilder: knitr
 Config/testthat/edition: 2

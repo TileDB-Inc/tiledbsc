@@ -5,6 +5,8 @@
 \title{Base class for interacting with TileDB groups}
 \value{
 A named list of arrays.
+
+The array object.
 }
 \description{
 Base class for interacting with TileDB groups
@@ -18,9 +20,6 @@ Base class for interacting with TileDB groups
 
 \item{\code{arrays}}{Named list of arrays in the group}
 
-\item{\code{dimension_name}}{Optional name of the dimension shared by all
-arrays within the group (typically \code{obs_id} or \code{var_id}).}
-
 \item{\code{verbose}}{Whether to print verbose output}
 }
 \if{html}{\out{</div>}}
@@ -29,9 +28,13 @@ arrays within the group (typically \code{obs_id} or \code{var_id}).}
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-new}{\code{TileDBGroup$new()}}
+\item \href{#method-class}{\code{TileDBGroup$class()}}
+\item \href{#method-print}{\code{TileDBGroup$print()}}
+\item \href{#method-group_exists}{\code{TileDBGroup$group_exists()}}
 \item \href{#method-list_objects}{\code{TileDBGroup$list_objects()}}
 \item \href{#method-list_object_uris}{\code{TileDBGroup$list_object_uris()}}
 \item \href{#method-get_arrays}{\code{TileDBGroup$get_arrays()}}
+\item \href{#method-get_array}{\code{TileDBGroup$get_array()}}
 \item \href{#method-get_metadata}{\code{TileDBGroup$get_metadata()}}
 \item \href{#method-add_metadata}{\code{TileDBGroup$add_metadata()}}
 \item \href{#method-clone}{\code{TileDBGroup$clone()}}
@@ -43,7 +46,7 @@ arrays within the group (typically \code{obs_id} or \code{var_id}).}
 \subsection{Method \code{new()}}{
 Create a new TileDBGroup object.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{TileDBGroup$new(uri, dimension_name = NULL, verbose = TRUE)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{TileDBGroup$new(uri, verbose = TRUE)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -51,12 +54,42 @@ Create a new TileDBGroup object.
 \describe{
 \item{\code{uri}}{TileDB array URI}
 
-\item{\code{dimension_name}}{Optional name of the dimension shared by all
-arrays.}
-
 \item{\code{verbose}}{Print status messages}
 }
 \if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-class"></a>}}
+\if{latex}{\out{\hypertarget{method-class}{}}}
+\subsection{Method \code{class()}}{
+Print the name of the R6 class.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{TileDBGroup$class()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-print"></a>}}
+\if{latex}{\out{\hypertarget{method-print}{}}}
+\subsection{Method \code{print()}}{
+Print summary of the group.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{TileDBGroup$print()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-group_exists"></a>}}
+\if{latex}{\out{\hypertarget{method-group_exists}{}}}
+\subsection{Method \code{group_exists()}}{
+Check if the group exists.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{TileDBGroup$group_exists()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+TRUE if the group exists, FALSE otherwise.
 }
 }
 \if{html}{\out{<hr>}}
@@ -118,6 +151,23 @@ criteria.
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{prefix}}{String prefix to filter the array names.}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-get_array"></a>}}
+\if{latex}{\out{\hypertarget{method-get_array}{}}}
+\subsection{Method \code{get_array()}}{
+Retrieve an array within the group.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{TileDBGroup$get_array(name)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{name}}{The name of the array to retrieve.}
 }
 \if{html}{\out{</div>}}
 }

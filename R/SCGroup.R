@@ -34,6 +34,8 @@ SCGroup <- R6::R6Class(
     obsp = list(),
     #' @field varp named list of [`AnnotationPairwiseMatrix`] objects aligned with `var`
     varp = list(),
+    #' @field misc Named list of miscellaneous objects.
+    misc = list(),
 
     #' @description Create a new SCGroup object. The existing array group is
     #'   opened at the specified array `uri` if one is present, otherwise a new
@@ -44,26 +46,29 @@ SCGroup <- R6::R6Class(
     initialize = function(
       uri,
       verbose = TRUE) {
-      self$uri <- uri
-      self$verbose <- verbose
+      private$tiledb_group_initialize(uri, verbose)
 
-      if (!private$group_exists()) {
-        private$create_group()
+      if ("obs" %in% names(self$arrays)) {
+        self$obs <- self$get_array("obs")
+      } else {
+        self$obs <- AnnotationDataframe$new(
+          uri = file_path(self$uri, "obs"),
+          verbose = self$verbose
+        )
       }
 
-      self$obs <- AnnotationDataframe$new(
-        uri = file_path(self$uri, "obs"),
-        verbose = self$verbose
-      )
-
-      self$var <- AnnotationDataframe$new(
-        uri = file_path(self$uri, "var"),
-        verbose = self$verbose
-      )
+      if ("var" %in% names(self$arrays)) {
+        self$var <- self$get_array("var")
+      } else {
+        self$var <- AnnotationDataframe$new(
+          uri = file_path(self$uri, "var"),
+          verbose = self$verbose
+        )
+      }
 
       self$X <- AssayMatrixGroup$new(
         uri = file_path(self$uri, "X"),
-        dimension_name = c("obs_id", "var_id"),
+        dimension_name = c("var_id", "obs_id"),
         verbose = self$verbose
       )
 
@@ -91,7 +96,10 @@ SCGroup <- R6::R6Class(
         verbose = self$verbose
       )
 
-      return(self)
+      self$misc <- TileDBGroup$new(
+        uri = file_path(self$uri, "misc"),
+        verbose = self$verbose
+      )
     },
 
     #' @description Convert a Seurat Assay to a TileDB-backed sc_group.
@@ -134,6 +142,10 @@ SCGroup <- R6::R6Class(
       }
       self$var$from_dataframe(object[[]], index_col = "var_id")
 
+      # Add obs/var to the scgroup's arrays list
+      # TODO: Necessary? Could obs/var be active bindings that point to arrays?
+      self$arrays[c("obs", "var")] <- list(obs = self$obs, var = self$var)
+
       assay_slots <- c("counts", "data")
       if (seurat_assay_has_scale_data(object)) {
         assay_slots <- c(assay_slots, "scale.data")
@@ -157,8 +169,16 @@ SCGroup <- R6::R6Class(
         )
       }
 
-      self$X$add_metadata(list(key = SeuratObject::Key(object)))
-      if (self$verbose) message("Finished converting Seurat object to TileDB")
+      assay_key <- SeuratObject::Key(object)
+      self$X$add_metadata(list(key = assay_key))
+      if (self$verbose) {
+        msg <- sprintf(
+          "Finished converting Seurat Assay with key [%s] to %s",
+          assay_key,
+          self$class()
+        )
+        message(msg)
+      }
     },
 
     #' @description Convert to a [`SeuratObject::Assay`] object.
@@ -257,23 +277,32 @@ SCGroup <- R6::R6Class(
     #' @param object A [`SeuratObject::DimReduc`] object
     #' @param technique Name of the dimensional reduction technique. By default,
     #' the `key` slot is used to determine the technique.
+    #' @importFrom utils modifyList
 
-    add_seurat_dimreduction = function(object, technique = NULL) {
+    add_seurat_dimreduction = function(object, technique = NULL, metadata = NULL) {
       stopifnot(
         "Must provide a Seurat 'DimReduc' object" = inherits(object, "DimReduc")
       )
+      if (!is.null(metadata)) {
+        stopifnot(
+          "'metadata' must be a named list of key-value pairs" = is_named_list(metadata)
+        )
+      }
 
       assay <- SeuratObject::DefaultAssay(object)
       key <- SeuratObject::Key(object)
 
       technique <- technique %||% sub("_$", "", key)
       stopifnot(is_scalar_character(technique))
-
-      metadata <- list(
-        dimreduction_technique = technique,
-        dimreduction_key = key
-      )
       array_name <- paste0("dimreduction_", technique)
+
+      metadata <- utils::modifyList(
+        x = metadata %||% list(),
+        val = list(
+          dimreduction_technique = technique,
+          dimreduction_key = key
+        )
+      )
 
       loadings <- SeuratObject::Loadings(object)
       if (!is_empty(loadings)) {
@@ -471,6 +500,7 @@ SCGroup <- R6::R6Class(
   ),
 
   private = list(
+
     # Validate layers argument
     check_layers = function(layers) {
       available_layers <- names(self$X$arrays)
@@ -501,6 +531,10 @@ SCGroup <- R6::R6Class(
       obs_ids <- self$obs$tiledb_array(attrs = NA_character_)[]$obs_id
       assay_mats <- lapply(assay_mats, pad_matrix, colnames = obs_ids)
       assay_mats
+    },
+
+    get_existing_arrays = function(uris) {
+      lapply(uris, AnnotationDataframe$new, verbose = self$verbose)
     }
   )
 )

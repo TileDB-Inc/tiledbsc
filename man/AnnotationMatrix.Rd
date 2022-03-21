@@ -39,10 +39,13 @@ features of an \code{\link{SCGroup}}.
 \item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="array_exists">}\href{../../tiledbsc/html/TileDBArray.html#method-array_exists}{\code{tiledbsc::TileDBArray$array_exists()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="attributes">}\href{../../tiledbsc/html/TileDBArray.html#method-attributes}{\code{tiledbsc::TileDBArray$attributes()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="attrnames">}\href{../../tiledbsc/html/TileDBArray.html#method-attrnames}{\code{tiledbsc::TileDBArray$attrnames()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="class">}\href{../../tiledbsc/html/TileDBArray.html#method-class}{\code{tiledbsc::TileDBArray$class()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="dimensions">}\href{../../tiledbsc/html/TileDBArray.html#method-dimensions}{\code{tiledbsc::TileDBArray$dimensions()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="dimnames">}\href{../../tiledbsc/html/TileDBArray.html#method-dimnames}{\code{tiledbsc::TileDBArray$dimnames()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="fragment_count">}\href{../../tiledbsc/html/TileDBArray.html#method-fragment_count}{\code{tiledbsc::TileDBArray$fragment_count()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="get_metadata">}\href{../../tiledbsc/html/TileDBArray.html#method-get_metadata}{\code{tiledbsc::TileDBArray$get_metadata()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="initialize">}\href{../../tiledbsc/html/TileDBArray.html#method-initialize}{\code{tiledbsc::TileDBArray$initialize()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="print">}\href{../../tiledbsc/html/TileDBArray.html#method-print}{\code{tiledbsc::TileDBArray$print()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="schema">}\href{../../tiledbsc/html/TileDBArray.html#method-schema}{\code{tiledbsc::TileDBArray$schema()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="tiledb_array">}\href{../../tiledbsc/html/TileDBArray.html#method-tiledb_array}{\code{tiledbsc::TileDBArray$tiledb_array()}}\out{</span>}
 }

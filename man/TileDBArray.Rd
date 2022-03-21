@@ -21,6 +21,8 @@ TileDB Array Base Class
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-new}{\code{TileDBArray$new()}}
+\item \href{#method-class}{\code{TileDBArray$class()}}
+\item \href{#method-print}{\code{TileDBArray$print()}}
 \item \href{#method-array_exists}{\code{TileDBArray$array_exists()}}
 \item \href{#method-tiledb_array}{\code{TileDBArray$tiledb_array()}}
 \item \href{#method-get_metadata}{\code{TileDBArray$get_metadata()}}
@@ -29,6 +31,7 @@ TileDB Array Base Class
 \item \href{#method-dimensions}{\code{TileDBArray$dimensions()}}
 \item \href{#method-attributes}{\code{TileDBArray$attributes()}}
 \item \href{#method-dimnames}{\code{TileDBArray$dimnames()}}
+\item \href{#method-fragment_count}{\code{TileDBArray$fragment_count()}}
 \item \href{#method-attrnames}{\code{TileDBArray$attrnames()}}
 \item \href{#method-clone}{\code{TileDBArray$clone()}}
 }
@@ -51,6 +54,26 @@ Create a new TileDBArray object.
 }
 \if{html}{\out{</div>}}
 }
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-class"></a>}}
+\if{latex}{\out{\hypertarget{method-class}{}}}
+\subsection{Method \code{class()}}{
+Print the name of the R6 class.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{TileDBArray$class()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-print"></a>}}
+\if{latex}{\out{\hypertarget{method-print}{}}}
+\subsection{Method \code{print()}}{
+Print summary of the array.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{TileDBArray$print()}\if{html}{\out{</div>}}
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-array_exists"></a>}}
@@ -181,6 +204,16 @@ Retrieve dimension names
 \subsection{Returns}{
 A character vector with the array's dimension names
 }
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-fragment_count"></a>}}
+\if{latex}{\out{\hypertarget{method-fragment_count}{}}}
+\subsection{Method \code{fragment_count()}}{
+Get number of fragments in the array
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{TileDBArray$fragment_count()}\if{html}{\out{</div>}}
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-attrnames"></a>}}

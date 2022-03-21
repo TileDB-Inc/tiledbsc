@@ -32,14 +32,22 @@ AnnotationMatrix <- R6::R6Class(
       x <- as.data.frame(x)
       x[[index_col]] <- rownames(x)
 
-      private$create_empty_array(x, index_col)
+      if (!self$array_exists()) {
+        private$create_empty_array(x, index_col)
+      } else {
+        message(sprintf("Updating existing %s at '%s'", self$class(), self$uri))
+      }
       private$ingest_data(x)
     },
 
     #' @description Retrieve the annotation data from TileDB
     #' @return A [`matrix`]
     to_matrix = function() {
-      if (self$verbose) message("Reading annotation matrix into memory")
+      if (self$verbose) {
+        message(
+          sprintf("Reading %s into memory from '%s'", self$class(), self$uri)
+        )
+      }
 
       df <- self$tiledb_array(return_as = "data.frame")[]
       index_col <- self$dimnames()
@@ -77,7 +85,8 @@ AnnotationMatrix <- R6::R6Class(
       )
       if (self$verbose) {
         msg <- sprintf(
-          "Creating new annotation matrix array with index [%s] at '%s'",
+          "Creating new %s with index [%s] at '%s'",
+          self$class(),
           paste0(index_cols, collapse = ", "),
           self$uri
         )

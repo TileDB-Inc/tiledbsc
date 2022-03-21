@@ -12,10 +12,8 @@ SCDataset <- R6::R6Class(
   public = list(
     #' @field scgroups Named list of [`SCGroup`]s in the dataset
     scgroups = list(),
-
-    #' @field commandsArray SeuratCommand history, persisted to storage for
-    #'   later readback
-    commandsArray = NULL,
+    #' @field misc Named list of miscellaneous objects.
+    misc = list(),
 
     #' @description Create a new SCDataset object. The existing array group is
     #'   opened at the specified array `uri` if one is present, otherwise a new
@@ -32,16 +30,7 @@ SCDataset <- R6::R6Class(
       uri,
       scgroup_uris = NULL,
       verbose = TRUE) {
-
-      if (missing(uri)) {
-        stop("A `uri` for the SCDataset must be specified")
-      }
-      self$uri <- uri
-      self$verbose <- verbose
-
-      if (!private$group_exists()) {
-        private$create_group()
-      }
+      private$tiledb_group_initialize(uri, verbose)
 
       # Collect user-specified and auto-discovered scgroup URIs
       scgroup_uris <- c(
@@ -56,13 +45,22 @@ SCDataset <- R6::R6Class(
         self$scgroups <- scgroups
       }
 
-      self$commandsArray <- CommandsArray$new(
-        uri = file_path(self$uri, "commands"),
+      self$misc <- TileDBGroup$new(
+        uri = file_path(self$uri, "misc"),
         verbose = self$verbose
       )
 
-      return(self)
+      # Special handling of Seurat commands array
+      if ("commands" %in% names(self$misc$arrays)) {
+        self$misc$arrays$commands <- CommandsArray$new(
+          uri = self$misc$arrays$commands$uri,
+          verbose = self$verbose
+        )
+      }
+
+      self
     },
+
 
     #' @description Convert a Seurat object to a TileDB-backed `sc_dataset`.
     #'
@@ -121,10 +119,19 @@ SCDataset <- R6::R6Class(
       if (!is_empty(commandNames)) {
         namedListOfCommands <- lapply(commandNames, SeuratObject::Command,  object=object)
         names(namedListOfCommands) <- commandNames
-        self$commandsArray$from_named_list_of_commands(namedListOfCommands)
+
+        commandsArray <- CommandsArray$new(
+          uri = file_path(self$misc$uri, "commands"),
+          verbose = self$verbose
+        )
+        commandsArray$from_named_list_of_commands(namedListOfCommands)
+        self$misc$arrays[["commands"]] <- commandsArray
       }
 
-      if (self$verbose) message("Finished converting Seurat object to TileDB")
+      if (self$verbose) {
+        msg <- sprintf("Finished converting Seurat object to %s", self$class())
+        message(msg)
+      }
     },
 
     #' @description Convert to a [SeuratObject::Seurat] object.
@@ -175,8 +182,10 @@ SCDataset <- R6::R6Class(
       }
 
       # command history
-      namedListOfCommands <- self$commandsArray$to_named_list_of_commands()
-      object@commands <- namedListOfCommands
+      if ("commands" %in% names(self$misc$arrays)) {
+        commands_array <- self$misc$arrays$commands
+        object@commands <- commands_array$to_named_list_of_commands()
+      }
 
       return(object)
     },
@@ -185,6 +194,27 @@ SCDataset <- R6::R6Class(
     #' @return A vector of URIs for each [`SCGroup`] in the dataset.
     scgroup_uris = function() {
       vapply(self$scgroups, function(x) x$uri, FUN.VALUE = character(1L))
+    }
+  ),
+
+  private = list(
+
+    # Override to include SCGroups using `scgroup_uris`
+    format_groups = function() {
+      uris <- self$scgroup_uris()
+      if (!is_empty(uris)) {
+        remote <- string_starts_with(uris, "s3://") | string_starts_with(uris, "tiledb://")
+        names(uris) <- ifelse(remote, paste0(names(uris), "*"), names(uris))
+        cat("  scgroups:", string_collapse(names(uris)), "\n")
+      }
+    },
+
+    group_print = function() {
+      cat("  uri:", self$uri, "\n")
+      if (self$group_exists()) {
+        private$format_arrays()
+        private$format_groups()
+      }
     }
   )
 )
