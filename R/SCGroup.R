@@ -200,6 +200,11 @@ SCGroup <- R6::R6Class(
       check_matrix = FALSE,
       ...) {
 
+      stopifnot(
+        "Creation of a Seurat Assay requires either 'counts' or 'data'" =
+          any(layers %in% c("counts", "data"))
+      )
+
       layers <- private$check_layers(layers)
       assay_mats <- private$get_assay_matrices(layers)
 

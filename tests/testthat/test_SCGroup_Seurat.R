@@ -71,6 +71,16 @@ test_that("Seurat Assay can be recreated from an existing SCGroup", {
   )
 })
 
+test_that("Individual layers can be retrieved from an existing SCGroup", {
+  scgroup <<- SCGroup$new(uri = tdb_uri, verbose = TRUE)
+  expect_true(inherits(scgroup$to_seurat_assay(layers = "counts"), "Assay"))
+  expect_true(inherits(scgroup$to_seurat_assay(layers = "data"), "Assay"))
+  expect_error(
+    scgroup$to_seurat_assay(layers = "scale.data"),
+    "Creation of a Seurat Assay requires either 'counts' or 'data'"
+  )
+})
+
 test_that("obs and var are created when even no annotations are present", {
   uri <- withr::local_tempdir("assay-with-no-annotations")
 
