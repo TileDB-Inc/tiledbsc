@@ -24,7 +24,6 @@ test_that("AssayMatrix object can be created from a dgCMatrix", {
 test_that("matrices can be added to an AssayMatrixGroup", {
   uri <- withr::local_tempdir("assay-matrix-group")
   mat <- Seurat::GetAssayData(pbmc_small[["RNA"]], "counts")
-  fs::dir_delete(uri)
 
   assaymats <- AssayMatrixGroup$new(uri = uri, dimension_name = c("obs_id", "var_id"))
   expect_length(assaymats$arrays, 0)
