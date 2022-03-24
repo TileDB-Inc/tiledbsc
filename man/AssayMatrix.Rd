@@ -10,8 +10,8 @@ that share the same dimensions and non-empty coordinates.
 
 Used for the \code{X} field of \code{\link{SCGroup}}.
 }
-\section{Super class}{
-\code{\link[tiledbsc:TileDBArray]{tiledbsc::TileDBArray}} -> \code{AssayMatrix}
+\section{Super classes}{
+\code{\link[tiledbsc:TileDBArray]{tiledbsc::TileDBArray}} -> \code{\link[tiledbsc:AnnotationArray]{tiledbsc::AnnotationArray}} -> \code{AssayMatrix}
 }
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
@@ -136,7 +136,6 @@ first layer is returned.}
 }
 \subsection{Returns}{
 A \code{\link[Matrix:dgTMatrix-class]{Matrix::dgTMatrix}}.
-more information.
 }
 }
 \if{html}{\out{<hr>}}
