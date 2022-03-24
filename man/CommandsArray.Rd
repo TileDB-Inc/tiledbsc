@@ -11,8 +11,8 @@ Storage for SeuratCommand
 \details{
 TileDB array with options for storing SeuratCommand objects.
 }
-\section{Super class}{
-\code{\link[tiledbsc:TileDBArray]{tiledbsc::TileDBArray}} -> \code{CommandsArray}
+\section{Super classes}{
+\code{\link[tiledbsc:TileDBArray]{tiledbsc::TileDBArray}} -> \code{\link[tiledbsc:AnnotationArray]{tiledbsc::AnnotationArray}} -> \code{CommandsArray}
 }
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}

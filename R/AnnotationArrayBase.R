@@ -14,8 +14,8 @@ AnnotationArray <- R6::R6Class(
       )
     },
 
-    # @description Create an empty TileDB array suitable storing aligned
-    # annotation/assay data sparse arrays with 1 or 2 string dimensions.
+    # @description Create an empty TileDB array suitable for storing aligned
+    # annotation/assay data as sparse arrays with 1 or 2 string dimensions.
     # @param x A [`data.frame`]
     # @param index_cols Character vector with column names to use as index
     # @param cell_order,tile_order Configure the TileDB array's global cell
