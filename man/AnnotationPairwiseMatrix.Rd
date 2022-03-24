@@ -14,7 +14,7 @@ columns aligned to either the observations or features of \code{X}
 (\code{\link{AssayMatrix}}).
 }
 \section{Super classes}{
-\code{\link[tiledbsc:TileDBArray]{tiledbsc::TileDBArray}} -> \code{\link[tiledbsc:AnnotationMatrix]{tiledbsc::AnnotationMatrix}} -> \code{AnnotationPairwiseMatrix}
+\code{\link[tiledbsc:TileDBArray]{tiledbsc::TileDBArray}} -> \code{\link[tiledbsc:AnnotationArray]{tiledbsc::AnnotationArray}} -> \code{AnnotationPairwiseMatrix}
 }
 \section{Methods}{
 \subsection{Public methods}{

@@ -7,7 +7,7 @@
 
 AnnotationDataframe <- R6::R6Class(
   classname = "AnnotationDataframe",
-  inherit = TileDBArray,
+  inherit = AnnotationArray,
 
   public = list(
     #' @field uri URI of the TileDB array
@@ -60,48 +60,6 @@ AnnotationDataframe <- R6::R6Class(
         df[setdiff(colnames(df), dimname)],
         row.names = df[[dimname]]
       )
-    }
-  ),
-
-  private = list(
-
-    # Create an empty TileDB array suitable for storing annotation data.
-    create_empty_array = function(
-      x,
-      index_col,
-      cell_order = "ROW_MAJOR",
-      tile_order = "ROW_MAJOR",
-      capacity = 10000) {
-
-      if (self$verbose) {
-        msg <- sprintf(
-          "Creating new %s array with index [%s] at '%s'",
-          self$class(),
-          index_col,
-          self$uri
-        )
-        message(msg)
-      }
-      tiledb::fromDataFrame(
-        obj = x,
-        uri = self$uri,
-        col_index = index_col,
-        cell_order = cell_order,
-        tile_order = tile_order,
-        capacity = capacity,
-        mode = "schema_only"
-      )
-    },
-
-    # @description Ingest annotation data into the TileDB array.
-    # @param x A [`data.frame`] containing annotation data
-    ingest_data = function(x) {
-      if (self$verbose) {
-        message("Ingesting annotation data into ", self$uri)
-      }
-      tdb_array <- tiledb::tiledb_array(self$uri, query_type = "WRITE")
-      tdb_array[] <- x
-      tiledb::tiledb_array_close(tdb_array)
     }
   )
 )

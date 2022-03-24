@@ -7,7 +7,7 @@
 
 AnnotationMatrix <- R6::R6Class(
   classname = "AnnotationMatrix",
-  inherit = TileDBArray,
+  inherit = AnnotationArray,
 
   public = list(
     #' @field uri URI of the TileDB array
@@ -57,68 +57,6 @@ AnnotationMatrix <- R6::R6Class(
       rownames(mat) <- df[[index_col]]
 
       return(mat)
-    }
-  ),
-
-  private = list(
-
-    # @description Create an empty TileDB array suitable for storing aligned
-    # matrix annotation data.
-    # @param x A [`data.frame`]
-    # @param index_cols Character vector with column name(s) to use for the
-    # TileDB array's dimensions
-    # @param cell_order,tile_order Configure the TileDB array's global cell
-    # ordering by specifying the tile (default: `"ROW_MAJOR"`) and cell
-    # (default: `"ROW_MAJOR"`) ordering. See
-    # [the docs](https://docs.tiledb.com/main/basic-concepts/terminology) for
-    #' more information.
-    # @param capacity Capacity of sparse fragments (default: 10000)
-    create_empty_array = function(
-      x,
-      index_cols,
-      cell_order = "ROW_MAJOR",
-      tile_order = "ROW_MAJOR",
-      capacity = 10000) {
-
-      stopifnot(
-        "Index column(s) must match columns in the data frame" = index_cols %in% colnames(x)
-      )
-      if (self$verbose) {
-        msg <- sprintf(
-          "Creating new %s with index [%s] at '%s'",
-          self$class(),
-          paste0(index_cols, collapse = ", "),
-          self$uri
-        )
-        message(msg)
-      }
-      tiledb::fromDataFrame(
-        obj = x,
-        uri = self$uri,
-        col_index = index_cols,
-        cell_order = cell_order,
-        tile_order = tile_order,
-        capacity = capacity,
-        mode = "schema_only"
-      )
-    },
-
-    # @description Ingest annotation data into the TileDB array.
-    # @param x A [`data.frame`] containing annotation data
-    ingest_data = function(x) {
-      if (self$verbose) {
-        message("Ingesting annotation matrix data into ", self$uri)
-      }
-      tdb_array <- tiledb::tiledb_array(self$uri, query_type = "WRITE")
-      tdb_array[] <- x
-      tiledb::tiledb_array_close(tdb_array)
-    },
-
-    validate_matrix = function(x) {
-      stopifnot(
-        "Annotation data must be a matrix" = is_matrix(x),
-        "Annotation matrix must have defined dim names" = has_dimnames(x)
-      )
     }
   )
 )

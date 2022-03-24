@@ -30,7 +30,7 @@ SCDataset <- R6::R6Class(
       uri,
       scgroup_uris = NULL,
       verbose = TRUE) {
-      private$tiledb_group_initialize(uri, verbose)
+      super$initialize(uri, verbose)
 
       # Collect user-specified and auto-discovered scgroup URIs
       scgroup_uris <- c(

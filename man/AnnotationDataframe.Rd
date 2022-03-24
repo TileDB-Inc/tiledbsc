@@ -13,8 +13,8 @@ Base class for data frames with rows aligned to the observations or features
 of an \code{\link{SCGroup}}. Used to store a heterogeneous collection of
 annotations/measurements.
 }
-\section{Super class}{
-\code{\link[tiledbsc:TileDBArray]{tiledbsc::TileDBArray}} -> \code{AnnotationDataframe}
+\section{Super classes}{
+\code{\link[tiledbsc:TileDBArray]{tiledbsc::TileDBArray}} -> \code{\link[tiledbsc:AnnotationArray]{tiledbsc::AnnotationArray}} -> \code{AnnotationDataframe}
 }
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}

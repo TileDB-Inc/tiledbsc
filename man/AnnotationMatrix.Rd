@@ -12,8 +12,8 @@ Single-cell Annotation Matrix
 Base class for matrix-like data with rows aligned to the observations or
 features of an \code{\link{SCGroup}}.
 }
-\section{Super class}{
-\code{\link[tiledbsc:TileDBArray]{tiledbsc::TileDBArray}} -> \code{AnnotationMatrix}
+\section{Super classes}{
+\code{\link[tiledbsc:TileDBArray]{tiledbsc::TileDBArray}} -> \code{\link[tiledbsc:AnnotationArray]{tiledbsc::AnnotationArray}} -> \code{AnnotationMatrix}
 }
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
@@ -82,7 +82,6 @@ Retrieve the annotation data from TileDB
 
 \subsection{Returns}{
 A \code{\link{matrix}}
-more information.
 }
 }
 \if{html}{\out{<hr>}}

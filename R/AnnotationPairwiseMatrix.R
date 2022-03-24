@@ -8,7 +8,7 @@
 
 AnnotationPairwiseMatrix <- R6::R6Class(
   classname = "AnnotationPairwiseMatrix",
-  inherit = AnnotationMatrix,
+  inherit = AnnotationArray,
 
   public = list(
 
