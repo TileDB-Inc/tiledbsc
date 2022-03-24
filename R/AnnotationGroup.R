@@ -19,7 +19,7 @@ AnnotationGroup <- R6::R6Class(
     #' arrays.
     #' @param verbose Print status messages
     initialize = function(uri, dimension_name = NULL, verbose = TRUE) {
-      private$tiledb_group_initialize(uri, verbose)
+      super$initialize(uri, verbose)
       self$dimension_name <- dimension_name
       self
     }

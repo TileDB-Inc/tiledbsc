@@ -46,7 +46,7 @@ SCGroup <- R6::R6Class(
     initialize = function(
       uri,
       verbose = TRUE) {
-      private$tiledb_group_initialize(uri, verbose)
+      super$initialize(uri, verbose)
 
       if ("obs" %in% names(self$arrays)) {
         self$obs <- self$get_array("obs")
