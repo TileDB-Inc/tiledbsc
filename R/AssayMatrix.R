@@ -12,7 +12,7 @@
 
 AssayMatrix <- R6::R6Class(
   classname = "AssayMatrix",
-  inherit = TileDBArray,
+  inherit = AnnotationArray,
 
   public = list(
     #' @field uri URI of the TileDB array
@@ -105,38 +105,6 @@ AssayMatrix <- R6::R6Class(
   ),
 
   private = list(
-
-    # @description Create an empty TileDB array suitable for storing pixel
-    # data.
-    # @param x A [`data.frame`]
-    # @param index_cols Character vector with column names to use as index
-    # @param cell_order,tile_order Configure the TileDB array's global cell
-    # ordering by specifying the tile (default: `"ROW_MAJOR"`) and cell
-    # (default: `"ROW_MAJOR"`) ordering. See
-    # [the docs](https://docs.tiledb.com/main/basic-concepts/terminology) for
-    #' more information.
-    # @param capacity Capacity of sparse fragments (default: 10000)
-    create_empty_array = function(
-      x,
-      index_cols,
-      cell_order = "ROW_MAJOR",
-      tile_order = "ROW_MAJOR",
-      capacity = 10000) {
-      if (self$verbose) {
-        message(
-          sprintf("Creating new %s at '%s'", self$class(), self$uri)
-        )
-      }
-      tiledb::fromDataFrame(
-        obj = x,
-        uri = self$uri,
-        col_index = index_cols,
-        cell_order = cell_order,
-        tile_order = tile_order,
-        capacity = capacity,
-        mode = "schema_only"
-      )
-    },
 
     # @description Ingest assay data into the TileDB array.
     # @param x A [`data.frame`] containing the assay data.
