@@ -1,7 +1,10 @@
 Package: tiledbsc
 Type: Package
-Title: TileDB-based Single Cell Tools
-Description: A collection of experimental functions for working with single cell data using TileDB.
+Title: TileDB Single Cell API
+Description: Store and retrieve single cell data using TileDB and the on-disk
+  format proposed in the Unified Single Cell Data Model and API. Users can
+  import from and export to in-memory formats used by popular toolchains like
+  Seurat and Bioconductor SingleCellExperiment.
 Version: 0.0.0.9037
 Authors@R: c(
     person(given = "Aaron",
