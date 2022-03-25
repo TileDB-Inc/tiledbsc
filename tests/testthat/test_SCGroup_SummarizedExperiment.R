@@ -3,7 +3,7 @@
 test_that("a SummarizedExperiment can be created from an existing SCGroup", {
   uri <- file.path(withr::local_tempdir(), "scgroup")
 
-  assay <- Seurat::GetAssay(pbmc_small, "RNA")
+  assay <- pbmc_small[["RNA"]]
   scgroup <- SCGroup$new(uri = uri)
   scgroup$from_seurat_assay(assay, obs = pbmc_small[[]])
 

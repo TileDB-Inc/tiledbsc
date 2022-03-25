@@ -83,7 +83,7 @@ SCDataset <- R6::R6Class(
 
       assays <- SeuratObject::Assays(object)
       for (assay in assays) {
-        assay_object <- Seurat::GetAssay(object, assay)
+        assay_object <- object[[assay]]
         assay_uri <- file_path(self$uri, paste0("scgroup_", assay))
         scgroup <- SCGroup$new(assay_uri, verbose = self$verbose)
         scgroup$from_seurat_assay(assay_object, obs = object[[]])
@@ -93,7 +93,7 @@ SCDataset <- R6::R6Class(
       reductions <- SeuratObject::Reductions(object)
       if (!is_empty(reductions)) {
         for (reduction in reductions) {
-          reduction_object <- Seurat::Reductions(object, slot = reduction)
+          reduction_object <- SeuratObject::Reductions(object, slot = reduction)
           assay <- SeuratObject::DefaultAssay(reduction_object)
           self$scgroups[[assay]]$add_seurat_dimreduction(
             object = reduction_object,
@@ -146,7 +146,7 @@ SCDataset <- R6::R6Class(
       # just take the first scgroup's obs metadata
       obs_df <- self$scgroups[[1]]$obs$to_dataframe()
 
-      object <- Seurat::CreateSeuratObject(
+      object <- SeuratObject::CreateSeuratObject(
         counts = assays[[1]],
         project = project,
         meta.data = obs_df

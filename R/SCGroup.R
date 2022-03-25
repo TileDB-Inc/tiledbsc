@@ -406,7 +406,7 @@ SCGroup <- R6::R6Class(
       assay_obj <- self$to_seurat_assay()
       obs_df <- self$obs$to_dataframe()[colnames(assay_obj), , drop = FALSE]
 
-      Seurat::CreateSeuratObject(
+      SeuratObject::CreateSeuratObject(
         counts = assay_obj,
         project = project,
         meta.data = obs_df

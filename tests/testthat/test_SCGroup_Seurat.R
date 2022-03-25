@@ -1,6 +1,6 @@
 setup({
   tdb_uri <<- file.path(tempdir(), "test-scgroup")
-  assay1 <<- Seurat::GetAssay(pbmc_small, "RNA")
+  assay1 <<- pbmc_small[["RNA"]]
 })
 
 teardown({
@@ -85,7 +85,7 @@ test_that("obs and var are created when even no annotations are present", {
   uri <- withr::local_tempdir("assay-with-no-annotations")
 
   assay <- SeuratObject::CreateAssayObject(
-    counts = Seurat::GetAssayData(pbmc_small[["RNA"]], "counts")
+    counts = SeuratObject::GetAssayData(pbmc_small[["RNA"]], "counts")
   )
   expect_true(is_empty(assay[[]]))
   SeuratObject::Key(assay) <- "RNA"
@@ -180,8 +180,11 @@ test_that("creation from a Seurat Assay without scale.data", {
 test_that("an assay with scale.data containing all features", {
   uri <- withr::local_tempdir()
 
-  SeuratObject::VariableFeatures(assay1) <- character()
-  assay1 <- Seurat::ScaleData(assay1)
+  # create a seurat object containing on
+  object1 <- pbmc_small[SeuratObject::VariableFeatures(pbmc_small),]
+  SeuratObject::VariableFeatures(object1) <- character()
+  assay1 <- object1[["RNA"]]
+
   expect_identical(
     dim(SeuratObject::GetAssayData(assay1, "counts")),
     dim(SeuratObject::GetAssayData(assay1, "scale.data"))
@@ -234,7 +237,7 @@ test_that("an assay with empty feature metdata can be converted", {
   uri <- withr::local_tempdir("assay-without-feature-metadata")
 
   assay <- SeuratObject::CreateAssayObject(
-    counts = Seurat::GetAssayData(pbmc_small[["RNA"]], "counts")
+    counts = SeuratObject::GetAssayData(pbmc_small[["RNA"]], "counts")
   )
   SeuratObject::Key(assay) <- "RNA"
   expect_true(is_empty(assay[[]]))
