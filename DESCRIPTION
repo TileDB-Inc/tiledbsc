@@ -28,7 +28,6 @@ Imports:
     methods,
     Matrix,
     tiledb (>= 0.11.0.16),
-    Seurat,
     SeuratObject,
     jsonlite,
     glue,
