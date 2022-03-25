@@ -2,10 +2,7 @@ test_that("graph data can be stored and retrieved", {
   uri <- withr::local_tempdir("test-scgroup-graph")
   scgroup <- SCGroup$new(uri = uri)
 
-  scgroup$from_seurat_assay(
-    Seurat::GetAssay(pbmc_small, "RNA"),
-    obs = pbmc_small[[]]
-  )
+  scgroup$from_seurat_assay(pbmc_small[["RNA"]], obs = pbmc_small[[]])
 
   # obsp/varp are empty
   expect_length(scgroup$obsp$arrays, 0L)

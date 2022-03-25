@@ -1,6 +1,6 @@
 setup({
   tdb_uri <<- file.path(tempdir(), "test-scgroup")
-  assay1 <<- Seurat::GetAssay(pbmc_small, "RNA")
+  assay1 <<- pbmc_small[["RNA"]]
 })
 
 teardown({
