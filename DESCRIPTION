@@ -24,6 +24,9 @@ Authors@R: c(
     person(given = "TileDB, Inc.",
            role = c("cph", "fnd"))
     )
+URL: https://github.com/TileDB-Inc/tiledbsc,
+    https://github.com/single-cell-data/matrix-api
+BugReports: https://github.com/TileDB-Inc/tiledbsc/issues
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
