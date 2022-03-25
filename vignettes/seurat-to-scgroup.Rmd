@@ -22,7 +22,7 @@ options(max.print = 500)
 library(tiledbsc)
 library(fs)
 library(tiledb)
-library(Seurat)
+library(SeuratObject)
 
 data_dir <- file.path(tempdir(), "pbmc_small")
 dir.create(data_dir, showWarnings = FALSE)
@@ -30,7 +30,7 @@ dir.create(data_dir, showWarnings = FALSE)
 
 ## Overview
 
-This vignette will cover the creation of an **sc_dataset** from a `Seurat` object. 
+This vignette will cover the creation of an **sc_dataset** from a `Seurat` object.
 
 ## Load data
 
@@ -88,13 +88,13 @@ scgroup <- SCGroup$new(uri = file.path(tempdir(), "sc_group"))
 fs::dir_tree(scgroup$uri)
 ```
 
-Then we'll pass `RNA` assay from `pbmc_small` to the `from_seurat_assay()` method of the `SCGroup` class. 
+Then we'll pass `RNA` assay from `pbmc_small` to the `from_seurat_assay()` method of the `SCGroup` class.
 
 *Note: Because cell-level metadata is stored in the parent `Seurat` object, we need to provide this data separately.*
 
 ```{r}
 scgroup$from_seurat_assay(
-  object = GetAssay(pbmc_small, assay = "RNA"),
+  object = pbmc_small[["RNA"]],
   obs = pbmc_small[[]]
 )
 ```
