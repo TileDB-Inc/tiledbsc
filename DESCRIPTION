@@ -31,7 +31,6 @@ Imports:
     tiledb (>= 0.11.0.16),
     Seurat,
     SeuratObject,
-    png,
     withr,
     jsonlite,
     glue,
