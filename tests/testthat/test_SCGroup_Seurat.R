@@ -180,8 +180,11 @@ test_that("creation from a Seurat Assay without scale.data", {
 test_that("an assay with scale.data containing all features", {
   uri <- withr::local_tempdir()
 
-  SeuratObject::VariableFeatures(assay1) <- character()
-  assay1 <- Seurat::ScaleData(assay1)
+  # create a seurat object containing on
+  object1 <- pbmc_small[SeuratObject::VariableFeatures(pbmc_small),]
+  SeuratObject::VariableFeatures(object1) <- character()
+  assay1 <- object1[["RNA"]]
+
   expect_identical(
     dim(SeuratObject::GetAssayData(assay1, "counts")),
     dim(SeuratObject::GetAssayData(assay1, "scale.data"))
