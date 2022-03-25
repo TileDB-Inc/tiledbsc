@@ -78,6 +78,7 @@ AnnotationPairwiseMatrix <- R6::R6Class(
 
     #' @description Read annotation data from TileDB into Seurat Graph
     #' @return A [`SeuratObject::Graph-class`]
+    #' @importFrom SeuratObject DefaultAssay
     to_seurat_graph = function() {
       assay <- self$get_metadata(key = "assay_used")
       object <- SeuratObject::as.Graph(self$to_sparse_matrix())
