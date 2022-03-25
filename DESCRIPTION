@@ -42,7 +42,6 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2
 Suggests:
     fs,
-    hdf5r,
     rmarkdown,
     knitr,
     testthat (>= 3.0.0),
