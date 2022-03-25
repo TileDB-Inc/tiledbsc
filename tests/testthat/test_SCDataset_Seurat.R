@@ -66,8 +66,8 @@ test_that("SCDataset can be created from a Seurat object", {
   )
 
   # check for commands
-  command_names <- Seurat::Command(object=pbmc_small)
-  command_names2 <- Seurat::Command(object=pbmc_small2)
+  command_names <- SeuratObject::Command(object=pbmc_small)
+  command_names2 <- SeuratObject::Command(object=pbmc_small2)
   expect_identical(command_names, command_names2)
 
   # calling from_seurat again will update the existing data
@@ -84,7 +84,7 @@ test_that("a dataset containing an assay with empty cells is fully retrieved", {
   cell_ids <- SeuratObject::Cells(pbmc_small)
 
   # remove all counts for a subset of cells
-  counts2 <- Seurat::GetAssayData(pbmc_small[["RNA"]], "counts")
+  counts2 <- SeuratObject::GetAssayData(pbmc_small[["RNA"]], "counts")
   counts2[, 1:10] <- 0
   pbmc_small[["RNA2"]] <- SeuratObject::CreateAssayObject(counts = counts2)
 

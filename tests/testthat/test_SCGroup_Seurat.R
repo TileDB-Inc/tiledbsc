@@ -85,7 +85,7 @@ test_that("obs and var are created when even no annotations are present", {
   uri <- withr::local_tempdir("assay-with-no-annotations")
 
   assay <- SeuratObject::CreateAssayObject(
-    counts = Seurat::GetAssayData(pbmc_small[["RNA"]], "counts")
+    counts = SeuratObject::GetAssayData(pbmc_small[["RNA"]], "counts")
   )
   expect_true(is_empty(assay[[]]))
   SeuratObject::Key(assay) <- "RNA"
@@ -234,7 +234,7 @@ test_that("an assay with empty feature metdata can be converted", {
   uri <- withr::local_tempdir("assay-without-feature-metadata")
 
   assay <- SeuratObject::CreateAssayObject(
-    counts = Seurat::GetAssayData(pbmc_small[["RNA"]], "counts")
+    counts = SeuratObject::GetAssayData(pbmc_small[["RNA"]], "counts")
   )
   SeuratObject::Key(assay) <- "RNA"
   expect_true(is_empty(assay[[]]))
