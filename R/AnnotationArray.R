@@ -1,5 +1,6 @@
 #' Base class for Annotation Arrays
 #'
+#' @importFrom R6 R6Class
 #' @export
 AnnotationArray <- R6::R6Class(
   classname = "AnnotationArray",
