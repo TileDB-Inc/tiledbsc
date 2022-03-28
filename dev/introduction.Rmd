@@ -1,0 +1,414 @@
+---
+title: "Introduction"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Setup
+
+```{r setup}
+options(max.print = 500)
+
+devtools::load_all()
+library(fs)
+library(tiledb)
+library(Seurat)
+library(SummarizedExperiment)
+library(SingleCellExperiment)
+```
+
+## Overview
+
+The [*matrix-api*][matrix-api] [spec][matrix-api-spec] provides a detailed description of the data model that *tiledbsc* adheres to. Briefly the primary components of this model are:
+
+1. the *sc_group*, which contains one or feature/observation matrices for a set of cells accompanyied by feature- and observation-level metadata
+2. the *sc_dataset*, which is a collection of one or more named *sc_groups*
+
+This vignette provides an overview of how the *tiledbsc* package's R6 classes that implement the *matrix-api* specification can be used to convert a `Seurat` object into a *sc_dataset*,
+
+This vignette will cover the creation of an **sc_dataset** from a `Seurat` object and provide an overview of the package's interface for
+
+## Load data
+
+Load the subsetted 10X genomics [PBMC dataset](https://mojaveazure.github.io/seurat-object/reference/pbmc_small.html) provided by [SeuratObject][].
+
+```{r}
+data("pbmc_small", package = "SeuratObject")
+pbmc_small
+```
+
+This dataset is a convenient starting point for demonstrating conversion functionality because it already contains raw, normalized, and scaled expression data:
+
+```{r}
+head(SeuratObject::GetAssayData(pbmc_small, "counts"))
+head(SeuratObject::GetAssayData(pbmc_small, "data"))
+head(SeuratObject::GetAssayData(pbmc_small, "scale.data"))
+```
+
+
+Cell-level (*obs*ervation) metad ata:
+```{r}
+head(pbmc_small[[]])
+```
+
+Feature-level (*var*iable) metadata:
+
+```{r}
+head(pbmc_small[["RNA"]][[]])
+```
+
+A list of variable features:
+
+```{r}
+SeuratObject::VariableFeatures(pbmc_small)
+```
+
+PCA and tSNE dimensional reduction results:
+
+```{r}
+SeuratObject::Reductions(pbmc_small)
+```
+
+A shared nearest neighbor graph:
+
+```{r}
+SeuratObject::Graphs(pbmc_small)
+```
+
+A log of commands of performed:
+
+```{r}
+SeuratObject::Command(pbmc_small)
+```
+
+## Convert a `Seurat` object to a TileDB-backed `sc_dataset`
+
+### Initialize the `SCDataset`
+
+The `SCDataset` class provides a method for converting an entire `Seurat` object to an `sc_dataset`. This is the recommended way to perform the conversion since it can handle multiple `Assay` objects and will (eventually) convert all of the standard slots that comprise a `Seurat` object.
+
+This first step is to create a new `SCDataset` object and provide a URI where the dataset should be created:
+
+```{r}
+uri <- "dev/pbmc_small_scdataset"
+if (tiledb_vfs_is_dir(uri)) tiledb_vfs_remove_dir(uri)
+
+scdataset <- SCDataset$new(uri = uri)
+```
+
+This indicates that no dataset currently exists at the URI specified and a new one should be created. At this point, `pbmc_small` contains only a TileDB group marker file, an empty metadata array, and an empty group for miscellaneous data.
+
+```{r}
+fs::dir_tree(scdataset$uri, recurse = 0)
+```
+
+### Ingest the `Seruat` object's data
+
+Next, we'll pass the entire `pbmc_small` object directly to `from_seurat()` and one `sc_group` will be created for each `Assay` object:
+
+```{r}
+scdataset$from_seurat(object = pbmc_small)
+```
+
+Examining the directory structure post-conversion, you can see the top-level `sc_dataset` directory now contains an `scgroup_RNA` sub-directory, corresponding to `pbmc_small`'s only assay, `"RNA"`:
+
+```{r}
+fs::dir_tree(scdataset$uri, recurse = 0)
+```
+
+Internally, the `SCGroup` class is used to convert each Seurat `Assay` object to an `sc_group`, which creates and populates the various sub-components, including:
+
+- the `counts`, `data`, and `scale.data` matrices are each stored in separate layer of the `X` group
+- the `data.frame` containing feature-level metadata is ingested into the `var` array
+
+Separately, any dimensional reductions and graphs are extracted and stored in corresponding `obsm`/`varm` and `obsp/varp`arrays, respectively.
+
+## Class Navigation
+
+Every *tiledbsc* class represents either a TileDB array or a TileDB *group* of arrays. The `SCDataset` class is the top-level class that contains a collection of `SCGroup` objects. Printing out `scdataset` reveals it contains a single `SCGroup` object called `"RNA"`.
+
+```{r}
+scdataset
+```
+
+Let's assign the `SCGroup` to a separate variable and examine its contents.
+
+```{r}
+scgroup <- scdataset$scgroups$RNA
+scgroup
+```
+
+Let's access the cell-level metadata by extracting the `obs` array:
+
+```{r}
+scgroup$obs
+```
+
+So the `obs` array contains a single dimension, `obs_id`, and a handful of attributes. This is a `AnnotationDataframe` object, which includes a method for reading the data into R as a `data.frame`:
+
+```{r}
+head(scgroup$obs$to_dataframe())
+```
+
+Note the the array's dimension becomes the data.frame's row names.
+
+## TileDB API
+
+### Helpers
+
+All of *tiledbsc*'s classes provide helper functions for interacting with the underlying TileDB arrays (and groups). Here are few of the most useful (demonstrated with the `assay_counts` array created above):
+
+Retrieve the URI:
+
+```{r}
+assay_counts$uri
+```
+
+Print the schema of an array:
+
+```{r}
+assay_counts$schema()
+```
+
+List the names of the array's dimensions (i.e., indexed columns)
+
+```{r}
+assay_counts$dimnames()
+```
+
+and attributes (i.e., non-indexed columns):
+
+```{r}
+assay_counts$attrnames()
+```
+
+Add and retrieve arbitrary key/value metadata:
+
+```{r}
+assay_counts$add_metadata(list(foo = "bar"))
+assay_counts$get_metadata("foo")
+```
+
+### TileDB Array API
+
+You can also use the `tiledb_array()` method to directly access the underlying arrays using the standard TileDB API, providing the full functionality of the [`tiledb`][tiledb-r] package.
+
+Let's create a `tiledb_array` object from the `assay_counts` array:
+
+```{r}
+obs_array <- scgroup$obs$tiledb_array(return_as = "tibble")
+class(obs_array)
+```
+
+We can now interact with `obs_array` as you would any `tiledb_array` object. For example, we can slice the array by cell ID:
+
+```{r}
+obs_array[c("ATTGCACTTGCTTT", "ATTGTAGATTCCCG"),]
+```
+
+And take advantage of TileDB's columnar format to retrieve only a subset of attributes:
+
+```{r}
+attrs(obs_array) <- c("nCount_RNA", "nFeature_RNA")
+obs_array[]
+```
+
+We can also include a set of query contions to retrieve only subset of cells that match our QC criteria:
+
+```{r}
+query_condition(obs_array) <- parse_query_condition(nFeature_RNA < 35)
+obs_array[]
+```
+
+
+### Assay Data
+
+The SCGroup's `X` field contains a group of arrays, one for each layer from the Seurat `Assay`:
+
+```{r}
+scgroup$X
+```
+
+Access a particular array by name:
+
+```{r}
+assay_counts <- scgroup$X$get_array("counts")
+assay_counts
+```
+
+Read in the assay data as a sparse matrix:
+
+```{r}
+assay_counts$to_matrix()[1:10, 1:5]
+```
+
+### Annotation Matrix
+
+Similar to `X`, `obsm`/`varm` and `obsp`/`varp` contain groups of arrays. For example, we can see `obsm` contains a couple of dimensional reductions:
+
+```{r}
+scgroup$obsm
+```
+
+Let's load the `obs`-aligned PCA results as a matrix by accessing the array directly from `obsm`'s named list of arrays':
+
+```{r}
+scgroup$obsm$arrays$dimreduction_pca$to_matrix()[1:5, 1:5]
+```
+
+## Mid-level Readers
+
+All of the array-based classes contain convenience methods for reading data from TileDB as a generic `data.frame` or `matrix`-like object, as seen in the examples above.
+
+Many of these classes also contain methods for converting into relevant *Seurat* or *Bioconductor* objects. For example, the `AnnotationPairwiseMatrix` class can be used to create a *Seurat* [`Graph`][seurat-graph]:
+
+```{r}
+graph_snn <- scgroup$obsp$arrays$graph_snn$to_seurat_graph()
+str(graph_snn)
+```
+
+Some of these conversions utilize multiple arrays. For example, a *Seurat* [`DimReduc`] object may contain both cell- and feature-aligned results. As such, the `DimReduc` conversion method belongs to `SCGroup`, which can search both the `obsm` and `varm` groups for corresponding results:
+
+```{r}
+scgroup$get_seurat_dimreduction(technique = "pca")
+```
+
+
+## High-level Readers
+
+The most common use case for *tiledbsc* is likely to be reading data from an `sc_dataset` into an appropriate in-memory format for analysis with *Seurat* or *Bioconductor*'s ecosystem.
+
+### Seurat Object
+
+To close the loop we can then read the on-disk `sc_dataset` back into memory as a `Seurat` object.
+
+```{r}
+pbmc_small2 <- scdataset$to_seurat(project = "SCDataset Example")
+pbmc_small2
+```
+
+Assays:
+
+```{r}
+SeuratObject::Assays(pbmc_small2)
+```
+
+Variable features:
+
+```{r}
+SeuratObject::VariableFeatures(pbmc_small2)
+```
+
+Dimensional reductions:
+
+```{r}
+SeuratObject::Reductions(pbmc_small2)
+```
+
+Graphs:
+
+```{r}
+SeuratObject::Graphs(pbmc_small2)
+```
+
+### Seurat Assay
+
+However, as seen above conversions can happen at multiple levels of the API. For example, we can convert directly to a *Seurat* `Assay` from `SCGroup`, and choose which layers to include:
+
+```{r}
+scgroup$to_seurat_assay(layers = "data")
+```
+
+### Bioconductor
+
+We can also convert the same `sc_dataset` to a Bioconductor [`SummarizedExperiment`][bioc-se] object.
+
+```{r}
+pbmc_se <- scgroup$to_summarized_experiment(layers = c("counts", "data"))
+pbmc_se
+```
+
+All specified layers are included in the `SummarizedExperiment` object's `assays` slot.
+
+```{r}
+assays(pbmc_se)
+```
+
+Feature-level annotations:
+
+```{r}
+rowData(pbmc_se)
+```
+
+Sample-level annotations:
+
+```{r}
+colData(pbmc_se)
+```
+
+
+We could also convert to a Bioconductor [`SingleCellExperiment`][bioc-sce] object. In addition to choose which layers to include, we can also rename them to match the *SingleCellExperiment*'s convention:
+
+```{r}
+pbmc_sce <- scgroup$to_single_cell_experiment(
+  layers = c(counts = "counts", logcounts = "data")
+)
+pbmc_sce
+```
+
+The resulting object is largely the same as the `SummarizedExperiment` object, but now includes the dimensional reduction results:
+
+```{r}
+reducedDims(pbmc_sce)
+# reducedDim(pbmc_sce, "pca")
+```
+
+## Remote Arrays
+
+Let's open an `sc_dataset` containing RNA counts from a dataset containing cord blood mononuclear cells (CBMCs).
+
+```{r}
+cbmc_scdataset <- SCDataset$new(
+  uri = "dev/data/cbmc_multimodal",
+  scgroup_uris = "s3://tiledb-aaron/demos/cbmc_multimodal/scgroup_ADT"
+)
+
+cbmc_scdataset
+```
+
+```{r}
+start <- Sys.time()
+system.time(cbmc <- cbmc_scdataset$to_seurat(project = "CBMC Multimodal"))
+difftime(Sys.time(), start)
+cbmc
+```
+
+## Session
+
+```{r}
+sessionInfo()
+```
+
+```{r cleanup, include=FALSE}
+tiledb::tiledb_vfs_remove_dir(data_dir)
+```
+
+<!-- links -->
+[tiledb-r]: https://tiledb-inc.github.io/TileDB-R/
+[SeuratObject]: https://cran.r-project.org/package=SeuratObject
+[matrix-api]: https://github.com/single-cell-data/matrix-api
+[matrix-api-spec]: https://github.com/single-cell-data/matrix-api/blob/main/specification.md
+[seurat-graph]: https://mojaveazure.github.io/seurat-object/reference/Graph-class.html
+[seurat-dimreduc]: https://mojaveazure.github.io/seurat-object/reference/DimReduc-class.html
+[bioc-se]: https://bioconductor.org/packages/release/bioc/html/SummarizedExperiment.html
+[bioc-sce]: https://bioconductor.org/packages/release/bioc/html/SingleCellExperiment.html
