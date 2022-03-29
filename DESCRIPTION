@@ -39,8 +39,6 @@ Imports:
     jsonlite,
     glue,
     utils
-Remotes:
-    tiledb-inc/tiledb-r
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2
 Suggests:
