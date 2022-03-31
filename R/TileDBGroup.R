@@ -68,6 +68,16 @@ TileDBGroup <- R6::R6Class(
       tiledb::tiledb_object_type(self$uri) == "GROUP"
     },
 
+    #' @description Return a [`tiledb_group`] object
+    #' @param ... Optional arguments to pass to `tiledb::tiledb_array()`
+    #' @return A [`tiledb::tiledb_group`] object.
+    tiledb_group = function(...) {
+      args <- list(...)
+      args$uri <- self$uri
+      args$query_type <- "READ"
+      do.call(tiledb::tiledb_group, args)
+    },
+
     #' @description List the TileDB objects within the group.
     #' @param type The type of object to list, either `"ARRAY"`, or `"GROUP"`.
     #' By default all object types are listed.

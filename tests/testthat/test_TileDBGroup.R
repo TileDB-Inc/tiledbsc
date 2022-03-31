@@ -14,6 +14,8 @@ test_that("a new TileDB group can be created", {
 test_that("arrays within a group can be discovered", {
   grp_uri <- withr::local_tempdir("new-group")
   grp <- TileDBGroup$new(uri = grp_uri, verbose = FALSE)
+  expect_is(grp$tiledb_group(), "tiledb_group")
+
 
   a1 <- create_empty_test_array(file.path(grp_uri, "a1"))
   a2 <- create_empty_test_array(file.path(grp_uri, "a2"))
