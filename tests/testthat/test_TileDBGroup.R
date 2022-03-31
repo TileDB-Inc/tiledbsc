@@ -16,14 +16,15 @@ test_that("arrays within a group can be discovered", {
   grp <- TileDBGroup$new(uri = grp_uri, verbose = FALSE)
   expect_is(grp$tiledb_group(), "tiledb_group")
 
+  objs <- grp$list_objects()
+  expect_is(objs, "data.frame")
+  expect_equal(nrow(objs), 0)
 
   a1 <- create_empty_test_array(file.path(grp_uri, "a1"))
   a2 <- create_empty_test_array(file.path(grp_uri, "a2"))
 
   objs <- grp$list_objects()
-  expect_is(objs, "data.frame")
-  # TODO: Change this back to 2 once TileDB supports group metadata
-  expect_equal(nrow(objs), 3)
+  expect_equal(nrow(objs), 2)
 })
 
 test_that("metadata can be set and retrieved from a group", {
@@ -32,5 +33,6 @@ test_that("metadata can be set and retrieved from a group", {
 
   md <- list(foo = "bar")
   grp$add_metadata(md)
-  expect_equal(grp$get_metadata(key = "foo"), "bar")
+
+  expect_equal(grp$get_metadata(key = "foo"), "bar", check.attributes = FALSE)
 })

@@ -19,10 +19,6 @@ TileDBGroup <- R6::R6Class(
       self$uri <- uri
       self$verbose <- verbose
 
-      # Until TileDB supports group metadata, we need to create an array
-      # to store the metadata.
-      private$metadata_uri <- file_path(self$uri, "__tiledb_group_metadata")
-
       if (self$group_exists()) {
         if (self$verbose) {
           message(
@@ -36,7 +32,6 @@ TileDBGroup <- R6::R6Class(
           )
         }
         private$create_group()
-        private$create_metadata_array()
       }
 
       # Create objects for each array URI (except the metadata array)
@@ -74,7 +69,6 @@ TileDBGroup <- R6::R6Class(
     tiledb_group = function(...) {
       args <- list(...)
       args$uri <- self$uri
-      args$query_type <- "READ"
       do.call(tiledb::tiledb_group, args)
     },
 
@@ -135,17 +129,16 @@ TileDBGroup <- R6::R6Class(
     #'   is not NULL.
     #' @return A list of metadata values.
     get_metadata = function(key = NULL, prefix = NULL) {
-      arr <- tiledb::tiledb_array(private$metadata_uri, query_type = "WRITE")
-      tiledb::tiledb_array_open(arr, "READ")
+      grp <- self$tiledb_group(type = "READ")
       if (!is.null(key)) {
-        metadata <- tiledb::tiledb_get_metadata(arr, key)
+        metadata <- tiledb::tiledb_group_get_metadata(grp, key)
       } else {
-        metadata <- tiledb::tiledb_get_all_metadata(arr)
+        metadata <- tiledb::tiledb_get_all_metadata(grp)
         if (!is.null(prefix)) {
           metadata <- metadata[string_starts_with(names(metadata), prefix)]
         }
       }
-      tiledb::tiledb_array_close(arr)
+      tiledb::tiledb_group_close(grp)
       return(metadata)
     },
 
@@ -158,34 +151,19 @@ TileDBGroup <- R6::R6Class(
         "Metadata must be a named list" = is_named_list(metadata)
       )
 
-      arr <- tiledb::tiledb_array(private$metadata_uri, query_type = "WRITE")
-      tiledb::tiledb_array_open(arr, "WRITE")
+      grp <- self$tiledb_group(type = "WRITE")
       mapply(
-        FUN = tiledb::tiledb_put_metadata,
+        FUN = tiledb::tiledb_group_put_metadata,
         key = paste0(prefix, names(metadata)),
-        val = metadata,
-        MoreArgs = list(arr = arr),
+        obj = metadata,
+        MoreArgs = list(grp = grp),
         SIMPLIFY = FALSE
       )
-      tiledb::tiledb_array_close(arr)
-      return(NULL)
+      tiledb::tiledb_group_close(grp)
     }
   ),
 
   private = list(
-    # @field URI of the array where group metadata is stored
-    # TODO: Remove once TileDB supports group metadata
-    metadata_uri = NULL,
-
-    # TODO: Remove once TileDB supports group metadata
-    create_metadata_array = function() {
-      dom <- tiledb::tiledb_domain(
-        dims = c(tiledb::tiledb_dim("d0", domain = c(0L, 1L), type = "INT32"))
-      )
-      attrs <- tiledb::tiledb_attr("a0", type = "INT32")
-      schema <- tiledb::tiledb_array_schema(domain = dom, attrs = attrs)
-      tiledb::tiledb_array_create(private$metadata_uri, schema)
-    },
 
     create_group = function() {
       if (self$verbose) {
