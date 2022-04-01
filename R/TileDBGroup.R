@@ -132,7 +132,7 @@ TileDBGroup <- R6::R6Class(
       if (!is.null(key)) {
         metadata <- tiledb::tiledb_group_get_metadata(grp, key)
       } else {
-        metadata <- private$get_all_metadata(grp)
+        metadata <- tiledb::tiledb_group_get_all_metadata(grp)
         if (!is.null(prefix)) {
           metadata <- metadata[string_starts_with(names(metadata), prefix)]
         }
@@ -195,23 +195,6 @@ TileDBGroup <- R6::R6Class(
         private$format_arrays()
         private$format_groups()
       }
-    },
-
-    # TODO: Remove once tiledb::tiledb_group_get_all_metadata() exists
-    get_all_metadata = function(group) {
-      stopifnot(inherits(group, "tiledb_group"))
-      n <- tiledb::tiledb_group_metadata_num(group)
-      md <- lapply(
-        seq_len(n) - 1,
-        FUN = tiledb::tiledb_group_get_metadata_from_index,
-        grp = group
-      )
-
-      # use key attribute as the name
-      setNames(
-        md,
-        vapply(md, FUN = attr, which = "key", FUN.VALUE = character(1L))
-      )
     }
   )
 )
