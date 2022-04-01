@@ -50,7 +50,7 @@ TileDBArray <- R6::R6Class(
       do.call(tiledb::tiledb_array, args)
     },
 
-    #' @description Retrieve metadata from a TileDB array.
+    #' @description Retrieve metadata from the TileDB array.
     #' @param key The name of the metadata attribute to retrieve.
     #' @param prefix Filter metadata using an optional prefix. Ignored if `key`
     #'   is not NULL.
