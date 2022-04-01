@@ -22,7 +22,7 @@ test_that("TileDBArray helper functions", {
   attr_cols <- setdiff(colnames(df), index_cols)
   expect_identical(tdb$attrnames(), attr_cols)
 
-  md <- list(foo = "bar", baz = "qux")
+  md <- list(baz = "qux", foo = "bar")
   tdb$add_metadata(md)
   expect_equal(tdb$get_metadata(key = "foo"), "bar")
   expect_equal(tdb$get_metadata(prefix = "foo"), md["foo"])

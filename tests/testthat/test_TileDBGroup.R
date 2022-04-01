@@ -31,7 +31,7 @@ test_that("metadata can be set and retrieved from a group", {
   grp_uri <- withr::local_tempdir("metadata-group")
   grp <- TileDBGroup$new(uri = grp_uri, verbose = TRUE)
 
-  md <- list(foo = "bar", baz = "qux")
+  md <- list(baz = "qux", foo = "bar")
   grp$add_metadata(md)
   expect_equivalent(grp$get_metadata(key = "foo"), "bar")
   expect_equivalent(grp$get_metadata(prefix = "foo"), md["foo"])
