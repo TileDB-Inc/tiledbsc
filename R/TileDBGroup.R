@@ -154,7 +154,7 @@ TileDBGroup <- R6::R6Class(
       mapply(
         FUN = tiledb::tiledb_group_put_metadata,
         key = paste0(prefix, names(metadata)),
-        obj = metadata,
+        val = metadata,
         MoreArgs = list(grp = grp),
         SIMPLIFY = FALSE
       )
