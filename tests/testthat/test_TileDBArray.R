@@ -26,5 +26,5 @@ test_that("TileDBArray helper functions", {
   md <- list(foo = "bar")
   tdb$add_metadata(md)
   expect_equal(tdb$get_metadata(key = "foo"), "bar")
-  expect_equal(tdb$get_metadata(prefix = "foo"), md)
+  expect_equal(tdb$get_metadata(), md)
 })

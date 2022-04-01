@@ -61,7 +61,8 @@ TileDBArray <- R6::R6Class(
       if (!is.null(key)) {
         metadata <- tiledb::tiledb_get_metadata(arr, key)
       } else {
-        metadata <- tiledb::tiledb_get_all_metadata(arr)
+        # coerce tiledb_metadata to list
+        metadata <- unclass(tiledb::tiledb_get_all_metadata(arr))
         if (!is.null(prefix)) {
           metadata <- metadata[string_starts_with(names(metadata), prefix)]
         }
