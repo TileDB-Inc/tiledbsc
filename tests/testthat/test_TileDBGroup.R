@@ -33,7 +33,7 @@ test_that("metadata can be set and retrieved from a group", {
 
   md <- list(foo = "bar", baz = "qux")
   grp$add_metadata(md)
-  expect_equal(grp$get_metadata(key = "foo"), "bar")
-  expect_equal(grp$get_metadata(prefix = "foo"), md["foo"])
-  expect_equal(grp$get_metadata(), md)
+  expect_equivalent(grp$get_metadata(key = "foo"), "bar")
+  expect_equivalent(grp$get_metadata(prefix = "foo"), md["foo"])
+  expect_equivalent(grp$get_metadata(), md)
 })

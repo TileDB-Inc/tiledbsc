@@ -29,7 +29,7 @@ test_that("Seurat Assay can be recreated from an existing SCGroup", {
   assay2 <- scgroup$to_seurat_assay()
 
   expect_s4_class(assay2, "Assay")
-  expect_equal(slot(assay2, "key"), slot(assay1, "key"))
+  expect_equivalent(slot(assay2, "key"), slot(assay1, "key"))
 
   # use feature/sample names to ensure objects being compared are sorted
   var_ids <- rownames(assay1)
