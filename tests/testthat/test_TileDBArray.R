@@ -1,5 +1,4 @@
 test_that("TileDBArray helper functions", {
-
   uri <- withr::local_tempdir(pattern = "test-array")
 
   expect_message(
@@ -23,8 +22,9 @@ test_that("TileDBArray helper functions", {
   attr_cols <- setdiff(colnames(df), index_cols)
   expect_identical(tdb$attrnames(), attr_cols)
 
-  md <- list(foo = "bar")
+  md <- list(foo = "bar", baz = "qux")
   tdb$add_metadata(md)
   expect_equal(tdb$get_metadata(key = "foo"), "bar")
+  expect_equal(tdb$get_metadata(prefix = "foo"), md["foo"])
   expect_equal(tdb$get_metadata(), md)
 })
