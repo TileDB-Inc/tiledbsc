@@ -36,7 +36,6 @@ TileDBGroup <- R6::R6Class(
 
       # Create objects for each array URI (except the metadata array)
       array_uris <- self$list_object_uris(type = "ARRAY")
-      array_uris <- array_uris[!grepl("__tiledb_group_metadata", array_uris)]
 
       if (!is_empty(array_uris)) {
         arrays <- private$get_existing_arrays(array_uris)
