@@ -12,7 +12,7 @@ Install the development version of the TileDB R package with group support:
 
 ```r
 remotes::install_github(
-  "tiledb-inc/tiledb-r#388",
+  "tiledb-inc/tiledb-r",
   configure.args = c(
     "--with-download=https://github.com/TileDB-Inc/TileDB/releases/download/2.8.0-rc0/tiledb-macos-x86_64-2.8.0-rc0-2296107.tar.gz"
   )
