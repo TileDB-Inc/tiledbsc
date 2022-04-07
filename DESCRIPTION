@@ -34,11 +34,13 @@ Imports:
     R6,
     methods,
     Matrix,
-    tiledb (>= 0.11.1),
+    tiledb (>= 0.11.1.1),
     SeuratObject,
     jsonlite,
     glue,
     utils
+Remotes:
+    tiledb-inc/tiledb-r@f3b7850
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2
 Suggests:
