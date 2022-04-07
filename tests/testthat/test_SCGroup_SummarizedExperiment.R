@@ -1,6 +1,7 @@
 # TODO: Add tests for creating an SCGroup from a SummarizedExperiment
 
 test_that("a SummarizedExperiment can be created from an existing SCGroup", {
+  skip_if_not_installed("SummarizedExperiment")
   uri <- file.path(withr::local_tempdir(), "scgroup")
 
   assay <- pbmc_small[["RNA"]]
@@ -46,6 +47,7 @@ test_that("a SummarizedExperiment can be created from an existing SCGroup", {
 
 
 test_that("a SingleCellExperiment can be created from an existing SCGroup", {
+  skip_if_not_installed("SummarizedExperiment")
   uri <- file.path(withr::local_tempdir(), "singlecellexperiment")
 
   # start with scdataset so the scgroup includes annot matrices
