@@ -25,7 +25,7 @@ var (AnnotationDataframe): 1D labeled array with row labels for X
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tiledbsc</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.0.9002</span>
       </span>
     </div>
 
@@ -339,7 +339,7 @@ default to the first <code>obsm/dimreduction_</code> array.</p></dd>
 
 </div><p></p><hr><a id="method-to_summarized_experiment"></a><div class="section">
 <h3 id="method-to-summarized-experiment-">Method <code>to_summarized_experiment()</code><a class="anchor" aria-label="anchor" href="#method-to-summarized-experiment-"></a></h3>
-<p>Convert to a <a href="https://rdrr.io/pkg/SummarizedExperiment/man/RangedSummarizedExperiment-class.html" class="external-link">SummarizedExperiment::SummarizedExperiment</a>
+<p>Convert to a SummarizedExperiment::SummarizedExperiment
 object.</p><div class="section">
 <h4 id="usage-7">Usage<a class="anchor" aria-label="anchor" href="#usage-7"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">SCGroup</span><span class="op">$</span><span class="fu">to_summarized_experiment</span><span class="op">(</span>layers <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"counts"</span>, <span class="st">"data"</span>, <span class="st">"scale.data"</span><span class="op">)</span><span class="op">)</span></code></pre></div><p></p></div>
@@ -363,7 +363,7 @@ of the layers vector.</p></dd>
 <h5 id="layers">Layers<a class="anchor" aria-label="anchor" href="#layers"></a></h5>
 
 
-<p>Note that <code><a href="https://rdrr.io/pkg/SummarizedExperiment/man/Assays-class.html" class="external-link">SummarizedExperiment::Assays()</a></code> requires that all assays share
+<p>Note that <code>SummarizedExperiment::Assays()</code> requires that all assays share
 identical dimensions, so the conversion will fail if <code>scale.data</code> created
 with a subset of features is included.</p>
 </div>
@@ -374,7 +374,7 @@ with a subset of features is included.</p>
 </div><p></p><hr><a id="method-to_single_cell_experiment"></a><div class="section">
 <h3 id="method-to-single-cell-experiment-">Method <code>to_single_cell_experiment()</code><a class="anchor" aria-label="anchor" href="#method-to-single-cell-experiment-"></a></h3>
 <p>Convert to a Bioconductor
-<a href="https://rdrr.io/pkg/SingleCellExperiment/man/SingleCellExperiment.html" class="external-link">SingleCellExperiment::SingleCellExperiment</a> object.</p><div class="section">
+SingleCellExperiment::SingleCellExperiment object.</p><div class="section">
 <h4 id="usage-8">Usage<a class="anchor" aria-label="anchor" href="#usage-8"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">SCGroup</span><span class="op">$</span><span class="fu">to_single_cell_experiment</span><span class="op">(</span>layers <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"counts"</span>, <span class="st">"data"</span><span class="op">)</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
