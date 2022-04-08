@@ -29,7 +29,7 @@ jobs:
       - name: Install dependencies
         env:
           R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
-        run: Rscript -e "install.packages(c('remotes', 'pkgdown'))" -e "remotes::install_deps(dependencies = TRUE)"
+        run: Rscript -e "install.packages(c('remotes', 'pkgdown'))" -e "remotes::install_deps(dependencies = TRUE)" -e "remotes::install_local()"
 
       - name: Deploy package
         run: |
