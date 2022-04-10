@@ -34,6 +34,9 @@ TileDBGroup <- R6::R6Class(
         private$create_group()
       }
 
+      private$group <- tiledb::tiledb_group(self$uri)
+      private$group_close()
+
       # Create objects for each array URI (except the metadata array)
       array_uris <- self$list_object_uris(type = "ARRAY")
 
@@ -71,6 +74,28 @@ TileDBGroup <- R6::R6Class(
       do.call(tiledb::tiledb_group, args)
     },
 
+    add_member = function(uri, relative = TRUE) {
+      private$group_open("WRITE")
+      tiledb::tiledb_group_add_member(
+        grp = private$group,
+        uri = uri,
+        relative = relative
+      )
+      private$group_close()
+    },
+
+    list_members = function(recursive = FALSE) {
+      private$group_open("READ")
+      nmembers <- tiledb::tiledb_group_member_count(private$group)
+      members <- lapply(
+        X = seq_len(nmembers) - 1L,
+        FUN = tiledb::tiledb_group_member,
+        grp = private$group
+      )
+      private$group_close()
+      members
+      )
+    },
     #' @description List the TileDB objects within the group.
     #' @param type The type of object to list, either `"ARRAY"`, or `"GROUP"`.
     #' By default all object types are listed.
@@ -163,6 +188,16 @@ TileDBGroup <- R6::R6Class(
   ),
 
   private = list(
+
+    group = NULL,
+    group_open = function(mode) {
+      mode <- match.arg(mode, c("READ", "WRITE"))
+      invisible(tiledb::tiledb_group_open(private$group, type = mode))
+    },
+
+    group_close = function() {
+      invisible(tiledb::tiledb_group_close(private$group))
+    },
 
     create_group = function() {
       if (self$verbose) {
