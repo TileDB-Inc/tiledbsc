@@ -39,9 +39,7 @@ AssayMatrixGroup <- R6::R6Class(
         value_col = value_col
       )
       if (!is.null(metadata)) array$add_metadata(metadata)
-      self$arrays[[name]] <- array
-
-      return(self)
+      self$add_member(array, name, relative = TRUE)
     }
   ),
 
