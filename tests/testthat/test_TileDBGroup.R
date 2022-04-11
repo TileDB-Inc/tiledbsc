@@ -19,12 +19,22 @@ test_that("arrays within a group can be discovered", {
   objs <- grp$list_objects()
   expect_is(objs, "data.frame")
   expect_equal(nrow(objs), 0)
+  expect_identical(grp$list_members(), objs)
 
+  # create sub-arrays
   a1 <- create_empty_test_array(file.path(grp_uri, "a1"))
   a2 <- create_empty_test_array(file.path(grp_uri, "a2"))
 
-  objs <- grp$list_objects()
-  expect_equal(nrow(objs), 2)
+  # objects are present but not yet members
+  expect_equal(nrow(grp$list_objects()), 2)
+  expect_equal(nrow(grp$list_members()), 0)
+
+  # add sub-arrays as members
+  grp$add_member(file.path(grp$uri, "a1"), relative = FALSE)
+  expect_equal(nrow(grp$list_members()), 1)
+
+  grp$add_member(file.path(grp_uri, "a2"), relative = FALSE)
+  expect_equal(nrow(grp$list_members()), 2)
 })
 
 test_that("metadata can be set and retrieved from a group", {
