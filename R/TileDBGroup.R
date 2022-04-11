@@ -104,7 +104,21 @@ TileDBGroup <- R6::R6Class(
       uris
     },
 
-    add_member = function(uri, relative = TRUE) {
+    #' @description Add new member to the group.
+    #' @param object The `TileDBArray` or `TileDBGroup` object to add.
+    #' @param name The name to use for the member. By default the base name of
+    #' the object's URI is used.
+    #' @param relative A logical value indicating whether the new member's URI
+    #' is relative to the group's URI or not.
+    add_member = function(object, name = NULL, relative = TRUE) {
+      stopifnot(
+        "Only 'TileDBArray' or 'TileDBGroup' objects can be added" =
+          inherits(object, "TileDBGroup") || inherits(object, "TileDBArray"),
+        is.null(name) || is_scalar_character(name)
+      )
+      uri <- object$uri
+      name <- name %||% basename(uri)
+
       on.exit(private$group_close())
       private$group_open("WRITE")
       tiledb::tiledb_group_add_member(
@@ -112,6 +126,7 @@ TileDBGroup <- R6::R6Class(
         uri = uri,
         relative = relative
       )
+      self$members[[name]] <- object
     },
 
     #' @description Count the number of members in the group.

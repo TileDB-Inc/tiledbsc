@@ -23,21 +23,35 @@ test_that("members can be added and retrieved from a new group", {
   expect_identical(grp$list_members(), objs)
 
   # create sub-objects
-  a1 <- create_empty_test_array(file.path(grp_uri, "a1"))
-  g1 <- tiledb::tiledb_group_create(file.path(grp_uri, "g1"))
+  a1 <- TileDBArray$new(
+    uri = create_empty_test_array(file.path(grp_uri, "a1"))
+  )
+  g1 <- TileDBGroup$new(
+    uri = tiledb::tiledb_group_create(file.path(grp_uri, "g1"))
+  )
 
   # objects are present but not yet members
   expect_equal(grp$list_objects()$TYPE, c("ARRAY", "GROUP"))
   expect_equal(grp$count_members(), 0)
 
   # add sub-array/group as members
-  grp$add_member("a1", relative = TRUE)
+  expect_error(
+    grp$add_member("a1"),
+    "Only 'TileDBArray' or 'TileDBGroup' objects can be added"
+  )
+  grp$add_member(a1)
   expect_equal(grp$count_members(), 1)
   expect_equal(grp$list_members()$TYPE, "ARRAY")
 
-  grp$add_member("g1", relative = TRUE)
+  grp$add_member(g1)
   expect_equal(grp$count_members(), 2)
-  expect_equal(grp$list_members()$TYPE, c("ARRAY", "GROUP"))
+  expect_equal(grp$list_members()$TYPE, c("GROUP", "ARRAY"))
+
+  # group member list
+  expect_true(is.list(grp$members))
+  expect_equal(names(grp$members), c("a1", "g1"))
+  expect_is(grp$members$a1, "TileDBArray")
+  expect_is(grp$members$g1, "TileDBGroup")
 })
 
 test_that("members of an existing group are instantiated", {
