@@ -102,11 +102,7 @@ TileDBGroup <- R6::R6Class(
     #' @return A `data.frame` with columns `URI` and `TYPE`.
     list_objects = function(type = NULL) {
       objects <- tiledb::tiledb_object_ls(self$uri)
-      if (!is.null(type)) {
-        type <- match.arg(type, c("ARRAY", "GROUP"), several.ok = TRUE)
-        objects <- objects[objects$TYPE %in% type, , drop = FALSE]
-      }
-      return(objects)
+      filter_by_type(objects, type)
     },
 
     #' @description List URIs for TileDB objects within the group.
@@ -208,6 +204,14 @@ TileDBGroup <- R6::R6Class(
 
     get_existing_arrays = function(uris) {
       lapply(uris, TileDBArray$new, verbose = self$verbose)
+    },
+
+    # Filter data.frame of group objects/members by the `TYPE` column
+    filter_by_type = function(x, type) {
+      stopifnot(is.data.frame(x) && "TYPE" %in% names(x))
+      if (is.null(type)) return(x)
+      type <- match.arg(type, c("ARRAY", "GROUP"), several.ok = TRUE)
+      x[x$TYPE %in% type, , drop = FALSE]
     },
 
     format_arrays = function() {
