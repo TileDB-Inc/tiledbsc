@@ -115,7 +115,7 @@ TileDBGroup <- R6::R6Class(
     #' @return A `data.frame` with columns `URI` and `TYPE`.
     list_objects = function(type = NULL) {
       objects <- tiledb::tiledb_object_ls(self$uri)
-      filter_by_type(objects, type)
+      private$filter_by_type(objects, type)
     },
 
     #' @description List URIs for TileDB objects within the group.
