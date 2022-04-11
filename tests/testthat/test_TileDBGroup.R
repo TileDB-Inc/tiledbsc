@@ -84,6 +84,9 @@ test_that("members of an existing group are instantiated", {
   expect_identical(grp$get_members(type = "GROUP"), grp$members["g1"])
   expect_identical(grp$get_members(prefix = "a"), grp$members["a1"])
   expect_identical(grp$get_members(prefix = "g"), grp$members["g1"])
+
+  expect_identical(grp$get_member("a1"), grp$members[["a1"]])
+  expect_identical(grp$get_member("g1"), grp$members[["g1"]])
 })
 
 test_that("metadata can be set and retrieved from a group", {
