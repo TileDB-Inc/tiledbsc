@@ -110,25 +110,30 @@ TileDBGroup <- R6::R6Class(
       private$group_close()
     },
 
+    #' @description Count the number of members in the group.
+    #' @return Integer count of members in the group.
+    count_members = function() {
+      on.exit(private$group_close())
+      private$group_open("READ")
+      tiledb::tiledb_group_member_count(private$group)
+    },
+
     #' @description List the members of the group.
     #' @param type The type of object to list, either `"ARRAY"`, or `"GROUP"`.
     #' By default all object types are listed.
     #' @return A `data.frame` with columns `URI` and `TYPE`.
     list_members = function(type = NULL) {
-      private$group_open("READ")
-      count <- tiledb::tiledb_group_member_count(private$group)
+      count <- self$count_members()
       members <- data.frame(TYPE = character(count), URI = character(count))
-      if (count == 0) {
-        private$group_close()
-        return(members)
-      }
+      if (count == 0) return(members)
 
+      on.exit(private$group_close())
+      private$group_open("READ")
       member_list <- lapply(
         X = seq_len(count) - 1L,
         FUN = tiledb::tiledb_group_member,
         grp = private$group
       )
-      private$group_close()
 
       members$TYPE <- vapply_char(member_list, FUN = getElement, name = 1L)
       members$URI <- vapply_char(member_list, FUN = getElement, name = 2L)

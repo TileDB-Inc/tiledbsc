@@ -16,6 +16,7 @@ test_that("arrays within a group can be discovered", {
   grp <- TileDBGroup$new(uri = grp_uri, verbose = FALSE)
   expect_is(grp$tiledb_group(), "tiledb_group")
 
+  expect_equal(grp$count_members(), 0)
   objs <- grp$list_objects()
   expect_is(objs, "data.frame")
   expect_equal(nrow(objs), 0)
@@ -27,7 +28,7 @@ test_that("arrays within a group can be discovered", {
 
   # objects are present but not yet members
   expect_equal(nrow(grp$list_objects()), 2)
-  expect_equal(nrow(grp$list_members()), 0)
+  expect_equal(grp$count_members(), 0)
 
   # add sub-arrays as members
   grp$add_member(file.path(grp$uri, "a1"), relative = FALSE)
