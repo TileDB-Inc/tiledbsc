@@ -48,8 +48,8 @@ SCGroup <- R6::R6Class(
       verbose = TRUE) {
       super$initialize(uri, verbose)
 
-      if ("obs" %in% names(self$arrays)) {
-        self$obs <- self$get_array("obs")
+      if ("obs" %in% names(self$members)) {
+        self$obs <- self$get_member("obs")
       } else {
         self$obs <- AnnotationDataframe$new(
           uri = file_path(self$uri, "obs"),
@@ -57,8 +57,8 @@ SCGroup <- R6::R6Class(
         )
       }
 
-      if ("var" %in% names(self$arrays)) {
-        self$var <- self$get_array("var")
+      if ("var" %in% names(self$members)) {
+        self$var <- self$get_member("var")
       } else {
         self$var <- AnnotationDataframe$new(
           uri = file_path(self$uri, "var"),
@@ -66,40 +66,70 @@ SCGroup <- R6::R6Class(
         )
       }
 
-      self$X <- AssayMatrixGroup$new(
-        uri = file_path(self$uri, "X"),
-        dimension_name = c("var_id", "obs_id"),
-        verbose = self$verbose
-      )
+      if ("X" %in% names(self$members)) {
+        self$X <- self$get_member("X")
+      } else {
+        self$X <- AssayMatrixGroup$new(
+          uri = file_path(self$uri, "X"),
+          dimension_name = c("var_id", "obs_id"),
+          verbose = self$verbose
+        )
+        self$add_member(self$X, name = "X", relative = FALSE)
+      }
 
-      self$obsm <- AnnotationMatrixGroup$new(
-        uri = file_path(self$uri, "obsm"),
-        dimension_name = "obs_id",
-        verbose = self$verbose
-      )
+      if ("obsm" %in% names(self$members)) {
+        self$obsm <- self$get_member("obsm")
+      } else {
+        self$obsm <- AnnotationMatrixGroup$new(
+          uri = file_path(self$uri, "obsm"),
+          dimension_name = "obs_id",
+          verbose = self$verbose
+        )
+        self$add_member(self$obsm, name = "obsm", relative = FALSE)
+      }
 
-      self$varm <- AnnotationMatrixGroup$new(
-        uri = file_path(self$uri, "varm"),
-        dimension_name = "var_id",
-        verbose = self$verbose
-      )
+      if ("varm" %in% names(self$members)) {
+        self$varm <- self$get_member("varm")
+      } else {
+        self$varm <- AnnotationMatrixGroup$new(
+          uri = file_path(self$uri, "varm"),
+          dimension_name = "var_id",
+          verbose = self$verbose
+        )
+        self$add_member(self$varm, name = "varm", relative = FALSE)
+      }
 
-      self$obsp <- AnnotationPairwiseMatrixGroup$new(
-        uri = file_path(self$uri, "obsp"),
-        dimension_name = "obs_id",
-        verbose = self$verbose
-      )
+      if ("obsp" %in% names(self$members)) {
+        self$obsp <- self$get_member("obsp")
+      } else {
+        self$obsp <- AnnotationPairwiseMatrixGroup$new(
+          uri = file_path(self$uri, "obsp"),
+          dimension_name = "obs_id",
+          verbose = self$verbose
+        )
+        self$add_member(self$obsp, name = "obsp", relative = FALSE)
+      }
 
-      self$varp <- AnnotationPairwiseMatrixGroup$new(
-        uri = file_path(self$uri, "varp"),
-        dimension_name = "var_id",
-        verbose = self$verbose
-      )
+      if ("varp" %in% names(self$members)) {
+        self$varp <- self$get_member("varp")
+      } else {
+        self$varp <- AnnotationPairwiseMatrixGroup$new(
+          uri = file_path(self$uri, "varp"),
+          dimension_name = "var_id",
+          verbose = self$verbose
+        )
+        self$add_member(self$varp, name = "varp", relative = FALSE)
+      }
 
-      self$misc <- TileDBGroup$new(
-        uri = file_path(self$uri, "misc"),
-        verbose = self$verbose
-      )
+      if ("misc" %in% names(self$members)) {
+        self$misc <- self$get_member("misc")
+      } else {
+        self$misc <- TileDBGroup$new(
+          uri = file_path(self$uri, "misc"),
+          verbose = self$verbose
+        )
+        self$add_member(self$misc, name = "misc", relative = FALSE)
+      }
     },
 
     #' @description Convert a Seurat Assay to a TileDB-backed sc_group.
@@ -131,6 +161,7 @@ SCGroup <- R6::R6Class(
       } else {
         obs <- data.frame(row.names = colnames(object))
       }
+      browser()
       self$obs$from_dataframe(obs, index_col = "obs_id")
 
       if (!is_empty(SeuratObject::VariableFeatures(object))) {
@@ -144,6 +175,7 @@ SCGroup <- R6::R6Class(
 
       # Add obs/var to the scgroup's arrays list
       # TODO: Necessary? Could obs/var be active bindings that point to arrays?
+
       self$arrays[c("obs", "var")] <- list(obs = self$obs, var = self$var)
 
       assay_slots <- c("counts", "data")
@@ -466,7 +498,7 @@ SCGroup <- R6::R6Class(
       )
 
       # obs-aligned dimreductions
-      dimreductions <- self$obsm$get_arrays(prefix = "dimreduction_")
+      dimreductions <- self$obsm$get_members(prefix = "dimreduction_")
       if (!is_empty(dimreductions)) {
         names(dimreductions) <- sub("^dimreduction_", "", names(dimreductions))
         # TODO: Why aren't the dimreduction matrices rownames sorted?
@@ -518,7 +550,7 @@ SCGroup <- R6::R6Class(
     },
 
     get_annotation_group_arrays = function(array_groups, prefix = NULL) {
-      arrays <- lapply(array_groups, function(x) x$get_arrays(prefix = prefix))
+      arrays <- lapply(array_groups, function(x) x$get_members(prefix = prefix))
       Filter(Negate(is_empty), arrays)
     },
 
