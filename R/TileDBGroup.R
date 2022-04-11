@@ -161,15 +161,29 @@ TileDBGroup <- R6::R6Class(
 
     #' @description Retrieve arrays within the group that meet the specified
     #' criteria.
-    #' @param prefix String prefix to filter the array names.
-    #' @returns A named list of arrays.
+    #' @param type The type of group members to list, either `"ARRAY"`, or
+    #' `"GROUP"`.
+    #' @param prefix String prefix to filter the member names.
+    #' @returns A named list of group members.
     # TODO: Add support for filtering by array metadata
-    get_arrays = function(prefix = NULL) {
-      if (is.null(prefix)) return(self$arrays)
-      stopifnot(is_scalar_character(prefix))
-      arrays <- names(self$arrays)
-      arrays <- Filter(function(x) string_starts_with(x, prefix), arrays)
-      self$arrays[arrays]
+    get_members = function(type = NULL, prefix = NULL) {
+      if (is.null(prefix) && is.null(type)) return(self$members)
+      stopifnot(
+        is.null(prefix) || is_scalar_character(prefix)
+      )
+
+      matched_type <- matched_prefix <- rep(TRUE, self$count_members())
+      if (!is.null(type)) {
+        all_uris <- vapply_char(self$members, function(x) x$uri)
+        matched_uris <- self$list_members(type = type)$URI
+        matched_type <- all_uris %in% matched_uris
+      }
+
+      if (!is.null(prefix)) {
+        matched_prefix <- string_starts_with(names(self$members), prefix)
+      }
+
+      self$members[matched_type & matched_prefix]
     },
 
     #' @description Retrieve an array within the group.

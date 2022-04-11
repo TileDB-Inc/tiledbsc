@@ -77,6 +77,13 @@ test_that("members of an existing group are instantiated", {
   grp <- TileDBGroup$new(uri = grp_uri, verbose = FALSE)
   expect_equal(grp$count_members(), 2)
   expect_equal(grp$list_members()$TYPE, c("GROUP", "ARRAY"))
+
+  # getters
+  expect_identical(grp$get_members(), grp$members)
+  expect_identical(grp$get_members(type = "ARRAY"), grp$members["a1"])
+  expect_identical(grp$get_members(type = "GROUP"), grp$members["g1"])
+  expect_identical(grp$get_members(prefix = "a"), grp$members["a1"])
+  expect_identical(grp$get_members(prefix = "g"), grp$members["g1"])
 })
 
 test_that("metadata can be set and retrieved from a group", {
