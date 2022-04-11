@@ -74,6 +74,32 @@ TileDBGroup <- R6::R6Class(
       do.call(tiledb::tiledb_group, args)
     },
 
+    #' @description List the TileDB objects within the group.
+    #' @param type The type of object to list, either `"ARRAY"`, or `"GROUP"`.
+    #' By default all object types are listed.
+    #' @return A `data.frame` with columns `URI` and `TYPE`.
+    list_objects = function(type = NULL) {
+      objects <- tiledb::tiledb_object_ls(self$uri)
+      private$filter_by_type(objects, type)
+    },
+
+    #' @description List URIs for TileDB objects within the group.
+    #' @param type The type of object to list, either `"ARRAY"`, or `"GROUP"`.
+    #' By default all object types are listed.
+    #' @param prefix Filter URIs whose basename contain an optional prefix.
+    #' @return A character vector of object URIs with names corresponding to the
+    #' basename of the object.
+    list_object_uris = function(type = NULL, prefix = NULL) {
+      uris <- self$list_objects(type = type)$URI
+      if (is_empty(uris)) return(uris)
+      names(uris) <- basename(uris)
+      if (!is.null(prefix)) {
+        stopifnot(is_scalar_character(prefix))
+        uris <- uris[string_starts_with(names(uris), prefix)]
+      }
+      uris
+    },
+
     add_member = function(uri, relative = TRUE) {
       private$group_open("WRITE")
       tiledb::tiledb_group_add_member(
@@ -107,32 +133,6 @@ TileDBGroup <- R6::R6Class(
       members$TYPE <- vapply_char(member_list, FUN = getElement, name = 1L)
       members$URI <- vapply_char(member_list, FUN = getElement, name = 2L)
       private$filter_by_type(members, type)
-    },
-
-    #' @description List the TileDB objects within the group.
-    #' @param type The type of object to list, either `"ARRAY"`, or `"GROUP"`.
-    #' By default all object types are listed.
-    #' @return A `data.frame` with columns `URI` and `TYPE`.
-    list_objects = function(type = NULL) {
-      objects <- tiledb::tiledb_object_ls(self$uri)
-      private$filter_by_type(objects, type)
-    },
-
-    #' @description List URIs for TileDB objects within the group.
-    #' @param type The type of object to list, either `"ARRAY"`, or `"GROUP"`.
-    #' By default all object types are listed.
-    #' @param prefix Filter URIs whose basename contain an optional prefix.
-    #' @return A character vector of object URIs with names corresponding to the
-    #' basename of the object.
-    list_object_uris = function(type = NULL, prefix = NULL) {
-      uris <- self$list_objects(type = type)$URI
-      if (is_empty(uris)) return(uris)
-      names(uris) <- basename(uris)
-      if (!is.null(prefix)) {
-        stopifnot(is_scalar_character(prefix))
-        uris <- uris[string_starts_with(names(uris), prefix)]
-      }
-      uris
     },
 
     #' @description Retrieve arrays within the group that meet the specified
@@ -199,6 +199,14 @@ TileDBGroup <- R6::R6Class(
   private = list(
 
     group = NULL,
+
+    create_group = function() {
+      if (self$verbose) {
+        message(sprintf("Creating new %s at '%s'", self$class(), self$uri))
+      }
+      tiledb::tiledb_group_create(self$uri)
+    },
+
     group_open = function(mode) {
       mode <- match.arg(mode, c("READ", "WRITE"))
       invisible(tiledb::tiledb_group_open(private$group, type = mode))
@@ -206,13 +214,6 @@ TileDBGroup <- R6::R6Class(
 
     group_close = function() {
       invisible(tiledb::tiledb_group_close(private$group))
-    },
-
-    create_group = function() {
-      if (self$verbose) {
-        message(sprintf("Creating new %s at '%s'", self$class(), self$uri))
-      }
-      tiledb::tiledb_group_create(self$uri)
     },
 
     get_existing_arrays = function(uris) {
