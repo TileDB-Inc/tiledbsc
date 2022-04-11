@@ -84,18 +84,31 @@ TileDBGroup <- R6::R6Class(
       private$group_close()
     },
 
-    list_members = function(recursive = FALSE) {
+    #' @description List the members of the group.
+    #' @param type The type of object to list, either `"ARRAY"`, or `"GROUP"`.
+    #' By default all object types are listed.
+    #' @return A `data.frame` with columns `URI` and `TYPE`.
+    list_members = function(type = NULL) {
       private$group_open("READ")
-      nmembers <- tiledb::tiledb_group_member_count(private$group)
-      members <- lapply(
-        X = seq_len(nmembers) - 1L,
+      count <- tiledb::tiledb_group_member_count(private$group)
+      members <- data.frame(TYPE = character(count), URI = character(count))
+      if (count == 0) {
+        private$group_close()
+        return(members)
+      }
+
+      member_list <- lapply(
+        X = seq_len(count) - 1L,
         FUN = tiledb::tiledb_group_member,
         grp = private$group
       )
       private$group_close()
-      members
-      )
+
+      members$TYPE <- vapply_char(member_list, FUN = getElement, name = 1L)
+      members$URI <- vapply_char(member_list, FUN = getElement, name = 2L)
+      private$filter_by_type(members, type)
     },
+
     #' @description List the TileDB objects within the group.
     #' @param type The type of object to list, either `"ARRAY"`, or `"GROUP"`.
     #' By default all object types are listed.
