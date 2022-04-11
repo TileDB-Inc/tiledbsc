@@ -186,12 +186,12 @@ TileDBGroup <- R6::R6Class(
       self$members[matched_type & matched_prefix]
     },
 
-    #' @description Retrieve an array within the group.
+    #' @description Retrieve a group member.
     #' @param name The name of the array to retrieve.
     #' @returns The array object.
-    get_array = function(name) {
+    get_member = function(name) {
       stopifnot(is_scalar_character(name))
-      self$arrays[[name]]
+      self$members[[name]]
     },
 
     #' @description Retrieve metadata from the TileDB group.
