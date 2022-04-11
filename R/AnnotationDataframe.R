@@ -28,7 +28,7 @@ AnnotationDataframe <- R6::R6Class(
 
       # logicals are not supported by tiledb::fromDataFrame so we convert
       # them to integers
-      logical_cols <- vapply(x, is.logical, FUN.VALUE = vector("logical", 1L))
+      logical_cols <- vapply_lgl(x, is.logical)
       x[logical_cols] <- as.data.frame(lapply(x[logical_cols], as.integer))
 
       # convert rownames to a column

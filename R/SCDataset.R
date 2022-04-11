@@ -193,7 +193,7 @@ SCDataset <- R6::R6Class(
     #' @description List the [`SCGroup`] URIs in the dataset.
     #' @return A vector of URIs for each [`SCGroup`] in the dataset.
     scgroup_uris = function() {
-      vapply(self$scgroups, function(x) x$uri, FUN.VALUE = character(1L))
+      vapply_char(self$scgroups, function(x) x$uri)
     }
   ),
 
