@@ -11,7 +11,7 @@ test_that("a new TileDB group can be created", {
   expect_match(tiledb::tiledb_object_type(grp_uri), "GROUP")
 })
 
-test_that("arrays within a group can be discovered", {
+test_that("members can be added and retrieved from a new group", {
   grp_uri <- withr::local_tempdir("new-group")
   grp <- TileDBGroup$new(uri = grp_uri, verbose = FALSE)
   expect_is(grp$tiledb_group(), "tiledb_group")
@@ -22,17 +22,24 @@ test_that("arrays within a group can be discovered", {
   expect_equal(nrow(objs), 0)
   expect_identical(grp$list_members(), objs)
 
-  # create sub-arrays
+  # create sub-objects
   a1 <- create_empty_test_array(file.path(grp_uri, "a1"))
-  a2 <- create_empty_test_array(file.path(grp_uri, "a2"))
+  g1 <- tiledb::tiledb_group_create(file.path(grp_uri, "g1"))
 
   # objects are present but not yet members
-  expect_equal(nrow(grp$list_objects()), 2)
+  expect_equal(grp$list_objects()$TYPE, c("ARRAY", "GROUP"))
   expect_equal(grp$count_members(), 0)
 
-  # add sub-arrays as members
-  grp$add_member(file.path(grp$uri, "a1"), relative = FALSE)
-  expect_equal(nrow(grp$list_members()), 1)
+  # add sub-array/group as members
+  grp$add_member("a1", relative = TRUE)
+  expect_equal(grp$count_members(), 1)
+  expect_equal(grp$list_members()$TYPE, "ARRAY")
+
+  grp$add_member("g1", relative = TRUE)
+  expect_equal(grp$count_members(), 2)
+  expect_equal(grp$list_members()$TYPE, c("ARRAY", "GROUP"))
+})
+
 
   grp$add_member(file.path(grp_uri, "a2"), relative = FALSE)
   expect_equal(nrow(grp$list_members()), 2)
