@@ -6,8 +6,8 @@ TileDBGroup <- R6::R6Class(
   public = list(
     #' @field uri The URI of the TileDB group
     uri = NULL,
-    #' @field arrays Named list of arrays in the group
-    arrays = list(),
+    #' @field members Named list of members in the group
+    members = list(),
     #' @field verbose Whether to print verbose output
     verbose = TRUE,
 
@@ -37,13 +37,17 @@ TileDBGroup <- R6::R6Class(
       private$group <- tiledb::tiledb_group(self$uri)
       private$group_close()
 
-      # Create objects for each array URI (except the metadata array)
-      array_uris <- self$list_object_uris(type = "ARRAY")
-
-      if (!is_empty(array_uris)) {
-        arrays <- private$get_existing_arrays(array_uris)
-        names(arrays) <- basename(array_uris)
-        self$arrays <- arrays
+      # Instatiate objects for existing members
+      members <- self$list_members()
+      if (!is_empty(members)) {
+        member_types <- lapply(
+          X = split(members$URI, members$TYPE),
+          FUN = function(x) setNames(x, basename(x))
+        )
+        self$members <- c(
+          private$get_existing_arrays(member_types$ARRAY),
+          private$get_existing_groups(member_types$GROUP)
+        )
       }
     },
 
@@ -222,6 +226,10 @@ TileDBGroup <- R6::R6Class(
 
     get_existing_arrays = function(uris) {
       lapply(uris, TileDBArray$new, verbose = self$verbose)
+    },
+
+    get_existing_groups = function(uris) {
+      lapply(uris, TileDBGroup$new, verbose = self$verbose)
     },
 
     # Filter data.frame of group objects/members by the `TYPE` column
