@@ -101,13 +101,13 @@ TileDBGroup <- R6::R6Class(
     },
 
     add_member = function(uri, relative = TRUE) {
+      on.exit(private$group_close())
       private$group_open("WRITE")
       tiledb::tiledb_group_add_member(
         grp = private$group,
         uri = uri,
         relative = relative
       )
-      private$group_close()
     },
 
     #' @description Count the number of members in the group.
@@ -167,17 +167,17 @@ TileDBGroup <- R6::R6Class(
     #'   is not NULL.
     #' @return A list of metadata values.
     get_metadata = function(key = NULL, prefix = NULL) {
-      grp <- self$tiledb_group(type = "READ")
+      on.exit(private$group_close())
+      private$group_open("READ")
       if (!is.null(key)) {
-        metadata <- tiledb::tiledb_group_get_metadata(grp, key)
+        metadata <- tiledb::tiledb_group_get_metadata(private$group, key)
       } else {
-        metadata <- tiledb::tiledb_group_get_all_metadata(grp)
+        metadata <- tiledb::tiledb_group_get_all_metadata(private$group)
         if (!is.null(prefix)) {
           metadata <- metadata[string_starts_with(names(metadata), prefix)]
         }
       }
-      tiledb::tiledb_group_close(grp)
-      return(metadata)
+      metadata
     },
 
     #' @description Add list of metadata to the TileDB group.
@@ -188,16 +188,15 @@ TileDBGroup <- R6::R6Class(
       stopifnot(
         "Metadata must be a named list" = is_named_list(metadata)
       )
-
-      grp <- self$tiledb_group(type = "WRITE")
+      on.exit(private$group_close())
+      private$group_open("WRITE")
       mapply(
         FUN = tiledb::tiledb_group_put_metadata,
         key = paste0(prefix, names(metadata)),
         val = metadata,
-        MoreArgs = list(grp = grp),
+        MoreArgs = list(grp = private$group),
         SIMPLIFY = FALSE
       )
-      tiledb::tiledb_group_close(grp)
     }
   ),
 
