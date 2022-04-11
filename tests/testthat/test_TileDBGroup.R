@@ -39,11 +39,11 @@ test_that("members can be added and retrieved from a new group", {
     grp$add_member("a1"),
     "Only 'TileDBArray' or 'TileDBGroup' objects can be added"
   )
-  grp$add_member(a1)
+  grp$add_member(a1, relative = FALSE)
   expect_equal(grp$count_members(), 1)
   expect_equal(grp$list_members()$TYPE, "ARRAY")
 
-  grp$add_member(g1)
+  grp$add_member(g1, relative = FALSE)
   expect_equal(grp$count_members(), 2)
   expect_equal(grp$list_members()$TYPE, c("GROUP", "ARRAY"))
 
