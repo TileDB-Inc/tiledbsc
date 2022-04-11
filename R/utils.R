@@ -1,7 +1,10 @@
 #' Check if object is empty
 #' @noRd
 is_empty <- function(x) {
-  length(x) == 0
+  switch(class(x),
+    "data.frame" = nrow(x) == 0,
+    length(x) == 0
+  )
 }
 
 #' Check if a vector is named
