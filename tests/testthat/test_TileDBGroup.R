@@ -40,9 +40,29 @@ test_that("members can be added and retrieved from a new group", {
   expect_equal(grp$list_members()$TYPE, c("ARRAY", "GROUP"))
 })
 
+test_that("members of an existing group are instantiated", {
+  grp_uri <- withr::local_tempdir("existing-group")
 
-  grp$add_member(file.path(grp_uri, "a2"), relative = FALSE)
-  expect_equal(nrow(grp$list_members()), 2)
+  # create group and members
+  tiledb::tiledb_group_create(grp_uri)
+  a1 <- create_empty_test_array(file.path(grp_uri, "a1"))
+  g1 <- tiledb::tiledb_group_create(file.path(grp_uri, "g1"))
+
+  # add members
+  tdb_grp <- tiledb::tiledb_group(grp_uri, "WRITE")
+  tiledb::tiledb_group_add_member(tdb_grp, "a1", TRUE)
+  tiledb::tiledb_group_add_member(tdb_grp, "g1", TRUE)
+  tiledb::tiledb_group_close(tdb_grp)
+
+  # validate members
+  tiledb::tiledb_group_open(tdb_grp)
+  expect_equal(tiledb::tiledb_group_member(tdb_grp, 0)[1], "GROUP")
+  expect_equal(tiledb::tiledb_group_member(tdb_grp, 1)[1], "ARRAY")
+  tiledb::tiledb_group_close(tdb_grp)
+
+  grp <- TileDBGroup$new(uri = grp_uri, verbose = FALSE)
+  expect_equal(grp$count_members(), 2)
+  expect_equal(grp$list_members()$TYPE, c("GROUP", "ARRAY"))
 })
 
 test_that("metadata can be set and retrieved from a group", {
