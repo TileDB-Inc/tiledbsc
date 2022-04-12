@@ -19,9 +19,14 @@ test_that("SCGroup object can be created from a Seurat assay", {
   )
 
   scgroup$from_seurat_assay(assay1, obs = pbmc_small[[]])
-  expect_s4_class(scgroup$obs$tiledb_array(), "tiledb_array")
-  expect_s4_class(scgroup$var$tiledb_array(), "tiledb_array")
   expect_true(inherits(scgroup$X, "AssayMatrixGroup"))
+  expect_true(inherits(scgroup$obs, "AnnotationDataframe"))
+  expect_true(inherits(scgroup$var, "AnnotationDataframe"))
+  expect_true(inherits(scgroup$obsm, "AnnotationMatrixGroup"))
+  expect_true(inherits(scgroup$varm, "AnnotationMatrixGroup"))
+  expect_true(inherits(scgroup$obsp, "AnnotationPairwiseMatrixGroup"))
+  expect_true(inherits(scgroup$varp, "AnnotationPairwiseMatrixGroup"))
+  expect_true(inherits(scgroup$misc, "TileDBGroup"))
 })
 
 test_that("Seurat Assay can be recreated from an existing SCGroup", {
