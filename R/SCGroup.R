@@ -161,8 +161,10 @@ SCGroup <- R6::R6Class(
       } else {
         obs <- data.frame(row.names = colnames(object))
       }
-      browser()
       self$obs$from_dataframe(obs, index_col = "obs_id")
+      if (is.null(self$get_member("obs"))) {
+        self$add_member(self$obs, name = "obs", relative = FALSE)
+      }
 
       if (!is_empty(SeuratObject::VariableFeatures(object))) {
         object <- SeuratObject::AddMetaData(
@@ -172,11 +174,9 @@ SCGroup <- R6::R6Class(
         )
       }
       self$var$from_dataframe(object[[]], index_col = "var_id")
-
-      # Add obs/var to the scgroup's arrays list
-      # TODO: Necessary? Could obs/var be active bindings that point to arrays?
-
-      self$arrays[c("obs", "var")] <- list(obs = self$obs, var = self$var)
+      if (is.null(self$get_member("var"))) {
+        self$add_member(self$var, name = "var", relative = FALSE)
+      }
 
       assay_slots <- c("counts", "data")
       if (seurat_assay_has_scale_data(object)) {
