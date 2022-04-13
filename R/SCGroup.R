@@ -587,7 +587,7 @@ SCGroup <- R6::R6Class(
 
     # Validate layers argument
     check_layers = function(layers) {
-      available_layers <- names(self$X$arrays)
+      available_layers <- names(self$X$members)
       matching_layers <- layers[layers %in% available_layers]
       if (is_empty(matching_layers)) {
         stop("Did not find any matching 'X' layers")
@@ -606,9 +606,10 @@ SCGroup <- R6::R6Class(
     # it doesn't contain the full set of obs identifiers (i.e., cell/sample
     # names).
     get_assay_matrices = function(layers) {
+
       assay_mats <- lapply(
-        setNames(layers, layers),
-        function(x) self$X$arrays[[x]]$to_matrix()
+        self$X$members[layers],
+        function(x) x$to_matrix()
       )
 
       # Ensure assay matrices all contain the same observations
