@@ -31,6 +31,15 @@ test_that("SCGroup object can be created from a Seurat assay", {
 
 test_that("Seurat Assay can be recreated from an existing SCGroup", {
   scgroup <- SCGroup$new(uri = tdb_uri, verbose = TRUE)
+  expect_true(inherits(scgroup$X, "AssayMatrixGroup"))
+  expect_true(inherits(scgroup$obs, "AnnotationDataframe"))
+  expect_true(inherits(scgroup$var, "AnnotationDataframe"))
+  expect_true(inherits(scgroup$obsm, "AnnotationMatrixGroup"))
+  expect_true(inherits(scgroup$varm, "AnnotationMatrixGroup"))
+  expect_true(inherits(scgroup$obsp, "AnnotationPairwiseMatrixGroup"))
+  expect_true(inherits(scgroup$varp, "AnnotationPairwiseMatrixGroup"))
+  expect_true(inherits(scgroup$misc, "TileDBGroup"))
+
   assay2 <- scgroup$to_seurat_assay()
 
   expect_s4_class(assay2, "Assay")
