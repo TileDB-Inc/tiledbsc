@@ -44,8 +44,8 @@ AssayMatrixGroup <- R6::R6Class(
   ),
 
   private = list(
-    get_existing_arrays = function(uris) {
-      lapply(uris, AssayMatrix$new, verbose = self$verbose)
+    instantiate_members = function() {
+      lapply(self$list_member_uris(), AssayMatrix$new, verbose = self$verbose)
     }
   )
 )

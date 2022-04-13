@@ -77,8 +77,8 @@ AnnotationPairwiseMatrixGroup <- R6::R6Class(
   ),
 
   private = list(
-    get_existing_arrays = function(uris) {
-      lapply(uris, AnnotationPairwiseMatrix$new, verbose = self$verbose)
+    instantiate_members = function() {
+      lapply(self$list_member_uris(), AnnotationPairwiseMatrix$new, verbose = self$verbose)
     }
   )
 )

@@ -38,17 +38,7 @@ TileDBGroup <- R6::R6Class(
       private$group_close()
 
       # Instatiate objects for existing members
-      members <- self$list_members()
-      if (!is_empty(members)) {
-        member_types <- lapply(
-          X = split(members$URI, members$TYPE),
-          FUN = function(x) setNames(x, basename(x))
-        )
-        self$members <- c(
-          private$get_existing_arrays(member_types$ARRAY),
-          private$get_existing_groups(member_types$GROUP)
-        )
-      }
+      self$members <- private$instantiate_members()
     },
 
     #' @description Print the name of the R6 class.
@@ -138,8 +128,8 @@ TileDBGroup <- R6::R6Class(
     },
 
     #' @description List the members of the group.
-    #' @param type The type of object to list, either `"ARRAY"`, or `"GROUP"`.
-    #' By default all object types are listed.
+    #' @param type The type of member to list, either `"ARRAY"`, or `"GROUP"`.
+    #' By default all member types are listed.
     #' @return A `data.frame` with columns `URI` and `TYPE`.
     list_members = function(type = NULL) {
       count <- self$count_members()
@@ -270,12 +260,25 @@ TileDBGroup <- R6::R6Class(
       invisible(tiledb::tiledb_group_close(private$group))
     },
 
-    get_existing_arrays = function(uris) {
-      lapply(uris, TileDBArray$new, verbose = self$verbose)
-    },
-
-    get_existing_groups = function(uris) {
-      lapply(uris, TileDBGroup$new, verbose = self$verbose)
+    # Instantiate existing group members
+    #
+    # Responsible for calling the appropriate R6 class generator for each
+    # pre-existing member of a group during initialization. Currently each
+    # object is named using the base name of the member's URI.
+    instantiate_members = function() {
+      members <- self$list_members()
+      member_objects <- list()
+      if (!is_empty(members)) {
+        member_uris <- lapply(
+          X = split(members$URI, members$TYPE),
+          FUN = function(x) setNames(x, basename(x))
+        )
+        member_objects <- c(
+          lapply(member_uris$ARRAY, TileDBArray$new, verbose = self$verbose),
+          lapply(member_uris$GROUP, TileDBGroup$new, verbose = self$verbose)
+        )
+      }
+      member_objects
     },
 
     # Filter data.frame of group objects/members by the `TYPE` column

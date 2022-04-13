@@ -539,6 +539,52 @@ SCGroup <- R6::R6Class(
 
   private = list(
 
+    # Instantiate each member of the scgroup using the appropriate R6 class
+    # generator, which is determined by the base name of the
+    # member's URI. In the future, it would be nice to have a more robust
+    # mechanism for doing this (e.g., by looking the member's type from its
+    # metadata).
+    instantiate_members = function() {
+      members <- self$list_members()
+      named_uris <- setNames(members$URI, basename(members$URI))
+
+      # fallback generators for members not covered by the scgroup schema
+      fallback_generators <- lapply(
+        members$TYPE,
+        FUN = switch,
+        ARRAY = TileDBArray$new,
+        GROUP = TileDBGroup$new
+      )
+
+      # scgroup components generators
+      scgroup_generators <- mapply(
+        function(member, fallback_generator) {
+          switch(member,
+            X = AssayMatrixGroup$new,
+            obs = AnnotationDataframe$new,
+            var = AnnotationDataframe$new,
+            obsm = AnnotationMatrixGroup$new,
+            varm = AnnotationMatrixGroup$new,
+            obsp = AnnotationPairwiseMatrixGroup$new,
+            varp = AnnotationPairwiseMatrixGroup$new,
+            fallback_generator
+          )
+        },
+        member = names(named_uris),
+        fallback_generator = fallback_generators
+      )
+
+      # instantiate scgroup components
+      mapply(
+        FUN = function(generator, uri, verbose) {
+          generator(uri = uri, verbose = verbose)
+        },
+        generator = scgroup_generators,
+        uri = named_uris,
+        MoreArgs = list(verbose = self$verbose)
+      )
+    },
+
     # Validate layers argument
     check_layers = function(layers) {
       available_layers <- names(self$X$arrays)
