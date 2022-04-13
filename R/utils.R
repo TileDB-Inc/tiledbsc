@@ -1,7 +1,7 @@
 #' Check if object is empty
 #' @noRd
 is_empty <- function(x) {
-  switch(class(x),
+  switch(class(x)[1],
     "data.frame" = nrow(x) == 0,
     length(x) == 0
   )
