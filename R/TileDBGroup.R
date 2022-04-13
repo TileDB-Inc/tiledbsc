@@ -159,6 +159,23 @@ TileDBGroup <- R6::R6Class(
       private$filter_by_type(members, type)
     },
 
+    #' @description List URIs for group members
+    #' @param type The type of member to list, either `"ARRAY"`, or `"GROUP"`.
+    #' By default all member types are listed.
+    #' @param prefix Filter URIs whose basename contain an optional prefix.
+    #' @return A character vector of member URIs with names corresponding to the
+    #' basename of the URI.
+    list_member_uris = function(type = NULL, prefix = NULL) {
+      uris <- self$list_members(type = type)$URI
+      if (is_empty(uris)) return(uris)
+      names(uris) <- basename(uris)
+      if (!is.null(prefix)) {
+        stopifnot(is_scalar_character(prefix))
+        uris <- uris[string_starts_with(names(uris), prefix)]
+      }
+      uris
+    },
+
     #' @description Retrieve arrays within the group that meet the specified
     #' criteria.
     #' @param type The type of group members to list, either `"ARRAY"`, or
