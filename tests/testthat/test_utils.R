@@ -19,6 +19,12 @@ test_that("matrices with empty dimensions are detected", {
   )
 })
 
+test_that("empty objects are detected", {
+  expect_true(is_empty(list()))
+  expect_true(is_empty(matrix(nrow = 0, ncol = 0)))
+  expect_true(is_empty(data.frame(empty = character(0L))))
+})
+
 test_that("vector renaming works", {
   vec1 <- c(a = 1, b = 2, c = 3)
   vec2 <- rename(vec1, c(A = "a", C = "c"))
