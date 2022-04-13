@@ -101,7 +101,7 @@ test_that("obs and var are created when even no annotations are present", {
   assay <- SeuratObject::CreateAssayObject(
     counts = SeuratObject::GetAssayData(pbmc_small[["RNA"]], "counts")
   )
-  expect_true(is_empty(assay[[]]))
+  expect_equal(ncol(assay[[]]), 0L)
   SeuratObject::Key(assay) <- "RNA"
 
   scgroup <- SCGroup$new(uri = uri)
