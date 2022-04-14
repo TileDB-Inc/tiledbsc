@@ -88,7 +88,7 @@ SCDataset <- R6::R6Class(
         assay_uri <- file_path(self$uri, paste0("scgroup_", assay))
         scgroup <- SCGroup$new(assay_uri, verbose = self$verbose)
         scgroup$from_seurat_assay(assay_object, obs = object[[]])
-        self$scgroups[[assay]] <- scgroup
+        self$add_member(scgroup, name = assay, relative = FALSE)
       }
 
       reductions <- SeuratObject::Reductions(object)
@@ -96,7 +96,7 @@ SCDataset <- R6::R6Class(
         for (reduction in reductions) {
           reduction_object <- SeuratObject::Reductions(object, slot = reduction)
           assay <- SeuratObject::DefaultAssay(reduction_object)
-          self$scgroups[[assay]]$add_seurat_dimreduction(
+          self$members[[assay]]$add_seurat_dimreduction(
             object = reduction_object,
             technique = reduction
           )
@@ -109,7 +109,7 @@ SCDataset <- R6::R6Class(
           graph_object <- SeuratObject::Graphs(object, slot = graph)
           assay <- SeuratObject::DefaultAssay(graph_object)
           technique <- sub(paste0(assay, "_"), "", graph, fixed = TRUE)
-          self$scgroups[[assay]]$obsp$add_seurat_graph(
+          self$members[[assay]]$obsp$add_seurat_graph(
             object = graph_object,
             technique = technique
           )
