@@ -34,12 +34,12 @@ SCDataset <- R6::R6Class(
         self$list_object_uris(prefix = "scgroup", type = "GROUP")
       )
 
-      # Create SCGroup objects for each scgroup URI
-      if (!is_empty(scgroup_uris)) {
-        scgroups <- lapply(scgroup_uris, SCGroup$new, verbose = self$verbose)
-        names(scgroups) <- sub("scgroup_", "", basename(scgroup_uris), fixed = TRUE)
-        self$scgroups <- scgroups
-      }
+      # # Create SCGroup objects for each scgroup URI
+      # if (!is_empty(scgroup_uris)) {
+      #   scgroups <- lapply(scgroup_uris, SCGroup$new, verbose = self$verbose)
+      #   names(scgroups) <- sub("scgroup_", "", basename(scgroup_uris), fixed = TRUE)
+      #   self$scgroups <- scgroups
+      # }
 
       if ("misc" %in% names(self$members)) {
         self$misc <- self$get_member("misc")
@@ -199,6 +199,20 @@ SCDataset <- R6::R6Class(
   ),
 
   private = list(
+
+    instantiate_members = function() {
+
+      # with the exception of 'misc' all members should be SCGroups
+      # TODO: Use group metadata to indicates each member's class
+      member_uris <- self$list_member_uris()
+      scgroup_uris <- member_uris[names(member_uris) != "misc"]
+      misc_uri <- member_uris[names(member_uris) == "misc"]
+
+      c(
+        lapply(scgroup_uris, SCGroup$new, verbose = self$verbose),
+        lapply(misc_uri, SCGroup$new, verbose = self$verbose)
+      )
+    },
 
     # Override to include SCGroups using `scgroup_uris`
     format_groups = function() {
