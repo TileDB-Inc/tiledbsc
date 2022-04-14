@@ -143,7 +143,7 @@ SCDataset <- R6::R6Class(
       assays <- lapply(self$scgroups, function(x) x$to_seurat_assay())
       nassays <- length(assays)
 
-      # feature-level obs metadata is stored in each scgroup, so for now we
+      # cell-level obs metadata is stored in each scgroup, so for now we
       # just take the first scgroup's obs metadata
       obs_df <- self$scgroups[[1]]$obs$to_dataframe()
 
@@ -183,8 +183,8 @@ SCDataset <- R6::R6Class(
       }
 
       # command history
-      if ("commands" %in% names(self$misc$arrays)) {
-        commands_array <- self$misc$arrays$commands
+      if ("commands" %in% names(self$misc$members)) {
+        commands_array <- self$misc$get_member("commands")
         object@commands <- commands_array$to_named_list_of_commands()
       }
 
