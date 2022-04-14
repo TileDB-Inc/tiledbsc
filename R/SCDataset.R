@@ -22,24 +22,8 @@ SCDataset <- R6::R6Class(
     #'
     #' @param uri URI of the TileDB group
     #' @param verbose Print status messages
-    initialize = function(
-      uri,
-      scgroup_uris = NULL,
-      verbose = TRUE) {
+    initialize = function(uri, verbose = TRUE) {
       super$initialize(uri, verbose)
-
-      # Collect user-specified and auto-discovered scgroup URIs
-      scgroup_uris <- c(
-        scgroup_uris,
-        self$list_object_uris(prefix = "scgroup", type = "GROUP")
-      )
-
-      # # Create SCGroup objects for each scgroup URI
-      # if (!is_empty(scgroup_uris)) {
-      #   scgroups <- lapply(scgroup_uris, SCGroup$new, verbose = self$verbose)
-      #   names(scgroups) <- sub("scgroup_", "", basename(scgroup_uris), fixed = TRUE)
-      #   self$scgroups <- scgroups
-      # }
 
       if ("misc" %in% names(self$members)) {
         self$misc <- self$get_member("misc")
