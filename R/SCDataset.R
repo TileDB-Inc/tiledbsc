@@ -221,7 +221,7 @@ SCDataset <- R6::R6Class(
 
       c(
         lapply(scgroup_uris, SCGroup$new, verbose = self$verbose),
-        lapply(misc_uri, SCGroup$new, verbose = self$verbose)
+        lapply(misc_uri, TileDBGroup$new, verbose = self$verbose)
       )
     },
 
