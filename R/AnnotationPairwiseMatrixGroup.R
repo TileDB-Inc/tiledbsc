@@ -35,7 +35,7 @@ AnnotationPairwiseMatrixGroup <- R6::R6Class(
       index_cols <- paste(self$dimension_name, c("i", "j"), sep = "_")
       array$from_matrix(data, index_cols)
       if (!is.null(metadata)) array$add_metadata(metadata)
-      self$add_member(array, name, relative = TRUE)
+      self$add_member(array, name, relative = FALSE)
     },
 
     #' @description Convert a [`SeuratObject::Graph`] object to
