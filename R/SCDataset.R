@@ -198,6 +198,16 @@ SCDataset <- R6::R6Class(
     }
   ),
 
+  active = list(
+    #' @description Retrieve [`SCGroup`] members.
+    scgroups = function(value) {
+      if (!missing(value)) {
+        stop("scgroups is read-only, use 'add_member()' to add a new SCGroup")
+      }
+      Filter(function(x) inherits(x, "SCGroup"), self$members)
+    }
+  ),
+
   private = list(
 
     instantiate_members = function() {
