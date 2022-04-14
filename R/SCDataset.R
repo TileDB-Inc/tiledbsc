@@ -45,15 +45,20 @@ SCDataset <- R6::R6Class(
         self$scgroups <- scgroups
       }
 
-      self$misc <- TileDBGroup$new(
-        uri = file_path(self$uri, "misc"),
-        verbose = self$verbose
-      )
+      if ("misc" %in% names(self$members)) {
+        self$misc <- self$get_member("misc")
+      } else {
+        self$misc <- TileDBGroup$new(
+          uri = file_path(self$uri, "misc"),
+          verbose = self$verbose
+        )
+        self$add_member(self$misc, name = "misc", relative = FALSE)
+      }
 
       # Special handling of Seurat commands array
-      if ("commands" %in% names(self$misc$arrays)) {
-        self$misc$arrays$commands <- CommandsArray$new(
-          uri = self$misc$arrays$commands$uri,
+      if ("commands" %in% names(self$misc$members)) {
+        self$misc$members$commands <- CommandsArray$new(
+          uri = self$misc$members$commands$uri,
           verbose = self$verbose
         )
       }
@@ -125,7 +130,7 @@ SCDataset <- R6::R6Class(
           verbose = self$verbose
         )
         commandsArray$from_named_list_of_commands(namedListOfCommands)
-        self$misc$arrays[["commands"]] <- commandsArray
+        self$misc$add_member(commandsArray, name = "commands", relative = FALSE)
       }
 
       if (self$verbose) {
