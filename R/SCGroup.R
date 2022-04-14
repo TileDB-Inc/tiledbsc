@@ -71,55 +71,57 @@ SCGroup <- R6::R6Class(
       } else {
         self$X <- AssayMatrixGroup$new(
           uri = file_path(self$uri, "X"),
-          dimension_name = c("var_id", "obs_id"),
           verbose = self$verbose
         )
         self$add_member(self$X, name = "X", relative = FALSE)
       }
+      # TODO: Store dimension_name in the group metadata when support for
+      # string vectors are supported
+      self$X$dimension_name <- c("var_id", "obs_id")
 
       if ("obsm" %in% names(self$members)) {
         self$obsm <- self$get_member("obsm")
       } else {
         self$obsm <- AnnotationMatrixGroup$new(
           uri = file_path(self$uri, "obsm"),
-          dimension_name = "obs_id",
           verbose = self$verbose
         )
         self$add_member(self$obsm, name = "obsm", relative = FALSE)
       }
+      self$obsm$dimension_name <- "obs_id"
 
       if ("varm" %in% names(self$members)) {
         self$varm <- self$get_member("varm")
       } else {
         self$varm <- AnnotationMatrixGroup$new(
           uri = file_path(self$uri, "varm"),
-          dimension_name = "var_id",
           verbose = self$verbose
         )
         self$add_member(self$varm, name = "varm", relative = FALSE)
       }
+      self$varm$dimension_name <- "var_id"
 
       if ("obsp" %in% names(self$members)) {
         self$obsp <- self$get_member("obsp")
       } else {
         self$obsp <- AnnotationPairwiseMatrixGroup$new(
           uri = file_path(self$uri, "obsp"),
-          dimension_name = "obs_id",
           verbose = self$verbose
         )
         self$add_member(self$obsp, name = "obsp", relative = FALSE)
       }
+      self$obsp$dimension_name <- "obs_id"
 
       if ("varp" %in% names(self$members)) {
         self$varp <- self$get_member("varp")
       } else {
         self$varp <- AnnotationPairwiseMatrixGroup$new(
           uri = file_path(self$uri, "varp"),
-          dimension_name = "var_id",
           verbose = self$verbose
         )
         self$add_member(self$varp, name = "varp", relative = FALSE)
       }
+      self$varp$dimension_name <- "var_id"
 
       if ("misc" %in% names(self$members)) {
         self$misc <- self$get_member("misc")
