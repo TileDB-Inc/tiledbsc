@@ -19,6 +19,8 @@ test_that("SCGroup object can be created from a Seurat assay", {
   )
 
   scgroup$from_seurat_assay(assay1, obs = pbmc_small[[]])
+
+  # SCGroup slot classes
   expect_true(inherits(scgroup$X, "AssayMatrixGroup"))
   expect_true(inherits(scgroup$obs, "AnnotationDataframe"))
   expect_true(inherits(scgroup$var, "AnnotationDataframe"))
@@ -27,10 +29,19 @@ test_that("SCGroup object can be created from a Seurat assay", {
   expect_true(inherits(scgroup$obsp, "AnnotationPairwiseMatrixGroup"))
   expect_true(inherits(scgroup$varp, "AnnotationPairwiseMatrixGroup"))
   expect_true(inherits(scgroup$misc, "TileDBGroup"))
+
+  # AnnotationGroup dimensions
+  expect_equal(scgroup$X$dimension_name, c("var_id", "obs_id"))
+  expect_equal(scgroup$obsm$dimension_name, "obs_id")
+  expect_equal(scgroup$varm$dimension_name, "var_id")
+  expect_equal(scgroup$obsp$dimension_name, "obs_id")
+  expect_equal(scgroup$varp$dimension_name, "var_id")
 })
 
 test_that("Seurat Assay can be recreated from an existing SCGroup", {
   scgroup <- SCGroup$new(uri = tdb_uri, verbose = TRUE)
+
+  # SCGroup slot classes are restored
   expect_true(inherits(scgroup$X, "AssayMatrixGroup"))
   expect_true(inherits(scgroup$obs, "AnnotationDataframe"))
   expect_true(inherits(scgroup$var, "AnnotationDataframe"))
@@ -40,6 +51,14 @@ test_that("Seurat Assay can be recreated from an existing SCGroup", {
   expect_true(inherits(scgroup$varp, "AnnotationPairwiseMatrixGroup"))
   expect_true(inherits(scgroup$misc, "TileDBGroup"))
 
+  # AnnotationGroup dimensions are restored
+  expect_equal(scgroup$X$dimension_name, c("var_id", "obs_id"))
+  expect_equal(scgroup$obsm$dimension_name, "obs_id")
+  expect_equal(scgroup$varm$dimension_name, "var_id")
+  expect_equal(scgroup$obsp$dimension_name, "obs_id")
+  expect_equal(scgroup$varp$dimension_name, "var_id")
+
+  # Seurat assay conversion
   assay2 <- scgroup$to_seurat_assay()
 
   expect_s4_class(assay2, "Assay")
