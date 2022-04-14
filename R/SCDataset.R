@@ -10,21 +10,17 @@ SCDataset <- R6::R6Class(
   inherit = TileDBGroup,
 
   public = list(
-    #' @field scgroups Named list of [`SCGroup`]s in the dataset
-    scgroups = list(),
     #' @field misc Named list of miscellaneous objects.
     misc = list(),
 
     #' @description Create a new SCDataset object. The existing array group is
     #'   opened at the specified array `uri` if one is present, otherwise a new
-    #'   array group is created. The `scgroups` field is populated with
+    #'   array group is created. The `members` field is populated with
     #'   `SCGroup` objects for each URI passed explicitly to `scgroup_uris`, as
     #'   well `SCGroup` objects discovered within the `SCdataset` object's
     #'   TileDB group.
     #'
     #' @param uri URI of the TileDB group
-    #' @param scgroup_uris Optional vector of URIs for existing [`SCGroup`]s to
-    #'  add to the dataset
     #' @param verbose Print status messages
     initialize = function(
       uri,
