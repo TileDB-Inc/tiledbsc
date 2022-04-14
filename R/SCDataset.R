@@ -199,7 +199,7 @@ SCDataset <- R6::R6Class(
   ),
 
   active = list(
-    #' @description Retrieve [`SCGroup`] members.
+    #' @field scgroups Retrieve [`SCGroup`] members.
     scgroups = function(value) {
       if (!missing(value)) {
         stop("scgroups is read-only, use 'add_member()' to add a new SCGroup")

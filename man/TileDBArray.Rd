@@ -112,7 +112,7 @@ A \code{\link[tiledb:tiledb_array]{tiledb::tiledb_array}} object.
 \if{html}{\out{<a id="method-get_metadata"></a>}}
 \if{latex}{\out{\hypertarget{method-get_metadata}{}}}
 \subsection{Method \code{get_metadata()}}{
-Retrieve metadata from a TileDB array.
+Retrieve metadata from the TileDB array.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{TileDBArray$get_metadata(key = NULL, prefix = NULL)}\if{html}{\out{</div>}}
 }

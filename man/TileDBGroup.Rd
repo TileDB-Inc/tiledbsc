@@ -4,7 +4,7 @@
 \alias{TileDBGroup}
 \title{Base class for interacting with TileDB groups}
 \value{
-A named list of arrays.
+A named list of group members.
 
 The array object.
 }
@@ -18,7 +18,7 @@ Base class for interacting with TileDB groups
 \describe{
 \item{\code{uri}}{The URI of the TileDB group}
 
-\item{\code{arrays}}{Named list of arrays in the group}
+\item{\code{members}}{Named list of members in the group}
 
 \item{\code{verbose}}{Whether to print verbose output}
 }
@@ -31,10 +31,15 @@ Base class for interacting with TileDB groups
 \item \href{#method-class}{\code{TileDBGroup$class()}}
 \item \href{#method-print}{\code{TileDBGroup$print()}}
 \item \href{#method-group_exists}{\code{TileDBGroup$group_exists()}}
+\item \href{#method-tiledb_group}{\code{TileDBGroup$tiledb_group()}}
 \item \href{#method-list_objects}{\code{TileDBGroup$list_objects()}}
 \item \href{#method-list_object_uris}{\code{TileDBGroup$list_object_uris()}}
-\item \href{#method-get_arrays}{\code{TileDBGroup$get_arrays()}}
-\item \href{#method-get_array}{\code{TileDBGroup$get_array()}}
+\item \href{#method-add_member}{\code{TileDBGroup$add_member()}}
+\item \href{#method-count_members}{\code{TileDBGroup$count_members()}}
+\item \href{#method-list_members}{\code{TileDBGroup$list_members()}}
+\item \href{#method-list_member_uris}{\code{TileDBGroup$list_member_uris()}}
+\item \href{#method-get_members}{\code{TileDBGroup$get_members()}}
+\item \href{#method-get_member}{\code{TileDBGroup$get_member()}}
 \item \href{#method-get_metadata}{\code{TileDBGroup$get_metadata()}}
 \item \href{#method-add_metadata}{\code{TileDBGroup$add_metadata()}}
 \item \href{#method-clone}{\code{TileDBGroup$clone()}}
@@ -93,6 +98,26 @@ TRUE if the group exists, FALSE otherwise.
 }
 }
 \if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-tiledb_group"></a>}}
+\if{latex}{\out{\hypertarget{method-tiledb_group}{}}}
+\subsection{Method \code{tiledb_group()}}{
+Return a \code{\link{tiledb_group}} object
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{TileDBGroup$tiledb_group(...)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{...}}{Optional arguments to pass to \code{tiledb::tiledb_array()}}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A \code{\link[tiledb:tiledb_group]{tiledb::tiledb_group}} object.
+}
+}
+\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-list_objects"></a>}}
 \if{latex}{\out{\hypertarget{method-list_objects}{}}}
 \subsection{Method \code{list_objects()}}{
@@ -138,30 +163,114 @@ basename of the object.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_arrays"></a>}}
-\if{latex}{\out{\hypertarget{method-get_arrays}{}}}
-\subsection{Method \code{get_arrays()}}{
-Retrieve arrays within the group that meet the specified
-criteria.
+\if{html}{\out{<a id="method-add_member"></a>}}
+\if{latex}{\out{\hypertarget{method-add_member}{}}}
+\subsection{Method \code{add_member()}}{
+Add new member to the group.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{TileDBGroup$get_arrays(prefix = NULL)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{TileDBGroup$add_member(object, name = NULL, relative = TRUE)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{prefix}}{String prefix to filter the array names.}
+\item{\code{object}}{The \code{TileDBArray} or \code{TileDBGroup} object to add.}
+
+\item{\code{name}}{The name to use for the member. By default the base name of
+the object's URI is used.}
+
+\item{\code{relative}}{A logical value indicating whether the new member's URI
+is relative to the group's URI or not.}
 }
 \if{html}{\out{</div>}}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_array"></a>}}
-\if{latex}{\out{\hypertarget{method-get_array}{}}}
-\subsection{Method \code{get_array()}}{
-Retrieve an array within the group.
+\if{html}{\out{<a id="method-count_members"></a>}}
+\if{latex}{\out{\hypertarget{method-count_members}{}}}
+\subsection{Method \code{count_members()}}{
+Count the number of members in the group.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{TileDBGroup$get_array(name)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{TileDBGroup$count_members()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+Integer count of members in the group.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-list_members"></a>}}
+\if{latex}{\out{\hypertarget{method-list_members}{}}}
+\subsection{Method \code{list_members()}}{
+List the members of the group.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{TileDBGroup$list_members(type = NULL)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{type}}{The type of member to list, either \code{"ARRAY"}, or \code{"GROUP"}.
+By default all member types are listed.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A \code{data.frame} with columns \code{URI} and \code{TYPE}.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-list_member_uris"></a>}}
+\if{latex}{\out{\hypertarget{method-list_member_uris}{}}}
+\subsection{Method \code{list_member_uris()}}{
+List URIs for group members
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{TileDBGroup$list_member_uris(type = NULL, prefix = NULL)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{type}}{The type of member to list, either \code{"ARRAY"}, or \code{"GROUP"}.
+By default all member types are listed.}
+
+\item{\code{prefix}}{Filter URIs whose basename contain an optional prefix.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A character vector of member URIs with names corresponding to the
+basename of the URI.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-get_members"></a>}}
+\if{latex}{\out{\hypertarget{method-get_members}{}}}
+\subsection{Method \code{get_members()}}{
+Retrieve arrays within the group that meet the specified
+criteria.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{TileDBGroup$get_members(type = NULL, prefix = NULL)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{type}}{The type of group members to list, either \code{"ARRAY"}, or
+\code{"GROUP"}.}
+
+\item{\code{prefix}}{String prefix to filter the member names.}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-get_member"></a>}}
+\if{latex}{\out{\hypertarget{method-get_member}{}}}
+\subsection{Method \code{get_member()}}{
+Retrieve a group member.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{TileDBGroup$get_member(name)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
