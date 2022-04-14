@@ -205,8 +205,9 @@ SCDataset <- R6::R6Class(
       # with the exception of 'misc' all members should be SCGroups
       # TODO: Use group metadata to indicates each member's class
       member_uris <- self$list_member_uris()
-      scgroup_uris <- member_uris[names(member_uris) != "misc"]
       misc_uri <- member_uris[names(member_uris) == "misc"]
+      scgroup_uris <- member_uris[names(member_uris) != "misc"]
+      names(scgroup_uris) <- sub("scgroup_", "", names(scgroup_uris), fixed = TRUE)
 
       c(
         lapply(scgroup_uris, SCGroup$new, verbose = self$verbose),
