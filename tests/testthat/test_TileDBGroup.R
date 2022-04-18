@@ -79,6 +79,26 @@ test_that("members of an existing group are instantiated", {
   expect_identical(grp$get_member("g1"), grp$members[["g1"]])
 })
 
+test_that("a group is portable when members are added with relative uris", {
+  grp_uri1 <- withr::local_tempdir("portable-group-1-")
+  grp_uri2 <- sub("-1-", "-2-", grp_uri1, fixed = TRUE)
+
+  grp <- TileDBGroup$new(grp_uri1)
+  a1 <- TileDBArray$new(create_empty_test_array(file.path(grp_uri1, "a1")))
+  grp$add_member(a1, relative = TRUE)
+
+  tiledb::tiledb_vfs_move_dir(olduri = grp_uri1, newuri = grp_uri2)
+
+  expect_message(
+    TileDBGroup$new(uri = grp_uri1, verbose = TRUE),
+    "No TileDBGroup currently exists at"
+  )
+
+  grp <- TileDBGroup$new(uri = grp_uri2)
+  expect_true(grp$members$a1$array_exists())
+  grp$members$a1$uri
+})
+
 test_that("metadata can be set and retrieved from a group", {
   grp_uri <- withr::local_tempdir("metadata-group")
   grp <- TileDBGroup$new(uri = grp_uri, verbose = TRUE)
