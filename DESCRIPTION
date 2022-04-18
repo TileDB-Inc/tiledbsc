@@ -38,11 +38,11 @@ Imports:
     SeuratObject,
     jsonlite,
     glue,
-    utils
+    utils,
+    fs
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2
 Suggests:
-    fs,
     rmarkdown,
     knitr,
     withr,

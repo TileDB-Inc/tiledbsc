@@ -99,14 +99,22 @@ TileDBGroup <- R6::R6Class(
     #' @param name The name to use for the member. By default the base name of
     #' the object's URI is used.
     #' @param relative A logical value indicating whether the new member's URI
-    #' is relative to the group's URI or not.
+    #' is relative to the group's URI.
+    #' @importFrom fs path_rel
     add_member = function(object, name = NULL, relative = TRUE) {
       stopifnot(
         "Only 'TileDBArray' or 'TileDBGroup' objects can be added" =
           inherits(object, "TileDBGroup") || inherits(object, "TileDBArray"),
         is.null(name) || is_scalar_character(name)
       )
-      uri <- object$uri
+
+      # Because object$uri will always return an absolute URI, we need to
+      # make it relative to the group's URI before adding it to the group
+      if (relative) {
+        uri <- fs::path_rel(object$uri, start = self$uri)
+      } else {
+        uri <- object$uri
+      }
       name <- name %||% basename(uri)
 
       on.exit(private$group_close())
