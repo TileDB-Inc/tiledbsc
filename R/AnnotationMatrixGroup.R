@@ -34,7 +34,7 @@ AnnotationMatrixGroup <- R6::R6Class(
 
       array$from_matrix(data, self$dimension_name)
       if (!is.null(metadata)) array$add_metadata(metadata)
-      self$add_member(array, name, relative = FALSE)
+      self$add_member(array, name, relative = TRUE)
     }
   ),
 
