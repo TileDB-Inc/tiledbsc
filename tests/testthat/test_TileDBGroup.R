@@ -58,12 +58,6 @@ test_that("members of an existing group are instantiated", {
   grp_uri <- withr::local_tempdir("existing-group")
   create_test_group_with_members(grp_uri, relative = FALSE)
 
-  # validate members
-  tdb_grp <- tiledb::tiledb_group(grp_uri, "READ")
-  expect_equal(tiledb::tiledb_group_member(tdb_grp, 0)[1], "ARRAY")
-  expect_equal(tiledb::tiledb_group_member(tdb_grp, 1)[1], "GROUP")
-  tiledb::tiledb_group_close(tdb_grp)
-
   grp <- TileDBGroup$new(uri = grp_uri, verbose = FALSE)
   expect_equal(grp$count_members(), 2)
   expect_setequal(grp$list_members()$TYPE, c("ARRAY", "GROUP"))
