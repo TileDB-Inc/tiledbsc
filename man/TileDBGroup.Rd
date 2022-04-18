@@ -180,7 +180,7 @@ Add new member to the group.
 the object's URI is used.}
 
 \item{\code{relative}}{A logical value indicating whether the new member's URI
-is relative to the group's URI or not.}
+is relative to the group's URI.}
 }
 \if{html}{\out{</div>}}
 }
