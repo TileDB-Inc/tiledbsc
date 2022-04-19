@@ -50,7 +50,7 @@ TileDBArray <- R6::R6Class(
       do.call(tiledb::tiledb_array, args)
     },
 
-    #' @description Retrieve metadata from a TileDB array.
+    #' @description Retrieve metadata from the TileDB array.
     #' @param key The name of the metadata attribute to retrieve.
     #' @param prefix Filter metadata using an optional prefix. Ignored if `key`
     #'   is not NULL.
@@ -61,7 +61,8 @@ TileDBArray <- R6::R6Class(
       if (!is.null(key)) {
         metadata <- tiledb::tiledb_get_metadata(arr, key)
       } else {
-        metadata <- tiledb::tiledb_get_all_metadata(arr)
+        # coerce tiledb_metadata to list
+        metadata <- unclass(tiledb::tiledb_get_all_metadata(arr))
         if (!is.null(prefix)) {
           metadata <- metadata[string_starts_with(names(metadata), prefix)]
         }

@@ -39,15 +39,13 @@ AssayMatrixGroup <- R6::R6Class(
         value_col = value_col
       )
       if (!is.null(metadata)) array$add_metadata(metadata)
-      self$arrays[[name]] <- array
-
-      return(self)
+      self$add_member(array, name, relative = TRUE)
     }
   ),
 
   private = list(
-    get_existing_arrays = function(uris) {
-      lapply(uris, AssayMatrix$new, verbose = self$verbose)
+    instantiate_members = function() {
+      lapply(self$list_member_uris(), AssayMatrix$new, verbose = self$verbose)
     }
   )
 )

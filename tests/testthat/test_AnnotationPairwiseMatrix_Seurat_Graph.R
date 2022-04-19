@@ -13,11 +13,11 @@ test_that("graph data can be stored and retrieved", {
 
   # obsp/varp are discovered
   scgroup2 <- SCGroup$new(uri = uri)
-  expect_length(scgroup2$obsp$arrays, 1L)
-  expect_length(scgroup2$varp$arrays, 0L)
+  expect_length(scgroup2$obsp$members, 1L)
+  expect_length(scgroup2$varp$members, 0L)
 
   # validate recreated graph
-  graph2 <- scgroup2$obsp$arrays$graph_snn$to_seurat_graph()
+  graph2 <- scgroup2$obsp$members$graph_snn$to_seurat_graph()
   expect_identical(
     SeuratObject::DefaultAssay(graph2),
     SeuratObject::DefaultAssay(graph1)

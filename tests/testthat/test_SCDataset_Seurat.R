@@ -12,36 +12,39 @@ test_that("SCDataset can be created from a Seurat object", {
   expect_true(inherits(scdataset, "SCDataset"))
 
   scdataset$from_seurat(pbmc_small)
-  expect_length(scdataset$scgroups, 1)
-  expect_true(inherits(scdataset$scgroups[[1]], "SCGroup"))
+  expect_true(inherits(scdataset$members$RNA, "SCGroup"))
+  expect_true(inherits(scdataset$members$misc, "TileDBGroup"))
+  expect_mapequal(scdataset$scgroups, scdataset$members["RNA"])
 
   # check for dimensionality reduction results
   expect_identical(
-    names(scdataset$scgroups[[1]]$obsm$arrays),
+    names(scdataset$members$RNA$obsm$members),
     c("dimreduction_pca", "dimreduction_tsne")
   )
   expect_identical(
-    names(scdataset$scgroups[[1]]$varm$arrays),
+    names(scdataset$members$RNA$varm$members),
     "dimreduction_pca"
   )
 
   # check for graph results
   expect_identical(
-    names(scdataset$scgroups[[1]]$obsp$arrays),
+    names(scdataset$members$RNA$obsp$members),
     c("graph_snn")
   )
 
   # create a new SCDataset from an existing TileDB group
   scdataset2 <- SCDataset$new(uri = tdb_uri, verbose = TRUE)
   expect_true(inherits(scdataset2, "SCDataset"))
-  expect_true(inherits(scdataset2$scgroups[[1]], "SCGroup"))
+  expect_true(inherits(scdataset2$members$RNA, "SCGroup"))
+  expect_false(inherits(scdataset2$members$misc, "SCGroup"))
+  expect_true(inherits(scdataset2$members$misc, "TileDBGroup"))
 
   # check for auxiliary arrays
-  scgroup <- scdataset2$scgroups[["RNA"]]
+  scgroup <- scdataset2$get_member("RNA")
 
-  expect_length(scgroup$obsm$arrays, 2)
-  expect_length(scgroup$varm$arrays, 1)
-  expect_length(scgroup$obsp$arrays, 1)
+  expect_equal(scgroup$obsm$count_members(), 2)
+  expect_equal(scgroup$varm$count_members(), 1)
+  expect_equal(scgroup$obsp$count_members(), 1)
 
   # validate restored aux data
   pbmc_small2 <- scdataset2$to_seurat()

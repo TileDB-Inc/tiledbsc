@@ -1,7 +1,10 @@
 #' Check if object is empty
 #' @noRd
 is_empty <- function(x) {
-  length(x) == 0
+  switch(class(x)[1],
+    "data.frame" = nrow(x) == 0,
+    length(x) == 0
+  )
 }
 
 #' Check if a vector is named
@@ -45,6 +48,18 @@ string_collapse <- function(x, sep = ", ") {
 
 n_unique <- function(x) {
   length(unique(x))
+}
+
+vapply_char <- function(X, FUN, ..., USE.NAMES = TRUE) {
+  vapply(X, FUN, FUN.VALUE = character(1L), ..., USE.NAMES = USE.NAMES)
+}
+
+vapply_lgl <- function(X, FUN, ..., USE.NAMES = TRUE) {
+  vapply(X, FUN, FUN.VALUE = logical(1L), ..., USE.NAMES = USE.NAMES)
+}
+
+vapply_int <- function(X, FUN, ..., USE.NAMES = TRUE) {
+  vapply(X, FUN, FUN.VALUE = integer(1L), ..., USE.NAMES = USE.NAMES)
 }
 
 # rename(iris, c(petal_length = "Petal.Length", species = "Species", hi = "YO"))

@@ -26,11 +26,11 @@ test_that("matrices can be added to an AssayMatrixGroup", {
   mat <- SeuratObject::GetAssayData(pbmc_small[["RNA"]], "counts")
 
   assaymats <- AssayMatrixGroup$new(uri = uri, dimension_name = c("obs_id", "var_id"))
-  expect_length(assaymats$arrays, 0)
+  expect_length(assaymats$members, 0)
 
   assaymats$add_assay_matrix(
     data = SeuratObject::GetAssayData(pbmc_small[["RNA"]], "counts"),
     name = "counts"
   )
-  expect_true(inherits(assaymats$arrays[["counts"]], "AssayMatrix"))
+  expect_true(inherits(assaymats$members[["counts"]], "AssayMatrix"))
 })

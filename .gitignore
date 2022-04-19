@@ -10,3 +10,6 @@ inst/doc
 # Vim swapfiles:
 .*.sw?
 .sw?
+
+# macos
+.DS_Store

@@ -19,17 +19,50 @@ test_that("SCGroup object can be created from a Seurat assay", {
   )
 
   scgroup$from_seurat_assay(assay1, obs = pbmc_small[[]])
-  expect_s4_class(scgroup$obs$tiledb_array(), "tiledb_array")
-  expect_s4_class(scgroup$var$tiledb_array(), "tiledb_array")
+
+  # SCGroup slot classes
   expect_true(inherits(scgroup$X, "AssayMatrixGroup"))
+  expect_true(inherits(scgroup$obs, "AnnotationDataframe"))
+  expect_true(inherits(scgroup$var, "AnnotationDataframe"))
+  expect_true(inherits(scgroup$obsm, "AnnotationMatrixGroup"))
+  expect_true(inherits(scgroup$varm, "AnnotationMatrixGroup"))
+  expect_true(inherits(scgroup$obsp, "AnnotationPairwiseMatrixGroup"))
+  expect_true(inherits(scgroup$varp, "AnnotationPairwiseMatrixGroup"))
+  expect_true(inherits(scgroup$misc, "TileDBGroup"))
+
+  # AnnotationGroup dimensions
+  expect_equal(scgroup$X$dimension_name, c("var_id", "obs_id"))
+  expect_equal(scgroup$obsm$dimension_name, "obs_id")
+  expect_equal(scgroup$varm$dimension_name, "var_id")
+  expect_equal(scgroup$obsp$dimension_name, "obs_id")
+  expect_equal(scgroup$varp$dimension_name, "var_id")
 })
 
 test_that("Seurat Assay can be recreated from an existing SCGroup", {
   scgroup <- SCGroup$new(uri = tdb_uri, verbose = TRUE)
+
+  # SCGroup slot classes are restored
+  expect_true(inherits(scgroup$X, "AssayMatrixGroup"))
+  expect_true(inherits(scgroup$obs, "AnnotationDataframe"))
+  expect_true(inherits(scgroup$var, "AnnotationDataframe"))
+  expect_true(inherits(scgroup$obsm, "AnnotationMatrixGroup"))
+  expect_true(inherits(scgroup$varm, "AnnotationMatrixGroup"))
+  expect_true(inherits(scgroup$obsp, "AnnotationPairwiseMatrixGroup"))
+  expect_true(inherits(scgroup$varp, "AnnotationPairwiseMatrixGroup"))
+  expect_true(inherits(scgroup$misc, "TileDBGroup"))
+
+  # AnnotationGroup dimensions are restored
+  expect_equal(scgroup$X$dimension_name, c("var_id", "obs_id"))
+  expect_equal(scgroup$obsm$dimension_name, "obs_id")
+  expect_equal(scgroup$varm$dimension_name, "var_id")
+  expect_equal(scgroup$obsp$dimension_name, "obs_id")
+  expect_equal(scgroup$varp$dimension_name, "var_id")
+
+  # Seurat assay conversion
   assay2 <- scgroup$to_seurat_assay()
 
   expect_s4_class(assay2, "Assay")
-  expect_equal(slot(assay2, "key"), slot(assay1, "key"))
+  expect_equivalent(slot(assay2, "key"), slot(assay1, "key"))
 
   # use feature/sample names to ensure objects being compared are sorted
   var_ids <- rownames(assay1)
@@ -73,8 +106,8 @@ test_that("Seurat Assay can be recreated from an existing SCGroup", {
 
 test_that("Individual layers can be retrieved from an existing SCGroup", {
   scgroup <<- SCGroup$new(uri = tdb_uri, verbose = TRUE)
-  expect_true(inherits(scgroup$to_seurat_assay(layers = "counts"), "Assay"))
-  expect_true(inherits(scgroup$to_seurat_assay(layers = "data"), "Assay"))
+  expect_s4_class(scgroup$to_seurat_assay(layers = "counts"), "Assay")
+  expect_s4_class(scgroup$to_seurat_assay(layers = "data"), "Assay")
   expect_error(
     scgroup$to_seurat_assay(layers = "scale.data"),
     "Creation of a Seurat Assay requires either 'counts' or 'data'"
@@ -87,7 +120,7 @@ test_that("obs and var are created when even no annotations are present", {
   assay <- SeuratObject::CreateAssayObject(
     counts = SeuratObject::GetAssayData(pbmc_small[["RNA"]], "counts")
   )
-  expect_true(is_empty(assay[[]]))
+  expect_equal(ncol(assay[[]]), 0L)
   SeuratObject::Key(assay) <- "RNA"
 
   scgroup <- SCGroup$new(uri = uri)
@@ -95,19 +128,19 @@ test_that("obs and var are created when even no annotations are present", {
 
   obs <- scgroup$obs$to_dataframe()
   expect_length(obs, 0)
-  expect_true(all(rownames(obs) %in% colnames(assay)))
+  expect_setequal(rownames(obs), colnames(assay))
 
   var <- scgroup$var$to_dataframe()
   expect_length(var, 0)
-  expect_true(all(rownames(var) %in% rownames(assay)))
+  expect_setequal(rownames(var), rownames(assay))
 })
 
 test_that("dimensional reduction data can be stored and retrieved", {
   scgroup <- SCGroup$new(uri = tdb_uri)
 
   # obsm/varm are empty
-  expect_length(scgroup$obsm$arrays, 0L)
-  expect_length(scgroup$varm$arrays, 0L)
+  expect_length(scgroup$obsm$members, 0L)
+  expect_length(scgroup$varm$members, 0L)
 
   user_md <- list(foo = "bar")
   pca1 <- SeuratObject::Reductions(pbmc_small, slot = "pca")
@@ -115,20 +148,20 @@ test_that("dimensional reduction data can be stored and retrieved", {
 
   # obsm/varm are discovered
   scgroup <- SCGroup$new(uri = tdb_uri)
-  expect_length(scgroup$obsm$arrays, 1L)
-  expect_length(scgroup$varm$arrays, 1L)
+  expect_length(scgroup$obsm$members, 1L)
+  expect_length(scgroup$varm$members, 1L)
 
   # check dimreduction metadata
   expect_identical(
-    scgroup$obsm$arrays[[1]]$get_metadata(key = "dimreduction_technique"),
+    scgroup$obsm$members[[1]]$get_metadata(key = "dimreduction_technique"),
     "pca"
   )
   expect_identical(
-    scgroup$obsm$arrays[[1]]$get_metadata(key = "dimreduction_key"),
+    scgroup$obsm$members[[1]]$get_metadata(key = "dimreduction_key"),
     "PC_"
   )
   expect_identical(
-    scgroup$obsm$arrays[[1]]$get_metadata(key = "foo"),
+    scgroup$obsm$members[[1]]$get_metadata(key = "foo"),
     "bar"
   )
 
@@ -240,7 +273,7 @@ test_that("an assay with empty feature metdata can be converted", {
     counts = SeuratObject::GetAssayData(pbmc_small[["RNA"]], "counts")
   )
   SeuratObject::Key(assay) <- "RNA"
-  expect_true(is_empty(assay[[]]))
+  expect_length(assay[[]], 0L)
 
   scgroup <- SCGroup$new(uri, verbose = FALSE)
   expect_silent(scgroup$from_seurat_assay(assay))

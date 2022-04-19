@@ -48,8 +48,8 @@ SCGroup <- R6::R6Class(
       verbose = TRUE) {
       super$initialize(uri, verbose)
 
-      if ("obs" %in% names(self$arrays)) {
-        self$obs <- self$get_array("obs")
+      if ("obs" %in% names(self$members)) {
+        self$obs <- self$get_member("obs")
       } else {
         self$obs <- AnnotationDataframe$new(
           uri = file_path(self$uri, "obs"),
@@ -57,8 +57,8 @@ SCGroup <- R6::R6Class(
         )
       }
 
-      if ("var" %in% names(self$arrays)) {
-        self$var <- self$get_array("var")
+      if ("var" %in% names(self$members)) {
+        self$var <- self$get_member("var")
       } else {
         self$var <- AnnotationDataframe$new(
           uri = file_path(self$uri, "var"),
@@ -66,40 +66,72 @@ SCGroup <- R6::R6Class(
         )
       }
 
-      self$X <- AssayMatrixGroup$new(
-        uri = file_path(self$uri, "X"),
-        dimension_name = c("var_id", "obs_id"),
-        verbose = self$verbose
-      )
+      if ("X" %in% names(self$members)) {
+        self$X <- self$get_member("X")
+      } else {
+        self$X <- AssayMatrixGroup$new(
+          uri = file_path(self$uri, "X"),
+          verbose = self$verbose
+        )
+        self$add_member(self$X, name = "X", relative = TRUE)
+      }
+      # TODO: Store dimension_name in the group metadata when support for
+      # string vectors are supported
+      self$X$dimension_name <- c("var_id", "obs_id")
 
-      self$obsm <- AnnotationMatrixGroup$new(
-        uri = file_path(self$uri, "obsm"),
-        dimension_name = "obs_id",
-        verbose = self$verbose
-      )
+      if ("obsm" %in% names(self$members)) {
+        self$obsm <- self$get_member("obsm")
+      } else {
+        self$obsm <- AnnotationMatrixGroup$new(
+          uri = file_path(self$uri, "obsm"),
+          verbose = self$verbose
+        )
+        self$add_member(self$obsm, name = "obsm", relative = TRUE)
+      }
+      self$obsm$dimension_name <- "obs_id"
 
-      self$varm <- AnnotationMatrixGroup$new(
-        uri = file_path(self$uri, "varm"),
-        dimension_name = "var_id",
-        verbose = self$verbose
-      )
+      if ("varm" %in% names(self$members)) {
+        self$varm <- self$get_member("varm")
+      } else {
+        self$varm <- AnnotationMatrixGroup$new(
+          uri = file_path(self$uri, "varm"),
+          verbose = self$verbose
+        )
+        self$add_member(self$varm, name = "varm", relative = TRUE)
+      }
+      self$varm$dimension_name <- "var_id"
 
-      self$obsp <- AnnotationPairwiseMatrixGroup$new(
-        uri = file_path(self$uri, "obsp"),
-        dimension_name = "obs_id",
-        verbose = self$verbose
-      )
+      if ("obsp" %in% names(self$members)) {
+        self$obsp <- self$get_member("obsp")
+      } else {
+        self$obsp <- AnnotationPairwiseMatrixGroup$new(
+          uri = file_path(self$uri, "obsp"),
+          verbose = self$verbose
+        )
+        self$add_member(self$obsp, name = "obsp", relative = TRUE)
+      }
+      self$obsp$dimension_name <- "obs_id"
 
-      self$varp <- AnnotationPairwiseMatrixGroup$new(
-        uri = file_path(self$uri, "varp"),
-        dimension_name = "var_id",
-        verbose = self$verbose
-      )
+      if ("varp" %in% names(self$members)) {
+        self$varp <- self$get_member("varp")
+      } else {
+        self$varp <- AnnotationPairwiseMatrixGroup$new(
+          uri = file_path(self$uri, "varp"),
+          verbose = self$verbose
+        )
+        self$add_member(self$varp, name = "varp", relative = TRUE)
+      }
+      self$varp$dimension_name <- "var_id"
 
-      self$misc <- TileDBGroup$new(
-        uri = file_path(self$uri, "misc"),
-        verbose = self$verbose
-      )
+      if ("misc" %in% names(self$members)) {
+        self$misc <- self$get_member("misc")
+      } else {
+        self$misc <- TileDBGroup$new(
+          uri = file_path(self$uri, "misc"),
+          verbose = self$verbose
+        )
+        self$add_member(self$misc, name = "misc", relative = TRUE)
+      }
     },
 
     #' @description Convert a Seurat Assay to a TileDB-backed sc_group.
@@ -132,6 +164,9 @@ SCGroup <- R6::R6Class(
         obs <- data.frame(row.names = colnames(object))
       }
       self$obs$from_dataframe(obs, index_col = "obs_id")
+      if (is.null(self$get_member("obs"))) {
+        self$add_member(self$obs, name = "obs", relative = TRUE)
+      }
 
       if (!is_empty(SeuratObject::VariableFeatures(object))) {
         object <- SeuratObject::AddMetaData(
@@ -141,10 +176,9 @@ SCGroup <- R6::R6Class(
         )
       }
       self$var$from_dataframe(object[[]], index_col = "var_id")
-
-      # Add obs/var to the scgroup's arrays list
-      # TODO: Necessary? Could obs/var be active bindings that point to arrays?
-      self$arrays[c("obs", "var")] <- list(obs = self$obs, var = self$var)
+      if (is.null(self$get_member("var"))) {
+        self$add_member(self$var, name = "var", relative = TRUE)
+      }
 
       assay_slots <- c("counts", "data")
       if (seurat_assay_has_scale_data(object)) {
@@ -466,7 +500,7 @@ SCGroup <- R6::R6Class(
       )
 
       # obs-aligned dimreductions
-      dimreductions <- self$obsm$get_arrays(prefix = "dimreduction_")
+      dimreductions <- self$obsm$get_members(prefix = "dimreduction_")
       if (!is_empty(dimreductions)) {
         names(dimreductions) <- sub("^dimreduction_", "", names(dimreductions))
         # TODO: Why aren't the dimreduction matrices rownames sorted?
@@ -507,9 +541,55 @@ SCGroup <- R6::R6Class(
 
   private = list(
 
+    # Instantiate each member of the scgroup using the appropriate R6 class
+    # generator, which is determined by the base name of the
+    # member's URI. In the future, it would be nice to have a more robust
+    # mechanism for doing this (e.g., by looking the member's type from its
+    # metadata).
+    instantiate_members = function() {
+      members <- self$list_members()
+      named_uris <- setNames(members$URI, basename(members$URI))
+
+      # fallback generators for members not covered by the scgroup schema
+      fallback_generators <- lapply(
+        members$TYPE,
+        FUN = switch,
+        ARRAY = TileDBArray$new,
+        GROUP = TileDBGroup$new
+      )
+
+      # scgroup components generators
+      scgroup_generators <- mapply(
+        function(member, fallback_generator) {
+          switch(member,
+            X = AssayMatrixGroup$new,
+            obs = AnnotationDataframe$new,
+            var = AnnotationDataframe$new,
+            obsm = AnnotationMatrixGroup$new,
+            varm = AnnotationMatrixGroup$new,
+            obsp = AnnotationPairwiseMatrixGroup$new,
+            varp = AnnotationPairwiseMatrixGroup$new,
+            fallback_generator
+          )
+        },
+        member = names(named_uris),
+        fallback_generator = fallback_generators
+      )
+
+      # instantiate scgroup components
+      mapply(
+        FUN = function(generator, uri, verbose) {
+          generator(uri = uri, verbose = verbose)
+        },
+        generator = scgroup_generators,
+        uri = named_uris,
+        MoreArgs = list(verbose = self$verbose)
+      )
+    },
+
     # Validate layers argument
     check_layers = function(layers) {
-      available_layers <- names(self$X$arrays)
+      available_layers <- names(self$X$members)
       matching_layers <- layers[layers %in% available_layers]
       if (is_empty(matching_layers)) {
         stop("Did not find any matching 'X' layers")
@@ -518,7 +598,7 @@ SCGroup <- R6::R6Class(
     },
 
     get_annotation_group_arrays = function(array_groups, prefix = NULL) {
-      arrays <- lapply(array_groups, function(x) x$get_arrays(prefix = prefix))
+      arrays <- lapply(array_groups, function(x) x$get_members(prefix = prefix))
       Filter(Negate(is_empty), arrays)
     },
 
@@ -528,9 +608,10 @@ SCGroup <- R6::R6Class(
     # it doesn't contain the full set of obs identifiers (i.e., cell/sample
     # names).
     get_assay_matrices = function(layers) {
+
       assay_mats <- lapply(
-        setNames(layers, layers),
-        function(x) self$X$arrays[[x]]$to_matrix()
+        self$X$members[layers],
+        function(x) x$to_matrix()
       )
 
       # Ensure assay matrices all contain the same observations

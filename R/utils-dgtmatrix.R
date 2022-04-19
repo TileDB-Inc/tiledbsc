@@ -26,7 +26,7 @@ dgtmatrix_to_dataframe <- function(x, index_cols = c("i", "j"), value_cols = NUL
 
   stopifnot(length(index_cols) == 2, length(value_cols) == length(x))
 
-  is_dgt <- vapply(x, inherits, FUN.VALUE = logical(1L), what = "dgTMatrix")
+  is_dgt <- vapply_lgl(x, inherits, what = "dgTMatrix")
   if (!all(is_dgt)) {
     stop("When 'x' is a list all elements must contain a dgTMatrix")
   }

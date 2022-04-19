@@ -34,15 +34,13 @@ AnnotationMatrixGroup <- R6::R6Class(
 
       array$from_matrix(data, self$dimension_name)
       if (!is.null(metadata)) array$add_metadata(metadata)
-      self$arrays[[name]] <- array
-
-      return(self)
+      self$add_member(array, name, relative = TRUE)
     }
   ),
 
   private = list(
-    get_existing_arrays = function(uris) {
-      lapply(uris, AnnotationMatrix$new, verbose = self$verbose)
+    instantiate_members = function() {
+      lapply(self$list_member_uris(), AnnotationMatrix$new, verbose = self$verbose)
     }
   )
 )

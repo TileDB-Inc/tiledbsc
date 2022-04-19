@@ -58,7 +58,7 @@ test_that("a SingleCellExperiment can be created from an existing SCGroup", {
   sce <- scgroup$to_single_cell_experiment(layers = c("counts", "data"))
   expect_s4_class(sce, "SingleCellExperiment")
 
-  expect_identical(
+  expect_setequal(
     names(SingleCellExperiment::reducedDims(sce)),
     SeuratObject::Reductions(pbmc_small)
   )

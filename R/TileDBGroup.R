@@ -6,8 +6,8 @@ TileDBGroup <- R6::R6Class(
   public = list(
     #' @field uri The URI of the TileDB group
     uri = NULL,
-    #' @field arrays Named list of arrays in the group
-    arrays = list(),
+    #' @field members Named list of members in the group
+    members = list(),
     #' @field verbose Whether to print verbose output
     verbose = TRUE,
 
@@ -18,10 +18,6 @@ TileDBGroup <- R6::R6Class(
       if (missing(uri)) stop("A `uri` must be specified")
       self$uri <- uri
       self$verbose <- verbose
-
-      # Until TileDB supports group metadata, we need to create an array
-      # to store the metadata.
-      private$metadata_uri <- file_path(self$uri, "__tiledb_group_metadata")
 
       if (self$group_exists()) {
         if (self$verbose) {
@@ -36,18 +32,13 @@ TileDBGroup <- R6::R6Class(
           )
         }
         private$create_group()
-        private$create_metadata_array()
       }
 
-      # Create objects for each array URI (except the metadata array)
-      array_uris <- self$list_object_uris(type = "ARRAY")
-      array_uris <- array_uris[!grepl("__tiledb_group_metadata", array_uris)]
+      private$group <- tiledb::tiledb_group(self$uri)
+      private$group_close()
 
-      if (!is_empty(array_uris)) {
-        arrays <- private$get_existing_arrays(array_uris)
-        names(arrays) <- basename(array_uris)
-        self$arrays <- arrays
-      }
+      # Instatiate objects for existing members
+      self$members <- private$instantiate_members()
     },
 
     #' @description Print the name of the R6 class.
@@ -68,17 +59,22 @@ TileDBGroup <- R6::R6Class(
       tiledb::tiledb_object_type(self$uri) == "GROUP"
     },
 
+    #' @description Return a [`tiledb_group`] object
+    #' @param ... Optional arguments to pass to `tiledb::tiledb_array()`
+    #' @return A [`tiledb::tiledb_group`] object.
+    tiledb_group = function(...) {
+      args <- list(...)
+      args$uri <- self$uri
+      do.call(tiledb::tiledb_group, args)
+    },
+
     #' @description List the TileDB objects within the group.
     #' @param type The type of object to list, either `"ARRAY"`, or `"GROUP"`.
     #' By default all object types are listed.
     #' @return A `data.frame` with columns `URI` and `TYPE`.
     list_objects = function(type = NULL) {
       objects <- tiledb::tiledb_object_ls(self$uri)
-      if (!is.null(type)) {
-        type <- match.arg(type, c("ARRAY", "GROUP"), several.ok = TRUE)
-        objects <- objects[objects$TYPE %in% type, , drop = FALSE]
-      }
-      return(objects)
+      private$filter_by_type(objects, type)
     },
 
     #' @description List URIs for TileDB objects within the group.
@@ -98,25 +94,119 @@ TileDBGroup <- R6::R6Class(
       uris
     },
 
-    #' @description Retrieve arrays within the group that meet the specified
-    #' criteria.
-    #' @param prefix String prefix to filter the array names.
-    #' @returns A named list of arrays.
-    # TODO: Add support for filtering by array metadata
-    get_arrays = function(prefix = NULL) {
-      if (is.null(prefix)) return(self$arrays)
-      stopifnot(is_scalar_character(prefix))
-      arrays <- names(self$arrays)
-      arrays <- Filter(function(x) string_starts_with(x, prefix), arrays)
-      self$arrays[arrays]
+    #' @description Add new member to the group.
+    #' @param object The `TileDBArray` or `TileDBGroup` object to add.
+    #' @param name The name to use for the member. By default the base name of
+    #' the object's URI is used.
+    #' @param relative A logical value indicating whether the new member's URI
+    #' is relative to the group's URI.
+    #' @importFrom fs path_rel
+    add_member = function(object, name = NULL, relative = TRUE) {
+      stopifnot(
+        "Only 'TileDBArray' or 'TileDBGroup' objects can be added" =
+          inherits(object, "TileDBGroup") || inherits(object, "TileDBArray"),
+        is.null(name) || is_scalar_character(name)
+      )
+
+      # Because object$uri will always return an absolute URI, we need to
+      # make it relative to the group's URI before adding it to the group
+      if (relative) {
+        uri <- fs::path_rel(object$uri, start = self$uri)
+      } else {
+        uri <- object$uri
+      }
+      name <- name %||% basename(uri)
+
+      on.exit(private$group_close())
+      private$group_open("WRITE")
+      tiledb::tiledb_group_add_member(
+        grp = private$group,
+        uri = uri,
+        relative = relative
+      )
+      self$members[[name]] <- object
     },
 
-    #' @description Retrieve an array within the group.
+    #' @description Count the number of members in the group.
+    #' @return Integer count of members in the group.
+    count_members = function() {
+      on.exit(private$group_close())
+      private$group_open("READ")
+      tiledb::tiledb_group_member_count(private$group)
+    },
+
+    #' @description List the members of the group.
+    #' @param type The type of member to list, either `"ARRAY"`, or `"GROUP"`.
+    #' By default all member types are listed.
+    #' @return A `data.frame` with columns `URI` and `TYPE`.
+    list_members = function(type = NULL) {
+      count <- self$count_members()
+      members <- data.frame(TYPE = character(count), URI = character(count))
+      if (count == 0) return(members)
+
+      on.exit(private$group_close())
+      private$group_open("READ")
+      member_list <- lapply(
+        X = seq_len(count) - 1L,
+        FUN = tiledb::tiledb_group_member,
+        grp = private$group
+      )
+
+      members$TYPE <- vapply_char(member_list, FUN = getElement, name = 1L)
+      members$URI <- vapply_char(member_list, FUN = getElement, name = 2L)
+      private$filter_by_type(members, type)
+    },
+
+    #' @description List URIs for group members
+    #' @param type The type of member to list, either `"ARRAY"`, or `"GROUP"`.
+    #' By default all member types are listed.
+    #' @param prefix Filter URIs whose basename contain an optional prefix.
+    #' @return A character vector of member URIs with names corresponding to the
+    #' basename of the URI.
+    list_member_uris = function(type = NULL, prefix = NULL) {
+      uris <- self$list_members(type = type)$URI
+      if (is_empty(uris)) return(uris)
+      names(uris) <- basename(uris)
+      if (!is.null(prefix)) {
+        stopifnot(is_scalar_character(prefix))
+        uris <- uris[string_starts_with(names(uris), prefix)]
+      }
+      uris
+    },
+
+    #' @description Retrieve arrays within the group that meet the specified
+    #' criteria.
+    #' @param type The type of group members to list, either `"ARRAY"`, or
+    #' `"GROUP"`.
+    #' @param prefix String prefix to filter the member names.
+    #' @returns A named list of group members.
+    # TODO: Add support for filtering by array metadata
+    get_members = function(type = NULL, prefix = NULL) {
+      if (is.null(prefix) && is.null(type)) return(self$members)
+      stopifnot(
+        is.null(prefix) || is_scalar_character(prefix)
+      )
+
+      matched_type <- matched_prefix <- rep(TRUE, self$count_members())
+      if (!is.null(type)) {
+        all_uris <- vapply_char(self$members, function(x) x$uri)
+        matched_uris <- self$list_members(type = type)$URI
+        matched_type <- all_uris %in% matched_uris
+      }
+
+      if (!is.null(prefix)) {
+        matched_prefix <- string_starts_with(names(self$members), prefix)
+      }
+
+      self$members[matched_type & matched_prefix]
+    },
+
+    #' @description Retrieve a group member.
     #' @param name The name of the array to retrieve.
     #' @returns The array object.
-    get_array = function(name) {
+    get_member = function(name) {
       stopifnot(is_scalar_character(name))
-      self$arrays[[name]]
+      self$members[[name]]
     },
 
     #' @description Retrieve metadata from the TileDB group.
@@ -125,18 +215,17 @@ TileDBGroup <- R6::R6Class(
     #'   is not NULL.
     #' @return A list of metadata values.
     get_metadata = function(key = NULL, prefix = NULL) {
-      arr <- tiledb::tiledb_array(private$metadata_uri, query_type = "WRITE")
-      tiledb::tiledb_array_open(arr, "READ")
+      on.exit(private$group_close())
+      private$group_open("READ")
       if (!is.null(key)) {
-        metadata <- tiledb::tiledb_get_metadata(arr, key)
+        metadata <- tiledb::tiledb_group_get_metadata(private$group, key)
       } else {
-        metadata <- tiledb::tiledb_get_all_metadata(arr)
+        metadata <- tiledb::tiledb_group_get_all_metadata(private$group)
         if (!is.null(prefix)) {
           metadata <- metadata[string_starts_with(names(metadata), prefix)]
         }
       }
-      tiledb::tiledb_array_close(arr)
-      return(metadata)
+      metadata
     },
 
     #' @description Add list of metadata to the TileDB group.
@@ -147,35 +236,21 @@ TileDBGroup <- R6::R6Class(
       stopifnot(
         "Metadata must be a named list" = is_named_list(metadata)
       )
-
-      arr <- tiledb::tiledb_array(private$metadata_uri, query_type = "WRITE")
-      tiledb::tiledb_array_open(arr, "WRITE")
+      on.exit(private$group_close())
+      private$group_open("WRITE")
       mapply(
-        FUN = tiledb::tiledb_put_metadata,
+        FUN = tiledb::tiledb_group_put_metadata,
         key = paste0(prefix, names(metadata)),
         val = metadata,
-        MoreArgs = list(arr = arr),
+        MoreArgs = list(grp = private$group),
         SIMPLIFY = FALSE
       )
-      tiledb::tiledb_array_close(arr)
-      return(NULL)
     }
   ),
 
   private = list(
-    # @field URI of the array where group metadata is stored
-    # TODO: Remove once TileDB supports group metadata
-    metadata_uri = NULL,
 
-    # TODO: Remove once TileDB supports group metadata
-    create_metadata_array = function() {
-      dom <- tiledb::tiledb_domain(
-        dims = c(tiledb::tiledb_dim("d0", domain = c(0L, 1L), type = "INT32"))
-      )
-      attrs <- tiledb::tiledb_attr("a0", type = "INT32")
-      schema <- tiledb::tiledb_array_schema(domain = dom, attrs = attrs)
-      tiledb::tiledb_array_create(private$metadata_uri, schema)
-    },
+    group = NULL,
 
     create_group = function() {
       if (self$verbose) {
@@ -184,8 +259,42 @@ TileDBGroup <- R6::R6Class(
       tiledb::tiledb_group_create(self$uri)
     },
 
-    get_existing_arrays = function(uris) {
-      lapply(uris, TileDBArray$new, verbose = self$verbose)
+    group_open = function(mode) {
+      mode <- match.arg(mode, c("READ", "WRITE"))
+      invisible(tiledb::tiledb_group_open(private$group, type = mode))
+    },
+
+    group_close = function() {
+      invisible(tiledb::tiledb_group_close(private$group))
+    },
+
+    # Instantiate existing group members
+    #
+    # Responsible for calling the appropriate R6 class generator for each
+    # pre-existing member of a group during initialization. Currently each
+    # object is named using the base name of the member's URI.
+    instantiate_members = function() {
+      members <- self$list_members()
+      member_objects <- list()
+      if (!is_empty(members)) {
+        member_uris <- lapply(
+          X = split(members$URI, members$TYPE),
+          FUN = function(x) setNames(x, basename(x))
+        )
+        member_objects <- c(
+          lapply(member_uris$ARRAY, TileDBArray$new, verbose = self$verbose),
+          lapply(member_uris$GROUP, TileDBGroup$new, verbose = self$verbose)
+        )
+      }
+      member_objects
+    },
+
+    # Filter data.frame of group objects/members by the `TYPE` column
+    filter_by_type = function(x, type) {
+      stopifnot(is.data.frame(x) && "TYPE" %in% names(x))
+      if (is.null(type)) return(x)
+      type <- match.arg(type, c("ARRAY", "GROUP"), several.ok = TRUE)
+      x[x$TYPE %in% type, , drop = FALSE]
     },
 
     format_arrays = function() {
