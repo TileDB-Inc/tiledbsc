@@ -1,4 +1,14 @@
-test_that("local object uris are detected", {
+test_that("local object uris using file:// scheme are detected", {
+  uri <- "/data/object_name"
+  tdb_uri <- TileDBURI$new(uri)
+
+  expect_match(tdb_uri$uri, uri)
+  expect_false(tdb_uri$is_remote_uri())
+  expect_false(tdb_uri$is_tiledb_cloud_uri())
+  expect_false(tdb_uri$is_tiledb_cloud_creation_uri())
+})
+
+test_that("local object uris using file:// scheme are detected", {
   uri <- "file://data/object_name"
   tdb_uri <- TileDBURI$new(uri)
 

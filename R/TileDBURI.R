@@ -9,7 +9,7 @@ TileDBURI <- R6::R6Class(
       stopifnot(is_scalar_character(uri))
       private$.uri <- uri
       private$.object_uri <- uri
-      private$.pieces <- as.list(urltools::url_parse(uri))
+      private$.pieces <- private$url_parse(uri)
 
       if (self$is_tiledb_cloud_uri()) {
         private$.tiledb_cloud_uri <- private$url_compose(
@@ -26,12 +26,12 @@ TileDBURI <- R6::R6Class(
 
     #' @description Does the URI point to a remote object?
     is_remote_uri = function() {
-      private$.pieces$scheme %in% c("tiledb", "s3")
+      private$.pieces$scheme %||% "" %in% c("tiledb", "s3")
     },
 
     #' @description Is the URI prefix tiledb://?
     is_tiledb_cloud_uri = function() {
-      private$.pieces$scheme == "tiledb"
+      private$.pieces$scheme %||% "" == "tiledb"
     },
 
     #' @description Is this a TileDB Cloud creation URI?
@@ -68,6 +68,14 @@ TileDBURI <- R6::R6Class(
     .pieces = list(),
     .tiledb_cloud_uri = NULL,
     .object_uri = NULL,
+
+    # Parse URL and remove empty pieces rather than keeping them as NA
+    url_parse = function(url) {
+      Filter(
+        Negate(is.na),
+        as.list(urltools::url_parse(url))
+      )
+    },
 
     # Compose URLs using only a subset of pieces
     url_compose = function(scheme = NULL, domain = NULL, path = NULL) {
