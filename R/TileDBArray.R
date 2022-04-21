@@ -47,6 +47,7 @@ TileDBArray <- R6::R6Class(
       args <- list(...)
       args$uri <- self$uri
       args$query_type <- "READ"
+      args$query_layout <- "UNORDERED"
       do.call(tiledb::tiledb_array, args)
     },
 
