@@ -72,7 +72,7 @@ SCDataset <- R6::R6Class(
         assay_uri <- file_path(self$uri, paste0("scgroup_", assay))
         scgroup <- SCGroup$new(assay_uri, verbose = self$verbose)
         scgroup$from_seurat_assay(assay_object, obs = object[[]])
-        self$add_member(scgroup, name = assay, relative = TRUE)
+        self$add_member(scgroup, name = assay)
       }
 
       reductions <- SeuratObject::Reductions(object)

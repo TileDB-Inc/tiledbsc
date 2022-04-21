@@ -73,7 +73,7 @@ SCGroup <- R6::R6Class(
           uri = file_path(self$uri, "X"),
           verbose = self$verbose
         )
-        self$add_member(self$X, name = "X", relative = TRUE)
+        self$add_member(self$X, name = "X")
       }
       # TODO: Store dimension_name in the group metadata when support for
       # string vectors are supported
@@ -86,7 +86,7 @@ SCGroup <- R6::R6Class(
           uri = file_path(self$uri, "obsm"),
           verbose = self$verbose
         )
-        self$add_member(self$obsm, name = "obsm", relative = TRUE)
+        self$add_member(self$obsm, name = "obsm")
       }
       self$obsm$dimension_name <- "obs_id"
 
@@ -97,7 +97,7 @@ SCGroup <- R6::R6Class(
           uri = file_path(self$uri, "varm"),
           verbose = self$verbose
         )
-        self$add_member(self$varm, name = "varm", relative = TRUE)
+        self$add_member(self$varm, name = "varm")
       }
       self$varm$dimension_name <- "var_id"
 
@@ -108,7 +108,7 @@ SCGroup <- R6::R6Class(
           uri = file_path(self$uri, "obsp"),
           verbose = self$verbose
         )
-        self$add_member(self$obsp, name = "obsp", relative = TRUE)
+        self$add_member(self$obsp, name = "obsp")
       }
       self$obsp$dimension_name <- "obs_id"
 
@@ -119,7 +119,7 @@ SCGroup <- R6::R6Class(
           uri = file_path(self$uri, "varp"),
           verbose = self$verbose
         )
-        self$add_member(self$varp, name = "varp", relative = TRUE)
+        self$add_member(self$varp, name = "varp")
       }
       self$varp$dimension_name <- "var_id"
 
@@ -130,7 +130,7 @@ SCGroup <- R6::R6Class(
           uri = file_path(self$uri, "misc"),
           verbose = self$verbose
         )
-        self$add_member(self$misc, name = "misc", relative = TRUE)
+        self$add_member(self$misc, name = "misc")
       }
     },
 
@@ -165,7 +165,7 @@ SCGroup <- R6::R6Class(
       }
       self$obs$from_dataframe(obs, index_col = "obs_id")
       if (is.null(self$get_member("obs"))) {
-        self$add_member(self$obs, name = "obs", relative = TRUE)
+        self$add_member(self$obs, name = "obs")
       }
 
       if (!is_empty(SeuratObject::VariableFeatures(object))) {
@@ -177,7 +177,7 @@ SCGroup <- R6::R6Class(
       }
       self$var$from_dataframe(object[[]], index_col = "var_id")
       if (is.null(self$get_member("var"))) {
-        self$add_member(self$var, name = "var", relative = TRUE)
+        self$add_member(self$var, name = "var")
       }
 
       assay_slots <- c("counts", "data")
