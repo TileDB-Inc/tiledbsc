@@ -1,4 +1,14 @@
 #' TileDB Array Base Class
+#'
+#' @description
+#' Base class for representing an individual TileDB array.
+#'
+#' @details
+#' ## Initialization
+#' Initializing a `TileDBArray` object does not automatically create a new array
+#' at the specified `uri` if one does not already exist because we don't know
+#' what the schema will be. Arrays are only created by child classes, which
+#' populate the private `create_empty_array()` and `ingest_data()` methods.
 #' @export
 TileDBArray <- R6::R6Class(
   classname = "TileDBArray",

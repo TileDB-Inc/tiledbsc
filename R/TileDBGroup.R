@@ -1,4 +1,11 @@
+#' TileDB Group Base Class
+#'
+#' @description
 #' Base class for interacting with TileDB groups
+#' @details
+#' ## Initialization
+#' Upon initialization a new group is created if one does not already exist at
+#' the specified `uri`.
 #' @export
 TileDBGroup <- R6::R6Class(
   classname = "TileDBGroup",
