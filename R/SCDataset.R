@@ -22,8 +22,10 @@ SCDataset <- R6::R6Class(
     #'
     #' @param uri URI of the TileDB group
     #' @param verbose Print status messages
-    initialize = function(uri, verbose = TRUE) {
-      super$initialize(uri, verbose)
+    #' @param config optional configuration
+    #' @param ctx optional tiledb context
+    initialize = function(uri, verbose = TRUE, config = NULL, ctx = NULL) {
+      super$initialize(uri, verbose, config, ctx)
 
       if ("misc" %in% names(self$members)) {
         self$misc <- self$get_member("misc")
@@ -70,7 +72,7 @@ SCDataset <- R6::R6Class(
       for (assay in assays) {
         assay_object <- object[[assay]]
         assay_uri <- file_path(self$uri, paste0("scgroup_", assay))
-        scgroup <- SCGroup$new(assay_uri, verbose = self$verbose)
+        scgroup <- SCGroup$new(assay_uri, verbose = self$verbose, config = self$config, context = self$context)
         scgroup$from_seurat_assay(assay_object, obs = object[[]])
         self$add_member(scgroup, name = assay)
       }
@@ -204,8 +206,8 @@ SCDataset <- R6::R6Class(
       names(scgroup_uris) <- sub("scgroup_", "", names(scgroup_uris), fixed = TRUE)
 
       c(
-        lapply(scgroup_uris, SCGroup$new, verbose = self$verbose),
-        lapply(misc_uri, TileDBGroup$new, verbose = self$verbose)
+        lapply(scgroup_uris, SCGroup$new, verbose = self$verbose, config = self$config, context = self$context),
+        lapply(misc_uri, TileDBGroup$new, verbose = self$verbose, config = self$config, context = self$context)
       )
     },
 

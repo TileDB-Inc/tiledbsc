@@ -7,13 +7,32 @@ TileDBArray <- R6::R6Class(
   public = list(
     uri = NULL,
     verbose = TRUE,
+    #' @field optional configuration'
+    config = NULL,
+    #' @field optional tiledb context'
+    ctx = NULL,
 
     #' @description Create a new TileDBArray object.
     #' @param uri URI for the TileDB array
     #' @param verbose Print status messages
-    initialize = function(uri, verbose = TRUE) {
+    #' @param config optional configuration
+    #' @param ctx optional tiledb context
+    initialize = function(uri, verbose = TRUE, config = NULL, ctx = NULL) {
       self$uri <- uri
       self$verbose <- verbose
+      self$config <- config
+      self$ctx <- ctx
+
+      if (!is.null(config) && !is.null(ctx)) stop("Cannot pass a config and context, please choose one")
+
+      if (!is.null(self$config)) {
+        self$ctx <- tiledb::tiledb_ctx(self$config)
+      }
+      
+      if (is.null(self$ctx)) {
+        self$ctx <- tiledb::tiledb_get_context()
+      }
+
       if (self$array_exists()) {
         msg <- sprintf("Found existing %s at '%s'", self$class(), self$uri)
       } else {
@@ -37,7 +56,7 @@ TileDBArray <- R6::R6Class(
     #' @description Check if the array exists.
     #' @return TRUE if the array exists, FALSE otherwise.
     array_exists = function() {
-      tiledb::tiledb_object_type(self$uri) == "ARRAY"
+      tiledb::tiledb_object_type(self$uri, ctx <- self$ctx) == "ARRAY"
     },
 
     #' @description Return a [`TileDBArray`] object
@@ -48,6 +67,7 @@ TileDBArray <- R6::R6Class(
       args$uri <- self$uri
       args$query_type <- "READ"
       args$query_layout <- "UNORDERED"
+      args$ctx <- self$ctx
       do.call(tiledb::tiledb_array, args)
     },
 
