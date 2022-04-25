@@ -154,7 +154,11 @@ SCGroup <- R6::R6Class(
     #' Variable features in the `var.features` slot are maintained by creating a
     #' `highly_variable` attribute in `var` that records `1` or `0` for each
     #' feature indicating whether it was a variable feature or not.
+    #'
     #' @param object A [`SeuratObject::Assay`] object
+    #' @param var Should the `Assay`'s' feature-level annotations be ingested
+    #' into the `var` array? If `FALSE` and the `var` array does not yet exist
+    #' then `var` is created as an array with 0 attributes.
     #' @param obs An optional `data.frame` containing annotations for
     #' cell/sample-level observations. If no annotations are provided and the
     #' `obs` array doesn't yet exist on disk, an array with 0 attributes is
@@ -192,14 +196,12 @@ SCGroup <- R6::R6Class(
           col.name = "highly_variable"
         )
       }
-      self$var$from_dataframe(object[[]], index_col = "var_id")
-      if (is.null(self$get_member("var"))) {
-        self$add_member(self$var, name = "var")
-      }
 
-      assay_slots <- c("counts", "data")
-      if (seurat_assay_has_scale_data(object)) {
-        assay_slots <- c(assay_slots, "scale.data")
+      if (var) {
+        self$var$from_dataframe(object[[]], index_col = "var_id")
+        if (is.null(self$get_member("var"))) {
+          self$add_member(self$var, name = "var")
+        }
       }
 
       assay_mats <- mapply(
