@@ -280,3 +280,32 @@ test_that("an assay with empty feature metdata can be converted", {
   assay2 <- scgroup$to_seurat_assay()
   expect_identical(assay2[[]][rownames(assay),], assay[[]])
 })
+
+test_that("individual layers can be added or updated", {
+  uri <- withr::local_tempdir("assay-with-individual-layers")
+
+  assay <- SeuratObject::CreateAssayObject(
+    counts = SeuratObject::GetAssayData(pbmc_small[["RNA"]], "counts")
+  )
+  SeuratObject::Key(assay) <- "RNA"
+
+  scgroup <- SCGroup$new(uri, verbose = TRUE)
+  scgroup$from_seurat_assay(assay, layers = "counts")
+
+  # only counts was created
+  expect_equal(names(scgroup$members$X$members), "counts")
+
+  # add data layer
+  scgroup$from_seurat_assay(assay, var = FALSE, layers = "data")
+  expect_equal(names(scgroup$members$X$members), c("counts", "data"))
+  # X$counts, obs and var were not updated
+  expect_identical(scgroup$obs$fragment_count(), 1)
+  expect_identical(scgroup$var$fragment_count(), 1)
+  expect_identical(scgroup$X$members$counts$fragment_count(), 1)
+
+  # update data layer
+  scgroup$from_seurat_assay(assay, var = FALSE, layers = "data")
+  expect_equal(names(scgroup$members$X$members), c("counts", "data"))
+  expect_identical(scgroup$X$members$counts$fragment_count(), 1)
+  expect_identical(scgroup$X$members$data$fragment_count(), 2)
+})

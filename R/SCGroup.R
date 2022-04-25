@@ -161,12 +161,25 @@ SCGroup <- R6::R6Class(
     #' then `var` is created as an array with 0 attributes.
     #' @param obs An optional `data.frame` containing annotations for
     #' cell/sample-level observations. If no annotations are provided and the
-    #' `obs` array doesn't yet exist on disk, an array with 0 attributes is
-    #' created to maintain the full set of `obs_id`s.
+    #' `obs` array doesn't yet exist, an array with 0 attributes is
+    #' created.
+    #' @param layers A vector of assay layer names to ingest. Must be some
+    #' combination of `"counts"`, `"data"`, `"scale.data"`.
+    from_seurat_assay = function(object, obs = NULL, var = TRUE, layers = c("counts", "data", "scale.data")) {
       stopifnot(
         "sc_groups must be created from a Seurat Assay"
-          = inherits(object, "Assay")
+          = inherits(object, "Assay"),
+        "'var' must be a logical value" = is.logical(var)
       )
+
+      if (is.null(layers)) {
+        layers <- c("counts", "data")
+        if (seurat_assay_has_scale_data(object)) {
+          layers <- c(layers, "scale.data")
+        }
+      } else {
+        layers <- match.arg(layers, c("counts", "data", "scale.data"), TRUE)
+      }
 
       skip_obs <- self$obs$array_exists() && is.null(obs)
       if (!is.null(obs)) {
@@ -206,7 +219,7 @@ SCGroup <- R6::R6Class(
 
       assay_mats <- mapply(
         FUN = SeuratObject::GetAssayData,
-        slot = assay_slots,
+        slot = layers,
         MoreArgs = list(object = object),
         SIMPLIFY = FALSE
       )
