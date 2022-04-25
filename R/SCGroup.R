@@ -141,7 +141,15 @@ SCGroup <- R6::R6Class(
     #' @description Convert a Seurat Assay to a TileDB-backed sc_group.
     #'
     #' @details
-    #' ## On-Disk Format
+    #'
+    #' ## Annotations
+    #'
+    #' Cell- and feature-level annotatations are stored in the `obs` and `var`
+    #' arrays, respectively. These arrays are _always_ created during the
+    #' initial ingestion in order to maintain the full set of cell and feature
+    #' identifiers in the array dimension.
+    #'
+    #' ## Variable features
     #'
     #' Variable features in the `var.features` slot are maintained by creating a
     #' `highly_variable` attribute in `var` that records `1` or `0` for each
