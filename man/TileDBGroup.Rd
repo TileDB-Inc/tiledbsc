@@ -168,7 +168,7 @@ basename of the object.
 \subsection{Method \code{add_member()}}{
 Add new member to the group.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{TileDBGroup$add_member(object, name = NULL)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{TileDBGroup$add_member(object, name = NULL, relative = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
