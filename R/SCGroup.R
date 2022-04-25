@@ -148,13 +148,15 @@ SCGroup <- R6::R6Class(
     #' feature indicating whether it was a variable feature or not.
     #' @param object A [`SeuratObject::Assay`] object
     #' @param obs An optional `data.frame` containing annotations for
-    #' cell/sample-level observations.
-    from_seurat_assay = function(object, obs = NULL) {
+    #' cell/sample-level observations. If no annotations are provided and the
+    #' `obs` array doesn't yet exist on disk, an array with 0 attributes is
+    #' created to maintain the full set of `obs_id`s.
       stopifnot(
         "sc_groups must be created from a Seurat Assay"
           = inherits(object, "Assay")
       )
 
+      skip_obs <- self$obs$array_exists() && is.null(obs)
       if (!is.null(obs)) {
         stopifnot(
           "'obs' must be a data.frame" = is.data.frame(obs),
@@ -167,9 +169,12 @@ SCGroup <- R6::R6Class(
       } else {
         obs <- data.frame(row.names = colnames(object))
       }
-      self$obs$from_dataframe(obs, index_col = "obs_id")
-      if (is.null(self$get_member("obs"))) {
-        self$add_member(self$obs, name = "obs")
+
+      if (skip_obs != TRUE) {
+        self$obs$from_dataframe(obs, index_col = "obs_id")
+        if (is.null(self$get_member("obs"))) {
+          self$add_member(self$obs, name = "obs")
+        }
       }
 
       if (!is_empty(SeuratObject::VariableFeatures(object))) {
