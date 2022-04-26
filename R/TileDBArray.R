@@ -7,7 +7,7 @@ TileDBArray <- R6::R6Class(
   public = list(
     uri = NULL,
     verbose = TRUE,
-    #' @field optional configuration'
+    #' @field optional configuration
     config = NULL,
     #' @field optional tiledb context'
     ctx = NULL,
