@@ -164,7 +164,7 @@ TileDBGroup <- R6::R6Class(
     #' @description List the members of the group.
     #' @param type The type of member to list, either `"ARRAY"`, or `"GROUP"`.
     #' By default all member types are listed.
-    #' @return A `data.frame` with columns `URI` and `TYPE`, `NAME`.
+    #' @return A `data.frame` with columns `URI`, `TYPE`, and `NAME`.
     list_members = function(type = NULL) {
       count <- self$count_members()
       members <- data.frame(TYPE = character(count), URI = character(count), NAME = character(count))
