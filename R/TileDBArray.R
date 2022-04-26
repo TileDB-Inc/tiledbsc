@@ -56,7 +56,7 @@ TileDBArray <- R6::R6Class(
     #' @description Check if the array exists.
     #' @return TRUE if the array exists, FALSE otherwise.
     array_exists = function() {
-      tiledb::tiledb_object_type(self$uri, ctx <- self$ctx) == "ARRAY"
+      tiledb::tiledb_object_type(self$uri, ctx = self$ctx) == "ARRAY"
     },
 
     #' @description Return a [`TileDBArray`] object
