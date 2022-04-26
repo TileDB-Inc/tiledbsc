@@ -9,7 +9,7 @@ TileDBArray <- R6::R6Class(
     verbose = TRUE,
     #' @field optional configuration
     config = NULL,
-    #' @field optional tiledb context'
+    #' @field optional tiledb context
     ctx = NULL,
 
     #' @description Create a new TileDBArray object.
