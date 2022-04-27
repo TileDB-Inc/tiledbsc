@@ -10,14 +10,32 @@ TileDBGroup <- R6::R6Class(
     members = list(),
     #' @field verbose Whether to print verbose output
     verbose = TRUE,
+    #' @field optional config'
+    config = NULL,
+        #' @field optional tiledb context'
+    ctx = NULL,
 
     #' @description Create a new TileDBGroup object.
     #' @param uri TileDB array URI
     #' @param verbose Print status messages
-    initialize = function(uri, verbose = TRUE) {
+    #' @param config optional configuration
+    #' @param ctx optional tiledb context
+    initialize = function(uri, verbose = TRUE, config = NULL, ctx = NULL) {
       if (missing(uri)) stop("A `uri` must be specified")
       self$uri <- uri
       self$verbose <- verbose
+      self$config <- config
+      self$ctx <- ctx
+
+      if (!is.null(config) && !is.null(ctx)) stop("Cannot pass a config and context, please choose one")
+
+      if (!is.null(self$config)) {
+        self$ctx <- tiledb::tiledb_ctx(self$config)
+      }
+      
+      if (is.null(self$ctx)) {
+        self$ctx <- tiledb::tiledb_get_context()
+      }
 
       if (self$group_exists()) {
         if (self$verbose) {
@@ -34,7 +52,7 @@ TileDBGroup <- R6::R6Class(
         private$create_group()
       }
 
-      private$group <- tiledb::tiledb_group(self$uri)
+      private$group <- tiledb::tiledb_group(self$uri, ctx = self$ctx)
       private$group_close()
 
       # Instatiate objects for existing members
@@ -56,7 +74,7 @@ TileDBGroup <- R6::R6Class(
     #' @description Check if the group exists.
     #' @return TRUE if the group exists, FALSE otherwise.
     group_exists = function() {
-      tiledb::tiledb_object_type(self$uri) == "GROUP"
+      tiledb::tiledb_object_type(self$uri, ctx = self$ctx) == "GROUP"
     },
 
     #' @description Return a [`tiledb_group`] object
@@ -65,6 +83,7 @@ TileDBGroup <- R6::R6Class(
     tiledb_group = function(...) {
       args <- list(...)
       args$uri <- self$uri
+      args$ctx <- self$ctx
       do.call(tiledb::tiledb_group, args)
     },
 
@@ -145,10 +164,10 @@ TileDBGroup <- R6::R6Class(
     #' @description List the members of the group.
     #' @param type The type of member to list, either `"ARRAY"`, or `"GROUP"`.
     #' By default all member types are listed.
-    #' @return A `data.frame` with columns `URI` and `TYPE`.
+    #' @return A `data.frame` with columns `URI`, `TYPE`, and `NAME`.
     list_members = function(type = NULL) {
       count <- self$count_members()
-      members <- data.frame(TYPE = character(count), URI = character(count))
+      members <- data.frame(TYPE = character(count), URI = character(count), NAME = character(count))
       if (count == 0) return(members)
 
       on.exit(private$group_close())
@@ -263,7 +282,7 @@ TileDBGroup <- R6::R6Class(
       if (self$verbose) {
         message(sprintf("Creating new %s at '%s'", self$class(), self$uri))
       }
-      tiledb::tiledb_group_create(self$uri)
+      tiledb::tiledb_group_create(self$uri, ctx = self$ctx)
     },
 
     group_open = function(mode) {

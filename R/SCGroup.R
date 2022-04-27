@@ -43,10 +43,14 @@ SCGroup <- R6::R6Class(
     #'
     #' @param uri URI of the TileDB group
     #' @param verbose Print status messages
+    #' @param config optional configuration
+    #' @param ctx optional tiledb context
     initialize = function(
       uri,
-      verbose = TRUE) {
-      super$initialize(uri, verbose)
+      verbose = TRUE,
+      config = NULL,
+      ctx = NULL) {
+      super$initialize(uri, verbose, config, ctx)
 
       if ("obs" %in% names(self$members)) {
         self$obs <- self$get_member("obs")
