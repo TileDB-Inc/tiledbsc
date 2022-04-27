@@ -72,7 +72,7 @@ SCDataset <- R6::R6Class(
       for (assay in assays) {
         assay_object <- object[[assay]]
         assay_uri <- file_path(self$uri, paste0("scgroup_", assay))
-        scgroup <- SCGroup$new(assay_uri, verbose = self$verbose, config = self$config, context = self$context)
+        scgroup <- SCGroup$new(assay_uri, verbose = self$verbose, config = self$config, ctx = self$context)
         scgroup$from_seurat_assay(assay_object, obs = object[[]])
         self$add_member(scgroup, name = assay)
       }
@@ -206,8 +206,8 @@ SCDataset <- R6::R6Class(
       names(scgroup_uris) <- sub("scgroup_", "", names(scgroup_uris), fixed = TRUE)
 
       c(
-        lapply(scgroup_uris, SCGroup$new, verbose = self$verbose, config = self$config, context = self$context),
-        lapply(misc_uri, TileDBGroup$new, verbose = self$verbose, config = self$config, context = self$context)
+        lapply(scgroup_uris, SCGroup$new, verbose = self$verbose, config = self$config, ctx = self$context),
+        lapply(misc_uri, TileDBGroup$new, verbose = self$verbose, config = self$config, ctx = self$context)
       )
     },
 

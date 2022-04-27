@@ -49,8 +49,8 @@ SCGroup <- R6::R6Class(
       uri,
       verbose = TRUE,
       config = NULL,
-      context = NULL) {
-      super$initialize(uri, verbose, config, context)
+      ctx = NULL) {
+      super$initialize(uri, verbose, config, ctx)
 
       if ("obs" %in% names(self$members)) {
         self$obs <- self$get_member("obs")

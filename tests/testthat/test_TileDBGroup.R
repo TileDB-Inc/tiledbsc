@@ -17,10 +17,18 @@ test_that("members can be added and retrieved from a new group", {
   expect_is(grp$tiledb_group(), "tiledb_group")
 
   expect_equal(grp$count_members(), 0)
+
   objs <- grp$list_objects()
   expect_is(objs, "data.frame")
   expect_equal(nrow(objs), 0)
-  expect_identical(grp$list_members(), objs)
+
+  mems <- grp$list_members()
+  expect_is(mems, "data.frame")
+  expect_equal(nrow(mems), 0)
+
+  # members and objects are not identical --
+  # members is a data.frame with (type, uri, name)
+  # objects is a data.frame with (type, uri)
 
   # create sub-objects
   a1 <- TileDBArray$new(
