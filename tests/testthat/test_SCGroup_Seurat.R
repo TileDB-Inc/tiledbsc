@@ -290,7 +290,7 @@ test_that("individual layers can be added or updated", {
   SeuratObject::Key(assay) <- "RNA"
 
   scgroup <- SCGroup$new(uri, verbose = TRUE)
-  scgroup$from_seurat_assay(assay, layers = "counts")
+  scgroup$from_seurat_assay(assay)
 
   # only counts was created
   expect_equal(names(scgroup$members$X$members), "counts")

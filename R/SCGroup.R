@@ -142,6 +142,18 @@ SCGroup <- R6::R6Class(
     #'
     #' @details
     #'
+    #' ## Assay data
+    #'
+    #' The [`SeuratObject::Assay`] class stores different transformations of an
+    #' assay in the `counts`, `data`, and `scale.data` slots. Data from each of
+    #' these slots is ingested into a separate layer of the `X` group, named for
+    #' the corresponding slot.
+    #'
+    #' By default *Seurat* populates the `data` slot with a reference to the
+    #' same data stored in `counts`. To avoid ingesting redundant data, we check
+    #' to see if `counts` and `data` are identical and skip the `data` slot if
+    #' they are.
+    #'
     #' ## Annotations
     #'
     #' Cell- and feature-level annotations are stored in the `obs` and `var`
@@ -223,6 +235,16 @@ SCGroup <- R6::R6Class(
         MoreArgs = list(object = object),
         SIMPLIFY = FALSE
       )
+
+      # Don't ingest the 'data' layer if it's identical to the 'counts'
+      if (identical(assay_mats$counts, assay_mats$data)) {
+        assay_mats$data <- NULL
+        if (self$verbose) {
+          message(
+            "Skipping ingestion of 'data' because it is identical to 'counts'"
+          )
+        }
+      }
 
       # create a list of non-empty dgTMatrix objects
       assay_mats <- lapply(assay_mats, FUN = as, Class = "dgTMatrix")
