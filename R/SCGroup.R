@@ -144,7 +144,7 @@ SCGroup <- R6::R6Class(
     #'
     #' ## Annotations
     #'
-    #' Cell- and feature-level annotatations are stored in the `obs` and `var`
+    #' Cell- and feature-level annotations are stored in the `obs` and `var`
     #' arrays, respectively. These arrays are _always_ created during the
     #' initial ingestion in order to maintain the full set of cell and feature
     #' identifiers in the array dimension.
