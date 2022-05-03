@@ -134,9 +134,22 @@ combination of \code{"counts"}, \code{"data"}, \code{"scale.data"}.}
 \if{html}{\out{</div>}}
 }
 \subsection{Details}{
+\subsection{Assay data}{
+
+The \code{\link[SeuratObject:Assay-class]{SeuratObject::Assay}} class stores different transformations of an
+assay in the \code{counts}, \code{data}, and \code{scale.data} slots. Data from each of
+these slots is ingested into a separate layer of the \code{X} group, named for
+the corresponding slot.
+
+By default \emph{Seurat} populates the \code{data} slot with a reference to the
+same data stored in \code{counts}. To avoid ingesting redundant data, we check
+to see if \code{counts} and \code{data} are identical and skip the \code{data} slot if
+they are.
+}
+
 \subsection{Annotations}{
 
-Cell- and feature-level annotatations are stored in the \code{obs} and \code{var}
+Cell- and feature-level annotations are stored in the \code{obs} and \code{var}
 arrays, respectively. These arrays are \emph{always} created during the
 initial ingestion in order to maintain the full set of cell and feature
 identifiers in the array dimension.
