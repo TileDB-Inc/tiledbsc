@@ -106,7 +106,12 @@ array group is created.
 \subsection{Method \code{from_seurat_assay()}}{
 Convert a Seurat Assay to a TileDB-backed sc_group.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{SCGroup$from_seurat_assay(object, obs = NULL)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{SCGroup$from_seurat_assay(
+  object,
+  obs = NULL,
+  var = TRUE,
+  layers = c("counts", "data", "scale.data")
+)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -115,12 +120,42 @@ Convert a Seurat Assay to a TileDB-backed sc_group.
 \item{\code{object}}{A \code{\link[SeuratObject:Assay-class]{SeuratObject::Assay}} object}
 
 \item{\code{obs}}{An optional \code{data.frame} containing annotations for
-cell/sample-level observations.}
+cell/sample-level observations. If no annotations are provided and the
+\code{obs} array doesn't yet exist, an array with 0 attributes is
+created.}
+
+\item{\code{var}}{Should the \code{Assay}'s' feature-level annotations be ingested
+into the \code{var} array? If \code{FALSE} and the \code{var} array does not yet exist
+then \code{var} is created as an array with 0 attributes.}
+
+\item{\code{layers}}{A vector of assay layer names to ingest. Must be some
+combination of \code{"counts"}, \code{"data"}, \code{"scale.data"}.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Details}{
-\subsection{On-Disk Format}{
+\subsection{Assay data}{
+
+The \code{\link[SeuratObject:Assay-class]{SeuratObject::Assay}} class stores different transformations of an
+assay in the \code{counts}, \code{data}, and \code{scale.data} slots. Data from each of
+these slots is ingested into a separate layer of the \code{X} group, named for
+the corresponding slot.
+
+By default \emph{Seurat} populates the \code{data} slot with a reference to the
+same data stored in \code{counts}. To avoid ingesting redundant data, we check
+to see if \code{counts} and \code{data} are identical and skip the \code{data} slot if
+they are.
+}
+
+\subsection{Annotations}{
+
+Cell- and feature-level annotations are stored in the \code{obs} and \code{var}
+arrays, respectively. These arrays are \emph{always} created during the
+initial ingestion in order to maintain the full set of cell and feature
+identifiers in the array dimension.
+}
+
+\subsection{Variable features}{
 
 Variable features in the \code{var.features} slot are maintained by creating a
 \code{highly_variable} attribute in \code{var} that records \code{1} or \code{0} for each

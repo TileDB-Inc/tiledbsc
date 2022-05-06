@@ -141,20 +141,59 @@ SCGroup <- R6::R6Class(
     #' @description Convert a Seurat Assay to a TileDB-backed sc_group.
     #'
     #' @details
-    #' ## On-Disk Format
+    #'
+    #' ## Assay data
+    #'
+    #' The [`SeuratObject::Assay`] class stores different transformations of an
+    #' assay in the `counts`, `data`, and `scale.data` slots. Data from each of
+    #' these slots is ingested into a separate layer of the `X` group, named for
+    #' the corresponding slot.
+    #'
+    #' By default *Seurat* populates the `data` slot with a reference to the
+    #' same data stored in `counts`. To avoid ingesting redundant data, we check
+    #' to see if `counts` and `data` are identical and skip the `data` slot if
+    #' they are.
+    #'
+    #' ## Annotations
+    #'
+    #' Cell- and feature-level annotations are stored in the `obs` and `var`
+    #' arrays, respectively. These arrays are _always_ created during the
+    #' initial ingestion in order to maintain the full set of cell and feature
+    #' identifiers in the array dimension.
+    #'
+    #' ## Variable features
     #'
     #' Variable features in the `var.features` slot are maintained by creating a
     #' `highly_variable` attribute in `var` that records `1` or `0` for each
     #' feature indicating whether it was a variable feature or not.
+    #'
     #' @param object A [`SeuratObject::Assay`] object
+    #' @param var Should the `Assay`'s' feature-level annotations be ingested
+    #' into the `var` array? If `FALSE` and the `var` array does not yet exist
+    #' then `var` is created as an array with 0 attributes.
     #' @param obs An optional `data.frame` containing annotations for
-    #' cell/sample-level observations.
-    from_seurat_assay = function(object, obs = NULL) {
+    #' cell/sample-level observations. If no annotations are provided and the
+    #' `obs` array doesn't yet exist, an array with 0 attributes is
+    #' created.
+    #' @param layers A vector of assay layer names to ingest. Must be some
+    #' combination of `"counts"`, `"data"`, `"scale.data"`.
+    from_seurat_assay = function(object, obs = NULL, var = TRUE, layers = c("counts", "data", "scale.data")) {
       stopifnot(
         "sc_groups must be created from a Seurat Assay"
-          = inherits(object, "Assay")
+          = inherits(object, "Assay"),
+        "'var' must be a logical value" = is.logical(var)
       )
 
+      if (is.null(layers)) {
+        layers <- c("counts", "data")
+        if (seurat_assay_has_scale_data(object)) {
+          layers <- c(layers, "scale.data")
+        }
+      } else {
+        layers <- match.arg(layers, c("counts", "data", "scale.data"), TRUE)
+      }
+
+      skip_obs <- self$obs$array_exists() && is.null(obs)
       if (!is.null(obs)) {
         stopifnot(
           "'obs' must be a data.frame" = is.data.frame(obs),
@@ -167,9 +206,12 @@ SCGroup <- R6::R6Class(
       } else {
         obs <- data.frame(row.names = colnames(object))
       }
-      self$obs$from_dataframe(obs, index_col = "obs_id")
-      if (is.null(self$get_member("obs"))) {
-        self$add_member(self$obs, name = "obs")
+
+      if (skip_obs != TRUE) {
+        self$obs$from_dataframe(obs, index_col = "obs_id")
+        if (is.null(self$get_member("obs"))) {
+          self$add_member(self$obs, name = "obs")
+        }
       }
 
       if (!is_empty(SeuratObject::VariableFeatures(object))) {
@@ -179,22 +221,30 @@ SCGroup <- R6::R6Class(
           col.name = "highly_variable"
         )
       }
-      self$var$from_dataframe(object[[]], index_col = "var_id")
-      if (is.null(self$get_member("var"))) {
-        self$add_member(self$var, name = "var")
-      }
 
-      assay_slots <- c("counts", "data")
-      if (seurat_assay_has_scale_data(object)) {
-        assay_slots <- c(assay_slots, "scale.data")
+      if (var) {
+        self$var$from_dataframe(object[[]], index_col = "var_id")
+        if (is.null(self$get_member("var"))) {
+          self$add_member(self$var, name = "var")
+        }
       }
 
       assay_mats <- mapply(
         FUN = SeuratObject::GetAssayData,
-        slot = assay_slots,
+        slot = layers,
         MoreArgs = list(object = object),
         SIMPLIFY = FALSE
       )
+
+      # Don't ingest the 'data' layer if it's identical to the 'counts'
+      if (identical(assay_mats$counts, assay_mats$data)) {
+        assay_mats$data <- NULL
+        if (self$verbose) {
+          message(
+            "Skipping ingestion of 'data' because it is identical to 'counts'"
+          )
+        }
+      }
 
       # create a list of non-empty dgTMatrix objects
       assay_mats <- lapply(assay_mats, FUN = as, Class = "dgTMatrix")
