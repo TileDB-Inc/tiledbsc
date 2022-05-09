@@ -121,23 +121,42 @@ AssayMatrix <- R6::R6Class(
       value_types <- vapply_char(x[value_cols], tiledb::r_to_tiledb_type)
 
       # array dimensions
-      tdb_dims <- lapply(index_cols,
-        tiledb::tiledb_dim,
-        type = "ASCII",
-        domain = NULL,
-        tile = NULL
+      tdb_dims <- mapply(
+        FUN = tiledb::tiledb_dim,
+        name = index_cols,
+        MoreArgs = list(
+          type = "ASCII",
+          domain = NULL,
+          tile = NULL
+        ),
+        SIMPLIFY = FALSE
+      )
+
+      tiledb::filter_list(tdb_dims[[1]]) <- tiledb::tiledb_filter_list(
+        tiledb::tiledb_filter("RLE")
+      )
+
+      tiledb::filter_list(tdb_dims[[2]]) <- tiledb::tiledb_filter_list(
+        tiledb::tiledb_filter_set_option(
+          object = tiledb::tiledb_filter("ZSTD"),
+          option = "COMPRESSION_LEVEL",
+          value = 22L
+        )
       )
 
       # array attributes
-      data_filter <- tiledb::tiledb_filter("ZSTD")
-      tiledb::tiledb_filter_set_option(data_filter, "COMPRESSION_LEVEL", -1L)
+      tdb_attr_filter <- tiledb::tiledb_filter_set_option(
+        object = tiledb::tiledb_filter("ZSTD"),
+        option = "COMPRESSION_LEVEL",
+        value = 1L
+      )
 
       tdb_attrs <- mapply(
         FUN = tiledb::tiledb_attr,
         name = value_cols,
         type = value_types,
         MoreArgs = list(
-          filter_list = tiledb::tiledb_filter_list(data_filter),
+          filter_list = tiledb::tiledb_filter_list(tdb_attr_filter),
           ctx = self$ctx
         ),
         SIMPLIFY = FALSE
@@ -152,7 +171,8 @@ AssayMatrix <- R6::R6Class(
         sparse = TRUE,
         capacity = capacity,
         offsets_filter_list = tiledb::tiledb_filter_list(c(
-          tiledb::tiledb_filter("POSITIVE_DELTA"),
+          tiledb::tiledb_filter("DOUBLE_DELTA"),
+          tiledb::tiledb_filter("BIT_WIDTH_REDUCTION"),
           tiledb::tiledb_filter("ZSTD")
         ))
       )
