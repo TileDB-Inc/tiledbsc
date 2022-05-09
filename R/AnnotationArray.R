@@ -36,16 +36,7 @@ AnnotationArray <- R6::R6Class(
         "'x' must contain column names matching the supplied index column(s)"
         = all(index_cols %in% colnames(x))
       )
-
-      if (self$verbose) {
-        msg <- sprintf(
-          "Creating new %s array with index [%s] at '%s'",
-          self$class(),
-          paste0(index_cols, collapse = ","),
-          self$uri
-        )
-        message(msg)
-      }
+      private$log_array_creation(index_cols)
 
       tiledb::fromDataFrame(
         obj = x,
@@ -61,12 +52,33 @@ AnnotationArray <- R6::R6Class(
     # @description Ingest assay/annotation data into the TileDB array
     # @param x A [`data.frame`]
     ingest_data = function(x) {
-      if (self$verbose) {
-        message(glue::glue("Ingesting {self$class()} data into: {self$uri}"))
-      }
+      private$log_array_ingestion()
       tdb_array <- tiledb::tiledb_array(self$uri, query_type = "WRITE")
       tdb_array[] <- x
       tiledb::tiledb_array_close(tdb_array)
+    },
+
+    log_array_creation = function(index_cols) {
+      if (self$verbose) {
+        msg <- sprintf(
+          "Creating new %s array with index [%s] at '%s'",
+          self$class(),
+          paste0(index_cols, collapse = ","),
+          self$uri
+        )
+        message(msg)
+      }
+    },
+
+    log_array_ingestion = function() {
+      if (self$verbose) {
+        msg <- sprintf(
+          "Ingesting %s data into: %s",
+          self$class,
+          self$uri
+        )
+        message(msg)
+      }
     }
   )
 )
