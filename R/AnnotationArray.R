@@ -74,7 +74,7 @@ AnnotationArray <- R6::R6Class(
       if (self$verbose) {
         msg <- sprintf(
           "Ingesting %s data into: %s",
-          self$class,
+          self$class(),
           self$uri
         )
         message(msg)

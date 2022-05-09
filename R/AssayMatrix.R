@@ -45,7 +45,7 @@ AssayMatrix <- R6::R6Class(
     #' @description Ingest assay data from a COO-formatted data frame
     #' @param x a [`data.frame`]
     #' @param index_cols A column index, either numeric with a column index, or
-    #' character with a column name, designating one or more index columns. All
+    #' character with a column name, identifying the 2 index columns. All
     #' other columns are ingested as attributes.
     from_dataframe = function(x, index_cols) {
       stopifnot(
@@ -104,6 +104,63 @@ AssayMatrix <- R6::R6Class(
 
   private = list(
 
+    # @description Create an empty TileDB array with a schema optimized for 2D
+    # COO-formatted data.
+    create_empty_array = function(
+      x,
+      index_cols = c("obs_id", "var_id"),
+      cell_order = "ROW_MAJOR",
+      tile_order = "ROW_MAJOR",
+      capacity = 10000) {
+
+      # determine appropriate type for each attribute
+      value_cols <- setdiff(colnames(x), index_cols)
+      stopifnot(
+        "'x' must contain >=1 non-indexing columns" = length(value_cols) >= 1
+      )
+      value_types <- vapply_char(x[value_cols], tiledb::r_to_tiledb_type)
+
+      # array dimensions
+      tdb_dims <- lapply(index_cols,
+        tiledb::tiledb_dim,
+        type = "ASCII",
+        domain = NULL,
+        tile = NULL
+      )
+
+      # array attributes
+      data_filter <- tiledb::tiledb_filter("ZSTD")
+      tiledb::tiledb_filter_set_option(data_filter, "COMPRESSION_LEVEL", -1L)
+
+      tdb_attrs <- mapply(
+        FUN = tiledb::tiledb_attr,
+        name = value_cols,
+        type = value_types,
+        MoreArgs = list(
+          filter_list = tiledb::tiledb_filter_list(data_filter),
+          ctx = self$ctx
+        ),
+        SIMPLIFY = FALSE
+      )
+
+      # array schema
+      tdb_schema <- tiledb::tiledb_array_schema(
+        domain = tiledb::tiledb_domain(tdb_dims),
+        attrs = tdb_attrs,
+        cell_order = cell_order,
+        tile_order = tile_order,
+        sparse = TRUE,
+        capacity = capacity,
+        offsets_filter_list = tiledb::tiledb_filter_list(c(
+          tiledb::tiledb_filter("POSITIVE_DELTA"),
+          tiledb::tiledb_filter("ZSTD")
+        ))
+      )
+
+      private$log_array_creation(index_cols)
+      tiledb::tiledb_array_create(uri = self$uri, schema = tdb_schema)
+    },
+
     # @description Ingest assay data into the TileDB array.
     # @param x A [`data.frame`] containing the assay data.
     # @param index_cols Character vector with column names to use as index
@@ -111,14 +168,9 @@ AssayMatrix <- R6::R6Class(
       stopifnot(
         "Assay data must be a data.frame" = is.data.frame(x)
       )
-
-      if (self$verbose) message("Ingesting assay data into ", self$uri)
-      tiledb::fromDataFrame(
-        obj = x,
-        uri = self$uri,
-        col_index = index_cols,
-        mode = "append"
-      )
+      private$log_array_ingestion()
+      tdb_array <- tiledb::tiledb_array(self$uri, query_type = "WRITE")
+      tdb_array[] <- x
     }
   )
 )
