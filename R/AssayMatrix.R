@@ -111,7 +111,7 @@ AssayMatrix <- R6::R6Class(
       index_cols = c("obs_id", "var_id"),
       cell_order = "ROW_MAJOR",
       tile_order = "ROW_MAJOR",
-      capacity = 10000) {
+      capacity = 100000) {
 
       # determine appropriate type for each attribute
       value_cols <- setdiff(colnames(x), index_cols)
