@@ -3,5 +3,6 @@ pkgdown: 2.0.3
 pkgdown_sha: ~
 articles:
   introduction: introduction.html
-last_built: 2022-04-27T01:04Z
+  updates: updates.html
+last_built: 2022-05-10T18:47Z
 

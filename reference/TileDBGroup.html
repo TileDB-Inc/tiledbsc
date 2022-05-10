@@ -18,7 +18,7 @@ Base class for interacting with TileDB groups"><!-- mathjax --><script src="http
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tiledbsc</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.0.9005</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.0.9008</span>
       </span>
     </div>
 
@@ -34,6 +34,9 @@ Base class for interacting with TileDB groups"><!-- mathjax --><script src="http
   </a>
   <ul class="dropdown-menu" role="menu"><li>
       <a href="../articles/introduction.html">Introduction</a>
+    </li>
+    <li>
+      <a href="../articles/updates.html">Selective Updates</a>
     </li>
   </ul></li>
 <li>
@@ -84,6 +87,14 @@ The array object.</p>
 <dd><p>Whether to print verbose output</p></dd>
 
 
+<dt><code>config</code></dt>
+<dd><p>optional config</p></dd>
+
+
+<dt><code>ctx</code></dt>
+<dd><p>optional tiledb context</p></dd>
+
+
 </dl><p></p></div>
     </div>
     <div id="methods">
@@ -112,7 +123,7 @@ The array object.</p>
 <h3 id="method-new-">Method <code>new()</code><a class="anchor" aria-label="anchor" href="#method-new-"></a></h3>
 <p>Create a new TileDBGroup object.</p><div class="section">
 <h4 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span class="va"><a href="../reference/TileDBGroup.html">TileDBGroup</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">uri</span>, verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div><p></p></div>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span class="va"><a href="../reference/TileDBGroup.html">TileDBGroup</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">uri</span>, verbose <span class="op">=</span> <span class="cn">TRUE</span>, config <span class="op">=</span> <span class="cn">NULL</span>, ctx <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
@@ -123,6 +134,14 @@ The array object.</p>
 
 <dt><code>verbose</code></dt>
 <dd><p>Print status messages</p></dd>
+
+
+<dt><code>config</code></dt>
+<dd><p>optional configuration</p></dd>
+
+
+<dt><code>ctx</code></dt>
+<dd><p>optional tiledb context</p></dd>
 
 
 </dl><p></p></div>
@@ -227,7 +246,7 @@ basename of the object.</p>
 <h3 id="method-add-member-">Method <code>add_member()</code><a class="anchor" aria-label="anchor" href="#method-add-member-"></a></h3>
 <p>Add new member to the group.</p><div class="section">
 <h4 id="usage-7">Usage<a class="anchor" aria-label="anchor" href="#usage-7"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">TileDBGroup</span><span class="op">$</span><span class="fu">add_member</span><span class="op">(</span><span class="va">object</span>, name <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></code></pre></div><p></p></div>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">TileDBGroup</span><span class="op">$</span><span class="fu">add_member</span><span class="op">(</span><span class="va">object</span>, name <span class="op">=</span> <span class="cn">NULL</span>, relative <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
@@ -279,7 +298,7 @@ By default all member types are listed.</p></dd>
 </div>
 <div class="section">
 <h4 id="returns-5">Returns<a class="anchor" aria-label="anchor" href="#returns-5"></a></h4>
-<p>A <code>data.frame</code> with columns <code>URI</code> and <code>TYPE</code>.</p>
+<p>A <code>data.frame</code> with columns <code>URI</code>, <code>TYPE</code>, and <code>NAME</code>.</p>
 </div>
 
 </div><p></p><hr><a id="method-list_member_uris"></a><div class="section">

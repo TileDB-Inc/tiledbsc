@@ -25,7 +25,7 @@ var (AnnotationDataframe): 1D labeled array with row labels for X
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tiledbsc</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.0.9005</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.0.9008</span>
       </span>
     </div>
 
@@ -41,6 +41,9 @@ var (AnnotationDataframe): 1D labeled array with row labels for X
   </a>
   <ul class="dropdown-menu" role="menu"><li>
       <a href="../articles/introduction.html">Introduction</a>
+    </li>
+    <li>
+      <a href="../articles/updates.html">Selective Updates</a>
     </li>
   </ul></li>
 <li>
@@ -158,7 +161,7 @@ dimensions of the <code>obs</code> and <code>var</code> arrays, respectively.</p
 opened at the specified array <code>uri</code> if one is present, otherwise a new
 array group is created.</p><div class="section">
 <h4 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span class="va"><a href="../reference/SCGroup.html">SCGroup</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">uri</span>, verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div><p></p></div>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span class="va"><a href="../reference/SCGroup.html">SCGroup</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">uri</span>, verbose <span class="op">=</span> <span class="cn">TRUE</span>, config <span class="op">=</span> <span class="cn">NULL</span>, ctx <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
@@ -171,6 +174,14 @@ array group is created.</p><div class="section">
 <dd><p>Print status messages</p></dd>
 
 
+<dt><code>config</code></dt>
+<dd><p>optional configuration</p></dd>
+
+
+<dt><code>ctx</code></dt>
+<dd><p>optional tiledb context</p></dd>
+
+
 </dl><p></p></div>
 </div>
 
@@ -178,7 +189,12 @@ array group is created.</p><div class="section">
 <h3 id="method-from-seurat-assay-">Method <code>from_seurat_assay()</code><a class="anchor" aria-label="anchor" href="#method-from-seurat-assay-"></a></h3>
 <p>Convert a Seurat Assay to a TileDB-backed sc_group.</p><div class="section">
 <h4 id="usage-1">Usage<a class="anchor" aria-label="anchor" href="#usage-1"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">SCGroup</span><span class="op">$</span><span class="fu">from_seurat_assay</span><span class="op">(</span><span class="va">object</span>, obs <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></code></pre></div><p></p></div>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">SCGroup</span><span class="op">$</span><span class="fu">from_seurat_assay</span><span class="op">(</span>
+  <span class="va">object</span>,
+  obs <span class="op">=</span> <span class="cn">NULL</span>,
+  var <span class="op">=</span> <span class="cn">TRUE</span>,
+  layers <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"counts"</span>, <span class="st">"data"</span>, <span class="st">"scale.data"</span><span class="op">)</span>
+<span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
@@ -189,7 +205,20 @@ array group is created.</p><div class="section">
 
 <dt><code>obs</code></dt>
 <dd><p>An optional <code>data.frame</code> containing annotations for
-cell/sample-level observations.</p></dd>
+cell/sample-level observations. If no annotations are provided and the
+<code>obs</code> array doesn't yet exist, an array with 0 attributes is
+created.</p></dd>
+
+
+<dt><code>var</code></dt>
+<dd><p>Should the <code>Assay</code>'s' feature-level annotations be ingested
+into the <code>var</code> array? If <code>FALSE</code> and the <code>var</code> array does not yet exist
+then <code>var</code> is created as an array with 0 attributes.</p></dd>
+
+
+<dt><code>layers</code></dt>
+<dd><p>A vector of assay layer names to ingest. Must be some
+combination of <code>"counts"</code>, <code>"data"</code>, <code>"scale.data"</code>.</p></dd>
 
 
 </dl><p></p></div>
@@ -198,7 +227,31 @@ cell/sample-level observations.</p></dd>
 <h4 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h4>
 
 <div class="section">
-<h5 id="on-disk-format">On-Disk Format<a class="anchor" aria-label="anchor" href="#on-disk-format"></a></h5>
+<h5 id="assay-data">Assay data<a class="anchor" aria-label="anchor" href="#assay-data"></a></h5>
+
+
+<p>The <code><a href="https://mojaveazure.github.io/seurat-object/reference/Assay-class.html" class="external-link">SeuratObject::Assay</a></code> class stores different transformations of an
+assay in the <code>counts</code>, <code>data</code>, and <code>scale.data</code> slots. Data from each of
+these slots is ingested into a separate layer of the <code>X</code> group, named for
+the corresponding slot.</p>
+<p>By default <em>Seurat</em> populates the <code>data</code> slot with a reference to the
+same data stored in <code>counts</code>. To avoid ingesting redundant data, we check
+to see if <code>counts</code> and <code>data</code> are identical and skip the <code>data</code> slot if
+they are.</p>
+</div>
+
+<div class="section">
+<h5 id="annotations">Annotations<a class="anchor" aria-label="anchor" href="#annotations"></a></h5>
+
+
+<p>Cell- and feature-level annotations are stored in the <code>obs</code> and <code>var</code>
+arrays, respectively. These arrays are <em>always</em> created during the
+initial ingestion in order to maintain the full set of cell and feature
+identifiers in the array dimension.</p>
+</div>
+
+<div class="section">
+<h5 id="variable-features">Variable features<a class="anchor" aria-label="anchor" href="#variable-features"></a></h5>
 
 
 <p>Variable features in the <code>var.features</code> slot are maintained by creating a
@@ -280,7 +333,7 @@ the <code>key</code> slot is used to determine the technique.</p></dd>
 <h4 id="details-1">Details<a class="anchor" aria-label="anchor" href="#details-1"></a></h4>
 
 <div class="section">
-<h5 id="on-disk-format-1">On-Disk Format<a class="anchor" aria-label="anchor" href="#on-disk-format-1"></a></h5>
+<h5 id="on-disk-format">On-Disk Format<a class="anchor" aria-label="anchor" href="#on-disk-format"></a></h5>
 
 
 <p>Seurat <code>DimReduc</code> objects contain a variety of slots to accommodate the

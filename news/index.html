@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tiledbsc</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.0.9005</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.0.9008</span>
       </span>
     </div>
 
@@ -33,6 +33,9 @@
   </a>
   <ul class="dropdown-menu" role="menu"><li>
       <a href="../articles/introduction.html">Introduction</a>
+    </li>
+    <li>
+      <a href="../articles/updates.html">Selective Updates</a>
     </li>
   </ul></li>
 <li>
@@ -86,6 +89,11 @@
 <h3 id="other-changes-development-version">Other changes<a class="anchor" aria-label="anchor" href="#other-changes-development-version"></a></h3>
 <ul><li>added a <code>NEWS.md</code> file to track changes to the package</li>
 <li>the <em>fs</em> package is now a dependency</li>
+<li>
+<code>SCGroup</code>’s <code>from_seurat_assay()</code> method gained two new arguments: <code>layers</code>, to specify which Seurat <code>Assay</code> slots should be ingested, and <code>var</code>, to control whether feature-level metadata is ingested</li>
+<li>
+<code>SCGroup</code>’s <code>from_seurat_assay()</code> method will no longer ingest the <code>data</code> slot if it is identical to <code>counts</code>
+</li>
 </ul></div>
 </div>
   </div>
