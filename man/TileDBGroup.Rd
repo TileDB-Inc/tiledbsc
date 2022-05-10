@@ -21,6 +21,10 @@ Base class for interacting with TileDB groups
 \item{\code{members}}{Named list of members in the group}
 
 \item{\code{verbose}}{Whether to print verbose output}
+
+\item{\code{config}}{optional config}
+
+\item{\code{ctx}}{optional tiledb context}
 }
 \if{html}{\out{</div>}}
 }
@@ -51,7 +55,7 @@ Base class for interacting with TileDB groups
 \subsection{Method \code{new()}}{
 Create a new TileDBGroup object.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{TileDBGroup$new(uri, verbose = TRUE)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{TileDBGroup$new(uri, verbose = TRUE, config = NULL, ctx = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -60,6 +64,10 @@ Create a new TileDBGroup object.
 \item{\code{uri}}{TileDB array URI}
 
 \item{\code{verbose}}{Print status messages}
+
+\item{\code{config}}{optional configuration}
+
+\item{\code{ctx}}{optional tiledb context}
 }
 \if{html}{\out{</div>}}
 }
@@ -216,7 +224,7 @@ By default all member types are listed.}
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A \code{data.frame} with columns \code{URI} and \code{TYPE}.
+A \code{data.frame} with columns \code{URI}, \code{TYPE}, and \code{NAME}.
 }
 }
 \if{html}{\out{<hr>}}

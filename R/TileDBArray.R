@@ -2,14 +2,14 @@
 #' @export
 TileDBArray <- R6::R6Class(
   classname = "TileDBArray",
-  #' @field uri The URI of the TileDB array
-  #' @field verbose Whether to print verbose output
   public = list(
+    #' @field uri The URI of the TileDB array
     uri = NULL,
+    #' @field verbose Whether to print verbose output
     verbose = TRUE,
-    #' @field optional configuration
+    #' @field config optional configuration
     config = NULL,
-    #' @field optional tiledb context
+    #' @field ctx optional tiledb context
     ctx = NULL,
 
     #' @description Create a new TileDBArray object.
@@ -28,7 +28,7 @@ TileDBArray <- R6::R6Class(
       if (!is.null(self$config)) {
         self$ctx <- tiledb::tiledb_ctx(self$config)
       }
-      
+
       if (is.null(self$ctx)) {
         self$ctx <- tiledb::tiledb_get_context()
       }
