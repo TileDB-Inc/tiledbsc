@@ -10,9 +10,9 @@ TileDBGroup <- R6::R6Class(
     members = list(),
     #' @field verbose Whether to print verbose output
     verbose = TRUE,
-    #' @field optional config'
+    #' @field config optional config
     config = NULL,
-        #' @field optional tiledb context'
+    #' @field ctx optional tiledb context
     ctx = NULL,
 
     #' @description Create a new TileDBGroup object.
@@ -32,7 +32,7 @@ TileDBGroup <- R6::R6Class(
       if (!is.null(self$config)) {
         self$ctx <- tiledb::tiledb_ctx(self$config)
       }
-      
+
       if (is.null(self$ctx)) {
         self$ctx <- tiledb::tiledb_get_context()
       }
