@@ -71,6 +71,7 @@ RUN apt-get update \
         libhdf5-dev \
         libudunits2-0 \
         libxml2 \
+        libgeos-dev \
     && install.r docopt devtools \
     && rm -rf /tmp/downloaded_packages/* /tmp/*.rds \
     && chmod a+w /tmp/downloaded_packages
