@@ -87,7 +87,7 @@ Create a new SCGroup object. The existing array group is
 opened at the specified array \code{uri} if one is present, otherwise a new
 array group is created.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{SCGroup$new(uri, verbose = TRUE)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{SCGroup$new(uri, verbose = TRUE, config = NULL, ctx = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -96,6 +96,10 @@ array group is created.
 \item{\code{uri}}{URI of the TileDB group}
 
 \item{\code{verbose}}{Print status messages}
+
+\item{\code{config}}{optional configuration}
+
+\item{\code{ctx}}{optional tiledb context}
 }
 \if{html}{\out{</div>}}
 }

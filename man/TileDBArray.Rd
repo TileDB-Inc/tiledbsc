@@ -14,6 +14,10 @@ TileDB Array Base Class
 \item{\code{uri}}{The URI of the TileDB array}
 
 \item{\code{verbose}}{Whether to print verbose output}
+
+\item{\code{config}}{optional configuration}
+
+\item{\code{ctx}}{optional tiledb context}
 }
 \if{html}{\out{</div>}}
 }
@@ -42,7 +46,7 @@ TileDB Array Base Class
 \subsection{Method \code{new()}}{
 Create a new TileDBArray object.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{TileDBArray$new(uri, verbose = TRUE)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{TileDBArray$new(uri, verbose = TRUE, config = NULL, ctx = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -51,6 +55,10 @@ Create a new TileDBArray object.
 \item{\code{uri}}{URI for the TileDB array}
 
 \item{\code{verbose}}{Print status messages}
+
+\item{\code{config}}{optional configuration}
+
+\item{\code{ctx}}{optional tiledb context}
 }
 \if{html}{\out{</div>}}
 }

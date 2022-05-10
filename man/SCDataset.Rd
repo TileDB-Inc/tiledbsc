@@ -65,7 +65,7 @@ array group is created. The \code{members} field is populated with
 well \code{SCGroup} objects discovered within the \code{SCdataset} object's
 TileDB group.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{SCDataset$new(uri, verbose = TRUE)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{SCDataset$new(uri, verbose = TRUE, config = NULL, ctx = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -74,6 +74,10 @@ TileDB group.
 \item{\code{uri}}{URI of the TileDB group}
 
 \item{\code{verbose}}{Print status messages}
+
+\item{\code{config}}{optional configuration}
+
+\item{\code{ctx}}{optional tiledb context}
 }
 \if{html}{\out{</div>}}
 }
