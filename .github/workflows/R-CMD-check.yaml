@@ -32,6 +32,10 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Install libgeos on Linux
+        if: runner.os == 'Linux'
+        run: sudo apt-get update -y && sudo apt-get install -y libgeos-dev
+
       - uses: r-lib/actions/setup-pandoc@v1
 
       - uses: r-lib/actions/setup-r@v1
@@ -45,4 +49,4 @@ jobs:
           R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
         run: Rscript -e "install.packages(c('remotes', 'rcmdcheck'))" -e "remotes::install_deps(dependencies = TRUE)"
 
-      - uses: r-lib/actions/check-r-package@v1
+      - uses: r-lib/actions/check-r-package@v2
