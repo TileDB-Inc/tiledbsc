@@ -12,22 +12,25 @@
 	// Set *default* container specific settings.json values on container create.
 	"settings": {},
 
+	"mounts": [
+		"source=tiledbsc-r-library,target=/usr/local/lib/R/site-library,type=volume,consistency=cached"
+	],
 
 	// Add the IDs of extensions you want installed when the container is created.
 	"extensions": [
-        "stkb.rewrap",
-        "eamodio.gitlens",
-        "Ikuyadeu.r"
-    ],
+		"stkb.rewrap",
+		"eamodio.gitlens",
+		"Ikuyadeu.r"
+	],
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// "forwardPorts": [],
 
 	// Use 'postCreateCommand' to run commands after the container is created.
-	// "postCreateCommand": "uname -a",
+	"postCreateCommand": "installDeps.r .",
 
 	// Comment out to connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
-	"remoteUser": "vscode",
+	// "remoteUser": "vscode",
 	"features": {
 		"git": "latest",
 		"github-cli": "latest"
