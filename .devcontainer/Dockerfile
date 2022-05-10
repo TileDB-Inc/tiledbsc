@@ -72,6 +72,7 @@ RUN apt-get update \
         libudunits2-0 \
         libxml2 \
         libgeos-dev \
+        libglpk-dev \
     && install.r docopt devtools \
     && rm -rf /tmp/downloaded_packages/* /tmp/*.rds \
     && chmod a+w /tmp/downloaded_packages
