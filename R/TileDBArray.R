@@ -161,9 +161,6 @@ TileDBArray <- R6::R6Class(
   ),
 
   private = list(
-    # @description Top-level function to create and populate the new array.
-    build_array = function() return(NULL),
-
     # @description Create empty TileDB array.
     create_empty_array = function() return(NULL),
 
