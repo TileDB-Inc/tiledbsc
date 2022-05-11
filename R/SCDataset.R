@@ -209,24 +209,6 @@ SCDataset <- R6::R6Class(
         lapply(scgroup_uris, SCGroup$new, verbose = self$verbose, config = self$config, ctx = self$context),
         lapply(misc_uri, TileDBGroup$new, verbose = self$verbose, config = self$config, ctx = self$context)
       )
-    },
-
-    # Override to include SCGroups using `scgroup_uris`
-    format_groups = function() {
-      uris <- self$scgroup_uris()
-      if (!is_empty(uris)) {
-        remote <- string_starts_with(uris, "s3://") | string_starts_with(uris, "tiledb://")
-        names(uris) <- ifelse(remote, paste0(names(uris), "*"), names(uris))
-        cat("  scgroups:", string_collapse(names(uris)), "\n")
-      }
-    },
-
-    group_print = function() {
-      cat("  uri:", self$uri, "\n")
-      if (self$group_exists()) {
-        private$format_arrays()
-        private$format_groups()
-      }
     }
   )
 )
