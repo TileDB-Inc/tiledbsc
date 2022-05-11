@@ -34,7 +34,7 @@ SCDataset <- R6::R6Class(
           uri = file_path(self$uri, "misc"),
           verbose = self$verbose
         )
-        self$add_member(self$misc, name = "misc", relative = FALSE)
+        self$add_member(self$misc, name = "misc")
       }
 
       # Special handling of Seurat commands array
