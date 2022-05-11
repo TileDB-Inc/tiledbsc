@@ -242,13 +242,12 @@ List URIs for group members
 \item{\code{type}}{The type of member to list, either \code{"ARRAY"}, or \code{"GROUP"}.
 By default all member types are listed.}
 
-\item{\code{prefix}}{Filter URIs whose basename contain an optional prefix.}
+\item{\code{prefix}}{Filter for members whose name contains an optional prefix.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A character vector of member URIs with names corresponding to the
-basename of the URI.
+A character vector of member URIs, named for the group member
 }
 }
 \if{html}{\out{<hr>}}
