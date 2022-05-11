@@ -308,11 +308,7 @@ TileDBGroup <- R6::R6Class(
       members <- self$list_members()
       member_objects <- list()
       if (!is_empty(members)) {
-
-        member_uris <- lapply(
-          X = split(members$URI, members$TYPE),
-          FUN = function(x) setNames(x, basename(x))
-        )
+        member_uris <- split(setNames(members$URI, members$NAME), members$TYPE)
         member_objects <- c(
           lapply(member_uris$ARRAY, TileDBArray$new, verbose = self$verbose),
           lapply(member_uris$GROUP, TileDBGroup$new, verbose = self$verbose)
