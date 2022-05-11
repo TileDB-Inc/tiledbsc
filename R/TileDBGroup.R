@@ -192,13 +192,12 @@ TileDBGroup <- R6::R6Class(
     #' @description List URIs for group members
     #' @param type The type of member to list, either `"ARRAY"`, or `"GROUP"`.
     #' By default all member types are listed.
-    #' @param prefix Filter URIs whose basename contain an optional prefix.
-    #' @return A character vector of member URIs with names corresponding to the
-    #' basename of the URI.
+    #' @param prefix Filter for members whose name contains an optional prefix.
+    #' @return A character vector of member URIs, named for the group member
     list_member_uris = function(type = NULL, prefix = NULL) {
-      uris <- self$list_members(type = type)$URI
-      if (is_empty(uris)) return(uris)
-      names(uris) <- basename(uris)
+      members <- self$list_members(type = type)
+      if (is_empty(members)) return(character(0L))
+      uris <- setNames(members$URI, members$NAME)
       if (!is.null(prefix)) {
         stopifnot(is_scalar_character(prefix))
         uris <- uris[string_starts_with(names(uris), prefix)]
@@ -309,6 +308,7 @@ TileDBGroup <- R6::R6Class(
       members <- self$list_members()
       member_objects <- list()
       if (!is_empty(members)) {
+
         member_uris <- lapply(
           X = split(members$URI, members$TYPE),
           FUN = function(x) setNames(x, basename(x))

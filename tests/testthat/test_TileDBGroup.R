@@ -71,6 +71,7 @@ test_that("group member names are retained", {
   )
   grp$add_member(a1, name = "foo", relative = FALSE)
   expect_equal(grp$count_members(), 1)
+  expect_equal(names(grp$list_member_uris()), "foo")
   expect_equal(names(grp$members), "foo")
   expect_equal(grp$list_members()$NAME, "foo")
 
