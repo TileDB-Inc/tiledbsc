@@ -53,7 +53,7 @@ SCDataset <- R6::R6Class(
     #'
     #' ## Assays
     #' Each `[SeuratObject::Assay`] is converted to a [`SCGroup`] and written to
-    #' a nested TileDB group with a URI of `./scgroup_<assay>` where `<assay>`
+    #' a nested TileDB group with a URI of `./<assay>` where `<assay>`
     #' is the name of the Seurat assay.
     #'
     #' ## Dimensionality Reductions
@@ -71,7 +71,7 @@ SCDataset <- R6::R6Class(
       assays <- SeuratObject::Assays(object)
       for (assay in assays) {
         assay_object <- object[[assay]]
-        assay_uri <- file_path(self$uri, paste0("scgroup_", assay))
+        assay_uri <- file_path(self$uri, assay)
         scgroup <- SCGroup$new(assay_uri, verbose = self$verbose, config = self$config, ctx = self$context)
         scgroup$from_seurat_assay(assay_object, obs = object[[]])
         self$add_member(scgroup, name = assay)
@@ -203,7 +203,6 @@ SCDataset <- R6::R6Class(
       member_uris <- self$list_member_uris()
       misc_uri <- member_uris[names(member_uris) == "misc"]
       scgroup_uris <- member_uris[names(member_uris) != "misc"]
-      names(scgroup_uris) <- sub("scgroup_", "", names(scgroup_uris), fixed = TRUE)
 
       c(
         lapply(scgroup_uris, SCGroup$new, verbose = self$verbose, config = self$config, ctx = self$context),
