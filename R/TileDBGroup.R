@@ -330,9 +330,21 @@ TileDBGroup <- R6::R6Class(
     },
 
     format_members = function() {
-      members <- names(self$members)
+      members <- self$list_members()
       if (!is_empty(members)) {
-        cat("  members:", string_collapse(members), "\n")
+        # denote remote URIs with *
+        formatted <- paste0(
+          members$NAME,
+          ifelse(is_remote_uri(members$URI), "*", "")
+        )
+        # list by type
+        formatted <- split(formatted, members$TYPE)
+        if (!is.null(formatted$ARRAY)) {
+          cat("  arrays:", string_collapse(sort(formatted$ARRAY)), "\n")
+        }
+        if (!is.null(formatted$GROUP)) {
+          cat("  groups:", string_collapse(sort(formatted$GROUP)), "\n")
+        }
       }
     },
 
