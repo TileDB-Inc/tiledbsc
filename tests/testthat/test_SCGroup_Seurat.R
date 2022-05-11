@@ -13,6 +13,13 @@ test_that("SCGroup object can be created from a Seurat assay", {
   scgroup <<- SCGroup$new(uri = tdb_uri, verbose = TRUE)
   expect_true(inherits(scgroup, "SCGroup"))
 
+  # default groups were created
+  expect_equal(scgroup$count_members(), 6L)
+  expect_setequal(
+    scgroup$list_members()$NAME,
+    c("X", "obsm", "varm", "obsp", "varp", "misc")
+  )
+
   expect_error(
     scgroup$from_seurat_assay(pbmc_small),
     "sc_groups must be created from a Seurat Assay"
