@@ -74,7 +74,9 @@ SCDataset <- R6::R6Class(
         assay_uri <- file_path(self$uri, assay)
         scgroup <- SCGroup$new(assay_uri, verbose = self$verbose, config = self$config, ctx = self$context)
         scgroup$from_seurat_assay(assay_object, obs = object[[]])
-        self$add_member(scgroup, name = assay)
+        if (is.null(self$members[[assay]])) {
+          self$add_member(scgroup, name = assay)
+        }
       }
 
       reductions <- SeuratObject::Reductions(object)
@@ -112,7 +114,9 @@ SCDataset <- R6::R6Class(
           verbose = self$verbose
         )
         commandsArray$from_named_list_of_commands(namedListOfCommands)
-        self$misc$add_member(commandsArray, name = "commands", relative = FALSE)
+        if (is.null(self$misc$members$commands)) {
+          self$misc$add_member(commandsArray, name = "commands")
+        }
       }
 
       if (self$verbose) {
