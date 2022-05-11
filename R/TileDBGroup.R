@@ -168,7 +168,11 @@ TileDBGroup <- R6::R6Class(
     #' @return A `data.frame` with columns `URI`, `TYPE`, and `NAME`.
     list_members = function(type = NULL) {
       count <- self$count_members()
-      members <- data.frame(TYPE = character(count), URI = character(count), NAME = character(count))
+      members <- data.frame(
+        TYPE = character(count),
+        URI = character(count),
+        NAME = character(count)
+      )
       if (count == 0) return(members)
 
       on.exit(private$group_close())
@@ -181,6 +185,7 @@ TileDBGroup <- R6::R6Class(
 
       members$TYPE <- vapply_char(member_list, FUN = getElement, name = 1L)
       members$URI <- vapply_char(member_list, FUN = getElement, name = 2L)
+      members$NAME <- vapply_char(member_list, FUN = getElement, name = 3L)
       private$filter_by_type(members, type)
     },
 
