@@ -73,6 +73,11 @@ test_that("group member names are retained", {
   expect_equal(grp$count_members(), 1)
   expect_equal(names(grp$members), "foo")
   expect_equal(grp$list_members()$NAME, "foo")
+
+  # member names are retained
+  grp2 <- TileDBGroup$new(uri = grp_uri)
+  expect_equal(names(grp2$members), "foo")
+  expect_equal(grp2$list_members()$NAME, "foo")
 })
 
 test_that("members of an existing group are instantiated", {
