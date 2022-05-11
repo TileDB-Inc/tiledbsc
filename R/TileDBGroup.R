@@ -148,7 +148,8 @@ TileDBGroup <- R6::R6Class(
       tiledb::tiledb_group_add_member(
         grp = private$group,
         uri = uri,
-        relative = relative
+        relative = relative,
+        name = name
       )
       self$members[[name]] <- object
     },
