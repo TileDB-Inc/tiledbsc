@@ -34,7 +34,7 @@ Imports:
     R6,
     methods,
     Matrix,
-    tiledb (>= 0.12.0),
+    tiledb (>= 0.12.0.2),
     SeuratObject,
     jsonlite,
     glue,
@@ -50,5 +50,7 @@ Suggests:
     testthat (>= 3.0.0),
     SummarizedExperiment,
     SingleCellExperiment
+Remotes:
+    tiledb-inc/tiledb-r
 VignetteBuilder: knitr
 Config/testthat/edition: 2
