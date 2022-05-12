@@ -4,20 +4,32 @@
 \alias{TileDBArray}
 \title{TileDB Array Base Class}
 \description{
-TileDB Array Base Class
+Base class for representing an individual TileDB array.
+}
+\details{
+\subsection{Initialization}{
 
-TileDB Array Base Class
+Initializing a \code{TileDBArray} object does not automatically create a new array
+at the specified \code{uri} if one does not already exist because we don't know
+what the schema will be. Arrays are only created by child classes, which
+populate the private \code{create_empty_array()} and \code{ingest_data()} methods.
+}
 }
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
-\item{\code{uri}}{The URI of the TileDB array}
-
 \item{\code{verbose}}{Whether to print verbose output}
 
 \item{\code{config}}{optional configuration}
 
 \item{\code{ctx}}{optional tiledb context}
+}
+\if{html}{\out{</div>}}
+}
+\section{Active bindings}{
+\if{html}{\out{<div class="r6-active-bindings">}}
+\describe{
+\item{\code{uri}}{The URI of the TileDB array.}
 }
 \if{html}{\out{</div>}}
 }

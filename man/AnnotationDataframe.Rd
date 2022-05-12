@@ -19,8 +19,6 @@ annotations/measurements.
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
-\item{\code{uri}}{URI of the TileDB array}
-
 \item{\code{verbose}}{Print status messages}
 }
 \if{html}{\out{</div>}}
