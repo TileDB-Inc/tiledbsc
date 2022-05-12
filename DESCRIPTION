@@ -39,7 +39,8 @@ Imports:
     jsonlite,
     glue,
     utils,
-    fs
+    fs,
+    urltools
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2
 Suggests:
