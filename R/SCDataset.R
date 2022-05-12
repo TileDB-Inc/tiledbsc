@@ -70,13 +70,15 @@ SCDataset <- R6::R6Class(
 
       assays <- SeuratObject::Assays(object)
       for (assay in assays) {
-        assay_object <- object[[assay]]
-        assay_uri <- file_path(self$uri, paste0("scgroup_", assay))
-        scgroup <- SCGroup$new(assay_uri, verbose = self$verbose, config = self$config, ctx = self$context)
-        scgroup$from_seurat_assay(assay_object, obs = object[[]])
         if (is.null(self$members[[assay]])) {
+          assay_uri <- file_path(self$uri, paste0("scgroup_", assay))
+          scgroup <- SCGroup$new(assay_uri, verbose = self$verbose, config = self$config, ctx = self$context)
           self$add_member(scgroup, name = assay)
+        } else {
+          scgroup <- self$members[[assay]]
         }
+        assay_object <- object[[assay]]
+        scgroup$from_seurat_assay(assay_object, obs = object[[]])
       }
 
       reductions <- SeuratObject::Reductions(object)
