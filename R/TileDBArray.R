@@ -13,8 +13,6 @@
 TileDBArray <- R6::R6Class(
   classname = "TileDBArray",
   public = list(
-    #' @field uri The URI of the TileDB array
-    uri = NULL,
     #' @field verbose Whether to print verbose output
     verbose = TRUE,
     #' @field config optional configuration
@@ -28,7 +26,7 @@ TileDBArray <- R6::R6Class(
     #' @param config optional configuration
     #' @param ctx optional tiledb context
     initialize = function(uri, verbose = TRUE, config = NULL, ctx = NULL) {
-      self$uri <- uri
+      private$tiledb_uri <- TileDBURI$new(uri)
       self$verbose <- verbose
       self$config <- config
       self$ctx <- ctx
@@ -66,7 +64,12 @@ TileDBArray <- R6::R6Class(
     #' @description Check if the array exists.
     #' @return TRUE if the array exists, FALSE otherwise.
     array_exists = function() {
-      tiledb::tiledb_object_type(self$uri, ctx = self$ctx) == "ARRAY"
+      if (private$tiledb_uri$is_tiledb_cloud_creation_uri()) {
+        uri <- private$tiledb_uri$object_uri
+      } else {
+        uri <- self$uri
+      }
+      tiledb::tiledb_object_type(uri, ctx = self$ctx) == "ARRAY"
     },
 
     #' @description Return a [`TileDBArray`] object
@@ -170,7 +173,20 @@ TileDBArray <- R6::R6Class(
     }
   ),
 
+  active = list(
+    #' @field uri
+    #' The URI of the TileDB array.
+    uri = function(value) {
+      if (missing(value)) return(private$tiledb_uri$uri)
+      stop(sprintf("'%s' is a read-only field.", "uri"))
+    }
+  ),
+
   private = list(
+
+    # @description Contains TileDBURI object for the array.
+    tiledb_uri = NULL,
+
     # @description Create empty TileDB array.
     create_empty_array = function() return(NULL),
 

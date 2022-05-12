@@ -11,8 +11,6 @@ TileDBGroup <- R6::R6Class(
   classname = "TileDBGroup",
 
   public = list(
-    #' @field uri The URI of the TileDB group
-    uri = NULL,
     #' @field members Named list of members in the group
     members = list(),
     #' @field verbose Whether to print verbose output
@@ -29,7 +27,7 @@ TileDBGroup <- R6::R6Class(
     #' @param ctx optional tiledb context
     initialize = function(uri, verbose = TRUE, config = NULL, ctx = NULL) {
       if (missing(uri)) stop("A `uri` must be specified")
-      self$uri <- uri
+      private$tiledb_uri <- TileDBURI$new(uri)
       self$verbose <- verbose
       self$config <- config
       self$ctx <- ctx
@@ -81,7 +79,12 @@ TileDBGroup <- R6::R6Class(
     #' @description Check if the group exists.
     #' @return TRUE if the group exists, FALSE otherwise.
     group_exists = function() {
-      tiledb::tiledb_object_type(self$uri, ctx = self$ctx) == "GROUP"
+      if (private$tiledb_uri$is_tiledb_cloud_creation_uri()) {
+        uri <- private$tiledb_uri$object_uri
+      } else {
+        uri <- self$uri
+      }
+      tiledb::tiledb_object_type(uri, ctx = self$ctx) == "GROUP"
     },
 
     #' @description Return a [`tiledb_group`] object
@@ -286,9 +289,21 @@ TileDBGroup <- R6::R6Class(
     }
   ),
 
+  active = list(
+    #' @field uri
+    #' The URI of the TileDB group
+    uri = function(value) {
+      if (missing(value)) return(private$tiledb_uri$uri)
+      stop(sprintf("'%s' is a read-only field.", "uri"))
+    }
+  ),
+
   private = list(
 
     group = NULL,
+
+    # @description Contains TileDBURI object for the group.
+    tiledb_uri = NULL,
 
     create_group = function() {
       if (self$verbose) {

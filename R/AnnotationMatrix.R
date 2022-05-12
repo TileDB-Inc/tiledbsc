@@ -10,8 +10,6 @@ AnnotationMatrix <- R6::R6Class(
   inherit = AnnotationArray,
 
   public = list(
-    #' @field uri URI of the TileDB array
-    uri = NULL,
     #' @field verbose Print status messages
     verbose = TRUE,
 
