@@ -119,7 +119,7 @@ Easy choice. `"RNA"` can then be used to index the corresponding `SCGroup`:
 
 
 ```{r}
-scdataset$members$RNA
+# scdataset$members$RNA
 ```
 
 We can see we have access to a variety of fields and methods, but `obs` is the one we're after.
