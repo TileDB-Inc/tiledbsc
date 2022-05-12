@@ -50,5 +50,7 @@ Suggests:
     testthat (>= 3.0.0),
     SummarizedExperiment,
     SingleCellExperiment
+Remotes:
+    tiledb-inc/tiledb-r
 VignetteBuilder: knitr
 Config/testthat/edition: 2
