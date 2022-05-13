@@ -16,9 +16,12 @@ See [TileDB 2.8 release notes](https://github.com/TileDB-Inc/TileDB/releases/tag
 - `get_array()` has been replaced with `get_member()` which add a `type` argument to filter by object type
 - gain the following methods: `count_members()`, `list_members()`, `list_member_uris()`, and `add_member()`
 
-### Other
+### SCGroup
 
 - the `scgroup_uris` argument has been dropped from `SCDataset`'s initialize method (`add_member()` should now be used instead to add additional `SCGroup`s)
+
+### SCDataset
+
 - `SCDataset`'s `scgroups` field is now an active binding that filters `members` for `SCGroup` objects
 
 ## Other changes
@@ -30,3 +33,4 @@ See [TileDB 2.8 release notes](https://github.com/TileDB-Inc/TileDB/releases/tag
 * Internally group members are now added with names
 * New internal `TileDBURI` class for handling  various URI formats
 * The `uri` field for all TileDB(Array|Group)-based classes is now an active binding that retrieves the URI from the private `tiledb_uri` field
+* Several default parameters have been changed to store the the `X`, `obs`, and `var` arrays more efficiently on disk (#50)
