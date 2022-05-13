@@ -1,4 +1,4 @@
-devtools::load_all()
+library(tiledbsc)
 library(lobstr)
 library(tiledb)
 library(SeuratObject)
