@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tiledbsc</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.0.9007</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.0.9008</span>
       </span>
     </div>
 
@@ -94,6 +94,9 @@
 <li>
 <code>SCGroup</code>’s <code>from_seurat_assay()</code> method will no longer ingest the <code>data</code> slot if it is identical to <code>counts</code>
 </li>
+<li>Internally group members are now added with names</li>
+<li>New internal <code>TileDBURI</code> class for handling various URI formats</li>
+<li>The <code>uri</code> field for all TileDB(Array|Group)-based classes is now an active binding that retrieves the URI from the private <code>tiledb_uri</code> field</li>
 </ul></div>
 </div>
   </div>
