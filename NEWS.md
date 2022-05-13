@@ -27,3 +27,6 @@ See [TileDB 2.8 release notes](https://github.com/TileDB-Inc/TileDB/releases/tag
 * the *fs* package is now a dependency
 * `SCGroup`'s `from_seurat_assay()` method gained two new arguments: `layers`, to specify which Seurat `Assay` slots should be ingested, and `var`, to control whether feature-level metadata is ingested
 * `SCGroup`'s `from_seurat_assay()` method will no longer ingest the `data` slot if it is identical to `counts`
+* Internally group members are now added with names
+* New internal `TileDBURI` class for handling  various URI formats
+* The `uri` field for all TileDB(Array|Group)-based classes is now an active binding that retrieves the URI from the private `tiledb_uri` field

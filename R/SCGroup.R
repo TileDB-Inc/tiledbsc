@@ -602,7 +602,7 @@ SCGroup <- R6::R6Class(
     # metadata).
     instantiate_members = function() {
       members <- self$list_members()
-      named_uris <- setNames(members$URI, basename(members$URI))
+      named_uris <- setNames(members$URI, members$NAME)
 
       # fallback generators for members not covered by the scgroup schema
       fallback_generators <- lapply(

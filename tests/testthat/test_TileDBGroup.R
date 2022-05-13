@@ -62,6 +62,25 @@ test_that("members can be added and retrieved from a new group", {
   expect_is(grp$members$g1, "TileDBGroup")
 })
 
+test_that("group member names are retained", {
+  grp_uri <- withr::local_tempdir("named-group-members")
+  grp <- TileDBGroup$new(uri = grp_uri, verbose = FALSE)
+
+  a1 <- TileDBArray$new(
+    uri = create_empty_test_array(file.path(grp_uri, "a1"))
+  )
+  grp$add_member(a1, name = "foo", relative = FALSE)
+  expect_equal(grp$count_members(), 1)
+  expect_equal(names(grp$list_member_uris()), "foo")
+  expect_equal(names(grp$members), "foo")
+  expect_equal(grp$list_members()$NAME, "foo")
+
+  # member names are retained
+  grp2 <- TileDBGroup$new(uri = grp_uri)
+  expect_equal(names(grp2$members), "foo")
+  expect_equal(grp2$list_members()$NAME, "foo")
+})
+
 test_that("members of an existing group are instantiated", {
   grp_uri <- withr::local_tempdir("existing-group")
   create_test_group_with_members(grp_uri, relative = FALSE)

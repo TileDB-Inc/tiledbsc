@@ -2,7 +2,7 @@
 % Please edit documentation in R/TileDBGroup.R
 \name{TileDBGroup}
 \alias{TileDBGroup}
-\title{Base class for interacting with TileDB groups}
+\title{TileDB Group Base Class}
 \value{
 A named list of group members.
 
@@ -10,14 +10,17 @@ The array object.
 }
 \description{
 Base class for interacting with TileDB groups
+}
+\details{
+\subsection{Initialization}{
 
-Base class for interacting with TileDB groups
+Upon initialization a new group is created if one does not already exist at
+the specified \code{uri}.
+}
 }
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
-\item{\code{uri}}{The URI of the TileDB group}
-
 \item{\code{members}}{Named list of members in the group}
 
 \item{\code{verbose}}{Whether to print verbose output}
@@ -25,6 +28,13 @@ Base class for interacting with TileDB groups
 \item{\code{config}}{optional config}
 
 \item{\code{ctx}}{optional tiledb context}
+}
+\if{html}{\out{</div>}}
+}
+\section{Active bindings}{
+\if{html}{\out{<div class="r6-active-bindings">}}
+\describe{
+\item{\code{uri}}{The URI of the TileDB group}
 }
 \if{html}{\out{</div>}}
 }
@@ -242,13 +252,12 @@ List URIs for group members
 \item{\code{type}}{The type of member to list, either \code{"ARRAY"}, or \code{"GROUP"}.
 By default all member types are listed.}
 
-\item{\code{prefix}}{Filter URIs whose basename contain an optional prefix.}
+\item{\code{prefix}}{Filter for members whose name contains an optional prefix.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A character vector of member URIs with names corresponding to the
-basename of the URI.
+A character vector of member URIs, named for the group member
 }
 }
 \if{html}{\out{<hr>}}

@@ -119,20 +119,20 @@ Easy choice. `"RNA"` can then be used to index the corresponding `SCGroup`:
 
 
 ```{r}
-scdataset$scgroups$RNA
+scdataset$members$RNA
 ```
 
 We can see we have access to a variety of fields and methods, but `obs` is the one we're after.
 
 ```{r}
-scdataset$scgroups$RNA$obs$to_dataframe()
+scdataset$members$RNA$obs$to_dataframe()
 ```
 
 This is a `AnnotationDataframe` object, which includes a method for reading the data into R as a `data.frame`:
 
 
 ```{r}
-head(scdataset$scgroups$RNA$obs$to_dataframe())
+head(scdataset$members$RNA$obs$to_dataframe())
 ```
 
 
@@ -145,7 +145,7 @@ All of the array-based classes include a number of helper functions for interact
 Print the schema of an array:
 
 ```{r}
-scgroup_obs <- scdataset$scgroups$RNA$obs
+scgroup_obs <- scdataset$members$RNA$obs
 scgroup_obs$schema()
 ```
 

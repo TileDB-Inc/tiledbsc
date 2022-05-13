@@ -1,11 +1,16 @@
+#' TileDB Group Base Class
+#'
+#' @description
 #' Base class for interacting with TileDB groups
+#' @details
+#' ## Initialization
+#' Upon initialization a new group is created if one does not already exist at
+#' the specified `uri`.
 #' @export
 TileDBGroup <- R6::R6Class(
   classname = "TileDBGroup",
 
   public = list(
-    #' @field uri The URI of the TileDB group
-    uri = NULL,
     #' @field members Named list of members in the group
     members = list(),
     #' @field verbose Whether to print verbose output
@@ -22,7 +27,7 @@ TileDBGroup <- R6::R6Class(
     #' @param ctx optional tiledb context
     initialize = function(uri, verbose = TRUE, config = NULL, ctx = NULL) {
       if (missing(uri)) stop("A `uri` must be specified")
-      self$uri <- uri
+      private$tiledb_uri <- TileDBURI$new(uri)
       self$verbose <- verbose
       self$config <- config
       self$ctx <- ctx
@@ -74,7 +79,12 @@ TileDBGroup <- R6::R6Class(
     #' @description Check if the group exists.
     #' @return TRUE if the group exists, FALSE otherwise.
     group_exists = function() {
-      tiledb::tiledb_object_type(self$uri, ctx = self$ctx) == "GROUP"
+      if (private$tiledb_uri$is_tiledb_cloud_creation_uri()) {
+        uri <- private$tiledb_uri$object_uri
+      } else {
+        uri <- self$uri
+      }
+      tiledb::tiledb_object_type(uri, ctx = self$ctx) == "GROUP"
     },
 
     #' @description Return a [`tiledb_group`] object
@@ -148,7 +158,8 @@ TileDBGroup <- R6::R6Class(
       tiledb::tiledb_group_add_member(
         grp = private$group,
         uri = uri,
-        relative = relative
+        relative = relative,
+        name = name
       )
       self$members[[name]] <- object
     },
@@ -167,7 +178,11 @@ TileDBGroup <- R6::R6Class(
     #' @return A `data.frame` with columns `URI`, `TYPE`, and `NAME`.
     list_members = function(type = NULL) {
       count <- self$count_members()
-      members <- data.frame(TYPE = character(count), URI = character(count), NAME = character(count))
+      members <- data.frame(
+        TYPE = character(count),
+        URI = character(count),
+        NAME = character(count)
+      )
       if (count == 0) return(members)
 
       on.exit(private$group_close())
@@ -180,19 +195,19 @@ TileDBGroup <- R6::R6Class(
 
       members$TYPE <- vapply_char(member_list, FUN = getElement, name = 1L)
       members$URI <- vapply_char(member_list, FUN = getElement, name = 2L)
+      members$NAME <- vapply_char(member_list, FUN = getElement, name = 3L)
       private$filter_by_type(members, type)
     },
 
     #' @description List URIs for group members
     #' @param type The type of member to list, either `"ARRAY"`, or `"GROUP"`.
     #' By default all member types are listed.
-    #' @param prefix Filter URIs whose basename contain an optional prefix.
-    #' @return A character vector of member URIs with names corresponding to the
-    #' basename of the URI.
+    #' @param prefix Filter for members whose name contains an optional prefix.
+    #' @return A character vector of member URIs, named for the group member
     list_member_uris = function(type = NULL, prefix = NULL) {
-      uris <- self$list_members(type = type)$URI
-      if (is_empty(uris)) return(uris)
-      names(uris) <- basename(uris)
+      members <- self$list_members(type = type)
+      if (is_empty(members)) return(character(0L))
+      uris <- setNames(members$URI, members$NAME)
       if (!is.null(prefix)) {
         stopifnot(is_scalar_character(prefix))
         uris <- uris[string_starts_with(names(uris), prefix)]
@@ -274,9 +289,21 @@ TileDBGroup <- R6::R6Class(
     }
   ),
 
+  active = list(
+    #' @field uri
+    #' The URI of the TileDB group
+    uri = function(value) {
+      if (missing(value)) return(private$tiledb_uri$uri)
+      stop(sprintf("'%s' is a read-only field.", "uri"))
+    }
+  ),
+
   private = list(
 
     group = NULL,
+
+    # @description Contains TileDBURI object for the group.
+    tiledb_uri = NULL,
 
     create_group = function() {
       if (self$verbose) {
@@ -303,10 +330,7 @@ TileDBGroup <- R6::R6Class(
       members <- self$list_members()
       member_objects <- list()
       if (!is_empty(members)) {
-        member_uris <- lapply(
-          X = split(members$URI, members$TYPE),
-          FUN = function(x) setNames(x, basename(x))
-        )
+        member_uris <- split(setNames(members$URI, members$NAME), members$TYPE)
         member_objects <- c(
           lapply(member_uris$ARRAY, TileDBArray$new, verbose = self$verbose),
           lapply(member_uris$GROUP, TileDBGroup$new, verbose = self$verbose)
@@ -324,9 +348,21 @@ TileDBGroup <- R6::R6Class(
     },
 
     format_members = function() {
-      members <- names(self$members)
+      members <- self$list_members()
       if (!is_empty(members)) {
-        cat("  members:", string_collapse(members), "\n")
+        # denote remote URIs with *
+        formatted <- paste0(
+          members$NAME,
+          ifelse(is_remote_uri(members$URI), "*", "")
+        )
+        # list by type
+        formatted <- split(formatted, members$TYPE)
+        if (!is.null(formatted$ARRAY)) {
+          cat("  arrays:", string_collapse(sort(formatted$ARRAY)), "\n")
+        }
+        if (!is.null(formatted$GROUP)) {
+          cat("  groups:", string_collapse(sort(formatted$GROUP)), "\n")
+        }
       }
     },
 

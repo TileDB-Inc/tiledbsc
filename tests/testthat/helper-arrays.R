@@ -22,7 +22,12 @@ create_test_group_with_members <- function(uri, relative) {
   grp <- tiledb::tiledb_group(uri, "WRITE")
   lapply(c(a1, g1), function(uri) {
     if (relative) uri <- basename(uri)
-    tiledb::tiledb_group_add_member(grp, uri = uri, relative = relative)
+    tiledb::tiledb_group_add_member(
+      grp = grp,
+      uri = uri,
+      relative = relative,
+      name = basename(uri)
+    )
   })
   tiledb::tiledb_group_close(grp)
   return(uri)

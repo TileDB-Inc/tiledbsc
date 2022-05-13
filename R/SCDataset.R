@@ -34,7 +34,7 @@ SCDataset <- R6::R6Class(
           uri = file_path(self$uri, "misc"),
           verbose = self$verbose
         )
-        self$add_member(self$misc, name = "misc", relative = FALSE)
+        self$add_member(self$misc, name = "misc")
       }
 
       # Special handling of Seurat commands array
@@ -70,11 +70,15 @@ SCDataset <- R6::R6Class(
 
       assays <- SeuratObject::Assays(object)
       for (assay in assays) {
+        if (is.null(self$members[[assay]])) {
+          assay_uri <- file_path(self$uri, paste0("scgroup_", assay))
+          scgroup <- SCGroup$new(assay_uri, verbose = self$verbose, config = self$config, ctx = self$context)
+          self$add_member(scgroup, name = assay)
+        } else {
+          scgroup <- self$members[[assay]]
+        }
         assay_object <- object[[assay]]
-        assay_uri <- file_path(self$uri, paste0("scgroup_", assay))
-        scgroup <- SCGroup$new(assay_uri, verbose = self$verbose, config = self$config, ctx = self$context)
         scgroup$from_seurat_assay(assay_object, obs = object[[]])
-        self$add_member(scgroup, name = assay)
       }
 
       reductions <- SeuratObject::Reductions(object)
@@ -112,7 +116,9 @@ SCDataset <- R6::R6Class(
           verbose = self$verbose
         )
         commandsArray$from_named_list_of_commands(namedListOfCommands)
-        self$misc$add_member(commandsArray, name = "commands", relative = FALSE)
+        if (is.null(self$misc$members$commands)) {
+          self$misc$add_member(commandsArray, name = "commands")
+        }
       }
 
       if (self$verbose) {
@@ -209,24 +215,6 @@ SCDataset <- R6::R6Class(
         lapply(scgroup_uris, SCGroup$new, verbose = self$verbose, config = self$config, ctx = self$context),
         lapply(misc_uri, TileDBGroup$new, verbose = self$verbose, config = self$config, ctx = self$context)
       )
-    },
-
-    # Override to include SCGroups using `scgroup_uris`
-    format_groups = function() {
-      uris <- self$scgroup_uris()
-      if (!is_empty(uris)) {
-        remote <- string_starts_with(uris, "s3://") | string_starts_with(uris, "tiledb://")
-        names(uris) <- ifelse(remote, paste0(names(uris), "*"), names(uris))
-        cat("  scgroups:", string_collapse(names(uris)), "\n")
-      }
-    },
-
-    group_print = function() {
-      cat("  uri:", self$uri, "\n")
-      if (self$group_exists()) {
-        private$format_arrays()
-        private$format_groups()
-      }
     }
   )
 )

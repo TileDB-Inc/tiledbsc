@@ -11,6 +11,10 @@ test_that("SCDataset can be created from a Seurat object", {
   scdataset <- SCDataset$new(uri = tdb_uri, verbose = TRUE)
   expect_true(inherits(scdataset, "SCDataset"))
 
+  # misc is created by default
+  expect_equal(scdataset$count_members(), 1L)
+  expect_equal(scdataset$list_members()$NAME, "misc")
+
   scdataset$from_seurat(pbmc_small)
   expect_true(inherits(scdataset$members$RNA, "SCGroup"))
   expect_true(inherits(scdataset$members$misc, "TileDBGroup"))
