@@ -48,7 +48,7 @@ datasets <- AvailableData()
 datasets <- subset(datasets, Version >= package_version("2.0.0"))
 
 # skip datasets that cause errors
-blacklist <- c(
+blocklist <- c(
   # Not a validObject(): no slot of name "images" for this object of class "Seurat"
   # I believe this error is specific to datasets with Versions < 2.0.0
   "humancortexref.SeuratData",
@@ -78,8 +78,8 @@ benchmarks <- data.frame(
 # main -------------------------------------------------------------------------
 for (ds_name in rownames(datasets)) {
   message(sprintf("Dataset: %s", ds_name))
-  if (ds_name %in% blacklist) {
-    message(sprintf("..skipping blacklisted dataset: %s", ds_name))
+  if (ds_name %in% blocklist) {
+    message(sprintf("..skipping blocklisted dataset: %s", ds_name))
     next
   }
 
