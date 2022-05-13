@@ -88,7 +88,7 @@ Ingest assay data from a COO-formatted data frame
 \item{\code{x}}{a \code{\link{data.frame}}}
 
 \item{\code{index_cols}}{A column index, either numeric with a column index, or
-character with a column name, designating one or more index columns. All
+character with a column name, identifying the 2 index columns. All
 other columns are ingested as attributes.}
 }
 \if{html}{\out{</div>}}
