@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tiledbsc</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.0.9008</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.0.9009</span>
       </span>
     </div>
 
@@ -79,11 +79,12 @@
 </li>
 </ul></div>
 <div class="section level4">
-<h4 id="other-development-version">Other<a class="anchor" aria-label="anchor" href="#other-development-version"></a></h4>
-<ul><li>the <code>scgroup_uris</code> argument has been dropped from <code>SCDataset</code>’s initialize method (<code>add_member()</code> should now be used instead to add additional <code>SCGroup</code>s)</li>
-<li>
-<code>SCDataset</code>’s <code>scgroups</code> field is now an active binding that filters <code>members</code> for <code>SCGroup</code> objects</li>
-</ul></div>
+<h4 id="scgroup-development-version">SCGroup<a class="anchor" aria-label="anchor" href="#scgroup-development-version"></a></h4>
+<ul><li>the <code>scgroup_uris</code> argument has been dropped from <code>SCDataset</code>’s initialize method (<code>add_member()</code> should now be used instead to add additional <code>SCGroup</code>s)</li></ul></div>
+<div class="section level4">
+<h4 id="scdataset-development-version">SCDataset<a class="anchor" aria-label="anchor" href="#scdataset-development-version"></a></h4>
+<ul><li>
+<code>SCDataset</code>’s <code>scgroups</code> field is now an active binding that filters <code>members</code> for <code>SCGroup</code> objects</li></ul></div>
 </div>
 <div class="section level3">
 <h3 id="other-changes-development-version">Other changes<a class="anchor" aria-label="anchor" href="#other-changes-development-version"></a></h3>
@@ -97,6 +98,7 @@
 <li>Internally group members are now added with names</li>
 <li>New internal <code>TileDBURI</code> class for handling various URI formats</li>
 <li>The <code>uri</code> field for all TileDB(Array|Group)-based classes is now an active binding that retrieves the URI from the private <code>tiledb_uri</code> field</li>
+<li>Several default parameters have been changed to store the the <code>X</code>, <code>obs</code>, and <code>var</code> arrays more efficiently on disk (<a href="https://github.com/TileDB-Inc/tiledbsc/issues/50" class="external-link">#50</a>)</li>
 </ul></div>
 </div>
   </div>

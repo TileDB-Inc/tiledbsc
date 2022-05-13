@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tiledbsc</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.0.9008</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.0.9009</span>
       </span>
     </div>
 
@@ -130,66 +130,66 @@
 <p>This first step is to create a new <code>SCDataset</code> object and provide a URI where the dataset should be created:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">scdataset</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/SCDataset.html">SCDataset</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>uri <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"sc_dataset"</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt; No SCDataset currently exists at '/tmp/RtmpmvJIwB/sc_dataset'</span>
-<span class="co">#&gt; Creating new SCDataset at '/tmp/RtmpmvJIwB/sc_dataset'</span>
-<span class="co">#&gt; No TileDBGroup currently exists at '/tmp/RtmpmvJIwB/sc_dataset/misc'</span>
-<span class="co">#&gt; Creating new TileDBGroup at '/tmp/RtmpmvJIwB/sc_dataset/misc'</span></code></pre></div>
+<span class="co">#&gt; No SCDataset currently exists at '/tmp/Rtmp9WySGZ/sc_dataset'</span>
+<span class="co">#&gt; Creating new SCDataset at '/tmp/Rtmp9WySGZ/sc_dataset'</span>
+<span class="co">#&gt; No TileDBGroup currently exists at '/tmp/Rtmp9WySGZ/sc_dataset/misc'</span>
+<span class="co">#&gt; Creating new TileDBGroup at '/tmp/Rtmp9WySGZ/sc_dataset/misc'</span></code></pre></div>
 <p>Next, we’ll pass the entire <code>pbmc_small</code> object directly to <code>from_seurat()</code> and one <code>sc_group</code> will be created for each <code>Assay</code> object:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">scdataset</span><span class="op">$</span><span class="fu">from_seurat</span><span class="op">(</span>object <span class="op">=</span> <span class="va">pbmc_small</span><span class="op">)</span>
-<span class="co">#&gt; No SCGroup currently exists at '/tmp/RtmpmvJIwB/sc_dataset/scgroup_RNA'</span>
-<span class="co">#&gt; Creating new SCGroup at '/tmp/RtmpmvJIwB/sc_dataset/scgroup_RNA'</span>
-<span class="co">#&gt; No AnnotationDataframe found at '/tmp/RtmpmvJIwB/sc_dataset/scgroup_RNA/obs'</span>
-<span class="co">#&gt; No AnnotationDataframe found at '/tmp/RtmpmvJIwB/sc_dataset/scgroup_RNA/var'</span>
-<span class="co">#&gt; No AssayMatrixGroup currently exists at '/tmp/RtmpmvJIwB/sc_dataset/scgroup_RNA/X'</span>
-<span class="co">#&gt; Creating new AssayMatrixGroup at '/tmp/RtmpmvJIwB/sc_dataset/scgroup_RNA/X'</span>
-<span class="co">#&gt; No AnnotationMatrixGroup currently exists at '/tmp/RtmpmvJIwB/sc_dataset/scgroup_RNA/obsm'</span>
-<span class="co">#&gt; Creating new AnnotationMatrixGroup at '/tmp/RtmpmvJIwB/sc_dataset/scgroup_RNA/obsm'</span>
-<span class="co">#&gt; No AnnotationMatrixGroup currently exists at '/tmp/RtmpmvJIwB/sc_dataset/scgroup_RNA/varm'</span>
-<span class="co">#&gt; Creating new AnnotationMatrixGroup at '/tmp/RtmpmvJIwB/sc_dataset/scgroup_RNA/varm'</span>
-<span class="co">#&gt; No AnnotationPairwiseMatrixGroup currently exists at '/tmp/RtmpmvJIwB/sc_dataset/scgroup_RNA/obsp'</span>
-<span class="co">#&gt; Creating new AnnotationPairwiseMatrixGroup at '/tmp/RtmpmvJIwB/sc_dataset/scgroup_RNA/obsp'</span>
-<span class="co">#&gt; No AnnotationPairwiseMatrixGroup currently exists at '/tmp/RtmpmvJIwB/sc_dataset/scgroup_RNA/varp'</span>
-<span class="co">#&gt; Creating new AnnotationPairwiseMatrixGroup at '/tmp/RtmpmvJIwB/sc_dataset/scgroup_RNA/varp'</span>
-<span class="co">#&gt; No TileDBGroup currently exists at '/tmp/RtmpmvJIwB/sc_dataset/scgroup_RNA/misc'</span>
-<span class="co">#&gt; Creating new TileDBGroup at '/tmp/RtmpmvJIwB/sc_dataset/scgroup_RNA/misc'</span>
-<span class="co">#&gt; Creating new AnnotationDataframe array with index [obs_id] at '/tmp/RtmpmvJIwB/sc_dataset/scgroup_RNA/obs'</span>
-<span class="co">#&gt; Ingesting AnnotationDataframe data into: /tmp/RtmpmvJIwB/sc_dataset/scgroup_RNA/obs</span>
-<span class="co">#&gt; Creating new AnnotationDataframe array with index [var_id] at '/tmp/RtmpmvJIwB/sc_dataset/scgroup_RNA/var'</span>
-<span class="co">#&gt; Ingesting AnnotationDataframe data into: /tmp/RtmpmvJIwB/sc_dataset/scgroup_RNA/var</span>
-<span class="co">#&gt; No AssayMatrix found at '/tmp/RtmpmvJIwB/sc_dataset/scgroup_RNA/X/counts'</span>
-<span class="co">#&gt; Creating new AssayMatrix array with index [var_id,obs_id] at '/tmp/RtmpmvJIwB/sc_dataset/scgroup_RNA/X/counts'</span>
-<span class="co">#&gt; Ingesting assay data into /tmp/RtmpmvJIwB/sc_dataset/scgroup_RNA/X/counts</span>
-<span class="co">#&gt; No AssayMatrix found at '/tmp/RtmpmvJIwB/sc_dataset/scgroup_RNA/X/data'</span>
-<span class="co">#&gt; Creating new AssayMatrix array with index [var_id,obs_id] at '/tmp/RtmpmvJIwB/sc_dataset/scgroup_RNA/X/data'</span>
-<span class="co">#&gt; Ingesting assay data into /tmp/RtmpmvJIwB/sc_dataset/scgroup_RNA/X/data</span>
-<span class="co">#&gt; No AssayMatrix found at '/tmp/RtmpmvJIwB/sc_dataset/scgroup_RNA/X/scale.data'</span>
-<span class="co">#&gt; Creating new AssayMatrix array with index [var_id,obs_id] at '/tmp/RtmpmvJIwB/sc_dataset/scgroup_RNA/X/scale.data'</span>
-<span class="co">#&gt; Ingesting assay data into /tmp/RtmpmvJIwB/sc_dataset/scgroup_RNA/X/scale.data</span>
+<span class="co">#&gt; No SCGroup currently exists at '/tmp/Rtmp9WySGZ/sc_dataset/scgroup_RNA'</span>
+<span class="co">#&gt; Creating new SCGroup at '/tmp/Rtmp9WySGZ/sc_dataset/scgroup_RNA'</span>
+<span class="co">#&gt; No AnnotationDataframe found at '/tmp/Rtmp9WySGZ/sc_dataset/scgroup_RNA/obs'</span>
+<span class="co">#&gt; No AnnotationDataframe found at '/tmp/Rtmp9WySGZ/sc_dataset/scgroup_RNA/var'</span>
+<span class="co">#&gt; No AssayMatrixGroup currently exists at '/tmp/Rtmp9WySGZ/sc_dataset/scgroup_RNA/X'</span>
+<span class="co">#&gt; Creating new AssayMatrixGroup at '/tmp/Rtmp9WySGZ/sc_dataset/scgroup_RNA/X'</span>
+<span class="co">#&gt; No AnnotationMatrixGroup currently exists at '/tmp/Rtmp9WySGZ/sc_dataset/scgroup_RNA/obsm'</span>
+<span class="co">#&gt; Creating new AnnotationMatrixGroup at '/tmp/Rtmp9WySGZ/sc_dataset/scgroup_RNA/obsm'</span>
+<span class="co">#&gt; No AnnotationMatrixGroup currently exists at '/tmp/Rtmp9WySGZ/sc_dataset/scgroup_RNA/varm'</span>
+<span class="co">#&gt; Creating new AnnotationMatrixGroup at '/tmp/Rtmp9WySGZ/sc_dataset/scgroup_RNA/varm'</span>
+<span class="co">#&gt; No AnnotationPairwiseMatrixGroup currently exists at '/tmp/Rtmp9WySGZ/sc_dataset/scgroup_RNA/obsp'</span>
+<span class="co">#&gt; Creating new AnnotationPairwiseMatrixGroup at '/tmp/Rtmp9WySGZ/sc_dataset/scgroup_RNA/obsp'</span>
+<span class="co">#&gt; No AnnotationPairwiseMatrixGroup currently exists at '/tmp/Rtmp9WySGZ/sc_dataset/scgroup_RNA/varp'</span>
+<span class="co">#&gt; Creating new AnnotationPairwiseMatrixGroup at '/tmp/Rtmp9WySGZ/sc_dataset/scgroup_RNA/varp'</span>
+<span class="co">#&gt; No TileDBGroup currently exists at '/tmp/Rtmp9WySGZ/sc_dataset/scgroup_RNA/misc'</span>
+<span class="co">#&gt; Creating new TileDBGroup at '/tmp/Rtmp9WySGZ/sc_dataset/scgroup_RNA/misc'</span>
+<span class="co">#&gt; Creating new AnnotationDataframe array with index [obs_id] at '/tmp/Rtmp9WySGZ/sc_dataset/scgroup_RNA/obs'</span>
+<span class="co">#&gt; Ingesting AnnotationDataframe data into: /tmp/Rtmp9WySGZ/sc_dataset/scgroup_RNA/obs</span>
+<span class="co">#&gt; Creating new AnnotationDataframe array with index [var_id] at '/tmp/Rtmp9WySGZ/sc_dataset/scgroup_RNA/var'</span>
+<span class="co">#&gt; Ingesting AnnotationDataframe data into: /tmp/Rtmp9WySGZ/sc_dataset/scgroup_RNA/var</span>
+<span class="co">#&gt; No AssayMatrix found at '/tmp/Rtmp9WySGZ/sc_dataset/scgroup_RNA/X/counts'</span>
+<span class="co">#&gt; Creating new AssayMatrix array with index [var_id,obs_id] at '/tmp/Rtmp9WySGZ/sc_dataset/scgroup_RNA/X/counts'</span>
+<span class="co">#&gt; Ingesting AssayMatrix data into: /tmp/Rtmp9WySGZ/sc_dataset/scgroup_RNA/X/counts</span>
+<span class="co">#&gt; No AssayMatrix found at '/tmp/Rtmp9WySGZ/sc_dataset/scgroup_RNA/X/data'</span>
+<span class="co">#&gt; Creating new AssayMatrix array with index [var_id,obs_id] at '/tmp/Rtmp9WySGZ/sc_dataset/scgroup_RNA/X/data'</span>
+<span class="co">#&gt; Ingesting AssayMatrix data into: /tmp/Rtmp9WySGZ/sc_dataset/scgroup_RNA/X/data</span>
+<span class="co">#&gt; No AssayMatrix found at '/tmp/Rtmp9WySGZ/sc_dataset/scgroup_RNA/X/scale.data'</span>
+<span class="co">#&gt; Creating new AssayMatrix array with index [var_id,obs_id] at '/tmp/Rtmp9WySGZ/sc_dataset/scgroup_RNA/X/scale.data'</span>
+<span class="co">#&gt; Ingesting AssayMatrix data into: /tmp/Rtmp9WySGZ/sc_dataset/scgroup_RNA/X/scale.data</span>
 <span class="co">#&gt; Finished converting Seurat Assay with key [rna_] to SCGroup</span>
-<span class="co">#&gt; No AnnotationMatrix found at '/tmp/RtmpmvJIwB/sc_dataset/scgroup_RNA/varm/dimreduction_pca'</span>
-<span class="co">#&gt; Creating new AnnotationMatrix array with index [var_id] at '/tmp/RtmpmvJIwB/sc_dataset/scgroup_RNA/varm/dimreduction_pca'</span>
-<span class="co">#&gt; Ingesting AnnotationMatrix data into: /tmp/RtmpmvJIwB/sc_dataset/scgroup_RNA/varm/dimreduction_pca</span>
-<span class="co">#&gt; No AnnotationMatrix found at '/tmp/RtmpmvJIwB/sc_dataset/scgroup_RNA/obsm/dimreduction_pca'</span>
-<span class="co">#&gt; Creating new AnnotationMatrix array with index [obs_id] at '/tmp/RtmpmvJIwB/sc_dataset/scgroup_RNA/obsm/dimreduction_pca'</span>
-<span class="co">#&gt; Ingesting AnnotationMatrix data into: /tmp/RtmpmvJIwB/sc_dataset/scgroup_RNA/obsm/dimreduction_pca</span>
-<span class="co">#&gt; No AnnotationMatrix found at '/tmp/RtmpmvJIwB/sc_dataset/scgroup_RNA/obsm/dimreduction_tsne'</span>
-<span class="co">#&gt; Creating new AnnotationMatrix array with index [obs_id] at '/tmp/RtmpmvJIwB/sc_dataset/scgroup_RNA/obsm/dimreduction_tsne'</span>
-<span class="co">#&gt; Ingesting AnnotationMatrix data into: /tmp/RtmpmvJIwB/sc_dataset/scgroup_RNA/obsm/dimreduction_tsne</span>
-<span class="co">#&gt; No AnnotationPairwiseMatrix found at '/tmp/RtmpmvJIwB/sc_dataset/scgroup_RNA/obsp/graph_snn'</span>
-<span class="co">#&gt; Creating new AnnotationPairwiseMatrix array with index [obs_id_i,obs_id_j] at '/tmp/RtmpmvJIwB/sc_dataset/scgroup_RNA/obsp/graph_snn'</span>
-<span class="co">#&gt; Ingesting AnnotationPairwiseMatrix data into: /tmp/RtmpmvJIwB/sc_dataset/scgroup_RNA/obsp/graph_snn</span>
-<span class="co">#&gt; No CommandsArray found at '/tmp/RtmpmvJIwB/sc_dataset/misc/commands'</span>
-<span class="co">#&gt; Creating new CommandsArray array with index [index] at '/tmp/RtmpmvJIwB/sc_dataset/misc/commands'</span>
-<span class="co">#&gt; Ingesting CommandsArray data into: /tmp/RtmpmvJIwB/sc_dataset/misc/commands</span>
+<span class="co">#&gt; No AnnotationMatrix found at '/tmp/Rtmp9WySGZ/sc_dataset/scgroup_RNA/varm/dimreduction_pca'</span>
+<span class="co">#&gt; Creating new AnnotationMatrix array with index [var_id] at '/tmp/Rtmp9WySGZ/sc_dataset/scgroup_RNA/varm/dimreduction_pca'</span>
+<span class="co">#&gt; Ingesting AnnotationMatrix data into: /tmp/Rtmp9WySGZ/sc_dataset/scgroup_RNA/varm/dimreduction_pca</span>
+<span class="co">#&gt; No AnnotationMatrix found at '/tmp/Rtmp9WySGZ/sc_dataset/scgroup_RNA/obsm/dimreduction_pca'</span>
+<span class="co">#&gt; Creating new AnnotationMatrix array with index [obs_id] at '/tmp/Rtmp9WySGZ/sc_dataset/scgroup_RNA/obsm/dimreduction_pca'</span>
+<span class="co">#&gt; Ingesting AnnotationMatrix data into: /tmp/Rtmp9WySGZ/sc_dataset/scgroup_RNA/obsm/dimreduction_pca</span>
+<span class="co">#&gt; No AnnotationMatrix found at '/tmp/Rtmp9WySGZ/sc_dataset/scgroup_RNA/obsm/dimreduction_tsne'</span>
+<span class="co">#&gt; Creating new AnnotationMatrix array with index [obs_id] at '/tmp/Rtmp9WySGZ/sc_dataset/scgroup_RNA/obsm/dimreduction_tsne'</span>
+<span class="co">#&gt; Ingesting AnnotationMatrix data into: /tmp/Rtmp9WySGZ/sc_dataset/scgroup_RNA/obsm/dimreduction_tsne</span>
+<span class="co">#&gt; No AnnotationPairwiseMatrix found at '/tmp/Rtmp9WySGZ/sc_dataset/scgroup_RNA/obsp/graph_snn'</span>
+<span class="co">#&gt; Creating new AnnotationPairwiseMatrix array with index [obs_id_i,obs_id_j] at '/tmp/Rtmp9WySGZ/sc_dataset/scgroup_RNA/obsp/graph_snn'</span>
+<span class="co">#&gt; Ingesting AnnotationPairwiseMatrix data into: /tmp/Rtmp9WySGZ/sc_dataset/scgroup_RNA/obsp/graph_snn</span>
+<span class="co">#&gt; No CommandsArray found at '/tmp/Rtmp9WySGZ/sc_dataset/misc/commands'</span>
+<span class="co">#&gt; Creating new CommandsArray array with index [index] at '/tmp/Rtmp9WySGZ/sc_dataset/misc/commands'</span>
+<span class="co">#&gt; Ingesting CommandsArray data into: /tmp/Rtmp9WySGZ/sc_dataset/misc/commands</span>
 <span class="co">#&gt; Finished converting Seurat object to SCDataset</span></code></pre></div>
 <p>Examining the directory structure, you can see the top-level <code>sc_dataset</code> directory now contains a single <code>scgroup_RNA</code> sub-directory, corresponding to <code>pbmc_small</code>’s only assay, <code>"RNA"</code>:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/dir_tree.html" class="external-link">dir_tree</a></span><span class="op">(</span><span class="va">scdataset</span><span class="op">$</span><span class="va">uri</span>, recurse <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>
-<span class="co">#&gt; <span style="color: #0000BB; font-weight: bold;">/tmp/RtmpmvJIwB/sc_dataset</span></span>
+<span class="co">#&gt; <span style="color: #0000BB; font-weight: bold;">/tmp/Rtmp9WySGZ/sc_dataset</span></span>
 <span class="co">#&gt; ├── <span style="color: #0000BB; font-weight: bold;">__group</span></span>
-<span class="co">#&gt; │   ├── __1652447118347_1652447118347_c8a2427391b4464993eba3bf8efcb18f</span>
-<span class="co">#&gt; │   └── __1652447118597_1652447118597_96cd8f24c91144518557b1d6d455defb</span>
+<span class="co">#&gt; │   ├── __1652478781086_1652478781086_68a1030b7f964c53a92cf42dbf8d1d54</span>
+<span class="co">#&gt; │   └── __1652478781303_1652478781303_2a6645701a464a8c9499fa5e7072eadf</span>
 <span class="co">#&gt; ├── <span style="color: #0000BB; font-weight: bold;">__meta</span></span>
 <span class="co">#&gt; ├── __tiledb_group.tdb</span>
 <span class="co">#&gt; ├── <span style="color: #0000BB; font-weight: bold;">misc</span></span>
@@ -218,17 +218,17 @@
 <p>To close the loop we can then read the on-disk <code>sc_dataset</code> back into memory as a <code>Seurat</code> object.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">scdataset</span><span class="op">$</span><span class="fu">to_seurat</span><span class="op">(</span>project <span class="op">=</span> <span class="st">"SCDataset Example"</span><span class="op">)</span>
-<span class="co">#&gt; Reading AssayMatrix into memory from '/tmp/RtmpmvJIwB/sc_dataset/scgroup_RNA/X/counts'</span>
-<span class="co">#&gt; Reading AssayMatrix into memory from '/tmp/RtmpmvJIwB/sc_dataset/scgroup_RNA/X/data'</span>
-<span class="co">#&gt; Reading AssayMatrix into memory from '/tmp/RtmpmvJIwB/sc_dataset/scgroup_RNA/X/scale.data'</span>
-<span class="co">#&gt; Reading AnnotationDataframe into memory from '/tmp/RtmpmvJIwB/sc_dataset/scgroup_RNA/var'</span>
-<span class="co">#&gt; Reading AnnotationDataframe into memory from '/tmp/RtmpmvJIwB/sc_dataset/scgroup_RNA/obs'</span>
+<span class="co">#&gt; Reading AssayMatrix into memory from '/tmp/Rtmp9WySGZ/sc_dataset/scgroup_RNA/X/counts'</span>
+<span class="co">#&gt; Reading AssayMatrix into memory from '/tmp/Rtmp9WySGZ/sc_dataset/scgroup_RNA/X/data'</span>
+<span class="co">#&gt; Reading AssayMatrix into memory from '/tmp/Rtmp9WySGZ/sc_dataset/scgroup_RNA/X/scale.data'</span>
+<span class="co">#&gt; Reading AnnotationDataframe into memory from '/tmp/Rtmp9WySGZ/sc_dataset/scgroup_RNA/var'</span>
+<span class="co">#&gt; Reading AnnotationDataframe into memory from '/tmp/Rtmp9WySGZ/sc_dataset/scgroup_RNA/obs'</span>
 <span class="co">#&gt; Found 2 dim reduction arrays</span>
-<span class="co">#&gt; Reading AnnotationMatrix into memory from '/tmp/RtmpmvJIwB/sc_dataset/scgroup_RNA/obsm/dimreduction_pca'</span>
-<span class="co">#&gt; Reading AnnotationMatrix into memory from '/tmp/RtmpmvJIwB/sc_dataset/scgroup_RNA/varm/dimreduction_pca'</span>
+<span class="co">#&gt; Reading AnnotationMatrix into memory from '/tmp/Rtmp9WySGZ/sc_dataset/scgroup_RNA/obsm/dimreduction_pca'</span>
+<span class="co">#&gt; Reading AnnotationMatrix into memory from '/tmp/Rtmp9WySGZ/sc_dataset/scgroup_RNA/varm/dimreduction_pca'</span>
 <span class="co">#&gt; Found 1 dim reduction arrays</span>
-<span class="co">#&gt; Reading AnnotationMatrix into memory from '/tmp/RtmpmvJIwB/sc_dataset/scgroup_RNA/obsm/dimreduction_tsne'</span>
-<span class="co">#&gt; Reading AnnotationPairwiseMatrix into dataframe from '/tmp/RtmpmvJIwB/sc_dataset/scgroup_RNA/obsp/graph_snn'</span>
+<span class="co">#&gt; Reading AnnotationMatrix into memory from '/tmp/Rtmp9WySGZ/sc_dataset/scgroup_RNA/obsm/dimreduction_tsne'</span>
+<span class="co">#&gt; Reading AnnotationPairwiseMatrix into dataframe from '/tmp/Rtmp9WySGZ/sc_dataset/scgroup_RNA/obsp/graph_snn'</span>
 <span class="co">#&gt; Reading command history into memory</span>
 <span class="co">#&gt; An object of class Seurat </span>
 <span class="co">#&gt; 230 features across 80 samples within 1 assay </span>
@@ -241,35 +241,35 @@
 <p>Conversions can happen at multiple levels of the API. For example, we can operate directly on a Seurat <code>Assay</code> using <code>SCGroup</code>. The workflow is largely the same:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">scgroup</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/SCGroup.html">SCGroup</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>uri <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"sc_group"</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt; No SCGroup currently exists at '/tmp/RtmpmvJIwB/sc_group'</span>
-<span class="co">#&gt; Creating new SCGroup at '/tmp/RtmpmvJIwB/sc_group'</span>
-<span class="co">#&gt; No AnnotationDataframe found at '/tmp/RtmpmvJIwB/sc_group/obs'</span>
-<span class="co">#&gt; No AnnotationDataframe found at '/tmp/RtmpmvJIwB/sc_group/var'</span>
-<span class="co">#&gt; No AssayMatrixGroup currently exists at '/tmp/RtmpmvJIwB/sc_group/X'</span>
-<span class="co">#&gt; Creating new AssayMatrixGroup at '/tmp/RtmpmvJIwB/sc_group/X'</span>
-<span class="co">#&gt; No AnnotationMatrixGroup currently exists at '/tmp/RtmpmvJIwB/sc_group/obsm'</span>
-<span class="co">#&gt; Creating new AnnotationMatrixGroup at '/tmp/RtmpmvJIwB/sc_group/obsm'</span>
-<span class="co">#&gt; No AnnotationMatrixGroup currently exists at '/tmp/RtmpmvJIwB/sc_group/varm'</span>
-<span class="co">#&gt; Creating new AnnotationMatrixGroup at '/tmp/RtmpmvJIwB/sc_group/varm'</span>
-<span class="co">#&gt; No AnnotationPairwiseMatrixGroup currently exists at '/tmp/RtmpmvJIwB/sc_group/obsp'</span>
-<span class="co">#&gt; Creating new AnnotationPairwiseMatrixGroup at '/tmp/RtmpmvJIwB/sc_group/obsp'</span>
-<span class="co">#&gt; No AnnotationPairwiseMatrixGroup currently exists at '/tmp/RtmpmvJIwB/sc_group/varp'</span>
-<span class="co">#&gt; Creating new AnnotationPairwiseMatrixGroup at '/tmp/RtmpmvJIwB/sc_group/varp'</span>
-<span class="co">#&gt; No TileDBGroup currently exists at '/tmp/RtmpmvJIwB/sc_group/misc'</span>
-<span class="co">#&gt; Creating new TileDBGroup at '/tmp/RtmpmvJIwB/sc_group/misc'</span>
+<span class="co">#&gt; No SCGroup currently exists at '/tmp/Rtmp9WySGZ/sc_group'</span>
+<span class="co">#&gt; Creating new SCGroup at '/tmp/Rtmp9WySGZ/sc_group'</span>
+<span class="co">#&gt; No AnnotationDataframe found at '/tmp/Rtmp9WySGZ/sc_group/obs'</span>
+<span class="co">#&gt; No AnnotationDataframe found at '/tmp/Rtmp9WySGZ/sc_group/var'</span>
+<span class="co">#&gt; No AssayMatrixGroup currently exists at '/tmp/Rtmp9WySGZ/sc_group/X'</span>
+<span class="co">#&gt; Creating new AssayMatrixGroup at '/tmp/Rtmp9WySGZ/sc_group/X'</span>
+<span class="co">#&gt; No AnnotationMatrixGroup currently exists at '/tmp/Rtmp9WySGZ/sc_group/obsm'</span>
+<span class="co">#&gt; Creating new AnnotationMatrixGroup at '/tmp/Rtmp9WySGZ/sc_group/obsm'</span>
+<span class="co">#&gt; No AnnotationMatrixGroup currently exists at '/tmp/Rtmp9WySGZ/sc_group/varm'</span>
+<span class="co">#&gt; Creating new AnnotationMatrixGroup at '/tmp/Rtmp9WySGZ/sc_group/varm'</span>
+<span class="co">#&gt; No AnnotationPairwiseMatrixGroup currently exists at '/tmp/Rtmp9WySGZ/sc_group/obsp'</span>
+<span class="co">#&gt; Creating new AnnotationPairwiseMatrixGroup at '/tmp/Rtmp9WySGZ/sc_group/obsp'</span>
+<span class="co">#&gt; No AnnotationPairwiseMatrixGroup currently exists at '/tmp/Rtmp9WySGZ/sc_group/varp'</span>
+<span class="co">#&gt; Creating new AnnotationPairwiseMatrixGroup at '/tmp/Rtmp9WySGZ/sc_group/varp'</span>
+<span class="co">#&gt; No TileDBGroup currently exists at '/tmp/Rtmp9WySGZ/sc_group/misc'</span>
+<span class="co">#&gt; Creating new TileDBGroup at '/tmp/Rtmp9WySGZ/sc_group/misc'</span>
 <span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/dir_tree.html" class="external-link">dir_tree</a></span><span class="op">(</span><span class="va">scgroup</span><span class="op">$</span><span class="va">uri</span><span class="op">)</span>
-<span class="co">#&gt; <span style="color: #0000BB; font-weight: bold;">/tmp/RtmpmvJIwB/sc_group</span></span>
+<span class="co">#&gt; <span style="color: #0000BB; font-weight: bold;">/tmp/Rtmp9WySGZ/sc_group</span></span>
 <span class="co">#&gt; ├── <span style="color: #0000BB; font-weight: bold;">X</span></span>
 <span class="co">#&gt; │   ├── <span style="color: #0000BB; font-weight: bold;">__group</span></span>
 <span class="co">#&gt; │   ├── <span style="color: #0000BB; font-weight: bold;">__meta</span></span>
 <span class="co">#&gt; │   └── __tiledb_group.tdb</span>
 <span class="co">#&gt; ├── <span style="color: #0000BB; font-weight: bold;">__group</span></span>
-<span class="co">#&gt; │   ├── __1652447120174_1652447120174_539f504f25534dfda0cd723808810d0c</span>
-<span class="co">#&gt; │   ├── __1652447120184_1652447120184_214c26e65c944d3ab056c5f90ac60f93</span>
-<span class="co">#&gt; │   ├── __1652447120193_1652447120193_4d177fd9bce9465c834b107143293dee</span>
-<span class="co">#&gt; │   ├── __1652447120202_1652447120202_fed7b0c360f147649c71c0f83471c33d</span>
-<span class="co">#&gt; │   ├── __1652447120210_1652447120210_6e5f5b463f5d4580996d2722c318155b</span>
-<span class="co">#&gt; │   └── __1652447120220_1652447120220_73da23a83ec04fe0ac5dc75d6baa059b</span>
+<span class="co">#&gt; │   ├── __1652478782608_1652478782608_7ae44bf1bac14fdaae938548adbfd824</span>
+<span class="co">#&gt; │   ├── __1652478782668_1652478782668_6c9b9162d5874e05a133767584531941</span>
+<span class="co">#&gt; │   ├── __1652478782676_1652478782676_3c9934409248495ca2c71559fbceb157</span>
+<span class="co">#&gt; │   ├── __1652478782684_1652478782684_3218bda5393d4a7ca1b812c08dde90eb</span>
+<span class="co">#&gt; │   ├── __1652478782692_1652478782692_16005a66ab9f4ae480262d93ddb84bfb</span>
+<span class="co">#&gt; │   └── __1652478782699_1652478782699_fb100898b8d74e929c6c0ec1d7d4aea2</span>
 <span class="co">#&gt; ├── <span style="color: #0000BB; font-weight: bold;">__meta</span></span>
 <span class="co">#&gt; ├── __tiledb_group.tdb</span>
 <span class="co">#&gt; ├── <span style="color: #0000BB; font-weight: bold;">misc</span></span>
@@ -299,24 +299,24 @@
   object <span class="op">=</span> <span class="va">pbmc_small</span><span class="op">[[</span><span class="st">"RNA"</span><span class="op">]</span><span class="op">]</span>,
   obs <span class="op">=</span> <span class="va">pbmc_small</span><span class="op">[[</span><span class="op">]</span><span class="op">]</span>
 <span class="op">)</span>
-<span class="co">#&gt; Creating new AnnotationDataframe array with index [obs_id] at '/tmp/RtmpmvJIwB/sc_group/obs'</span>
-<span class="co">#&gt; Ingesting AnnotationDataframe data into: /tmp/RtmpmvJIwB/sc_group/obs</span>
-<span class="co">#&gt; Creating new AnnotationDataframe array with index [var_id] at '/tmp/RtmpmvJIwB/sc_group/var'</span>
-<span class="co">#&gt; Ingesting AnnotationDataframe data into: /tmp/RtmpmvJIwB/sc_group/var</span>
-<span class="co">#&gt; No AssayMatrix found at '/tmp/RtmpmvJIwB/sc_group/X/counts'</span>
-<span class="co">#&gt; Creating new AssayMatrix array with index [var_id,obs_id] at '/tmp/RtmpmvJIwB/sc_group/X/counts'</span>
-<span class="co">#&gt; Ingesting assay data into /tmp/RtmpmvJIwB/sc_group/X/counts</span>
-<span class="co">#&gt; No AssayMatrix found at '/tmp/RtmpmvJIwB/sc_group/X/data'</span>
-<span class="co">#&gt; Creating new AssayMatrix array with index [var_id,obs_id] at '/tmp/RtmpmvJIwB/sc_group/X/data'</span>
-<span class="co">#&gt; Ingesting assay data into /tmp/RtmpmvJIwB/sc_group/X/data</span>
-<span class="co">#&gt; No AssayMatrix found at '/tmp/RtmpmvJIwB/sc_group/X/scale.data'</span>
-<span class="co">#&gt; Creating new AssayMatrix array with index [var_id,obs_id] at '/tmp/RtmpmvJIwB/sc_group/X/scale.data'</span>
-<span class="co">#&gt; Ingesting assay data into /tmp/RtmpmvJIwB/sc_group/X/scale.data</span>
+<span class="co">#&gt; Creating new AnnotationDataframe array with index [obs_id] at '/tmp/Rtmp9WySGZ/sc_group/obs'</span>
+<span class="co">#&gt; Ingesting AnnotationDataframe data into: /tmp/Rtmp9WySGZ/sc_group/obs</span>
+<span class="co">#&gt; Creating new AnnotationDataframe array with index [var_id] at '/tmp/Rtmp9WySGZ/sc_group/var'</span>
+<span class="co">#&gt; Ingesting AnnotationDataframe data into: /tmp/Rtmp9WySGZ/sc_group/var</span>
+<span class="co">#&gt; No AssayMatrix found at '/tmp/Rtmp9WySGZ/sc_group/X/counts'</span>
+<span class="co">#&gt; Creating new AssayMatrix array with index [var_id,obs_id] at '/tmp/Rtmp9WySGZ/sc_group/X/counts'</span>
+<span class="co">#&gt; Ingesting AssayMatrix data into: /tmp/Rtmp9WySGZ/sc_group/X/counts</span>
+<span class="co">#&gt; No AssayMatrix found at '/tmp/Rtmp9WySGZ/sc_group/X/data'</span>
+<span class="co">#&gt; Creating new AssayMatrix array with index [var_id,obs_id] at '/tmp/Rtmp9WySGZ/sc_group/X/data'</span>
+<span class="co">#&gt; Ingesting AssayMatrix data into: /tmp/Rtmp9WySGZ/sc_group/X/data</span>
+<span class="co">#&gt; No AssayMatrix found at '/tmp/Rtmp9WySGZ/sc_group/X/scale.data'</span>
+<span class="co">#&gt; Creating new AssayMatrix array with index [var_id,obs_id] at '/tmp/Rtmp9WySGZ/sc_group/X/scale.data'</span>
+<span class="co">#&gt; Ingesting AssayMatrix data into: /tmp/Rtmp9WySGZ/sc_group/X/scale.data</span>
 <span class="co">#&gt; Finished converting Seurat Assay with key [rna_] to SCGroup</span></code></pre></div>
 <p>Examine the directory structure of the <code>sc_group</code> we can see the <code>X</code>, <code>var</code>, and <code>obs</code> arrays have all been created.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/dir_tree.html" class="external-link">dir_tree</a></span><span class="op">(</span><span class="va">scgroup</span><span class="op">$</span><span class="va">uri</span>, recurse <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-<span class="co">#&gt; <span style="color: #0000BB; font-weight: bold;">/tmp/RtmpmvJIwB/sc_group</span></span>
+<span class="co">#&gt; <span style="color: #0000BB; font-weight: bold;">/tmp/Rtmp9WySGZ/sc_group</span></span>
 <span class="co">#&gt; ├── <span style="color: #0000BB; font-weight: bold;">X</span></span>
 <span class="co">#&gt; ├── <span style="color: #0000BB; font-weight: bold;">__group</span></span>
 <span class="co">#&gt; ├── <span style="color: #0000BB; font-weight: bold;">__meta</span></span>
@@ -341,13 +341,13 @@
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">scdataset</span><span class="op">$</span><span class="va">members</span><span class="op">$</span><span class="va">RNA</span>
 <span class="co">#&gt; &lt;SCGroup&gt;</span>
-<span class="co">#&gt;   uri: /tmp/RtmpmvJIwB/sc_dataset/scgroup_RNA </span>
+<span class="co">#&gt;   uri: /tmp/Rtmp9WySGZ/sc_dataset/scgroup_RNA </span>
 <span class="co">#&gt;   arrays: obs, var </span>
 <span class="co">#&gt;   groups: misc, obsm, obsp, varm, varp, X</span></code></pre></div>
 <p>We can see we have access to a variety of fields and methods, but <code>obs</code> is the one we’re after.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">scdataset</span><span class="op">$</span><span class="va">members</span><span class="op">$</span><span class="va">RNA</span><span class="op">$</span><span class="va">obs</span><span class="op">$</span><span class="fu">to_dataframe</span><span class="op">(</span><span class="op">)</span>
-<span class="co">#&gt; Reading AnnotationDataframe into memory from '/tmp/RtmpmvJIwB/sc_dataset/scgroup_RNA/obs'</span>
+<span class="co">#&gt; Reading AnnotationDataframe into memory from '/tmp/Rtmp9WySGZ/sc_dataset/scgroup_RNA/obs'</span>
 <span class="co">#&gt;                   orig.ident nCount_RNA nFeature_RNA RNA_snn_res.0.8</span>
 <span class="co">#&gt; AAATTCGAATCACG SeuratProject        327           62               1</span>
 <span class="co">#&gt; AAGCAAGAGCTTAG SeuratProject        126           48               0</span>
@@ -496,7 +496,7 @@
 <p>This is a <code>AnnotationDataframe</code> object, which includes a method for reading the data into R as a <code>data.frame</code>:</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">scdataset</span><span class="op">$</span><span class="va">members</span><span class="op">$</span><span class="va">RNA</span><span class="op">$</span><span class="va">obs</span><span class="op">$</span><span class="fu">to_dataframe</span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt; Reading AnnotationDataframe into memory from '/tmp/RtmpmvJIwB/sc_dataset/scgroup_RNA/obs'</span>
+<span class="co">#&gt; Reading AnnotationDataframe into memory from '/tmp/Rtmp9WySGZ/sc_dataset/scgroup_RNA/obs'</span>
 <span class="co">#&gt;                   orig.ident nCount_RNA nFeature_RNA RNA_snn_res.0.8</span>
 <span class="co">#&gt; AAATTCGAATCACG SeuratProject        327           62               1</span>
 <span class="co">#&gt; AAGCAAGAGCTTAG SeuratProject        126           48               0</span>
@@ -526,7 +526,7 @@
 <span class="co">#&gt; tiledb_array_schema(</span>
 <span class="co">#&gt;     domain=tiledb_domain(c(tiledb_dim(name="obs_id", domain=c(NULL,NULL), tile=NULL, type="ASCII"))),</span>
 <span class="co">#&gt;     attrs=c(tiledb_attr(name="orig.ident", type="ASCII", ncells=NA, nullable=FALSE, filter_list=tiledb_filter_list(c(tiledb_filter_set_option(tiledb_filter("ZSTD"),"COMPRESSION_LEVEL",-1)))), tiledb_attr(name="nCount_RNA", type="FLOAT64", ncells=1, nullable=FALSE, filter_list=tiledb_filter_list(c(tiledb_filter_set_option(tiledb_filter("ZSTD"),"COMPRESSION_LEVEL",-1)))), tiledb_attr(name="nFeature_RNA", type="INT32", ncells=1, nullable=FALSE, filter_list=tiledb_filter_list(c(tiledb_filter_set_option(tiledb_filter("ZSTD"),"COMPRESSION_LEVEL",-1)))), tiledb_attr(name="RNA_snn_res.0.8", type="ASCII", ncells=NA, nullable=FALSE, filter_list=tiledb_filter_list(c(tiledb_filter_set_option(tiledb_filter("ZSTD"),"COMPRESSION_LEVEL",-1)))), tiledb_attr(name="letter.idents", type="ASCII", ncells=NA, nullable=FALSE, filter_list=tiledb_filter_list(c(tiledb_filter_set_option(tiledb_filter("ZSTD"),"COMPRESSION_LEVEL",-1)))), tiledb_attr(name="groups", type="ASCII", ncells=NA, nullable=FALSE, filter_list=tiledb_filter_list(c(tiledb_filter_set_option(tiledb_filter("ZSTD"),"COMPRESSION_LEVEL",-1)))), tiledb_attr(name="RNA_snn_res.1", type="ASCII", ncells=NA, nullable=FALSE, filter_list=tiledb_filter_list(c(tiledb_filter_set_option(tiledb_filter("ZSTD"),"COMPRESSION_LEVEL",-1))))),</span>
-<span class="co">#&gt;     cell_order="ROW_MAJOR", tile_order="ROW_MAJOR", capacity=10000, sparse=TRUE, allows_dups=TRUE,</span>
+<span class="co">#&gt;     cell_order="ROW_MAJOR", tile_order="ROW_MAJOR", capacity=256, sparse=TRUE, allows_dups=TRUE,</span>
 <span class="co">#&gt;     coords_filter_list=tiledb_filter_list(c(tiledb_filter_set_option(tiledb_filter("ZSTD"),"COMPRESSION_LEVEL",-1))),</span>
 <span class="co">#&gt;     offsets_filter_list=tiledb_filter_list(c(tiledb_filter_set_option(tiledb_filter("ZSTD"),"COMPRESSION_LEVEL",-1))),</span>
 <span class="co">#&gt;     validity_filter_list=tiledb_filter_list(c(tiledb_filter_set_option(tiledb_filter("RLE"),"COMPRESSION_LEVEL",-1)))</span>
@@ -593,7 +593,7 @@
 <span class="co">#&gt; </span>
 <span class="co">#&gt; other attached packages:</span>
 <span class="co">#&gt; [1] sp_1.4-7            SeuratObject_4.1.0  tiledb_0.12.0.3    </span>
-<span class="co">#&gt; [4] fs_1.5.2            tiledbsc_0.1.0.9008</span>
+<span class="co">#&gt; [4] fs_1.5.2            tiledbsc_0.1.0.9009</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; loaded via a namespace (and not attached):</span>
 <span class="co">#&gt;  [1] zoo_1.8-10         xfun_0.31          bslib_0.3.1        purrr_0.3.4       </span>
