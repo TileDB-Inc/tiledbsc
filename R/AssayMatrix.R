@@ -136,11 +136,13 @@ AssayMatrix <- R6::R6Class(
         tiledb::tiledb_filter("RLE")
       )
 
+      # TODO: Make zstd compression level configurable, currently using same
+      # default as core: https://github.com/TileDB-Inc/TileDB/blob/56644c1e94fcba26d07a608112fdcdf3fd120ba8/tiledb/sm/filter/compression_filter.h#L154
       tiledb::filter_list(tdb_dims[[2]]) <- tiledb::tiledb_filter_list(
         tiledb::tiledb_filter_set_option(
           object = tiledb::tiledb_filter("ZSTD"),
           option = "COMPRESSION_LEVEL",
-          value = 22L
+          value = 3L
         )
       )
 
@@ -148,7 +150,7 @@ AssayMatrix <- R6::R6Class(
       tdb_attr_filter <- tiledb::tiledb_filter_set_option(
         object = tiledb::tiledb_filter("ZSTD"),
         option = "COMPRESSION_LEVEL",
-        value = 1L
+        value = 3L
       )
 
       tdb_attrs <- mapply(
