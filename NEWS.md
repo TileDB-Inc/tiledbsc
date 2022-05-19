@@ -34,3 +34,4 @@ See [TileDB 2.8 release notes](https://github.com/TileDB-Inc/TileDB/releases/tag
 * New internal `TileDBURI` class for handling  various URI formats
 * The `uri` field for all TileDB(Array|Group)-based classes is now an active binding that retrieves the URI from the private `tiledb_uri` field
 * Several default parameters have been changed to store the the `X`, `obs`, and `var` arrays more efficiently on disk (#50)
+* Seurat cell identities are now stored in the `active_ident` attribute of the `obs` array (#56)

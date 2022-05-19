@@ -94,6 +94,13 @@ a nested TileDB group with a URI of \verb{./scgroup_<assay>} where \verb{<assay>
 is the name of the Seurat assay.
 }
 
+\subsection{Identities}{
+
+Cell identities in the \code{\link[SeuratObject:Seurat-class]{SeuratObject::Seurat}} are maintained by
+creating an \code{active_ident} attribute in \code{obs} that stores the factor
+levels as a character vector.
+}
+
 \subsection{Dimensionality Reductions}{
 
 Dimensionality reduction results are stored as \code{obsm} and \code{varm} arrays
