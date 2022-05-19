@@ -3,7 +3,7 @@
 #' @description
 #' Class for representing a sc_dataset, which may contain of one or more
 #' [`SCGroup`]s.
-#' @importFrom SeuratObject CreateSeuratObject Reductions
+#' @importFrom SeuratObject CreateSeuratObject Reductions Idents
 #' @export
 SCDataset <- R6::R6Class(
   classname = "SCDataset",
@@ -56,6 +56,12 @@ SCDataset <- R6::R6Class(
     #' a nested TileDB group with a URI of `./scgroup_<assay>` where `<assay>`
     #' is the name of the Seurat assay.
     #'
+    #' ## Identities
+    #'
+    #' Cell identities in the [`SeuratObject::Seurat`] are maintained by
+    #' creating an `active_ident` attribute in `obs` that stores the factor
+    #' levels as a character vector.
+    #
     #' ## Dimensionality Reductions
     #'
     #' Dimensionality reduction results are stored as `obsm` and `varm` arrays
@@ -67,6 +73,15 @@ SCDataset <- R6::R6Class(
     #' @param object A [`SeuratObject::Seurat`] object.
     from_seurat = function(object) {
       stopifnot(inherits(object, "Seurat"))
+
+      identities <- SeuratObject::Idents(object)
+      if (nlevels(identities) > 1L) {
+        object <- SeuratObject::AddMetaData(
+          object = object,
+          metadata = as.character(identities),
+          col.name = "active_ident"
+        )
+      }
 
       assays <- SeuratObject::Assays(object)
       for (assay in assays) {
