@@ -61,9 +61,10 @@ test_that("SCDataset can be created from a Seurat object", {
 
   # check for cell identities
   # factors are stored in tiledb as character vectors
-  expect_setequal(
-    as.character(SeuratObject::Idents(pbmc_small2)),
-    as.character(SeuratObject::Idents(pbmc_small))
+  obs_ids <- SeuratObject::Cells(pbmc_small)
+  expect_equal(
+    as.character(SeuratObject::Idents(pbmc_small2)[obs_ids]),
+    as.character(SeuratObject::Idents(pbmc_small)[obs_ids])
   )
 
   expect_identical(

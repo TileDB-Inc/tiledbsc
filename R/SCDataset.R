@@ -154,11 +154,19 @@ SCDataset <- R6::R6Class(
       # just take the first scgroup's obs metadata
       obs_df <- self$scgroups[[1]]$obs$to_dataframe()
 
+      # retain cell identities before restoring cell-level metadata
+      identities <- setNames(obs_df$active_ident, rownames(obs_df))
+      obs_df$active_ident <- NULL
+
       object <- SeuratObject::CreateSeuratObject(
         counts = assays[[1]],
         project = project,
         meta.data = obs_df
       )
+
+      if (!is.null(identities)) {
+        SeuratObject::Idents(object) <- identities[SeuratObject::Cells(object)]
+      }
 
       if (nassays > 1) {
         for (i in seq(2, nassays)) {
