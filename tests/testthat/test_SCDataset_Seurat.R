@@ -1,13 +1,5 @@
-setup({
-  tdb_uri <<- file.path(tempdir(), "test-scdata")
-})
-
-teardown({
-  tiledb::tiledb_vfs_remove_dir(tdb_uri)
-})
-
-
 test_that("SCDataset can be created from a Seurat object", {
+  tdb_uri <- withr::local_tempdir("test-scdataset")
   scdataset <- SCDataset$new(uri = tdb_uri, verbose = TRUE)
   expect_true(inherits(scdataset, "SCDataset"))
 
