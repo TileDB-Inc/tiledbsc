@@ -74,11 +74,11 @@ SCDataset <- R6::R6Class(
     from_seurat = function(object) {
       stopifnot(inherits(object, "Seurat"))
 
-      identities <- SeuratObject::Idents(object)
-      if (nlevels(identities) > 1L) {
+      idents <- SeuratObject::Idents(object)
+      if (nlevels(idents) > 1L) {
         object <- SeuratObject::AddMetaData(
           object = object,
-          metadata = as.character(identities),
+          metadata = as.character(idents),
           col.name = "active_ident"
         )
       }
@@ -155,7 +155,7 @@ SCDataset <- R6::R6Class(
       obs_df <- self$scgroups[[1]]$obs$to_dataframe()
 
       # retain cell identities before restoring cell-level metadata
-      identities <- setNames(obs_df$active_ident, rownames(obs_df))
+      idents <- setNames(obs_df$active_ident, rownames(obs_df))
       obs_df$active_ident <- NULL
 
       object <- SeuratObject::CreateSeuratObject(
@@ -164,8 +164,8 @@ SCDataset <- R6::R6Class(
         meta.data = obs_df
       )
 
-      if (!is.null(identities)) {
-        SeuratObject::Idents(object) <- identities[SeuratObject::Cells(object)]
+      if (!is.null(idents)) {
+        SeuratObject::Idents(object) <- idents[SeuratObject::Cells(object)]
       }
 
       if (nassays > 1) {
