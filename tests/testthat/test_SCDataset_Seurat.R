@@ -102,3 +102,19 @@ test_that("a dataset containing an assay with empty cells is fully retrieved", {
   # Cannot add a different number of cells than already present
   expect_silent(scdataset$to_seurat())
 })
+
+test_that("a dataset with empty cell identities is retrieved", {
+  uri <- withr::local_tempdir("empty-cell-identities")
+  assay_counts <- SeuratObject::CreateSeuratObject(
+    counts = GetAssayData(pbmc_small[["RNA"]])
+  )
+
+  # verify identities is unset
+  testthat::expect_length(nlevels(SeuratObject::Idents(assay_counts)), 1L)
+
+  scdataset <- SCDataset$new(uri, verbose = FALSE)
+  scdataset$from_seurat(assay_counts)
+
+  # Should not trigger error
+  expect_silent(scdataset$to_seurat())
+})
