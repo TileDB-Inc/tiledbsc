@@ -1,6 +1,6 @@
 # tiledbsc 0.1.2
 
-Improve handling of Seurat objects with empty cell identities.
+Improve handling of Seurat objects with empty cell identities (#58).
 
 # tiledbsc 0.1.1
 
