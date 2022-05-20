@@ -155,8 +155,11 @@ SCDataset <- R6::R6Class(
       obs_df <- self$scgroups[[1]]$obs$to_dataframe()
 
       # retain cell identities before restoring cell-level metadata
-      idents <- setNames(obs_df$active_ident, rownames(obs_df))
-      obs_df$active_ident <- NULL
+      idents <- obs_df$active_ident
+      if (!is.null(idents)) {
+        idents <- setNames(idents, rownames(obs_df))
+        obs_df$active_ident <- NULL
+      }
 
       object <- SeuratObject::CreateSeuratObject(
         counts = assays[[1]],
