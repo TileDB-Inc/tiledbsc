@@ -1,13 +1,5 @@
-setup({
-  tdb_uri <<- file.path(tempdir(), "test-scdata")
-})
-
-teardown({
-  tiledb::tiledb_vfs_remove_dir(tdb_uri)
-})
-
-
 test_that("SCDataset can be created from a Seurat object", {
+  tdb_uri <- withr::local_tempdir("test-scdataset")
   scdataset <- SCDataset$new(uri = tdb_uri, verbose = TRUE)
   expect_true(inherits(scdataset, "SCDataset"))
 
@@ -66,6 +58,14 @@ test_that("SCDataset can be created from a Seurat object", {
     embed2 <- SeuratObject::Embeddings(reduc2)
     expect_identical(embed2[rownames(embed1), ], embed1)
   }
+
+  # check for cell identities
+  # factors are stored in tiledb as character vectors
+  obs_ids <- SeuratObject::Cells(pbmc_small)
+  expect_equal(
+    as.character(SeuratObject::Idents(pbmc_small2)[obs_ids]),
+    as.character(SeuratObject::Idents(pbmc_small)[obs_ids])
+  )
 
   expect_identical(
     SeuratObject::Graphs(pbmc_small2),
