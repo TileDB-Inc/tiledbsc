@@ -1,3 +1,7 @@
+# tiledbsc 0.1.2
+
+Improve handling of Seurat objects with empty cell identities (#58).
+
 # tiledbsc 0.1.1
 
 tiledbsc now uses the enhanced Group API's introduced in TileDB v2.8 and TileDB-R 0.12.0.
