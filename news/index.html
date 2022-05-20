@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tiledbsc</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.0.9010</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.1</span>
       </span>
     </div>
 
@@ -61,17 +61,18 @@
     </div>
 
     <div class="section level2">
-<h2 class="page-header" data-toc-text="development version" id="tiledbsc-development-version">tiledbsc (development version)<a class="anchor" aria-label="anchor" href="#tiledbsc-development-version"></a></h2>
+<h2 class="page-header" data-toc-text="0.1.1" id="tiledbsc-011">tiledbsc 0.1.1<a class="anchor" aria-label="anchor" href="#tiledbsc-011"></a></h2>
 <p>tiledbsc now uses the enhanced Group API’s introduced in TileDB v2.8 and TileDB-R 0.12.0.</p>
+<p><em>Note: The next version of tiledbsc will migrate to the new SOMA-based naming scheme described <a href="https://github.com/single-cell-data/matrix-api/issues/27" class="external-link">here</a>.</em></p>
 <div class="section level3">
-<h3 id="on-disk-changes-development-version">On-disk changes<a class="anchor" aria-label="anchor" href="#on-disk-changes-development-version"></a></h3>
+<h3 id="on-disk-changes-0-1-1">On-disk changes<a class="anchor" aria-label="anchor" href="#on-disk-changes-0-1-1"></a></h3>
 <p>Group-level metadata is now natively supported by TileDB so <code>TileDBGroup</code>-based classes no longer create nested <code>__tiledb_group_metadata</code> arrays for the purpose of storing group-level metadata.</p>
 <p>See <a href="https://github.com/TileDB-Inc/TileDB/releases/tag/2.8.0" class="external-link">TileDB 2.8 release notes</a> for additional changes.</p>
 </div>
 <div class="section level3">
-<h3 id="api-changes-development-version">API changes<a class="anchor" aria-label="anchor" href="#api-changes-development-version"></a></h3>
+<h3 id="api-changes-0-1-1">API changes<a class="anchor" aria-label="anchor" href="#api-changes-0-1-1"></a></h3>
 <div class="section level4">
-<h4 id="for-tiledbgroup-and-its-child-classes-development-version">For <code>TileDBGroup</code> and its child classes:<a class="anchor" aria-label="anchor" href="#for-tiledbgroup-and-its-child-classes-development-version"></a></h4>
+<h4 id="for-tiledbgroup-and-its-child-classes-0-1-1">For <code>TileDBGroup</code> and its child classes:<a class="anchor" aria-label="anchor" href="#for-tiledbgroup-and-its-child-classes-0-1-1"></a></h4>
 <ul><li>the <code>arrays</code> field has been replaced with <code>members</code>, which includes both TileDB arrays <em>and</em> groups</li>
 <li>
 <code>get_array()</code> has been replaced with <code>get_member()</code> which add a <code>type</code> argument to filter by object type</li>
@@ -79,15 +80,15 @@
 </li>
 </ul></div>
 <div class="section level4">
-<h4 id="scgroup-development-version">SCGroup<a class="anchor" aria-label="anchor" href="#scgroup-development-version"></a></h4>
+<h4 id="scgroup-0-1-1">SCGroup<a class="anchor" aria-label="anchor" href="#scgroup-0-1-1"></a></h4>
 <ul><li>the <code>scgroup_uris</code> argument has been dropped from <code>SCDataset</code>’s initialize method (<code>add_member()</code> should now be used instead to add additional <code>SCGroup</code>s)</li></ul></div>
 <div class="section level4">
-<h4 id="scdataset-development-version">SCDataset<a class="anchor" aria-label="anchor" href="#scdataset-development-version"></a></h4>
+<h4 id="scdataset-0-1-1">SCDataset<a class="anchor" aria-label="anchor" href="#scdataset-0-1-1"></a></h4>
 <ul><li>
 <code>SCDataset</code>’s <code>scgroups</code> field is now an active binding that filters <code>members</code> for <code>SCGroup</code> objects</li></ul></div>
 </div>
 <div class="section level3">
-<h3 id="other-changes-development-version">Other changes<a class="anchor" aria-label="anchor" href="#other-changes-development-version"></a></h3>
+<h3 id="other-changes-0-1-1">Other changes<a class="anchor" aria-label="anchor" href="#other-changes-0-1-1"></a></h3>
 <ul><li>added a <code>NEWS.md</code> file to track changes to the package</li>
 <li>the <em>fs</em> package is now a dependency</li>
 <li>
@@ -100,6 +101,7 @@
 <li>The <code>uri</code> field for all TileDB(Array|Group)-based classes is now an active binding that retrieves the URI from the private <code>tiledb_uri</code> field</li>
 <li>Several default parameters have been changed to store the the <code>X</code>, <code>obs</code>, and <code>var</code> arrays more efficiently on disk (<a href="https://github.com/TileDB-Inc/tiledbsc/issues/50" class="external-link">#50</a>)</li>
 <li>Seurat cell identities are now stored in the <code>active_ident</code> attribute of the <code>obs</code> array (<a href="https://github.com/TileDB-Inc/tiledbsc/issues/56" class="external-link">#56</a>)</li>
+<li>Require at least version 0.13.0 of tiledb-r to support retrieval of group names</li>
 </ul></div>
 </div>
   </div>
