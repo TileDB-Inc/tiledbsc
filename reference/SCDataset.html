@@ -18,7 +18,7 @@ SCGroups."><!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/m
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tiledbsc</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.0.9009</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.0.9010</span>
       </span>
     </div>
 
@@ -155,6 +155,15 @@ TileDB group.</p><div class="section">
 <p>Each <code>[SeuratObject::Assay</code>] is converted to a <code><a href="SCGroup.html">SCGroup</a></code> and written to
 a nested TileDB group with a URI of <code>./scgroup_&lt;assay&gt;</code> where <code>&lt;assay&gt;</code>
 is the name of the Seurat assay.</p>
+</div>
+
+<div class="section">
+<h4 id="identities">Identities<a class="anchor" aria-label="anchor" href="#identities"></a></h4>
+
+
+<p>Cell identities in the <code><a href="https://mojaveazure.github.io/seurat-object/reference/Seurat-class.html" class="external-link">SeuratObject::Seurat</a></code> are maintained by
+creating an <code>active_ident</code> attribute in <code>obs</code> that stores the factor
+levels as a character vector.</p>
 </div>
 
 <div class="section">

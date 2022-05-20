@@ -34,7 +34,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tiledbsc</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.0.9009</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.0.9010</span>
       </span>
     </div>
 
@@ -136,7 +136,7 @@
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">scgroup</span><span class="op">$</span><span class="va">X</span>
 <span class="co">#&gt; &lt;AssayMatrixGroup&gt;</span>
-<span class="co">#&gt;   uri: /tmp/RtmpMfnunP/pbmc_small_rna/X </span>
+<span class="co">#&gt;   uri: /tmp/Rtmp7GzuaM/pbmc_small_rna/X </span>
 <span class="co">#&gt;   arrays: counts</span></code></pre></div>
 <p><em>Note: A Seurat <code>Assay</code> instantiated with data passed to the <code>counts</code> argument will store a reference to the same matrix in both the <code>counts</code> and <code>data</code> slots (i.e., <code>GetAssayData(pbmc_small_rna, "counts")</code> and <code>GetAssayData(pbmc_small_rna, "data")</code>). To avoid redundantly storing data on disk, </em>tiledbsc* only ingests data from <code>data</code> when it is not identical to <code>counts</code>.*</p>
 </div>
@@ -161,15 +161,15 @@
 <p>To avoid these redudndant ingestions, use the <code>layers</code> argument to specify which of the assay slots (<code>counts</code>, <code>data</code>, or <code>scale.data</code>) should be ingested. We also set <code>var = FALSE</code> to prevent re-ingestion of the feature-level metadata since it hasn’t changed.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">scgroup</span><span class="op">$</span><span class="fu">from_seurat_assay</span><span class="op">(</span><span class="va">pbmc_small_rna</span>, layers <span class="op">=</span> <span class="st">"data"</span>, var <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-<span class="co">#&gt; No AssayMatrix found at '/tmp/RtmpMfnunP/pbmc_small_rna/X/data'</span>
-<span class="co">#&gt; Creating new AssayMatrix array with index [var_id,obs_id] at '/tmp/RtmpMfnunP/pbmc_small_rna/X/data'</span>
-<span class="co">#&gt; Ingesting AssayMatrix data into: /tmp/RtmpMfnunP/pbmc_small_rna/X/data</span>
+<span class="co">#&gt; No AssayMatrix found at '/tmp/Rtmp7GzuaM/pbmc_small_rna/X/data'</span>
+<span class="co">#&gt; Creating new AssayMatrix array with index [var_id,obs_id] at '/tmp/Rtmp7GzuaM/pbmc_small_rna/X/data'</span>
+<span class="co">#&gt; Ingesting AssayMatrix data into: /tmp/Rtmp7GzuaM/pbmc_small_rna/X/data</span>
 <span class="co">#&gt; Finished converting Seurat Assay with key [rna_] to SCGroup</span></code></pre></div>
 <p>Printing out the <code>X</code> group again reveals that it now contains 2 members: <code>counts</code> and <code>data</code>.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">scgroup</span><span class="op">$</span><span class="va">X</span>
 <span class="co">#&gt; &lt;AssayMatrixGroup&gt;</span>
-<span class="co">#&gt;   uri: /tmp/RtmpMfnunP/pbmc_small_rna/X </span>
+<span class="co">#&gt;   uri: /tmp/Rtmp7GzuaM/pbmc_small_rna/X </span>
 <span class="co">#&gt;   arrays: counts, data</span></code></pre></div>
 <p>Let’s repeat this process for the scaled/centered version of the data that’s stored in the <code>scale.data</code> slot.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
@@ -181,13 +181,13 @@
 
 <span class="va">scgroup</span><span class="op">$</span><span class="fu">from_seurat_assay</span><span class="op">(</span><span class="va">pbmc_small_rna</span>, layers <span class="op">=</span> <span class="st">"scale.data"</span>, var <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
 <span class="co">#&gt; Skipping ingestion of 'data' because it is identical to 'counts'</span>
-<span class="co">#&gt; No AssayMatrix found at '/tmp/RtmpMfnunP/pbmc_small_rna/X/scale.data'</span>
-<span class="co">#&gt; Creating new AssayMatrix array with index [var_id,obs_id] at '/tmp/RtmpMfnunP/pbmc_small_rna/X/scale.data'</span>
-<span class="co">#&gt; Ingesting AssayMatrix data into: /tmp/RtmpMfnunP/pbmc_small_rna/X/scale.data</span>
+<span class="co">#&gt; No AssayMatrix found at '/tmp/Rtmp7GzuaM/pbmc_small_rna/X/scale.data'</span>
+<span class="co">#&gt; Creating new AssayMatrix array with index [var_id,obs_id] at '/tmp/Rtmp7GzuaM/pbmc_small_rna/X/scale.data'</span>
+<span class="co">#&gt; Ingesting AssayMatrix data into: /tmp/Rtmp7GzuaM/pbmc_small_rna/X/scale.data</span>
 <span class="co">#&gt; Finished converting Seurat Assay with key [rna_] to SCGroup</span>
 <span class="va">scgroup</span><span class="op">$</span><span class="va">X</span>
 <span class="co">#&gt; &lt;AssayMatrixGroup&gt;</span>
-<span class="co">#&gt;   uri: /tmp/RtmpMfnunP/pbmc_small_rna/X </span>
+<span class="co">#&gt;   uri: /tmp/Rtmp7GzuaM/pbmc_small_rna/X </span>
 <span class="co">#&gt;   arrays: counts, data, scale.data</span></code></pre></div>
 <p>The <code>X</code> group now contains 3 arrays, each of which has only been written to a single time. We can verify this by counting the number of fragments contained within any of individual arrays:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
@@ -209,9 +209,9 @@
 
 <span class="va">scgroup</span><span class="op">$</span><span class="fu">from_seurat_assay</span><span class="op">(</span><span class="va">pbmc_small_rna</span>, layers <span class="op">=</span> <span class="st">"scale.data"</span>, var <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
 <span class="co">#&gt; Skipping ingestion of 'data' because it is identical to 'counts'</span>
-<span class="co">#&gt; Found existing AssayMatrix at '/tmp/RtmpMfnunP/pbmc_small_rna/X/scale.data'</span>
-<span class="co">#&gt; Updating existing AssayMatrix at '/tmp/RtmpMfnunP/pbmc_small_rna/X/scale.data'</span>
-<span class="co">#&gt; Ingesting AssayMatrix data into: /tmp/RtmpMfnunP/pbmc_small_rna/X/scale.data</span>
+<span class="co">#&gt; Found existing AssayMatrix at '/tmp/Rtmp7GzuaM/pbmc_small_rna/X/scale.data'</span>
+<span class="co">#&gt; Updating existing AssayMatrix at '/tmp/Rtmp7GzuaM/pbmc_small_rna/X/scale.data'</span>
+<span class="co">#&gt; Ingesting AssayMatrix data into: /tmp/Rtmp7GzuaM/pbmc_small_rna/X/scale.data</span>
 <span class="co">#&gt; Finished converting Seurat Assay with key [rna_] to SCGroup</span></code></pre></div>
 <p>Now let’s verify that number of fragments in each <code>X</code>’s layers:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
@@ -245,7 +245,7 @@
 <span class="co">#&gt; [1] stats     graphics  grDevices utils     datasets  methods   base     </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; other attached packages:</span>
-<span class="co">#&gt; [1] sp_1.4-7            SeuratObject_4.1.0  tiledbsc_0.1.0.9009</span>
+<span class="co">#&gt; [1] sp_1.4-7            SeuratObject_4.1.0  tiledbsc_0.1.0.9010</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; loaded via a namespace (and not attached):</span>
 <span class="co">#&gt;  [1] Rcpp_1.0.8.3       progressr_0.10.0   bslib_0.3.1        compiler_4.2.0    </span>
@@ -258,7 +258,7 @@
 <span class="co">#&gt; [29] sass_0.4.1         systemfonts_1.0.4  triebeard_0.3.0    rprojroot_2.0.3   </span>
 <span class="co">#&gt; [33] bit64_4.0.5        grid_4.2.0         glue_1.6.2         listenv_0.8.0     </span>
 <span class="co">#&gt; [37] R6_2.5.1           textshaping_0.3.6  future.apply_1.9.0 parallelly_1.31.1 </span>
-<span class="co">#&gt; [41] rmarkdown_2.14     purrr_0.3.4        tiledb_0.12.0.3    magrittr_2.0.3    </span>
+<span class="co">#&gt; [41] rmarkdown_2.14     purrr_0.3.4        tiledb_0.13.0      magrittr_2.0.3    </span>
 <span class="co">#&gt; [45] urltools_1.7.3     codetools_0.2-18   htmltools_0.5.2    future_1.25.0     </span>
 <span class="co">#&gt; [49] ragg_1.2.2         stringi_1.7.6      cachem_1.0.6       zoo_1.8-10</span></code></pre></div>
 </div>
