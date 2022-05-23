@@ -244,3 +244,58 @@ SOMACollection <- R6::R6Class(
     }
   )
 )
+
+#' Single-cell Dataset
+#'
+#' @description
+#' Class for representing the now deprecated SCDataset objects, which have been
+#' renamed to [`SOMACollection`]s.
+#' @export
+SCDataset <- R6::R6Class(
+  classname = "SCDataset",
+  inherit = SOMACollection,
+
+  public = list(
+    #' @description Create a new SCDataset object.
+    #'
+    #' @param uri URI of the TileDB group
+    #' @param verbose Print status messages
+    #' @param config optional configuration
+    #' @param ctx optional tiledb context
+    initialize = function(uri, verbose = TRUE, config = NULL, ctx = NULL) {
+      .Deprecated(
+        new = "SOMACollection",
+        old = "SCDataset",
+        package = "tiledbsc"
+      )
+      super$initialize(uri, verbose, config, ctx)
+    },
+
+    #' @description List the [`SOMA`] (formerly `SCGroup`) URIs in the
+    #' collection.
+    #' @return A vector of URIs for each [`SOMA`] in the collection.
+    scgroup_uris = function() {
+      .Deprecated(
+        new = "soma_uris",
+        old = "scgroup_uri",
+        package = "tiledbsc"
+      )
+      self$soma_uris
+    }
+  ),
+
+  active = list(
+    #' @field scgroups Retrieve the [`SOMA`] (formerly `SCGroup`) members.
+    scgroups = function(value) {
+      if (!missing(value)) {
+        stop("scgroups is read-only, use 'add_member()' to add a new SOMA")
+      }
+      .Deprecated(
+        new = "somas",
+        old = "scgroups",
+        package = "tiledbsc"
+      )
+      self$somas
+    }
+  )
+)
