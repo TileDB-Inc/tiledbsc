@@ -1,23 +1,23 @@
-#' Single-cell Dataset
+#' SOMA Collection
 #'
 #' @description
-#' Class for representing a sc_dataset, which may contain of one or more
-#' [`SCGroup`]s.
+#' Class for representing a `SOMACollection`, which may contain of one or more
+#' [`SOMA`]s.
 #' @importFrom SeuratObject CreateSeuratObject Reductions Idents
 #' @export
-SCDataset <- R6::R6Class(
-  classname = "SCDataset",
+SOMACollection <- R6::R6Class(
+  classname = "SOMACollection",
   inherit = TileDBGroup,
 
   public = list(
     #' @field misc Named list of miscellaneous objects.
     misc = list(),
 
-    #' @description Create a new SCDataset object. The existing array group is
+    #' @description Create a new `SOMACollection`. The existing array group is
     #'   opened at the specified array `uri` if one is present, otherwise a new
     #'   array group is created. The `members` field is populated with
-    #'   `SCGroup` objects for each URI passed explicitly to `scgroup_uris`, as
-    #'   well `SCGroup` objects discovered within the `SCdataset` object's
+    #'   `SOMA` objects for each URI passed explicitly to `soma_uris`, as
+    #'   well `SOMA` objects discovered within the `SOMACollection` object's
     #'   TileDB group.
     #'
     #' @param uri URI of the TileDB group
@@ -49,11 +49,11 @@ SCDataset <- R6::R6Class(
     },
 
 
-    #' @description Convert a Seurat object to a TileDB-backed `sc_dataset`.
+    #' @description Convert a Seurat object to a TileDB-backed `SOMACollection`.
     #'
     #' ## Assays
-    #' Each `[SeuratObject::Assay`] is converted to a [`SCGroup`] and written to
-    #' a nested TileDB group with a URI of `./scgroup_<assay>` where `<assay>`
+    #' Each `[SeuratObject::Assay`] is converted to a [`SOMA`] and written to
+    #' a nested TileDB group with a URI of `./soma_<assay>` where `<assay>`
     #' is the name of the Seurat assay.
     #'
     #' ## Identities
@@ -65,10 +65,10 @@ SCDataset <- R6::R6Class(
     #' ## Dimensionality Reductions
     #'
     #' Dimensionality reduction results are stored as `obsm` and `varm` arrays
-    #' within an `SCGroup`. The [`SeuratObject::DimReduc`] object's `key` slot
-    #' is used to determine which `SCGroup` to store the results in. The array
-    #' names are `(obsm|varm)_dimreduction_<name>`, where `<name>` is the name
-    #' of the dimensionality reduction method (e.g., `"pca"`).
+    #' within an `SOMA`. The [`SeuratObject::DimReduc`] object's `key` slot is
+    #' used to determine which `SOMA` to store the results in. The array names
+    #' are `(obsm|varm)_dimreduction_<name>`, where `<name>` is the name of the
+    #' dimensionality reduction method (e.g., `"pca"`).
     #'
     #' @param object A [`SeuratObject::Seurat`] object.
     from_seurat = function(object) {
@@ -86,14 +86,14 @@ SCDataset <- R6::R6Class(
       assays <- SeuratObject::Assays(object)
       for (assay in assays) {
         if (is.null(self$members[[assay]])) {
-          assay_uri <- file_path(self$uri, paste0("scgroup_", assay))
-          scgroup <- SCGroup$new(assay_uri, verbose = self$verbose, config = self$config, ctx = self$context)
-          self$add_member(scgroup, name = assay)
+          assay_uri <- file_path(self$uri, paste0("soma_", assay))
+          soma <- SOMA$new(assay_uri, verbose = self$verbose, config = self$config, ctx = self$context)
+          self$add_member(soma, name = assay)
         } else {
-          scgroup <- self$members[[assay]]
+          soma <- self$members[[assay]]
         }
         assay_object <- object[[assay]]
-        scgroup$from_seurat_assay(assay_object, obs = object[[]])
+        soma$from_seurat_assay(assay_object, obs = object[[]])
       }
 
       reductions <- SeuratObject::Reductions(object)
@@ -147,15 +147,15 @@ SCDataset <- R6::R6Class(
     to_seurat = function(project = "SeuratProject") {
       stopifnot(is_scalar_character(project))
 
-      assays <- lapply(self$scgroups, function(x) x$to_seurat_assay())
+      assays <- lapply(self$somas, function(x) x$to_seurat_assay())
       nassays <- length(assays)
 
-      # cell-level obs metadata is stored in each scgroup, so for now we
-      # just take the first scgroup's obs metadata
-      obs_df <- self$scgroups[[1]]$obs$to_dataframe()
+      # cell-level obs metadata is stored in each soma, so for now we
+      # just take the first soma's obs metadata
+      obs_df <- self$somas[[1]]$obs$to_dataframe()
 
       # retain cell identities before restoring cell-level metadata
-      idents <- obs_df$active_ident
+  idents <- obs_df$active_ident
       if (!is.null(idents)) {
         idents <- setNames(idents, rownames(obs_df))
         obs_df$active_ident <- NULL
@@ -179,17 +179,17 @@ SCDataset <- R6::R6Class(
       }
 
       # dimreductions
-      # Retrieve list of all techniques used in any scgroup's obsm/varm
+      # Retrieve list of all techniques used in any soma's obsm/varm
       # dimensionality reduction arrays. The association between assay and
       # dimreduction is maintained by the DimReduc's `assay.used` slot.
       dimreductions <- lapply(
-        self$scgroups,
+        self$somas,
         function(x) x$get_seurat_dimreductions_list()
       )
       object@reductions <- Reduce(base::c, dimreductions)
 
       # graphs
-      graph_arrays <- lapply(self$scgroups,
+      graph_arrays <- lapply(self$somas,
         function(x) x$get_annotation_pairwise_matrix_arrays(prefix = "graph_")
       )
       if (!is_empty(graph_arrays)) {
@@ -209,20 +209,20 @@ SCDataset <- R6::R6Class(
       return(object)
     },
 
-    #' @description List the [`SCGroup`] URIs in the dataset.
-    #' @return A vector of URIs for each [`SCGroup`] in the dataset.
-    scgroup_uris = function() {
-      vapply_char(self$scgroups, function(x) x$uri)
+    #' @description List the [`SOMA`] URIs in the collection.
+    #' @return A vector of URIs for each [`SOMA`] in the collection.
+    soma_uris = function() {
+      vapply_char(self$somas, function(x) x$uri)
     }
   ),
 
   active = list(
-    #' @field scgroups Retrieve [`SCGroup`] members.
-    scgroups = function(value) {
+    #' @field somas Retrieve [`SOMA`] members.
+    somas = function(value) {
       if (!missing(value)) {
-        stop("scgroups is read-only, use 'add_member()' to add a new SCGroup")
+        stop("somas is read-only, use 'add_member()' to add a new SOMA")
       }
-      Filter(function(x) inherits(x, "SCGroup"), self$members)
+      Filter(function(x) inherits(x, "SOMA"), self$members)
     }
   ),
 
@@ -230,15 +230,15 @@ SCDataset <- R6::R6Class(
 
     instantiate_members = function() {
 
-      # with the exception of 'misc' all members should be SCGroups
+      # with the exception of 'misc' all members should be SOMA objects
       # TODO: Use group metadata to indicates each member's class
       member_uris <- self$list_member_uris()
       misc_uri <- member_uris[names(member_uris) == "misc"]
-      scgroup_uris <- member_uris[names(member_uris) != "misc"]
-      names(scgroup_uris) <- sub("scgroup_", "", names(scgroup_uris), fixed = TRUE)
+      soma_uris <- member_uris[names(member_uris) != "misc"]
+      names(soma_uris) <- sub("soma_", "", names(soma_uris), fixed = TRUE)
 
       c(
-        lapply(scgroup_uris, SCGroup$new, verbose = self$verbose, config = self$config, ctx = self$context),
+        lapply(soma_uris, SOMA$new, verbose = self$verbose, config = self$config, ctx = self$context),
         lapply(misc_uri, TileDBGroup$new, verbose = self$verbose, config = self$config, ctx = self$context)
       )
     }
