@@ -679,3 +679,38 @@ SOMA <- R6::R6Class(
     }
   )
 )
+
+
+#' Single-cell Group
+#'
+#' @description
+#' Class for representing the now deprecated SCGroup objects, which have been
+#' renamed to [`SOMA`]s.
+#'
+#' @export
+SCGroup <- R6::R6Class(
+  classname = "SCGroup",
+  inherit = SOMA,
+
+  public = list(
+
+    #' @description Create a new SCGroup.
+    #'
+    #' @param uri URI of the TileDB group
+    #' @param verbose Print status messages
+    #' @param config optional configuration
+    #' @param ctx optional tiledb context
+    initialize = function(
+      uri,
+      verbose = TRUE,
+      config = NULL,
+      ctx = NULL) {
+      .Deprecated(
+        new = "SOMA",
+        old = "SCGroup",
+        package = "tiledbsc"
+      )
+      super$initialize(uri, verbose, config, ctx)
+    }
+  )
+)
