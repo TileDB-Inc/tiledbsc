@@ -1,8 +1,8 @@
-#' Single-cell Group
+#' SOMA: Stack of Matrices, Annotated
 #'
 #' @description
-#' Class for representing a group of TileDB arrays that consitute an `sc_group`,
-#' which includes:
+#' Class for representing a group of TileDB groups/arrays that consitute a
+#' `SOMA` (stack of matrices, annotated), which includes:
 #' - `X` ([`AssayMatrixGroup`]): a group of one or more labeled 2D sparse arrays
 #'   that share the same dimensions.
 #' - `obs` ([`AnnotationDataframe`]): 1D labeled array with column labels for
@@ -11,8 +11,8 @@
 #' @importFrom SeuratObject AddMetaData Loadings Embeddings VariableFeatures
 #' @importFrom SeuratObject GetAssayData CreateAssayObject SetAssayData
 #' @export
-SCGroup <- R6::R6Class(
-  classname = "SCGroup",
+SOMA <- R6::R6Class(
+  classname = "SOMA",
   inherit = TileDBGroup,
 
   public = list(
@@ -37,7 +37,7 @@ SCGroup <- R6::R6Class(
     #' @field misc Named list of miscellaneous objects.
     misc = list(),
 
-    #' @description Create a new SCGroup object. The existing array group is
+    #' @description Create a new SOMA. The existing array group is
     #'   opened at the specified array `uri` if one is present, otherwise a new
     #'   array group is created.
     #'
@@ -179,7 +179,7 @@ SCGroup <- R6::R6Class(
     #' combination of `"counts"`, `"data"`, `"scale.data"`.
     from_seurat_assay = function(object, obs = NULL, var = TRUE, layers = c("counts", "data", "scale.data")) {
       stopifnot(
-        "sc_groups must be created from a Seurat Assay"
+        "SOMAs must be created from a Seurat Assay"
           = inherits(object, "Assay"),
         "'var' must be a logical value" = is.logical(var)
       )
@@ -595,7 +595,7 @@ SCGroup <- R6::R6Class(
 
   private = list(
 
-    # Instantiate each member of the scgroup using the appropriate R6 class
+    # Instantiate each member of the SOMA using the appropriate R6 class
     # generator, which is determined by the base name of the
     # member's URI. In the future, it would be nice to have a more robust
     # mechanism for doing this (e.g., by looking the member's type from its
@@ -604,7 +604,7 @@ SCGroup <- R6::R6Class(
       members <- self$list_members()
       named_uris <- setNames(members$URI, members$NAME)
 
-      # fallback generators for members not covered by the scgroup schema
+      # fallback generators for members not covered by the SOMA schema
       fallback_generators <- lapply(
         members$TYPE,
         FUN = switch,
@@ -612,8 +612,8 @@ SCGroup <- R6::R6Class(
         GROUP = TileDBGroup$new
       )
 
-      # scgroup components generators
-      scgroup_generators <- mapply(
+      # soma components generators
+      soma_generators <- mapply(
         function(member, fallback_generator) {
           switch(member,
             X = AssayMatrixGroup$new,
@@ -630,12 +630,12 @@ SCGroup <- R6::R6Class(
         fallback_generator = fallback_generators
       )
 
-      # instantiate scgroup components
+      # instantiate soma components
       mapply(
         FUN = function(generator, uri, verbose) {
           generator(uri = uri, verbose = verbose)
         },
-        generator = scgroup_generators,
+        generator = soma_generators,
         uri = named_uris,
         MoreArgs = list(verbose = self$verbose)
       )
