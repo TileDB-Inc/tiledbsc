@@ -5,7 +5,7 @@
 #' `AssayMatrix` may contain one or more "layers" (i.e., additional measurements
 #' that share the same dimensions and non-empty coordinates.
 #'
-#' Used for the `X` field of [`SCGroup`].
+#' Used for the `X` field of [`SOMA`].
 
 #' @importFrom Matrix sparseMatrix
 #' @export
