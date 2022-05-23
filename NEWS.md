@@ -1,10 +1,18 @@
 # tiledbsc (development version)
-## SCDataset / SOMACollection Differences
 
-While the new `SOMACollection` class is a drop-in replacement for the old SCDataset, a couple of the fields are named differently:
+This release changes the names of the 2 top-level classes in the tiledbsc package to follow new nomenclature adopted by the [single-cell data model specification](https://github.com/single-cell-data/matrix-api/blob/main/specification.md), which was implemented [here](https://github.com/single-cell-data/matrix-api/pull/28). You can read more about the rationale for this change [here](https://github.com/single-cell-data/matrix-api/issues/11#issuecomment-1109975498).
 
-- `scgroups` is now `somas`
+## New class names
+
+- `SCGroup` is replaced by `SOMA` (stack of matrices, annotated)
+- `SCDataset` is replaced by `SOMACollection`
+
+There are no functional changes to either class. `SOMA` is a drop-in replacement for `SCGroup` and `SOMACollection` is a drop-in replacement for `SCDataset`. However, with the new names two of `SOMACollection`'s methods have changed accordingly:
+
+- the `scgroups` field is now `somas`
 - `scgroup_uris()` is now `soma_uris()`
+
+To ease the transition, the `SCDataset` and `SCGroup` classes are still available as aliases for `SOMACollection` and `SOMA`, respectively. However, they have been deprecated and will be removed in the future.
 
 # tiledbsc 0.1.2
 
