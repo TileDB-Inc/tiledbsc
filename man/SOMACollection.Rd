@@ -58,7 +58,7 @@ Class for representing a \code{SOMACollection}, which may contain of one or more
 \if{html}{\out{<a id="method-new"></a>}}
 \if{latex}{\out{\hypertarget{method-new}{}}}
 \subsection{Method \code{new()}}{
-Create a new \code{SOMACollection}. The existing array group is
+Create a new \code{SOMACollection}. The existing TileDB group is
 opened at the specified array \code{uri} if one is present, otherwise a new
 array group is created. The \code{members} field is populated with
 \code{SOMA} objects for each URI passed explicitly to \code{soma_uris}, as

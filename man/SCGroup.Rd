@@ -4,8 +4,8 @@
 \alias{SCGroup}
 \title{Single-cell Group}
 \description{
-Class for representing the now deprecated SCGroup objects, which have been
-renamed to \code{\link{SOMA}}s.
+Class for representing the now-deprecated SCGroup object, which has been
+renamed to \code{\link{SOMA}}.
 }
 \section{Super classes}{
 \code{\link[tiledbsc:TileDBGroup]{tiledbsc::TileDBGroup}} -> \code{\link[tiledbsc:SOMA]{tiledbsc::SOMA}} -> \code{SCGroup}

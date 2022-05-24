@@ -13,7 +13,7 @@ SOMACollection <- R6::R6Class(
     #' @field misc Named list of miscellaneous objects.
     misc = list(),
 
-    #' @description Create a new `SOMACollection`. The existing array group is
+    #' @description Create a new `SOMACollection`. The existing TileDB group is
     #'   opened at the specified array `uri` if one is present, otherwise a new
     #'   array group is created. The `members` field is populated with
     #'   `SOMA` objects for each URI passed explicitly to `soma_uris`, as
@@ -231,7 +231,7 @@ SOMACollection <- R6::R6Class(
     instantiate_members = function() {
 
       # with the exception of 'misc' all members should be SOMA objects
-      # TODO: Use group metadata to indicates each member's class
+      # TODO: Use group metadata to indicate each member's class
       member_uris <- self$list_member_uris()
       misc_uri <- member_uris[names(member_uris) == "misc"]
       soma_uris <- member_uris[names(member_uris) != "misc"]
@@ -248,8 +248,8 @@ SOMACollection <- R6::R6Class(
 #' Single-cell Dataset
 #'
 #' @description
-#' Class for representing the now deprecated SCDataset objects, which have been
-#' renamed to [`SOMACollection`]s.
+#' Class for representing the now-deprecated SCDataset object, which has been
+#' renamed to [`SOMACollection`].
 #' @export
 SCDataset <- R6::R6Class(
   classname = "SCDataset",

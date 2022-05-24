@@ -10,7 +10,7 @@ Single-cell Annotation Matrix
 }
 \details{
 Base class for matrix-like data with rows aligned to the observations or
-features of an \code{\link{SOMA}}.
+features of a \code{\link{SOMA}}.
 }
 \section{Super classes}{
 \code{\link[tiledbsc:TileDBArray]{tiledbsc::TileDBArray}} -> \code{\link[tiledbsc:AnnotationArray]{tiledbsc::AnnotationArray}} -> \code{AnnotationMatrix}

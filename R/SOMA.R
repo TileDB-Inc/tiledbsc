@@ -179,7 +179,7 @@ SOMA <- R6::R6Class(
     #' combination of `"counts"`, `"data"`, `"scale.data"`.
     from_seurat_assay = function(object, obs = NULL, var = TRUE, layers = c("counts", "data", "scale.data")) {
       stopifnot(
-        "SOMAs must be created from a Seurat Assay"
+        "A SOMA must be created from a Seurat Assay"
           = inherits(object, "Assay"),
         "'var' must be a logical value" = is.logical(var)
       )
@@ -684,8 +684,8 @@ SOMA <- R6::R6Class(
 #' Single-cell Group
 #'
 #' @description
-#' Class for representing the now deprecated SCGroup objects, which have been
-#' renamed to [`SOMA`]s.
+#' Class for representing the now-deprecated SCGroup object, which has been
+#' renamed to [`SOMA`].
 #'
 #' @export
 SCGroup <- R6::R6Class(

@@ -4,8 +4,8 @@
 \alias{SCDataset}
 \title{Single-cell Dataset}
 \description{
-Class for representing the now deprecated SCDataset objects, which have been
-renamed to \code{\link{SOMACollection}}s.
+Class for representing the now-deprecated SCDataset object, which has been
+renamed to \code{\link{SOMACollection}}.
 }
 \section{Super classes}{
 \code{\link[tiledbsc:TileDBGroup]{tiledbsc::TileDBGroup}} -> \code{\link[tiledbsc:SOMACollection]{tiledbsc::SOMACollection}} -> \code{SCDataset}
