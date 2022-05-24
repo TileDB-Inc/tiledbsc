@@ -10,7 +10,7 @@ Single-cell Annotation Data Frame
 }
 \details{
 Base class for data frames with rows aligned to the observations or features
-of an \code{\link{SCGroup}}. Used to store a heterogeneous collection of
+of an \code{\link{SOMA}}. Used to store a heterogeneous collection of
 annotations/measurements.
 }
 \section{Super classes}{
