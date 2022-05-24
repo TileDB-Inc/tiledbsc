@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tiledbsc</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.2.9000</span>
       </span>
     </div>
 
@@ -61,18 +61,34 @@
     </div>
 
     <div class="section level2">
+<h2 class="page-header" data-toc-text="development version" id="tiledbsc-development-version">tiledbsc (development version)<a class="anchor" aria-label="anchor" href="#tiledbsc-development-version"></a></h2>
+<p>This release changes the names of the 2 top-level classes in the tiledbsc package to follow new nomenclature adopted by the <a href="https://github.com/single-cell-data/matrix-api/blob/main/specification.md" class="external-link">single-cell data model specification</a>, which was implemented <a href="https://github.com/single-cell-data/matrix-api/pull/28" class="external-link">here</a>. You can read more about the rationale for this change <a href="https://github.com/single-cell-data/matrix-api/issues/11#issuecomment-1109975498" class="external-link">here</a>.</p>
+<div class="section level3">
+<h3 id="new-class-names-development-version">New class names<a class="anchor" aria-label="anchor" href="#new-class-names-development-version"></a></h3>
+<ul><li>
+<code>SCGroup</code> is replaced by <code>SOMA</code> (stack of matrices, annotated)</li>
+<li>
+<code>SCDataset</code> is replaced by <code>SOMACollection</code>
+</li>
+</ul><p>There are no functional changes to either class. <code>SOMA</code> is a drop-in replacement for <code>SCGroup</code> and <code>SOMACollection</code> is a drop-in replacement for <code>SCDataset</code>. However, with the new names two of <code>SOMACollection</code>’s methods have changed accordingly:</p>
+<ul><li>the <code>scgroups</code> field is now <code>somas</code>
+</li>
+<li>
+<code>scgroup_uris()</code> is now <code>soma_uris()</code>
+</li>
+</ul><p>To ease the transition, the <code>SCDataset</code> and <code>SCGroup</code> classes are still available as aliases for <code>SOMACollection</code> and <code>SOMA</code>, respectively. However, they have been deprecated and will be removed in the future.</p>
+</div>
+</div>
+    <div class="section level2">
 <h2 class="page-header" data-toc-text="0.1.2" id="tiledbsc-012">tiledbsc 0.1.2<a class="anchor" aria-label="anchor" href="#tiledbsc-012"></a></h2>
 <p>Improve handling of Seurat objects with empty cell identities (<a href="https://github.com/TileDB-Inc/tiledbsc/issues/58" class="external-link">#58</a>).</p>
 </div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.1.1" id="tiledbsc-011">tiledbsc 0.1.1<a class="anchor" aria-label="anchor" href="#tiledbsc-011"></a></h2>
 <p>tiledbsc now uses the enhanced Group API’s introduced in TileDB v2.8 and TileDB-R 0.12.0.</p>
-<p><em>Note: The next version of tiledbsc will migrate to the new SOMA-based naming scheme described <a href="https://github.com/single-cell-data/matrix-api/issues/27" class="external-link">here</a>.</em></p>
-<div class="section level3">
-<h3 id="on-disk-changes-0-1-1">On-disk changes<a class="anchor" aria-label="anchor" href="#on-disk-changes-0-1-1"></a></h3>
+<p><em>Note: The next version of tiledbsc will migrate to the new SOMA-based naming scheme described <a href="https://github.com/single-cell-data/matrix-api/issues/27" class="external-link">here</a>.</em> ## On-disk changes</p>
 <p>Group-level metadata is now natively supported by TileDB so <code>TileDBGroup</code>-based classes no longer create nested <code>__tiledb_group_metadata</code> arrays for the purpose of storing group-level metadata.</p>
 <p>See <a href="https://github.com/TileDB-Inc/TileDB/releases/tag/2.8.0" class="external-link">TileDB 2.8 release notes</a> for additional changes.</p>
-</div>
 <div class="section level3">
 <h3 id="api-changes-0-1-1">API changes<a class="anchor" aria-label="anchor" href="#api-changes-0-1-1"></a></h3>
 <div class="section level4">
