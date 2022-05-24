@@ -1,6 +1,10 @@
 test_that("SCDataset can be created from a Seurat object", {
   tdb_uri <- withr::local_tempdir("test-scdataset")
-  scdataset <- SCDataset$new(uri = tdb_uri, verbose = TRUE)
+
+  expect_warning(
+    scdataset <- SCDataset$new(uri = tdb_uri, verbose = TRUE),
+    "'SCDataset' is deprecated."
+  )
   expect_true(inherits(scdataset, "SCDataset"))
 
   # misc is created by default
@@ -10,7 +14,11 @@ test_that("SCDataset can be created from a Seurat object", {
   scdataset$from_seurat(pbmc_small)
   expect_true(inherits(scdataset$members$RNA, "SOMA"))
   expect_true(inherits(scdataset$members$misc, "TileDBGroup"))
-  expect_mapequal(scdataset$scgroups, scdataset$members["RNA"])
+  expect_warning(scdataset$scgroups, "'scgroups' is deprecated")
+  expect_mapequal(
+    suppressWarnings(scdataset$scgroups),
+    scdataset$members["RNA"]
+  )
 
   # check for dimensionality reduction results
   expect_identical(
@@ -29,7 +37,10 @@ test_that("SCDataset can be created from a Seurat object", {
   )
 
   # create a new SCDataset from an existing TileDB group
-  scdataset2 <- SCDataset$new(uri = tdb_uri, verbose = TRUE)
+  expect_warning(
+    scdataset2 <- SCDataset$new(uri = tdb_uri, verbose = TRUE),
+    "'SCDataset' is deprecated."
+  )
   expect_true(inherits(scdataset2, "SCDataset"))
   expect_true(inherits(scdataset2$members$RNA, "SOMA"))
   expect_false(inherits(scdataset2$members$misc, "SOMA"))
@@ -80,7 +91,7 @@ test_that("SCDataset can be created from a Seurat object", {
   # calling from_seurat again will update the existing data
   scdataset2$from_seurat(pbmc_small)
   expect_identical(
-    scdataset2$scgroups$RNA$obs$fragment_count(),
+    suppressWarnings(scdataset2$scgroups$RNA$obs$fragment_count()),
     2
   )
 })
@@ -95,7 +106,10 @@ test_that("a dataset containing an assay with empty cells is fully retrieved", {
   counts2[, 1:10] <- 0
   pbmc_small[["RNA2"]] <- SeuratObject::CreateAssayObject(counts = counts2)
 
-  scdataset <- SCDataset$new(uri, verbose = FALSE)
+  expect_warning(
+    scdataset <- SCDataset$new(uri = uri, verbose = FALSE),
+    "'SCDataset' is deprecated."
+  )
   scdataset$from_seurat(pbmc_small)
 
   # Should not trigger error:
@@ -112,7 +126,10 @@ test_that("a dataset with empty cell identities is retrieved", {
   # verify identities is unset
   testthat::expect_length(nlevels(SeuratObject::Idents(assay_counts)), 1L)
 
-  scdataset <- SCDataset$new(uri, verbose = FALSE)
+  expect_warning(
+    scdataset <- SCDataset$new(uri, verbose = FALSE),
+    "'SCDataset' is deprecated."
+  )
   scdataset$from_seurat(assay_counts)
 
   # Should not trigger error

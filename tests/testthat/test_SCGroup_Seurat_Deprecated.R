@@ -10,7 +10,10 @@ teardown({
 
 test_that("SCGroup object can be created from a Seurat assay", {
 
-  scgroup <<- SCGroup$new(uri = tdb_uri, verbose = TRUE)
+  expect_warning(
+    scgroup <- SCGroup$new(uri = tdb_uri, verbose = TRUE),
+    "'SCGroup' is deprecated."
+  )
   expect_true(inherits(scgroup, "SCGroup"))
 
   # default groups were created
@@ -46,7 +49,11 @@ test_that("SCGroup object can be created from a Seurat assay", {
 })
 
 test_that("Seurat Assay can be recreated from an existing SCGroup", {
-  scgroup <- SCGroup$new(uri = tdb_uri, verbose = TRUE)
+  expect_warning(
+    scgroup <- SCGroup$new(uri = tdb_uri, verbose = TRUE),
+    "'SCGroup' is deprecated."
+  )
+
 
   # SCGroup slot classes are restored
   expect_true(inherits(scgroup$X, "AssayMatrixGroup"))
@@ -112,7 +119,10 @@ test_that("Seurat Assay can be recreated from an existing SCGroup", {
 })
 
 test_that("Individual layers can be retrieved from an existing SCGroup", {
-  scgroup <<- SCGroup$new(uri = tdb_uri, verbose = TRUE)
+    expect_warning(
+    scgroup <- SCGroup$new(uri = tdb_uri, verbose = TRUE),
+    "'SCGroup' is deprecated."
+  )
   expect_s4_class(scgroup$to_seurat_assay(layers = "counts"), "Assay")
   expect_s4_class(scgroup$to_seurat_assay(layers = "data"), "Assay")
   expect_error(
@@ -130,7 +140,10 @@ test_that("obs and var are created when even no annotations are present", {
   expect_equal(ncol(assay[[]]), 0L)
   SeuratObject::Key(assay) <- "RNA"
 
-  scgroup <- SCGroup$new(uri = uri)
+  expect_warning(
+    scgroup <- SCGroup$new(uri = uri),
+    "'SCGroup' is deprecated."
+  )
   scgroup$from_seurat_assay(assay)
 
   obs <- scgroup$obs$to_dataframe()
@@ -143,7 +156,10 @@ test_that("obs and var are created when even no annotations are present", {
 })
 
 test_that("dimensional reduction data can be stored and retrieved", {
-  scgroup <- SCGroup$new(uri = tdb_uri)
+  expect_warning(
+    scgroup <- SCGroup$new(uri = tdb_uri),
+    "'SCGroup' is deprecated."
+  )
 
   # obsm/varm are empty
   expect_length(scgroup$obsm$members, 0L)
@@ -154,7 +170,10 @@ test_that("dimensional reduction data can be stored and retrieved", {
   scgroup$add_seurat_dimreduction(pca1, technique = "pca", metadata = user_md)
 
   # obsm/varm are discovered
-  scgroup <- SCGroup$new(uri = tdb_uri)
+  expect_warning(
+    scgroup <- SCGroup$new(uri = tdb_uri),
+    "'SCGroup' is deprecated."
+  )
   expect_length(scgroup$obsm$members, 1L)
   expect_length(scgroup$varm$members, 1L)
 
@@ -207,7 +226,10 @@ test_that("creation from a Seurat Assay without scale.data", {
     new.data = new(Class = "matrix")
   )
 
-  scgroup <- SCGroup$new(uri = uri, verbose = FALSE)
+  expect_warning(
+    scgroup <- SCGroup$new(uri = uri, verbose = FALSE),
+    "'SCGroup' is deprecated."
+  )
   testthat::expect_silent(scgroup$from_seurat_assay(assay1))
 
   assay2 <- scgroup$to_seurat_assay()
@@ -230,7 +252,10 @@ test_that("an assay with scale.data containing all features", {
     dim(SeuratObject::GetAssayData(assay1, "scale.data"))
   )
 
-  scgroup <- SCGroup$new(uri = uri, verbose = FALSE)
+  expect_warning(
+    scgroup <- SCGroup$new(uri = uri, verbose = FALSE),
+    "'SCGroup' is deprecated."
+  )
   testthat::expect_silent(scgroup$from_seurat_assay(assay1))
 
   var_ids <- rownames(assay1)
@@ -253,7 +278,10 @@ test_that("an assay with empty counts slot can be converted", {
 
   expect_true(is_empty(SeuratObject::GetAssayData(assay, "counts")))
 
-  scgroup <- SCGroup$new(uri, verbose = FALSE)
+  expect_warning(
+    scgroup <- SCGroup$new(uri = uri, verbose = FALSE),
+    "'SCGroup' is deprecated."
+  )
   expect_silent(scgroup$from_seurat_assay(assay))
   expect_match(tiledb::tiledb_object_type(scgroup$X$uri), "GROUP")
 
@@ -282,7 +310,10 @@ test_that("an assay with empty feature metdata can be converted", {
   SeuratObject::Key(assay) <- "RNA"
   expect_length(assay[[]], 0L)
 
-  scgroup <- SCGroup$new(uri, verbose = FALSE)
+  expect_warning(
+    scgroup <- SCGroup$new(uri = uri, verbose = FALSE),
+    "'SCGroup' is deprecated."
+  )
   expect_silent(scgroup$from_seurat_assay(assay))
   assay2 <- scgroup$to_seurat_assay()
   expect_identical(assay2[[]][rownames(assay),], assay[[]])
@@ -296,7 +327,10 @@ test_that("individual layers can be added or updated", {
   )
   SeuratObject::Key(assay) <- "RNA"
 
-  scgroup <- SCGroup$new(uri, verbose = TRUE)
+  expect_warning(
+    scgroup <- SCGroup$new(uri = uri, verbose = FALSE),
+    "'SCGroup' is deprecated."
+  )
   scgroup$from_seurat_assay(assay)
 
   # only counts was created
