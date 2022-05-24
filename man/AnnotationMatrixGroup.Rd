@@ -51,7 +51,7 @@ Add a new \code{\link{AnnotationMatrix}} array to the group.
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{data}}{a \code{\link{matrix}} of annotation data to ingest. The \code{matrix} rows
-must be aligned to the \code{\link{SCGroup}} dimension indicated by the group's
+must be aligned to the \code{\link{SOMA}} dimension indicated by the group's
 \code{dimension_name}.}
 
 \item{\code{name}}{Name of the new variable annotation matrix.}

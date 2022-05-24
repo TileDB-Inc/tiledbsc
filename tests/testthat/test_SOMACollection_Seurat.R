@@ -1,49 +1,49 @@
-test_that("SCDataset can be created from a Seurat object", {
-  tdb_uri <- withr::local_tempdir("test-scdataset")
-  scdataset <- SCDataset$new(uri = tdb_uri, verbose = TRUE)
-  expect_true(inherits(scdataset, "SCDataset"))
+test_that("SOMACollection can be created from a Seurat object", {
+  tdb_uri <- withr::local_tempdir("test-soco")
+  soco <- SOMACollection$new(uri = tdb_uri, verbose = TRUE)
+  expect_true(inherits(soco, "SOMACollection"))
 
   # misc is created by default
-  expect_equal(scdataset$count_members(), 1L)
-  expect_equal(scdataset$list_members()$NAME, "misc")
+  expect_equal(soco$count_members(), 1L)
+  expect_equal(soco$list_members()$NAME, "misc")
 
-  scdataset$from_seurat(pbmc_small)
-  expect_true(inherits(scdataset$members$RNA, "SCGroup"))
-  expect_true(inherits(scdataset$members$misc, "TileDBGroup"))
-  expect_mapequal(scdataset$scgroups, scdataset$members["RNA"])
+  soco$from_seurat(pbmc_small)
+  expect_true(inherits(soco$members$RNA, "SOMA"))
+  expect_true(inherits(soco$members$misc, "TileDBGroup"))
+  expect_mapequal(soco$somas, soco$members["RNA"])
 
   # check for dimensionality reduction results
   expect_identical(
-    names(scdataset$members$RNA$obsm$members),
+    names(soco$members$RNA$obsm$members),
     c("dimreduction_pca", "dimreduction_tsne")
   )
   expect_identical(
-    names(scdataset$members$RNA$varm$members),
+    names(soco$members$RNA$varm$members),
     "dimreduction_pca"
   )
 
   # check for graph results
   expect_identical(
-    names(scdataset$members$RNA$obsp$members),
+    names(soco$members$RNA$obsp$members),
     c("graph_snn")
   )
 
-  # create a new SCDataset from an existing TileDB group
-  scdataset2 <- SCDataset$new(uri = tdb_uri, verbose = TRUE)
-  expect_true(inherits(scdataset2, "SCDataset"))
-  expect_true(inherits(scdataset2$members$RNA, "SCGroup"))
-  expect_false(inherits(scdataset2$members$misc, "SCGroup"))
-  expect_true(inherits(scdataset2$members$misc, "TileDBGroup"))
+  # create a new SOMACollection from an existing TileDB group
+  soco2 <- SOMACollection$new(uri = tdb_uri, verbose = TRUE)
+  expect_true(inherits(soco2, "SOMACollection"))
+  expect_true(inherits(soco2$members$RNA, "SOMA"))
+  expect_false(inherits(soco2$members$misc, "SOMA"))
+  expect_true(inherits(soco2$members$misc, "TileDBGroup"))
 
   # check for auxiliary arrays
-  scgroup <- scdataset2$get_member("RNA")
+  soma <- soco2$get_member("RNA")
 
-  expect_equal(scgroup$obsm$count_members(), 2)
-  expect_equal(scgroup$varm$count_members(), 1)
-  expect_equal(scgroup$obsp$count_members(), 1)
+  expect_equal(soma$obsm$count_members(), 2)
+  expect_equal(soma$varm$count_members(), 1)
+  expect_equal(soma$obsp$count_members(), 1)
 
   # validate restored aux data
-  pbmc_small2 <- scdataset2$to_seurat()
+  pbmc_small2 <- soco2$to_seurat()
 
   reductions <- SeuratObject::Reductions(pbmc_small)
   for (r in reductions) {
@@ -78,9 +78,9 @@ test_that("SCDataset can be created from a Seurat object", {
   expect_identical(command_names, command_names2)
 
   # calling from_seurat again will update the existing data
-  scdataset2$from_seurat(pbmc_small)
+  soco2$from_seurat(pbmc_small)
   expect_identical(
-    scdataset2$scgroups$RNA$obs$fragment_count(),
+    soco2$somas$RNA$obs$fragment_count(),
     2
   )
 })
@@ -95,12 +95,12 @@ test_that("a dataset containing an assay with empty cells is fully retrieved", {
   counts2[, 1:10] <- 0
   pbmc_small[["RNA2"]] <- SeuratObject::CreateAssayObject(counts = counts2)
 
-  scdataset <- SCDataset$new(uri, verbose = FALSE)
-  scdataset$from_seurat(pbmc_small)
+  soco <- SOMACollection$new(uri, verbose = FALSE)
+  soco$from_seurat(pbmc_small)
 
   # Should not trigger error:
   # Cannot add a different number of cells than already present
-  expect_silent(scdataset$to_seurat())
+  expect_silent(soco$to_seurat())
 })
 
 test_that("a dataset with empty cell identities is retrieved", {
@@ -112,9 +112,9 @@ test_that("a dataset with empty cell identities is retrieved", {
   # verify identities is unset
   testthat::expect_length(nlevels(SeuratObject::Idents(assay_counts)), 1L)
 
-  scdataset <- SCDataset$new(uri, verbose = FALSE)
-  scdataset$from_seurat(assay_counts)
+  soco <- SOMACollection$new(uri, verbose = FALSE)
+  soco$from_seurat(assay_counts)
 
   # Should not trigger error
-  expect_silent(scdataset$to_seurat())
+  expect_silent(soco$to_seurat())
 })

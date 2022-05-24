@@ -8,7 +8,7 @@ Base class for 2D sparse \code{matrix}-like data with string dimensions. An
 \code{AssayMatrix} may contain one or more "layers" (i.e., additional measurements
 that share the same dimensions and non-empty coordinates.
 
-Used for the \code{X} field of \code{\link{SCGroup}}.
+Used for the \code{X} field of \code{\link{SOMA}}.
 }
 \section{Super classes}{
 \code{\link[tiledbsc:TileDBArray]{tiledbsc::TileDBArray}} -> \code{\link[tiledbsc:AnnotationArray]{tiledbsc::AnnotationArray}} -> \code{AssayMatrix}

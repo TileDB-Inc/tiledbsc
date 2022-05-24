@@ -1,23 +1,23 @@
 test_that("graph data can be stored and retrieved", {
-  uri <- withr::local_tempdir("test-scgroup-graph")
-  scgroup <- SCGroup$new(uri = uri)
+  uri <- withr::local_tempdir("test-soma-graph")
+  soma <- SOMA$new(uri = uri)
 
-  scgroup$from_seurat_assay(pbmc_small[["RNA"]], obs = pbmc_small[[]])
+  soma$from_seurat_assay(pbmc_small[["RNA"]], obs = pbmc_small[[]])
 
   # obsp/varp are empty
-  expect_length(scgroup$obsp$arrays, 0L)
-  expect_length(scgroup$varp$arrays, 0L)
+  expect_length(soma$obsp$arrays, 0L)
+  expect_length(soma$varp$arrays, 0L)
 
   graph1 <- SeuratObject::Graphs(pbmc_small, slot = "RNA_snn")
-  scgroup$obsp$add_seurat_graph(graph1, technique = "snn")
+  soma$obsp$add_seurat_graph(graph1, technique = "snn")
 
   # obsp/varp are discovered
-  scgroup2 <- SCGroup$new(uri = uri)
-  expect_length(scgroup2$obsp$members, 1L)
-  expect_length(scgroup2$varp$members, 0L)
+  soma2 <- SOMA$new(uri = uri)
+  expect_length(soma2$obsp$members, 1L)
+  expect_length(soma2$varp$members, 0L)
 
   # validate recreated graph
-  graph2 <- scgroup2$obsp$members$graph_snn$to_seurat_graph()
+  graph2 <- soma2$obsp$members$graph_snn$to_seurat_graph()
   expect_identical(
     SeuratObject::DefaultAssay(graph2),
     SeuratObject::DefaultAssay(graph1)

@@ -1,7 +1,7 @@
 #' Single-cell Annotation Data Frame
 #'
 #' Base class for data frames with rows aligned to the observations or features
-#' of an [`SCGroup`]. Used to store a heterogeneous collection of
+#' of a [`SOMA`]. Used to store a heterogeneous collection of
 #' annotations/measurements.
 #' @export
 
