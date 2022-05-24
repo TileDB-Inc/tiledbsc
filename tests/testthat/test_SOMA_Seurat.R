@@ -15,7 +15,7 @@ test_that("SOMA object can be created from a Seurat assay", {
   # should fail if not provided a Seurat assay
   expect_error(
     soma$from_seurat_assay(pbmc_small),
-    "SOMAs must be created from a Seurat Assay"
+    "A SOMA must be created from a Seurat Assay"
   )
 
   soma$from_seurat_assay(assay1, obs = pbmc_small[[]])

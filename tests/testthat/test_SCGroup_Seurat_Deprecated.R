@@ -25,7 +25,7 @@ test_that("SCGroup object can be created from a Seurat assay", {
 
   expect_error(
     scgroup$from_seurat_assay(pbmc_small),
-    "SOMAs must be created from a Seurat Assay"
+    "A SOMA must be created from a Seurat Assay"
   )
 
   scgroup$from_seurat_assay(assay1, obs = pbmc_small[[]])
