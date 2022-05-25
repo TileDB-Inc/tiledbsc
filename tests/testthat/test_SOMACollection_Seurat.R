@@ -3,13 +3,13 @@ test_that("SOMACollection can be created from a Seurat object", {
   soco <- SOMACollection$new(uri = tdb_uri, verbose = TRUE)
   expect_true(inherits(soco, "SOMACollection"))
 
-  # misc is created by default
+  # uns is created by default
   expect_equal(soco$count_members(), 1L)
-  expect_equal(soco$list_members()$NAME, "misc")
+  expect_equal(soco$list_members()$NAME, "uns")
 
   soco$from_seurat(pbmc_small)
   expect_true(inherits(soco$members$RNA, "SOMA"))
-  expect_true(inherits(soco$members$misc, "TileDBGroup"))
+  expect_true(inherits(soco$members$uns, "TileDBGroup"))
   expect_mapequal(soco$somas, soco$members["RNA"])
 
   # check for dimensionality reduction results
@@ -32,8 +32,8 @@ test_that("SOMACollection can be created from a Seurat object", {
   soco2 <- SOMACollection$new(uri = tdb_uri, verbose = TRUE)
   expect_true(inherits(soco2, "SOMACollection"))
   expect_true(inherits(soco2$members$RNA, "SOMA"))
-  expect_false(inherits(soco2$members$misc, "SOMA"))
-  expect_true(inherits(soco2$members$misc, "TileDBGroup"))
+  expect_false(inherits(soco2$members$uns, "SOMA"))
+  expect_true(inherits(soco2$members$uns, "TileDBGroup"))
 
   # check for auxiliary arrays
   soma <- soco2$get_member("RNA")

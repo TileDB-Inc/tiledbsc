@@ -20,7 +20,7 @@ test_that("SCGroup object can be created from a Seurat assay", {
   expect_equal(scgroup$count_members(), 6L)
   expect_setequal(
     scgroup$list_members()$NAME,
-    c("X", "obsm", "varm", "obsp", "varp", "misc")
+    c("X", "obsm", "varm", "obsp", "varp", "uns")
   )
 
   expect_error(
@@ -38,7 +38,7 @@ test_that("SCGroup object can be created from a Seurat assay", {
   expect_true(inherits(scgroup$varm, "AnnotationMatrixGroup"))
   expect_true(inherits(scgroup$obsp, "AnnotationPairwiseMatrixGroup"))
   expect_true(inherits(scgroup$varp, "AnnotationPairwiseMatrixGroup"))
-  expect_true(inherits(scgroup$misc, "TileDBGroup"))
+  expect_true(inherits(scgroup$uns, "TileDBGroup"))
 
   # AnnotationGroup dimensions
   expect_equal(scgroup$X$dimension_name, c("var_id", "obs_id"))
@@ -63,7 +63,7 @@ test_that("Seurat Assay can be recreated from an existing SCGroup", {
   expect_true(inherits(scgroup$varm, "AnnotationMatrixGroup"))
   expect_true(inherits(scgroup$obsp, "AnnotationPairwiseMatrixGroup"))
   expect_true(inherits(scgroup$varp, "AnnotationPairwiseMatrixGroup"))
-  expect_true(inherits(scgroup$misc, "TileDBGroup"))
+  expect_true(inherits(scgroup$uns, "TileDBGroup"))
 
   # AnnotationGroup dimensions are restored
   expect_equal(scgroup$X$dimension_name, c("var_id", "obs_id"))

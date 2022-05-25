@@ -34,8 +34,8 @@ SOMA <- R6::R6Class(
     obsp = list(),
     #' @field varp named list of [`AnnotationPairwiseMatrix`] objects aligned with `var`
     varp = list(),
-    #' @field misc Named list of miscellaneous objects.
-    misc = list(),
+    #' @field uns Named list of unstructured objects.
+    uns = list(),
 
     #' @description Create a new SOMA. The existing array group is
     #'   opened at the specified array `uri` if one is present, otherwise a new
@@ -127,14 +127,14 @@ SOMA <- R6::R6Class(
       }
       self$varp$dimension_name <- "var_id"
 
-      if ("misc" %in% names(self$members)) {
-        self$misc <- self$get_member("misc")
+      if ("uns" %in% names(self$members)) {
+        self$uns <- self$get_member("uns")
       } else {
-        self$misc <- TileDBGroup$new(
-          uri = file_path(self$uri, "misc"),
+        self$uns <- TileDBGroup$new(
+          uri = file_path(self$uri, "uns"),
           verbose = self$verbose
         )
-        self$add_member(self$misc, name = "misc")
+        self$add_member(self$uns, name = "uns")
       }
     },
 

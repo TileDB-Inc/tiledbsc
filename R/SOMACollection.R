@@ -10,8 +10,8 @@ SOMACollection <- R6::R6Class(
   inherit = TileDBGroup,
 
   public = list(
-    #' @field misc Named list of miscellaneous objects.
-    misc = list(),
+    #' @field uns Named list of unstructured objects.
+    uns = list(),
 
     #' @description Create a new `SOMACollection`. The existing TileDB group is
     #'   opened at the specified array `uri` if one is present, otherwise a new
@@ -27,20 +27,20 @@ SOMACollection <- R6::R6Class(
     initialize = function(uri, verbose = TRUE, config = NULL, ctx = NULL) {
       super$initialize(uri, verbose, config, ctx)
 
-      if ("misc" %in% names(self$members)) {
-        self$misc <- self$get_member("misc")
+      if ("uns" %in% names(self$members)) {
+        self$uns <- self$get_member("uns")
       } else {
-        self$misc <- TileDBGroup$new(
-          uri = file_path(self$uri, "misc"),
+        self$uns <- TileDBGroup$new(
+          uri = file_path(self$uri, "uns"),
           verbose = self$verbose
         )
-        self$add_member(self$misc, name = "misc")
+        self$add_member(self$uns, name = "uns")
       }
 
       # Special handling of Seurat commands array
-      if ("commands" %in% names(self$misc$members)) {
-        self$misc$members$commands <- CommandsArray$new(
-          uri = self$misc$members$commands$uri,
+      if ("commands" %in% names(self$uns$members)) {
+        self$uns$members$commands <- CommandsArray$new(
+          uri = self$uns$members$commands$uri,
           verbose = self$verbose
         )
       }
@@ -127,12 +127,12 @@ SOMACollection <- R6::R6Class(
         names(namedListOfCommands) <- commandNames
 
         commandsArray <- CommandsArray$new(
-          uri = file_path(self$misc$uri, "commands"),
+          uri = file_path(self$uns$uri, "commands"),
           verbose = self$verbose
         )
         commandsArray$from_named_list_of_commands(namedListOfCommands)
-        if (is.null(self$misc$members$commands)) {
-          self$misc$add_member(commandsArray, name = "commands")
+        if (is.null(self$uns$members$commands)) {
+          self$uns$add_member(commandsArray, name = "commands")
         }
       }
 
@@ -201,8 +201,8 @@ SOMACollection <- R6::R6Class(
       }
 
       # command history
-      if ("commands" %in% names(self$misc$members)) {
-        commands_array <- self$misc$get_member("commands")
+      if ("commands" %in% names(self$uns$members)) {
+        commands_array <- self$uns$get_member("commands")
         object@commands <- commands_array$to_named_list_of_commands()
       }
 
@@ -230,16 +230,16 @@ SOMACollection <- R6::R6Class(
 
     instantiate_members = function() {
 
-      # with the exception of 'misc' all members should be SOMA objects
+      # with the exception of 'uns' all members should be SOMA objects
       # TODO: Use group metadata to indicate each member's class
       member_uris <- self$list_member_uris()
-      misc_uri <- member_uris[names(member_uris) == "misc"]
-      soma_uris <- member_uris[names(member_uris) != "misc"]
+      uns_uri <- member_uris[names(member_uris) == "uns"]
+      soma_uris <- member_uris[names(member_uris) != "uns"]
       names(soma_uris) <- sub("soma_", "", names(soma_uris), fixed = TRUE)
 
       c(
         lapply(soma_uris, SOMA$new, verbose = self$verbose, config = self$config, ctx = self$context),
-        lapply(misc_uri, TileDBGroup$new, verbose = self$verbose, config = self$config, ctx = self$context)
+        lapply(uns_uri, TileDBGroup$new, verbose = self$verbose, config = self$config, ctx = self$context)
       )
     }
   )
