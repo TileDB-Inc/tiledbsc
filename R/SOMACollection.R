@@ -297,12 +297,15 @@ SCDataset <- R6::R6Class(
       if (!missing(value)) {
         stop("scgroups is read-only, use 'add_member()' to add a new SOMA")
       }
-      .Deprecated(
-        new = "somas",
-        old = "scgroups",
-        package = "tiledbsc"
-      )
+      .Deprecated(new = "somas", old = "scgroups", package = "tiledbsc")
       self$somas
+    },
+
+    #' @field misc An alias for `uns`.
+    misc = function(value) {
+      if (!missing(value)) stop("misc is read-only")
+      .Deprecated(new = "uns", old = "misc", package = "tiledbsc")
+      self$uns
     }
   )
 )

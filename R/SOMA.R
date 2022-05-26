@@ -720,5 +720,14 @@ SCGroup <- R6::R6Class(
       )
       super$initialize(uri, verbose, config, ctx)
     }
+  ),
+
+  active = list(
+    #' @field misc An alias for `uns`.
+    misc = function(value) {
+      if (!missing(value)) stop("misc is read-only")
+      .Deprecated(new = "uns", old = "misc", package = "tiledbsc")
+      self$uns
+    }
   )
 )
