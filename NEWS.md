@@ -2,6 +2,8 @@
 
 This release changes the names of the 2 top-level classes in the tiledbsc package to follow new nomenclature adopted by the [single-cell data model specification](https://github.com/single-cell-data/matrix-api/blob/main/specification.md), which was implemented [here](https://github.com/single-cell-data/matrix-api/pull/28). You can read more about the rationale for this change [here](https://github.com/single-cell-data/matrix-api/issues/11#issuecomment-1109975498).
 
+Additionally, the `misc` slot has been renamed to `uns`. See below for details.
+
 ## New class names
 
 - `SCGroup` is replaced by `SOMA` (stack of matrices, annotated)
@@ -13,6 +15,14 @@ There are no functional changes to either class. `SOMA` is a drop-in replacement
 - `scgroup_uris()` is now `soma_uris()`
 
 To ease the transition, the `SCDataset` and `SCGroup` classes are still available as aliases for `SOMACollection` and `SOMA`, respectively. However, they have been deprecated and will be removed in the future.
+
+## New location for miscellaneous/unstructured data
+
+Previously, the `SCDataset` and `SCGroup` classes included a TileDB group called `misc` that was intended for miscellaneous/unstructured data. To better align with the SOMA matrix-api specification this group has been renamed to `uns`. Practically, this means new `SOMA`s and `SOMACollection`s will create TileDB groups named `uns`, rather than `misc`. And these groups can be accessed with the `SOMA` and `SOMACollection` classes using `SOMA$uns`.
+
+For backwards compatibility:
+- if a `misc` group exists within a `SOMACollection` or `SOMA` on disk, it will be accessible via the `uns` field of the parent class
+- the deprecated `SCDataset` and `SCGroup` will continue to provide a `misc` field (actually an active binding that aliases the `uns` slot) so users can continue to use the old name
 
 # tiledbsc 0.1.2
 
