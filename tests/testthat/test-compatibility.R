@@ -1,20 +1,26 @@
-test_that("compatibility is maintained with SCDataset created using v0.1.2", {
-  uri <<- testthat::test_path("test-data/scdataset-pbmc-small_0-1-2")
+test_that("compatibility is maintained with v0.1.2 SCDataset", {
+  uri <- testthat::test_path("test-data/scdataset-pbmc-small_0-1-2")
   expect_warning(
-    scdataset <- SCDataset$new(uri, verbose = TRUE)
+    scdataset <- SCDataset$new(uri, verbose = FALSE)
   )
   expect_true(inherits(scdataset, "SCDataset"))
 
-  pbmc_small2 <- scdataset$to_seurat()
+  # verify uns wasn't created in the presence of an existing misc group
+  expect_false(dir.exists(file.path(scdataset$uri, "uns")))
 
-  # commands recovered from misc
+  # verify misc group contains only a single array
   expect_identical(
-    SeuratObject::Command(object = pbmc_small2),
-    SeuratObject::Command(object = pbmc_small)
+    suppressWarnings(scdataset$misc$count_members()),
+    1
   )
 
-  # obs dataframe manually added to the SCGroup misc group is present
-  expect_identical(scdataset$members$RNA$misc$count_members(), 1)
+  # misc is an alias for uns
+  expect_identical(
+    suppressWarnings(scdataset$misc$uri),
+    scdataset$uns$uri
+  )
+
+  expect_silent(pbmc_small2 <- scdataset$to_seurat())
 })
 
 test_that("compatibility is maintained with v0.1.2 SCGroup", {
