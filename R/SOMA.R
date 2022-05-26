@@ -612,6 +612,12 @@ SOMA <- R6::R6Class(
       members <- self$list_members()
       named_uris <- setNames(members$URI, members$NAME)
 
+      # TODO: Remove when SCDataset/SCGroup/misc is defunct
+      # Rename misc to uns if it exists for backwards compatibility
+      if ("misc" %in% names(named_uris)) {
+        named_uris <- rename(named_uris, c(uns = "misc"))
+      }
+
       # fallback generators for members not covered by the SOMA schema
       fallback_generators <- lapply(
         members$TYPE,
