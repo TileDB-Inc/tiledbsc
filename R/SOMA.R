@@ -127,15 +127,23 @@ SOMA <- R6::R6Class(
       }
       self$varp$dimension_name <- "var_id"
 
-      if ("uns" %in% names(self$members)) {
-        self$uns <- self$get_member("uns")
+      # For compatibility with SCGroups created with <=0.1.2 we look for a misc
+      # directory first and treat it as uns
+      if ("misc" %in% names(self$members)) {
+        warning("Found deprecated 'misc' directory in SOMA.")
+        self$uns <- self$get_member("misc")
       } else {
-        self$uns <- TileDBGroup$new(
-          uri = file_path(self$uri, "uns"),
-          verbose = self$verbose
-        )
-        self$add_member(self$uns, name = "uns")
+        if ("uns" %in% names(self$members)) {
+          self$uns <- self$get_member("uns")
+        } else {
+          self$uns <- TileDBGroup$new(
+            uri = file_path(self$uri, "uns"),
+            verbose = self$verbose
+          )
+          self$add_member(self$uns, name = "uns")
+        }
       }
+
     },
 
     #' @description Convert a Seurat Assay to a TileDB-backed sc_group.

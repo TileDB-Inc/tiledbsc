@@ -27,14 +27,21 @@ SOMACollection <- R6::R6Class(
     initialize = function(uri, verbose = TRUE, config = NULL, ctx = NULL) {
       super$initialize(uri, verbose, config, ctx)
 
-      if ("uns" %in% names(self$members)) {
-        self$uns <- self$get_member("uns")
+      # For compatibility with SCDatasets created with <=0.1.2 we look for a
+      # misc directory first and treat it as uns
+      if ("misc" %in% names(self$members)) {
+        warning("Found deprecated 'misc' directory in SOMACollection.")
+        self$uns <- self$get_member("misc")
       } else {
-        self$uns <- TileDBGroup$new(
-          uri = file_path(self$uri, "uns"),
-          verbose = self$verbose
-        )
-        self$add_member(self$uns, name = "uns")
+        if ("uns" %in% names(self$members)) {
+          self$uns <- self$get_member("uns")
+        } else {
+          self$uns <- TileDBGroup$new(
+            uri = file_path(self$uri, "uns"),
+            verbose = self$verbose
+          )
+          self$add_member(self$uns, name = "uns")
+        }
       }
 
       # Special handling of Seurat commands array
