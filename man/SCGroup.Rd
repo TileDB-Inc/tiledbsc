@@ -10,6 +10,13 @@ renamed to \code{\link{SOMA}}.
 \section{Super classes}{
 \code{\link[tiledbsc:TileDBGroup]{tiledbsc::TileDBGroup}} -> \code{\link[tiledbsc:SOMA]{tiledbsc::SOMA}} -> \code{SCGroup}
 }
+\section{Active bindings}{
+\if{html}{\out{<div class="r6-active-bindings">}}
+\describe{
+\item{\code{misc}}{An alias for \code{uns}.}
+}
+\if{html}{\out{</div>}}
+}
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{

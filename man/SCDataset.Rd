@@ -14,6 +14,8 @@ renamed to \code{\link{SOMACollection}}.
 \if{html}{\out{<div class="r6-active-bindings">}}
 \describe{
 \item{\code{scgroups}}{Retrieve the \code{\link{SOMA}} (formerly \code{SCGroup}) members.}
+
+\item{\code{misc}}{An alias for \code{uns}.}
 }
 \if{html}{\out{</div>}}
 }

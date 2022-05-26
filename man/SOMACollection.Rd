@@ -13,7 +13,7 @@ Class for representing a \code{SOMACollection}, which may contain of one or more
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
-\item{\code{misc}}{Named list of miscellaneous objects.}
+\item{\code{uns}}{Named list of unstructured objects.}
 }
 \if{html}{\out{</div>}}
 }
