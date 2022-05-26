@@ -240,9 +240,15 @@ SOMACollection <- R6::R6Class(
       # with the exception of 'uns' all members should be SOMA objects
       # TODO: Use group metadata to indicate each member's class
       member_uris <- self$list_member_uris()
+
+      # TODO: Remove misc check when SCDatasets/SCGroups/misc are defunct
+      if ("misc" %in% names(member_uris)) {
+        member_uris <- rename(member_uris, c(uns = "misc"))
+      }
+
       uns_uri <- member_uris[names(member_uris) == "uns"]
       soma_uris <- member_uris[names(member_uris) != "uns"]
-      names(soma_uris) <- sub("soma_", "", names(soma_uris), fixed = TRUE)
+      names(soma_uris) <- sub("^(scgroup|soma)_", "", names(soma_uris))
 
       c(
         lapply(soma_uris, SOMA$new, verbose = self$verbose, config = self$config, ctx = self$context),
