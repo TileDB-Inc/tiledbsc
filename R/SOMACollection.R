@@ -250,8 +250,15 @@ SOMACollection <- R6::R6Class(
       soma_uris <- member_uris[names(member_uris) != "uns"]
       names(soma_uris) <- sub("^(scgroup|soma)_", "", names(soma_uris))
 
+      # TODO: Remove this switch when SCDatasets/SCGroups/misc are defunct
+      if (self$class() == "SCDataset") {
+        SOMAClass <- SCGroup
+      } else {
+        SOMAClass <- SOMA
+      }
+
       c(
-        lapply(soma_uris, SOMA$new, verbose = self$verbose, config = self$config, ctx = self$context),
+        lapply(soma_uris, SOMAClass$new, verbose = self$verbose, config = self$config, ctx = self$context),
         lapply(uns_uri, TileDBGroup$new, verbose = self$verbose, config = self$config, ctx = self$context)
       )
     }
