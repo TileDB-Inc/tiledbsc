@@ -1,7 +1,21 @@
+setup({
+  zipfile <- testthat::test_path("test-data/scdataset-pbmc-small_0-1-2.zip")
+  unzip(zipfile, exdir = tempdir())
+  scdataset_uri <<- file.path(
+    tempdir(),
+    "tests/testthat/test-data",
+    sub("\\.zip$", "", basename(zipfile))
+  )
+})
+
+teardown({
+  unlink(scdataset_uri, recursive = TRUE)
+})
+
 test_that("compatibility is maintained with v0.1.2 SCDataset", {
-  uri <- testthat::test_path("test-data/scdataset-pbmc-small_0-1-2")
+
   expect_warning(
-    scdataset <- SCDataset$new(uri, verbose = FALSE)
+    scdataset <- SCDataset$new(scdataset_uri, verbose = FALSE)
   )
   expect_true(inherits(scdataset, "SCDataset"))
 
@@ -33,9 +47,9 @@ test_that("compatibility is maintained with v0.1.2 SCDataset", {
 })
 
 test_that("compatibility is maintained with v0.1.2 SCGroup", {
-  uri <- testthat::test_path("test-data/scdataset-pbmc-small_0-1-2/scgroup_RNA")
+  scgroup_uri <- file.path(scdataset_uri, "scgroup_RNA")
   expect_warning(
-    scgroup <- SCGroup$new(uri, verbose = FALSE)
+    scgroup <- SCGroup$new(scgroup_uri, verbose = FALSE)
   )
   expect_true(inherits(scgroup, "SCGroup"))
 

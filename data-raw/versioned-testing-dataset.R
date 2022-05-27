@@ -32,3 +32,11 @@ obs2_uri <- file.path(scgroup$misc$uri, "RNA_obs")
 fromDataFrame(obj = pbmc_small[[]], uri = obs2_uri)
 obs2 <- TileDBArray$new(obs2_uri)
 scgroup$misc$add_member(obs2, name = "RNA_obs", relative = TRUE)
+
+# zip the entire array to avoid build problems on windows caused by path length
+# limitations we use zip because ?tar warns that known problems arise from
+# handling of file paths of more than 100 bytes
+out <- zip(
+  zipfile = paste0(uri, ".zip"),
+  files = uri
+)
