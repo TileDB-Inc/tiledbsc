@@ -14,6 +14,15 @@ test_that("compatibility is maintained with v0.1.2 SCDataset", {
     1
   )
 
+  # Members are SCGroups, not SOMAs
+  expect_true(inherits(scdataset$members$RNA, "SCGroup"))
+
+  # SCGroup's misc group is accessible via misc
+  expect_identical(
+    suppressWarnings(scdataset$members$RNA$misc),
+    scdataset$members$RNA$uns
+  )
+
   # misc is an alias for uns
   expect_identical(
     suppressWarnings(scdataset$misc$uri),
