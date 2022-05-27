@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tiledbsc</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.2.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.2.9001</span>
       </span>
     </div>
 
@@ -63,6 +63,7 @@
     <div class="section level2">
 <h2 class="page-header" data-toc-text="development version" id="tiledbsc-development-version">tiledbsc (development version)<a class="anchor" aria-label="anchor" href="#tiledbsc-development-version"></a></h2>
 <p>This release changes the names of the 2 top-level classes in the tiledbsc package to follow new nomenclature adopted by the <a href="https://github.com/single-cell-data/matrix-api/blob/main/specification.md" class="external-link">single-cell data model specification</a>, which was implemented <a href="https://github.com/single-cell-data/matrix-api/pull/28" class="external-link">here</a>. You can read more about the rationale for this change <a href="https://github.com/single-cell-data/matrix-api/issues/11#issuecomment-1109975498" class="external-link">here</a>.</p>
+<p>Additionally, the <code>misc</code> slot has been renamed to <code>uns</code>. See below for details.</p>
 <div class="section level3">
 <h3 id="new-class-names-development-version">New class names<a class="anchor" aria-label="anchor" href="#new-class-names-development-version"></a></h3>
 <ul><li>
@@ -77,6 +78,11 @@
 <code>scgroup_uris()</code> is now <code>soma_uris()</code>
 </li>
 </ul><p>To ease the transition, the <code>SCDataset</code> and <code>SCGroup</code> classes are still available as aliases for <code>SOMACollection</code> and <code>SOMA</code>, respectively. However, they have been deprecated and will be removed in the future.</p>
+</div>
+<div class="section level3">
+<h3 id="new-location-for-miscellaneousunstructured-data-development-version">New location for miscellaneous/unstructured data<a class="anchor" aria-label="anchor" href="#new-location-for-miscellaneousunstructured-data-development-version"></a></h3>
+<p>Previously, the <code>SCDataset</code> and <code>SCGroup</code> classes included a TileDB group called <code>misc</code> that was intended for miscellaneous/unstructured data. To better align with the SOMA matrix-api specification this group has been renamed to <code>uns</code>. Practically, this means new <code>SOMA</code>s and <code>SOMACollection</code>s will create TileDB groups named <code>uns</code>, rather than <code>misc</code>. And these groups can be accessed with the <code>SOMA</code> and <code>SOMACollection</code> classes using <code>SOMA$uns</code>.</p>
+<p>For backwards compatibility: - if a <code>misc</code> group exists within a <code>SOMACollection</code> or <code>SOMA</code> on disk, it will be accessible via the <code>uns</code> field of the parent class - the deprecated <code>SCDataset</code> and <code>SCGroup</code> will continue to provide a <code>misc</code> field (actually an active binding that aliases the <code>uns</code> slot) so users can continue to use the old name</p>
 </div>
 </div>
     <div class="section level2">
