@@ -252,13 +252,25 @@ SOMACollection <- R6::R6Class(
 
       # TODO: Remove this switch when SCDatasets/SCGroups/misc are defunct
       if (self$class() == "SCDataset") {
-        SOMAClass <- SCGroup
+        somas <- suppressWarnings(lapply(
+          X = soma_uris,
+          FUN = SCGroup$new,
+          verbose = self$verbose,
+          config = self$config,
+          ctx = self$context
+        ))
       } else {
-        SOMAClass <- SOMA
+        somas <- lapply(
+          X = soma_uris,
+          FUN = SOMA$new,
+          verbose = self$verbose,
+          config = self$config,
+          ctx = self$context
+        )
       }
 
       c(
-        lapply(soma_uris, SOMAClass$new, verbose = self$verbose, config = self$config, ctx = self$context),
+        somas,
         lapply(uns_uri, TileDBGroup$new, verbose = self$verbose, config = self$config, ctx = self$context)
       )
     }
