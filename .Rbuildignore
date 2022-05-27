@@ -8,3 +8,4 @@
 ^.devcontainer
 ^LICENSE\.md$
 ^\.github$
+^data-raw$

@@ -28,7 +28,7 @@ test_that("SOMA object can be created from a Seurat assay", {
   expect_true(inherits(soma$varm, "AnnotationMatrixGroup"))
   expect_true(inherits(soma$obsp, "AnnotationPairwiseMatrixGroup"))
   expect_true(inherits(soma$varp, "AnnotationPairwiseMatrixGroup"))
-  expect_true(inherits(soma$misc, "TileDBGroup"))
+  expect_true(inherits(soma$uns, "TileDBGroup"))
 
   # AnnotationGroup dimensions
   expect_equal(soma$X$dimension_name, c("var_id", "obs_id"))
@@ -49,7 +49,7 @@ test_that("Seurat Assay can be recreated from an existing SOMA", {
   expect_true(inherits(soma$varm, "AnnotationMatrixGroup"))
   expect_true(inherits(soma$obsp, "AnnotationPairwiseMatrixGroup"))
   expect_true(inherits(soma$varp, "AnnotationPairwiseMatrixGroup"))
-  expect_true(inherits(soma$misc, "TileDBGroup"))
+  expect_true(inherits(soma$uns, "TileDBGroup"))
 
   # AnnotationGroup dimensions are restored
   expect_equal(soma$X$dimension_name, c("var_id", "obs_id"))

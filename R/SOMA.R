@@ -34,8 +34,8 @@ SOMA <- R6::R6Class(
     obsp = list(),
     #' @field varp named list of [`AnnotationPairwiseMatrix`] objects aligned with `var`
     varp = list(),
-    #' @field misc Named list of miscellaneous objects.
-    misc = list(),
+    #' @field uns Named list of unstructured objects.
+    uns = list(),
 
     #' @description Create a new SOMA. The existing array group is
     #'   opened at the specified array `uri` if one is present, otherwise a new
@@ -127,15 +127,23 @@ SOMA <- R6::R6Class(
       }
       self$varp$dimension_name <- "var_id"
 
+      # For compatibility with SCGroups created with <=0.1.2 we look for a misc
+      # directory first and treat it as uns
       if ("misc" %in% names(self$members)) {
-        self$misc <- self$get_member("misc")
+        warning("Found deprecated 'misc' directory in SOMA.")
+        self$uns <- self$get_member("misc")
       } else {
-        self$misc <- TileDBGroup$new(
-          uri = file_path(self$uri, "misc"),
-          verbose = self$verbose
-        )
-        self$add_member(self$misc, name = "misc")
+        if ("uns" %in% names(self$members)) {
+          self$uns <- self$get_member("uns")
+        } else {
+          self$uns <- TileDBGroup$new(
+            uri = file_path(self$uri, "uns"),
+            verbose = self$verbose
+          )
+          self$add_member(self$uns, name = "uns")
+        }
       }
+
     },
 
     #' @description Convert a Seurat Assay to a TileDB-backed sc_group.
@@ -604,6 +612,12 @@ SOMA <- R6::R6Class(
       members <- self$list_members()
       named_uris <- setNames(members$URI, members$NAME)
 
+      # TODO: Remove when SCDataset/SCGroup/misc is defunct
+      # Rename misc to uns if it exists for backwards compatibility
+      if ("misc" %in% names(named_uris)) {
+        named_uris <- rename(named_uris, c(uns = "misc"))
+      }
+
       # fallback generators for members not covered by the SOMA schema
       fallback_generators <- lapply(
         members$TYPE,
@@ -711,6 +725,15 @@ SCGroup <- R6::R6Class(
         package = "tiledbsc"
       )
       super$initialize(uri, verbose, config, ctx)
+    }
+  ),
+
+  active = list(
+    #' @field misc An alias for `uns`.
+    misc = function(value) {
+      if (!missing(value)) stop("misc is read-only")
+      .Deprecated(new = "uns", old = "misc", package = "tiledbsc")
+      self$uns
     }
   )
 )

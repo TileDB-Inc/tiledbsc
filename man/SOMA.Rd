@@ -38,7 +38,7 @@ dimensions of the \code{obs} and \code{var} arrays, respectively.}
 
 \item{\code{varp}}{named list of \code{\link{AnnotationPairwiseMatrix}} objects aligned with \code{var}}
 
-\item{\code{misc}}{Named list of miscellaneous objects.}
+\item{\code{uns}}{Named list of unstructured objects.}
 }
 \if{html}{\out{</div>}}
 }

@@ -7,13 +7,13 @@ test_that("SCDataset can be created from a Seurat object", {
   )
   expect_true(inherits(scdataset, "SCDataset"))
 
-  # misc is created by default
+  # uns is created by default
   expect_equal(scdataset$count_members(), 1L)
-  expect_equal(scdataset$list_members()$NAME, "misc")
+  expect_equal(scdataset$list_members()$NAME, "uns")
 
   scdataset$from_seurat(pbmc_small)
   expect_true(inherits(scdataset$members$RNA, "SOMA"))
-  expect_true(inherits(scdataset$members$misc, "TileDBGroup"))
+  expect_true(inherits(scdataset$members$uns, "TileDBGroup"))
   expect_warning(scdataset$scgroups, "'scgroups' is deprecated")
   expect_mapequal(
     suppressWarnings(scdataset$scgroups),
@@ -43,8 +43,8 @@ test_that("SCDataset can be created from a Seurat object", {
   )
   expect_true(inherits(scdataset2, "SCDataset"))
   expect_true(inherits(scdataset2$members$RNA, "SOMA"))
-  expect_false(inherits(scdataset2$members$misc, "SOMA"))
-  expect_true(inherits(scdataset2$members$misc, "TileDBGroup"))
+  expect_false(inherits(scdataset2$members$uns, "SOMA"))
+  expect_true(inherits(scdataset2$members$uns, "TileDBGroup"))
 
   # check for auxiliary arrays
   scgroup <- scdataset2$get_member("RNA")

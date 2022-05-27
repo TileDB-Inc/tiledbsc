@@ -10,8 +10,8 @@ SOMACollection <- R6::R6Class(
   inherit = TileDBGroup,
 
   public = list(
-    #' @field misc Named list of miscellaneous objects.
-    misc = list(),
+    #' @field uns Named list of unstructured objects.
+    uns = list(),
 
     #' @description Create a new `SOMACollection`. The existing TileDB group is
     #'   opened at the specified array `uri` if one is present, otherwise a new
@@ -27,20 +27,27 @@ SOMACollection <- R6::R6Class(
     initialize = function(uri, verbose = TRUE, config = NULL, ctx = NULL) {
       super$initialize(uri, verbose, config, ctx)
 
+      # For compatibility with SCDatasets created with <=0.1.2 we look for a
+      # misc directory first and treat it as uns
       if ("misc" %in% names(self$members)) {
-        self$misc <- self$get_member("misc")
+        warning("Found deprecated 'misc' directory in SOMACollection.")
+        self$uns <- self$get_member("misc")
       } else {
-        self$misc <- TileDBGroup$new(
-          uri = file_path(self$uri, "misc"),
-          verbose = self$verbose
-        )
-        self$add_member(self$misc, name = "misc")
+        if ("uns" %in% names(self$members)) {
+          self$uns <- self$get_member("uns")
+        } else {
+          self$uns <- TileDBGroup$new(
+            uri = file_path(self$uri, "uns"),
+            verbose = self$verbose
+          )
+          self$add_member(self$uns, name = "uns")
+        }
       }
 
       # Special handling of Seurat commands array
-      if ("commands" %in% names(self$misc$members)) {
-        self$misc$members$commands <- CommandsArray$new(
-          uri = self$misc$members$commands$uri,
+      if ("commands" %in% names(self$uns$members)) {
+        self$uns$members$commands <- CommandsArray$new(
+          uri = self$uns$members$commands$uri,
           verbose = self$verbose
         )
       }
@@ -127,12 +134,12 @@ SOMACollection <- R6::R6Class(
         names(namedListOfCommands) <- commandNames
 
         commandsArray <- CommandsArray$new(
-          uri = file_path(self$misc$uri, "commands"),
+          uri = file_path(self$uns$uri, "commands"),
           verbose = self$verbose
         )
         commandsArray$from_named_list_of_commands(namedListOfCommands)
-        if (is.null(self$misc$members$commands)) {
-          self$misc$add_member(commandsArray, name = "commands")
+        if (is.null(self$uns$members$commands)) {
+          self$uns$add_member(commandsArray, name = "commands")
         }
       }
 
@@ -201,8 +208,8 @@ SOMACollection <- R6::R6Class(
       }
 
       # command history
-      if ("commands" %in% names(self$misc$members)) {
-        commands_array <- self$misc$get_member("commands")
+      if ("commands" %in% names(self$uns$members)) {
+        commands_array <- self$uns$get_member("commands")
         object@commands <- commands_array$to_named_list_of_commands()
       }
 
@@ -230,16 +237,41 @@ SOMACollection <- R6::R6Class(
 
     instantiate_members = function() {
 
-      # with the exception of 'misc' all members should be SOMA objects
+      # with the exception of 'uns' all members should be SOMA objects
       # TODO: Use group metadata to indicate each member's class
       member_uris <- self$list_member_uris()
-      misc_uri <- member_uris[names(member_uris) == "misc"]
-      soma_uris <- member_uris[names(member_uris) != "misc"]
-      names(soma_uris) <- sub("soma_", "", names(soma_uris), fixed = TRUE)
+
+      # TODO: Remove misc check when SCDatasets/SCGroups/misc are defunct
+      if ("misc" %in% names(member_uris)) {
+        member_uris <- rename(member_uris, c(uns = "misc"))
+      }
+
+      uns_uri <- member_uris[names(member_uris) == "uns"]
+      soma_uris <- member_uris[names(member_uris) != "uns"]
+      names(soma_uris) <- sub("^(scgroup|soma)_", "", names(soma_uris))
+
+      # TODO: Remove this switch when SCDatasets/SCGroups/misc are defunct
+      if (self$class() == "SCDataset") {
+        somas <- suppressWarnings(lapply(
+          X = soma_uris,
+          FUN = SCGroup$new,
+          verbose = self$verbose,
+          config = self$config,
+          ctx = self$context
+        ))
+      } else {
+        somas <- lapply(
+          X = soma_uris,
+          FUN = SOMA$new,
+          verbose = self$verbose,
+          config = self$config,
+          ctx = self$context
+        )
+      }
 
       c(
-        lapply(soma_uris, SOMA$new, verbose = self$verbose, config = self$config, ctx = self$context),
-        lapply(misc_uri, TileDBGroup$new, verbose = self$verbose, config = self$config, ctx = self$context)
+        somas,
+        lapply(uns_uri, TileDBGroup$new, verbose = self$verbose, config = self$config, ctx = self$context)
       )
     }
   )
@@ -290,12 +322,15 @@ SCDataset <- R6::R6Class(
       if (!missing(value)) {
         stop("scgroups is read-only, use 'add_member()' to add a new SOMA")
       }
-      .Deprecated(
-        new = "somas",
-        old = "scgroups",
-        package = "tiledbsc"
-      )
+      .Deprecated(new = "somas", old = "scgroups", package = "tiledbsc")
       self$somas
+    },
+
+    #' @field misc An alias for `uns`.
+    misc = function(value) {
+      if (!missing(value)) stop("misc is read-only")
+      .Deprecated(new = "uns", old = "misc", package = "tiledbsc")
+      self$uns
     }
   )
 )
