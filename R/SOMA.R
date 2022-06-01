@@ -382,7 +382,12 @@ SOMA <- R6::R6Class(
       }
 
       assay_key <- SeuratObject::Key(object)
-      self$X$add_metadata(list(key = assay_key))
+      if (identical(assay_key, character(0))) {
+        message("Null assay_key; no metadata found")
+      } else {
+        self$X$add_metadata(list(key = assay_key))
+      }
+
       if (self$verbose) {
         msg <- sprintf(
           "Finished converting Seurat Assay with key [%s] to %s",
