@@ -47,7 +47,10 @@ TileDBGroup <- R6::R6Class(
 
     #' @description Print summary of the group.
     print = function() {
-      private$object_print()
+      super$print()
+      if (self$exists()) {
+        private$format_members()
+      }
     },
 
     #' @description Check if the group exists.
@@ -325,13 +328,6 @@ TileDBGroup <- R6::R6Class(
         if (!is.null(formatted$GROUP)) {
           cat("  groups:", string_collapse(sort(formatted$GROUP)), "\n")
         }
-      }
-    },
-
-    object_print = function() {
-      super$print()
-      if (self$exists()) {
-        private$format_members()
       }
     }
   )

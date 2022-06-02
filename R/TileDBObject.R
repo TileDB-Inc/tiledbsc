@@ -44,7 +44,8 @@ TileDBObject <- R6::R6Class(
 
     #' @description Print summary of the array.
     print = function() {
-      private$object_print()
+      cat("  uri:", self$uri, "\n")
+      cat(glue::glue("<{self$class()}>"), sep = "\n")
     },
 
     #' @description Check if the object exists.
@@ -83,14 +84,6 @@ TileDBObject <- R6::R6Class(
     object = NULL,
 
     # @description Contains TileDBURI object
-    tiledb_uri = NULL,
-
-    # @description Ingest data into the TileDB array.
-    ingest_data = function() return(NULL),
-
-    object_print = function() {
-      cat("  uri:", self$uri, "\n")
-      cat(glue::glue("<{self$class()}>"), sep = "\n")
-    }
+    tiledb_uri = NULL
   )
 )

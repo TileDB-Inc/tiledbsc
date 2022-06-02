@@ -34,7 +34,11 @@ TileDBArray <- R6::R6Class(
 
     #' @description Print summary of the array.
     print = function() {
-      private$object_print()
+      super$print()
+      if (self$exists()) {
+        cat("  dimensions:", string_collapse(self$dimnames()), "\n")
+        cat("  attributes:", string_collapse(self$attrnames()), "\n")
+      }
     },
 
     #' @description Check if the array exists.
@@ -153,14 +157,6 @@ TileDBArray <- R6::R6Class(
     create_empty_array = function() return(NULL),
 
     # @description Ingest data into the TileDB array.
-    ingest_data = function() return(NULL),
-
-    object_print = function() {
-      super$print()
-      if (self$exists()) {
-        cat("  dimensions:", string_collapse(self$dimnames()), "\n")
-        cat("  attributes:", string_collapse(self$attrnames()), "\n")
-      }
-    }
+    ingest_data = function() return(NULL)
   )
 )
