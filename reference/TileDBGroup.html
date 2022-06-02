@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tiledbsc</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.2.9001</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.2.9002</span>
       </span>
     </div>
 
@@ -83,30 +83,14 @@ the specified <code>uri</code>.</p>
 </div>
 
     </div>
+    <div id="super-class">
+    <h2>Super class</h2>
+    <p><code><a href="TileDBObject.html">tiledbsc::TileDBObject</a></code> -&gt; <code>TileDBGroup</code></p>
+    </div>
     <div id="public-fields">
     <h2>Public fields</h2>
     <p></p><div class="r6-fields"><dl><dt><code>members</code></dt>
 <dd><p>Named list of members in the group</p></dd>
-
-
-<dt><code>verbose</code></dt>
-<dd><p>Whether to print verbose output</p></dd>
-
-
-<dt><code>config</code></dt>
-<dd><p>optional config</p></dd>
-
-
-<dt><code>ctx</code></dt>
-<dd><p>optional tiledb context</p></dd>
-
-
-</dl><p></p></div>
-    </div>
-    <div id="active-bindings">
-    <h2>Active bindings</h2>
-    <p></p><div class="r6-active-bindings"><dl><dt><code>uri</code></dt>
-<dd><p>The URI of the TileDB group</p></dd>
 
 
 </dl><p></p></div>
@@ -118,7 +102,6 @@ the specified <code>uri</code>.</p>
 <h3 id="public-methods">Public methods<a class="anchor" aria-label="anchor" href="#public-methods"></a></h3>
 
 <ul><li><p><a href="#method-new"><code>TileDBGroup$new()</code></a></p></li>
-<li><p><a href="#method-class"><code>TileDBGroup$class()</code></a></p></li>
 <li><p><a href="#method-print"><code>TileDBGroup$print()</code></a></p></li>
 <li><p><a href="#method-group_exists"><code>TileDBGroup$group_exists()</code></a></p></li>
 <li><p><a href="#method-tiledb_group"><code>TileDBGroup$tiledb_group()</code></a></p></li>
@@ -133,7 +116,9 @@ the specified <code>uri</code>.</p>
 <li><p><a href="#method-get_metadata"><code>TileDBGroup$get_metadata()</code></a></p></li>
 <li><p><a href="#method-add_metadata"><code>TileDBGroup$add_metadata()</code></a></p></li>
 <li><p><a href="#method-clone"><code>TileDBGroup$clone()</code></a></p></li>
-</ul></div><p></p><hr><a id="method-new"></a><div class="section">
+</ul></div><p><details open><summary>Inherited methods</summary><ul><li><p><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBObject" data-id="class"><a href="TileDBObject.html#method-class"><code>tiledbsc::TileDBObject$class()</code></a></span></p></li>
+<li><p><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBObject" data-id="exists"><a href="TileDBObject.html#method-exists"><code>tiledbsc::TileDBObject$exists()</code></a></span></p></li>
+</ul></details></p><hr><a id="method-new"></a><div class="section">
 <h3 id="method-new-">Method <code>new()</code><a class="anchor" aria-label="anchor" href="#method-new-"></a></h3>
 <p>Create a new TileDBGroup object.</p><div class="section">
 <h4 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a></h4>
@@ -161,18 +146,10 @@ the specified <code>uri</code>.</p>
 </dl><p></p></div>
 </div>
 
-</div><p></p><hr><a id="method-class"></a><div class="section">
-<h3 id="method-class-">Method <code><a href="https://rdrr.io/r/base/class.html" class="external-link">class()</a></code><a class="anchor" aria-label="anchor" href="#method-class-"></a></h3>
-<p>Print the name of the R6 class.</p><div class="section">
-<h4 id="usage-1">Usage<a class="anchor" aria-label="anchor" href="#usage-1"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">TileDBGroup</span><span class="op">$</span><span class="fu">class</span><span class="op">(</span><span class="op">)</span></code></pre></div><p></p></div>
-</div>
-
-
 </div><p></p><hr><a id="method-print"></a><div class="section">
 <h3 id="method-print-">Method <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code><a class="anchor" aria-label="anchor" href="#method-print-"></a></h3>
 <p>Print summary of the group.</p><div class="section">
-<h4 id="usage-2">Usage<a class="anchor" aria-label="anchor" href="#usage-2"></a></h4>
+<h4 id="usage-1">Usage<a class="anchor" aria-label="anchor" href="#usage-1"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">TileDBGroup</span><span class="op">$</span><span class="fu">print</span><span class="op">(</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
@@ -180,7 +157,7 @@ the specified <code>uri</code>.</p>
 </div><p></p><hr><a id="method-group_exists"></a><div class="section">
 <h3 id="method-group-exists-">Method <code>group_exists()</code><a class="anchor" aria-label="anchor" href="#method-group-exists-"></a></h3>
 <p>Check if the group exists.</p><div class="section">
-<h4 id="usage-3">Usage<a class="anchor" aria-label="anchor" href="#usage-3"></a></h4>
+<h4 id="usage-2">Usage<a class="anchor" aria-label="anchor" href="#usage-2"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">TileDBGroup</span><span class="op">$</span><span class="fu">group_exists</span><span class="op">(</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
@@ -192,7 +169,7 @@ the specified <code>uri</code>.</p>
 </div><p></p><hr><a id="method-tiledb_group"></a><div class="section">
 <h3 id="method-tiledb-group-">Method <code>tiledb_group()</code><a class="anchor" aria-label="anchor" href="#method-tiledb-group-"></a></h3>
 <p>Return a <code>tiledb_group</code> object</p><div class="section">
-<h4 id="usage-4">Usage<a class="anchor" aria-label="anchor" href="#usage-4"></a></h4>
+<h4 id="usage-3">Usage<a class="anchor" aria-label="anchor" href="#usage-3"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">TileDBGroup</span><span class="op">$</span><span class="fu">tiledb_group</span><span class="op">(</span><span class="va">...</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
@@ -212,7 +189,7 @@ the specified <code>uri</code>.</p>
 </div><p></p><hr><a id="method-list_objects"></a><div class="section">
 <h3 id="method-list-objects-">Method <code>list_objects()</code><a class="anchor" aria-label="anchor" href="#method-list-objects-"></a></h3>
 <p>List the TileDB objects within the group.</p><div class="section">
-<h4 id="usage-5">Usage<a class="anchor" aria-label="anchor" href="#usage-5"></a></h4>
+<h4 id="usage-4">Usage<a class="anchor" aria-label="anchor" href="#usage-4"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">TileDBGroup</span><span class="op">$</span><span class="fu">list_objects</span><span class="op">(</span>type <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
@@ -233,7 +210,7 @@ By default all object types are listed.</p></dd>
 </div><p></p><hr><a id="method-list_object_uris"></a><div class="section">
 <h3 id="method-list-object-uris-">Method <code>list_object_uris()</code><a class="anchor" aria-label="anchor" href="#method-list-object-uris-"></a></h3>
 <p>List URIs for TileDB objects within the group.</p><div class="section">
-<h4 id="usage-6">Usage<a class="anchor" aria-label="anchor" href="#usage-6"></a></h4>
+<h4 id="usage-5">Usage<a class="anchor" aria-label="anchor" href="#usage-5"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">TileDBGroup</span><span class="op">$</span><span class="fu">list_object_uris</span><span class="op">(</span>type <span class="op">=</span> <span class="cn">NULL</span>, prefix <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
@@ -259,7 +236,7 @@ basename of the object.</p>
 </div><p></p><hr><a id="method-add_member"></a><div class="section">
 <h3 id="method-add-member-">Method <code>add_member()</code><a class="anchor" aria-label="anchor" href="#method-add-member-"></a></h3>
 <p>Add new member to the group.</p><div class="section">
-<h4 id="usage-7">Usage<a class="anchor" aria-label="anchor" href="#usage-7"></a></h4>
+<h4 id="usage-6">Usage<a class="anchor" aria-label="anchor" href="#usage-6"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">TileDBGroup</span><span class="op">$</span><span class="fu">add_member</span><span class="op">(</span><span class="va">object</span>, name <span class="op">=</span> <span class="cn">NULL</span>, relative <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
@@ -285,7 +262,7 @@ is relative to the group's URI.</p></dd>
 </div><p></p><hr><a id="method-count_members"></a><div class="section">
 <h3 id="method-count-members-">Method <code>count_members()</code><a class="anchor" aria-label="anchor" href="#method-count-members-"></a></h3>
 <p>Count the number of members in the group.</p><div class="section">
-<h4 id="usage-8">Usage<a class="anchor" aria-label="anchor" href="#usage-8"></a></h4>
+<h4 id="usage-7">Usage<a class="anchor" aria-label="anchor" href="#usage-7"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">TileDBGroup</span><span class="op">$</span><span class="fu">count_members</span><span class="op">(</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
@@ -297,7 +274,7 @@ is relative to the group's URI.</p></dd>
 </div><p></p><hr><a id="method-list_members"></a><div class="section">
 <h3 id="method-list-members-">Method <code>list_members()</code><a class="anchor" aria-label="anchor" href="#method-list-members-"></a></h3>
 <p>List the members of the group.</p><div class="section">
-<h4 id="usage-9">Usage<a class="anchor" aria-label="anchor" href="#usage-9"></a></h4>
+<h4 id="usage-8">Usage<a class="anchor" aria-label="anchor" href="#usage-8"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">TileDBGroup</span><span class="op">$</span><span class="fu">list_members</span><span class="op">(</span>type <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
@@ -318,7 +295,7 @@ By default all member types are listed.</p></dd>
 </div><p></p><hr><a id="method-list_member_uris"></a><div class="section">
 <h3 id="method-list-member-uris-">Method <code>list_member_uris()</code><a class="anchor" aria-label="anchor" href="#method-list-member-uris-"></a></h3>
 <p>List URIs for group members</p><div class="section">
-<h4 id="usage-10">Usage<a class="anchor" aria-label="anchor" href="#usage-10"></a></h4>
+<h4 id="usage-9">Usage<a class="anchor" aria-label="anchor" href="#usage-9"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">TileDBGroup</span><span class="op">$</span><span class="fu">list_member_uris</span><span class="op">(</span>type <span class="op">=</span> <span class="cn">NULL</span>, prefix <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
@@ -344,7 +321,7 @@ By default all member types are listed.</p></dd>
 <h3 id="method-get-members-">Method <code>get_members()</code><a class="anchor" aria-label="anchor" href="#method-get-members-"></a></h3>
 <p>Retrieve arrays within the group that meet the specified
 criteria.</p><div class="section">
-<h4 id="usage-11">Usage<a class="anchor" aria-label="anchor" href="#usage-11"></a></h4>
+<h4 id="usage-10">Usage<a class="anchor" aria-label="anchor" href="#usage-10"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">TileDBGroup</span><span class="op">$</span><span class="fu">get_members</span><span class="op">(</span>type <span class="op">=</span> <span class="cn">NULL</span>, prefix <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
@@ -365,7 +342,7 @@ criteria.</p><div class="section">
 </div><p></p><hr><a id="method-get_member"></a><div class="section">
 <h3 id="method-get-member-">Method <code>get_member()</code><a class="anchor" aria-label="anchor" href="#method-get-member-"></a></h3>
 <p>Retrieve a group member.</p><div class="section">
-<h4 id="usage-12">Usage<a class="anchor" aria-label="anchor" href="#usage-12"></a></h4>
+<h4 id="usage-11">Usage<a class="anchor" aria-label="anchor" href="#usage-11"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">TileDBGroup</span><span class="op">$</span><span class="fu">get_member</span><span class="op">(</span><span class="va">name</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
@@ -381,7 +358,7 @@ criteria.</p><div class="section">
 </div><p></p><hr><a id="method-get_metadata"></a><div class="section">
 <h3 id="method-get-metadata-">Method <code>get_metadata()</code><a class="anchor" aria-label="anchor" href="#method-get-metadata-"></a></h3>
 <p>Retrieve metadata from the TileDB group.</p><div class="section">
-<h4 id="usage-13">Usage<a class="anchor" aria-label="anchor" href="#usage-13"></a></h4>
+<h4 id="usage-12">Usage<a class="anchor" aria-label="anchor" href="#usage-12"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">TileDBGroup</span><span class="op">$</span><span class="fu">get_metadata</span><span class="op">(</span>key <span class="op">=</span> <span class="cn">NULL</span>, prefix <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
@@ -406,7 +383,7 @@ is not NULL.</p></dd>
 </div><p></p><hr><a id="method-add_metadata"></a><div class="section">
 <h3 id="method-add-metadata-">Method <code>add_metadata()</code><a class="anchor" aria-label="anchor" href="#method-add-metadata-"></a></h3>
 <p>Add list of metadata to the TileDB group.</p><div class="section">
-<h4 id="usage-14">Usage<a class="anchor" aria-label="anchor" href="#usage-14"></a></h4>
+<h4 id="usage-13">Usage<a class="anchor" aria-label="anchor" href="#usage-13"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">TileDBGroup</span><span class="op">$</span><span class="fu">add_metadata</span><span class="op">(</span><span class="va">metadata</span>, prefix <span class="op">=</span> <span class="st">""</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
@@ -430,7 +407,7 @@ is not NULL.</p></dd>
 </div><p></p><hr><a id="method-clone"></a><div class="section">
 <h3 id="method-clone-">Method <code>clone()</code><a class="anchor" aria-label="anchor" href="#method-clone-"></a></h3>
 <p>The objects of this class are cloneable with this method.</p><div class="section">
-<h4 id="usage-15">Usage<a class="anchor" aria-label="anchor" href="#usage-15"></a></h4>
+<h4 id="usage-14">Usage<a class="anchor" aria-label="anchor" href="#usage-14"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">TileDBGroup</span><span class="op">$</span><span class="fu">clone</span><span class="op">(</span>deep <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 

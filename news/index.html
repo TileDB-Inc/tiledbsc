@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tiledbsc</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.2.9001</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.2.9002</span>
       </span>
     </div>
 
@@ -84,6 +84,12 @@
 <p>Previously, the <code>SCDataset</code> and <code>SCGroup</code> classes included a TileDB group called <code>misc</code> that was intended for miscellaneous/unstructured data. To better align with the SOMA matrix-api specification this group has been renamed to <code>uns</code>. Practically, this means new <code>SOMA</code>s and <code>SOMACollection</code>s will create TileDB groups named <code>uns</code>, rather than <code>misc</code>. And these groups can be accessed with the <code>SOMA</code> and <code>SOMACollection</code> classes using <code>SOMA$uns</code>.</p>
 <p>For backwards compatibility: - if a <code>misc</code> group exists within a <code>SOMACollection</code> or <code>SOMA</code> on disk, it will be accessible via the <code>uns</code> field of the parent class - the deprecated <code>SCDataset</code> and <code>SCGroup</code> will continue to provide a <code>misc</code> field (actually an active binding that aliases the <code>uns</code> slot) so users can continue to use the old name</p>
 </div>
+<div class="section level3">
+<h3 id="additional-changes-development-version">Additional changes<a class="anchor" aria-label="anchor" href="#additional-changes-development-version"></a></h3>
+<ul><li>Added <code>TileDBObject</code> base class to provide fields and methods common to both <code>TileDBArray</code>- and <code>TileDBGroup</code>-based classes</li>
+<li>The <code>array_exists()</code> and <code>group_exists()</code> methods have been deprecated in favor of the more general <code><a href="https://rdrr.io/r/base/exists.html" class="external-link">exists()</a></code>
+</li>
+</ul></div>
 </div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.1.2" id="tiledbsc-012">tiledbsc 0.1.2<a class="anchor" aria-label="anchor" href="#tiledbsc-012"></a></h2>
