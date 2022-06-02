@@ -25,6 +25,7 @@ TileDBArray <- R6::R6Class(
 
       if (self$exists()) {
         msg <- sprintf("Found existing %s at '%s'", self$class(), self$uri)
+        private$initialize_object()
       } else {
         msg <- sprintf("No %s found at '%s'", self$class(), self$uri)
       }
@@ -153,8 +154,28 @@ TileDBArray <- R6::R6Class(
   ),
 
   private = list(
+
+    # Once the array has been created this initializes the TileDB array object
+    # and stores the reference in private$object.
+    initialize_object = function() {
+      private$object <- tiledb::tiledb_array(
+        uri = self$uri,
+        ctx = self$ctx
+      )
+      private$close()
+    },
+
     # @description Create empty TileDB array.
     create_empty_array = function() return(NULL),
+
+    open = function(mode) {
+      mode <- match.arg(mode, c("READ", "WRITE"))
+      invisible(tiledb::tiledb_array_open(private$object, type = mode))
+    },
+
+    close = function() {
+      invisible(tiledb::tiledb_array_close(private$object))
+    },
 
     # @description Ingest data into the TileDB array.
     ingest_data = function() return(NULL)
