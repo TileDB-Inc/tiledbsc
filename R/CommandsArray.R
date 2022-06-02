@@ -34,7 +34,7 @@ CommandsArray <- R6::R6Class(
       # differently when written.
       command_dataframe$index <- seq_len(nrow(command_dataframe))
 
-      if (!self$array_exists()) {
+      if (!self$exists()) {
         private$create_empty_array(command_dataframe, "index")
       } else {
         message(sprintf("Updating existing %s at '%s'", self$class(), self$uri))

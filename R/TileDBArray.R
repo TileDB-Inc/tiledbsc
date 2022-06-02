@@ -23,7 +23,7 @@ TileDBArray <- R6::R6Class(
     initialize = function(uri, verbose = TRUE, config = NULL, ctx = NULL) {
       super$initialize(uri, verbose, config, ctx)
 
-      if (self$array_exists()) {
+      if (self$exists()) {
         msg <- sprintf("Found existing %s at '%s'", self$class(), self$uri)
       } else {
         msg <- sprintf("No %s found at '%s'", self$class(), self$uri)
@@ -40,12 +40,11 @@ TileDBArray <- R6::R6Class(
     #' @description Check if the array exists.
     #' @return TRUE if the array exists, FALSE otherwise.
     array_exists = function() {
-      if (private$tiledb_uri$is_tiledb_cloud_creation_uri()) {
-        uri <- private$tiledb_uri$object_uri
-      } else {
-        uri <- self$uri
-      }
-      tiledb::tiledb_object_type(uri, ctx = self$ctx) == "ARRAY"
+      .Deprecated(
+        new = "exists()",
+        old = "array_exists()"
+      )
+      self$exists()
     },
 
     #' @description Return a [`TileDBArray`] object
@@ -158,7 +157,7 @@ TileDBArray <- R6::R6Class(
 
     object_print = function() {
       super$print()
-      if (self$array_exists()) {
+      if (self$exists()) {
         cat("  dimensions:", string_collapse(self$dimnames()), "\n")
         cat("  attributes:", string_collapse(self$attrnames()), "\n")
       }

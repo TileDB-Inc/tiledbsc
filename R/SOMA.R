@@ -201,7 +201,7 @@ SOMA <- R6::R6Class(
         layers <- match.arg(layers, c("counts", "data", "scale.data"), TRUE)
       }
 
-      skip_obs <- self$obs$array_exists() && is.null(obs)
+      skip_obs <- self$obs$exists() && is.null(obs)
       if (!is.null(obs)) {
         stopifnot(
           "'obs' must be a data.frame" = is.data.frame(obs),

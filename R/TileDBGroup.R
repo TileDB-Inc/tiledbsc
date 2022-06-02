@@ -23,7 +23,7 @@ TileDBGroup <- R6::R6Class(
     initialize = function(uri, verbose = TRUE, config = NULL, ctx = NULL) {
       super$initialize(uri, verbose, config, ctx)
 
-      if (self$group_exists()) {
+      if (self$exists()) {
         if (self$verbose) {
           message(
             sprintf("Found existing %s at '%s'", self$class(), self$uri)
@@ -53,12 +53,11 @@ TileDBGroup <- R6::R6Class(
     #' @description Check if the group exists.
     #' @return TRUE if the group exists, FALSE otherwise.
     group_exists = function() {
-      if (private$tiledb_uri$is_tiledb_cloud_creation_uri()) {
-        uri <- private$tiledb_uri$object_uri
-      } else {
-        uri <- self$uri
-      }
-      tiledb::tiledb_object_type(uri, ctx = self$ctx) == "GROUP"
+      .Deprecated(
+        new = "exists()",
+        old = "group_exists()"
+      )
+      self$exists()
     },
 
     #' @description Return a [`tiledb_group`] object
@@ -329,9 +328,9 @@ TileDBGroup <- R6::R6Class(
       }
     },
 
-    group_print = function() {
-      cat("  uri:", self$uri, "\n")
-      if (self$group_exists()) {
+    object_print = function() {
+      super$print()
+      if (self$exists()) {
         private$format_members()
       }
     }

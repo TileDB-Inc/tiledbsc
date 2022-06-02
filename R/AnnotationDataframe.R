@@ -31,7 +31,7 @@ AnnotationDataframe <- R6::R6Class(
 
       # convert rownames to a column
       x[[index_col]] <- rownames(x)
-      if (!self$array_exists()) {
+      if (!self$exists()) {
         # TODO: Replace with configurable SOMAOptions class
         capacity <- switch(basename(self$uri),
           obs = 256L,

@@ -54,7 +54,7 @@ AssayMatrix <- R6::R6Class(
         length(index_cols) == 2,
         all(index_cols %in% colnames(x))
       )
-      if (!self$array_exists()) {
+      if (!self$exists()) {
         private$create_empty_array(x, index_cols)
       } else {
         message(sprintf("Updating existing %s at '%s'", self$class(), self$uri))
