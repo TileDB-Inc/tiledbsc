@@ -24,6 +24,11 @@ For backwards compatibility:
 - if a `misc` group exists within a `SOMACollection` or `SOMA` on disk, it will be accessible via the `uns` field of the parent class
 - the deprecated `SCDataset` and `SCGroup` will continue to provide a `misc` field (actually an active binding that aliases the `uns` slot) so users can continue to use the old name
 
+## Additional changes
+
+- Added `TileDBObject` base class to provide fields and methods common to both `TileDBArray`- and `TileDBGroup`-based classes
+- The `array_exists()` and `group_exists()` methods have been deprecated in favor of the more general `exists()`
+
 # tiledbsc 0.1.2
 
 Improve handling of Seurat objects with empty cell identities (#58).
