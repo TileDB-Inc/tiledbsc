@@ -160,7 +160,8 @@ TileDBArray <- R6::R6Class(
     initialize_object = function() {
       private$object <- tiledb::tiledb_array(
         uri = self$uri,
-        ctx = self$ctx
+        ctx = self$ctx,
+        query_layout = "UNORDERED"
       )
       private$close()
     },
