@@ -12,13 +12,8 @@
 #' @export
 TileDBArray <- R6::R6Class(
   classname = "TileDBArray",
+  inherit = TileDBObject,
   public = list(
-    #' @field verbose Whether to print verbose output
-    verbose = TRUE,
-    #' @field config optional configuration
-    config = NULL,
-    #' @field ctx optional tiledb context
-    ctx = NULL,
 
     #' @description Create a new TileDBArray object.
     #' @param uri URI for the TileDB array
@@ -26,22 +21,9 @@ TileDBArray <- R6::R6Class(
     #' @param config optional configuration
     #' @param ctx optional tiledb context
     initialize = function(uri, verbose = TRUE, config = NULL, ctx = NULL) {
-      private$tiledb_uri <- TileDBURI$new(uri)
-      self$verbose <- verbose
-      self$config <- config
-      self$ctx <- ctx
+      super$initialize(uri, verbose, config, ctx)
 
-      if (!is.null(config) && !is.null(ctx)) stop("Cannot pass a config and context, please choose one")
-
-      if (!is.null(self$config)) {
-        self$ctx <- tiledb::tiledb_ctx(self$config)
-      }
-
-      if (is.null(self$ctx)) {
-        self$ctx <- tiledb::tiledb_get_context()
-      }
-
-      if (self$array_exists()) {
+      if (self$exists()) {
         msg <- sprintf("Found existing %s at '%s'", self$class(), self$uri)
       } else {
         msg <- sprintf("No %s found at '%s'", self$class(), self$uri)
@@ -50,26 +32,23 @@ TileDBArray <- R6::R6Class(
       return(self)
     },
 
-    #' @description Print the name of the R6 class.
-    class = function() {
-      class(self)[1]
-    },
-
     #' @description Print summary of the array.
     print = function() {
-      cat(glue::glue("<{self$class()}>"), sep = "\n")
-      private$array_print()
+      super$print()
+      if (self$exists()) {
+        cat("  dimensions:", string_collapse(self$dimnames()), "\n")
+        cat("  attributes:", string_collapse(self$attrnames()), "\n")
+      }
     },
 
     #' @description Check if the array exists.
     #' @return TRUE if the array exists, FALSE otherwise.
     array_exists = function() {
-      if (private$tiledb_uri$is_tiledb_cloud_creation_uri()) {
-        uri <- private$tiledb_uri$object_uri
-      } else {
-        uri <- self$uri
-      }
-      tiledb::tiledb_object_type(uri, ctx = self$ctx) == "ARRAY"
+      .Deprecated(
+        new = "exists()",
+        old = "array_exists()"
+      )
+      self$exists()
     },
 
     #' @description Return a [`TileDBArray`] object
@@ -173,32 +152,11 @@ TileDBArray <- R6::R6Class(
     }
   ),
 
-  active = list(
-    #' @field uri
-    #' The URI of the TileDB array.
-    uri = function(value) {
-      if (missing(value)) return(private$tiledb_uri$uri)
-      stop(sprintf("'%s' is a read-only field.", "uri"))
-    }
-  ),
-
   private = list(
-
-    # @description Contains TileDBURI object for the array.
-    tiledb_uri = NULL,
-
     # @description Create empty TileDB array.
     create_empty_array = function() return(NULL),
 
     # @description Ingest data into the TileDB array.
-    ingest_data = function() return(NULL),
-
-    array_print = function() {
-      cat("  uri:", self$uri, "\n")
-      if (self$array_exists()) {
-        cat("  dimensions:", string_collapse(self$dimnames()), "\n")
-        cat("  attributes:", string_collapse(self$attrnames()), "\n")
-      }
-    }
+    ingest_data = function() return(NULL)
   )
 )

@@ -8,7 +8,7 @@ Class for representing the now-deprecated SCDataset object, which has been
 renamed to \code{\link{SOMACollection}}.
 }
 \section{Super classes}{
-\code{\link[tiledbsc:TileDBGroup]{tiledbsc::TileDBGroup}} -> \code{\link[tiledbsc:SOMACollection]{tiledbsc::SOMACollection}} -> \code{SCDataset}
+\code{\link[tiledbsc:TileDBObject]{tiledbsc::TileDBObject}} -> \code{\link[tiledbsc:TileDBGroup]{tiledbsc::TileDBGroup}} -> \code{\link[tiledbsc:SOMACollection]{tiledbsc::SOMACollection}} -> \code{SCDataset}
 }
 \section{Active bindings}{
 \if{html}{\out{<div class="r6-active-bindings">}}
@@ -30,9 +30,10 @@ renamed to \code{\link{SOMACollection}}.
 \if{html}{
 \out{<details ><summary>Inherited methods</summary>}
 \itemize{
+\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBObject" data-id="class">}\href{../../tiledbsc/html/TileDBObject.html#method-class}{\code{tiledbsc::TileDBObject$class()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBObject" data-id="exists">}\href{../../tiledbsc/html/TileDBObject.html#method-exists}{\code{tiledbsc::TileDBObject$exists()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBGroup" data-id="add_member">}\href{../../tiledbsc/html/TileDBGroup.html#method-add_member}{\code{tiledbsc::TileDBGroup$add_member()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBGroup" data-id="add_metadata">}\href{../../tiledbsc/html/TileDBGroup.html#method-add_metadata}{\code{tiledbsc::TileDBGroup$add_metadata()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBGroup" data-id="class">}\href{../../tiledbsc/html/TileDBGroup.html#method-class}{\code{tiledbsc::TileDBGroup$class()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBGroup" data-id="count_members">}\href{../../tiledbsc/html/TileDBGroup.html#method-count_members}{\code{tiledbsc::TileDBGroup$count_members()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBGroup" data-id="get_member">}\href{../../tiledbsc/html/TileDBGroup.html#method-get_member}{\code{tiledbsc::TileDBGroup$get_member()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBGroup" data-id="get_members">}\href{../../tiledbsc/html/TileDBGroup.html#method-get_members}{\code{tiledbsc::TileDBGroup$get_members()}}\out{</span>}

@@ -30,7 +30,7 @@ AnnotationMatrix <- R6::R6Class(
       x <- as.data.frame(x)
       x[[index_col]] <- rownames(x)
 
-      if (!self$array_exists()) {
+      if (!self$exists()) {
         private$create_empty_array(x, index_col)
       } else {
         message(sprintf("Updating existing %s at '%s'", self$class(), self$uri))

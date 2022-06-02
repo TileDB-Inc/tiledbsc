@@ -116,7 +116,7 @@ test_that("a group is portable when members are added with relative uris", {
   )
 
   grp <- TileDBGroup$new(uri = grp_uri2)
-  expect_true(grp$members$a1$array_exists())
+  expect_true(grp$members$a1$exists())
   grp$members$a1$uri
 })
 

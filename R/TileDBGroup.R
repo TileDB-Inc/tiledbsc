@@ -9,16 +9,11 @@
 #' @export
 TileDBGroup <- R6::R6Class(
   classname = "TileDBGroup",
+  inherit = TileDBObject,
 
   public = list(
     #' @field members Named list of members in the group
     members = list(),
-    #' @field verbose Whether to print verbose output
-    verbose = TRUE,
-    #' @field config optional config
-    config = NULL,
-    #' @field ctx optional tiledb context
-    ctx = NULL,
 
     #' @description Create a new TileDBGroup object.
     #' @param uri TileDB array URI
@@ -26,23 +21,9 @@ TileDBGroup <- R6::R6Class(
     #' @param config optional configuration
     #' @param ctx optional tiledb context
     initialize = function(uri, verbose = TRUE, config = NULL, ctx = NULL) {
-      if (missing(uri)) stop("A `uri` must be specified")
-      private$tiledb_uri <- TileDBURI$new(uri)
-      self$verbose <- verbose
-      self$config <- config
-      self$ctx <- ctx
+      super$initialize(uri, verbose, config, ctx)
 
-      if (!is.null(config) && !is.null(ctx)) stop("Cannot pass a config and context, please choose one")
-
-      if (!is.null(self$config)) {
-        self$ctx <- tiledb::tiledb_ctx(self$config)
-      }
-
-      if (is.null(self$ctx)) {
-        self$ctx <- tiledb::tiledb_get_context()
-      }
-
-      if (self$group_exists()) {
+      if (self$exists()) {
         if (self$verbose) {
           message(
             sprintf("Found existing %s at '%s'", self$class(), self$uri)
@@ -64,27 +45,22 @@ TileDBGroup <- R6::R6Class(
       self$members <- private$instantiate_members()
     },
 
-    #' @description Print the name of the R6 class.
-    class = function() {
-      class(self)[1]
-    },
-
-
     #' @description Print summary of the group.
     print = function() {
-      cat(glue::glue("<{self$class()}>"), sep = "\n")
-      private$group_print()
+      super$print()
+      if (self$exists()) {
+        private$format_members()
+      }
     },
 
     #' @description Check if the group exists.
     #' @return TRUE if the group exists, FALSE otherwise.
     group_exists = function() {
-      if (private$tiledb_uri$is_tiledb_cloud_creation_uri()) {
-        uri <- private$tiledb_uri$object_uri
-      } else {
-        uri <- self$uri
-      }
-      tiledb::tiledb_object_type(uri, ctx = self$ctx) == "GROUP"
+      .Deprecated(
+        new = "exists()",
+        old = "group_exists()"
+      )
+      self$exists()
     },
 
     #' @description Return a [`tiledb_group`] object
@@ -289,21 +265,10 @@ TileDBGroup <- R6::R6Class(
     }
   ),
 
-  active = list(
-    #' @field uri
-    #' The URI of the TileDB group
-    uri = function(value) {
-      if (missing(value)) return(private$tiledb_uri$uri)
-      stop(sprintf("'%s' is a read-only field.", "uri"))
-    }
-  ),
-
   private = list(
 
+    # Internal pointer to the TileDB group
     group = NULL,
-
-    # @description Contains TileDBURI object for the group.
-    tiledb_uri = NULL,
 
     create_group = function() {
       if (self$verbose) {
@@ -363,13 +328,6 @@ TileDBGroup <- R6::R6Class(
         if (!is.null(formatted$GROUP)) {
           cat("  groups:", string_collapse(sort(formatted$GROUP)), "\n")
         }
-      }
-    },
-
-    group_print = function() {
-      cat("  uri:", self$uri, "\n")
-      if (self$group_exists()) {
-        private$format_members()
       }
     }
   )
