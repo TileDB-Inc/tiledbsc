@@ -9,16 +9,11 @@
 #' @export
 TileDBGroup <- R6::R6Class(
   classname = "TileDBGroup",
+  inherit = TileDBObject,
 
   public = list(
     #' @field members Named list of members in the group
     members = list(),
-    #' @field verbose Whether to print verbose output
-    verbose = TRUE,
-    #' @field config optional config
-    config = NULL,
-    #' @field ctx optional tiledb context
-    ctx = NULL,
 
     #' @description Create a new TileDBGroup object.
     #' @param uri TileDB array URI
@@ -26,21 +21,7 @@ TileDBGroup <- R6::R6Class(
     #' @param config optional configuration
     #' @param ctx optional tiledb context
     initialize = function(uri, verbose = TRUE, config = NULL, ctx = NULL) {
-      if (missing(uri)) stop("A `uri` must be specified")
-      private$tiledb_uri <- TileDBURI$new(uri)
-      self$verbose <- verbose
-      self$config <- config
-      self$ctx <- ctx
-
-      if (!is.null(config) && !is.null(ctx)) stop("Cannot pass a config and context, please choose one")
-
-      if (!is.null(self$config)) {
-        self$ctx <- tiledb::tiledb_ctx(self$config)
-      }
-
-      if (is.null(self$ctx)) {
-        self$ctx <- tiledb::tiledb_get_context()
-      }
+      super$initialize(uri, verbose, config, ctx)
 
       if (self$group_exists()) {
         if (self$verbose) {
@@ -64,16 +45,9 @@ TileDBGroup <- R6::R6Class(
       self$members <- private$instantiate_members()
     },
 
-    #' @description Print the name of the R6 class.
-    class = function() {
-      class(self)[1]
-    },
-
-
     #' @description Print summary of the group.
     print = function() {
-      cat(glue::glue("<{self$class()}>"), sep = "\n")
-      private$group_print()
+      private$object_print()
     },
 
     #' @description Check if the group exists.
@@ -289,21 +263,10 @@ TileDBGroup <- R6::R6Class(
     }
   ),
 
-  active = list(
-    #' @field uri
-    #' The URI of the TileDB group
-    uri = function(value) {
-      if (missing(value)) return(private$tiledb_uri$uri)
-      stop(sprintf("'%s' is a read-only field.", "uri"))
-    }
-  ),
-
   private = list(
 
+    # Internal pointer to the TileDB group
     group = NULL,
-
-    # @description Contains TileDBURI object for the group.
-    tiledb_uri = NULL,
 
     create_group = function() {
       if (self$verbose) {
