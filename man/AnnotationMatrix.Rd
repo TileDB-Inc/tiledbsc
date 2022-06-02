@@ -13,7 +13,7 @@ Base class for matrix-like data with rows aligned to the observations or
 features of a \code{\link{SOMA}}.
 }
 \section{Super classes}{
-\code{\link[tiledbsc:TileDBArray]{tiledbsc::TileDBArray}} -> \code{\link[tiledbsc:AnnotationArray]{tiledbsc::AnnotationArray}} -> \code{AnnotationMatrix}
+\code{\link[tiledbsc:TileDBObject]{tiledbsc::TileDBObject}} -> \code{\link[tiledbsc:TileDBArray]{tiledbsc::TileDBArray}} -> \code{\link[tiledbsc:AnnotationArray]{tiledbsc::AnnotationArray}} -> \code{AnnotationMatrix}
 }
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
@@ -33,11 +33,12 @@ features of a \code{\link{SOMA}}.
 \if{html}{
 \out{<details ><summary>Inherited methods</summary>}
 \itemize{
+\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBObject" data-id="class">}\href{../../tiledbsc/html/TileDBObject.html#method-class}{\code{tiledbsc::TileDBObject$class()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBObject" data-id="exists">}\href{../../tiledbsc/html/TileDBObject.html#method-exists}{\code{tiledbsc::TileDBObject$exists()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="add_metadata">}\href{../../tiledbsc/html/TileDBArray.html#method-add_metadata}{\code{tiledbsc::TileDBArray$add_metadata()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="array_exists">}\href{../../tiledbsc/html/TileDBArray.html#method-array_exists}{\code{tiledbsc::TileDBArray$array_exists()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="attributes">}\href{../../tiledbsc/html/TileDBArray.html#method-attributes}{\code{tiledbsc::TileDBArray$attributes()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="attrnames">}\href{../../tiledbsc/html/TileDBArray.html#method-attrnames}{\code{tiledbsc::TileDBArray$attrnames()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="class">}\href{../../tiledbsc/html/TileDBArray.html#method-class}{\code{tiledbsc::TileDBArray$class()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="dimensions">}\href{../../tiledbsc/html/TileDBArray.html#method-dimensions}{\code{tiledbsc::TileDBArray$dimensions()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="dimnames">}\href{../../tiledbsc/html/TileDBArray.html#method-dimnames}{\code{tiledbsc::TileDBArray$dimnames()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="fragment_count">}\href{../../tiledbsc/html/TileDBArray.html#method-fragment_count}{\code{tiledbsc::TileDBArray$fragment_count()}}\out{</span>}

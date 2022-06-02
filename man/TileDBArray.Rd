@@ -15,29 +15,13 @@ what the schema will be. Arrays are only created by child classes, which
 populate the private \code{create_empty_array()} and \code{ingest_data()} methods.
 }
 }
-\section{Public fields}{
-\if{html}{\out{<div class="r6-fields">}}
-\describe{
-\item{\code{verbose}}{Whether to print verbose output}
-
-\item{\code{config}}{optional configuration}
-
-\item{\code{ctx}}{optional tiledb context}
-}
-\if{html}{\out{</div>}}
-}
-\section{Active bindings}{
-\if{html}{\out{<div class="r6-active-bindings">}}
-\describe{
-\item{\code{uri}}{The URI of the TileDB array.}
-}
-\if{html}{\out{</div>}}
+\section{Super class}{
+\code{\link[tiledbsc:TileDBObject]{tiledbsc::TileDBObject}} -> \code{TileDBArray}
 }
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-new}{\code{TileDBArray$new()}}
-\item \href{#method-class}{\code{TileDBArray$class()}}
 \item \href{#method-print}{\code{TileDBArray$print()}}
 \item \href{#method-array_exists}{\code{TileDBArray$array_exists()}}
 \item \href{#method-tiledb_array}{\code{TileDBArray$tiledb_array()}}
@@ -51,6 +35,14 @@ populate the private \code{create_empty_array()} and \code{ingest_data()} method
 \item \href{#method-attrnames}{\code{TileDBArray$attrnames()}}
 \item \href{#method-clone}{\code{TileDBArray$clone()}}
 }
+}
+\if{html}{
+\out{<details open ><summary>Inherited methods</summary>}
+\itemize{
+\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBObject" data-id="class">}\href{../../tiledbsc/html/TileDBObject.html#method-class}{\code{tiledbsc::TileDBObject$class()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBObject" data-id="exists">}\href{../../tiledbsc/html/TileDBObject.html#method-exists}{\code{tiledbsc::TileDBObject$exists()}}\out{</span>}
+}
+\out{</details>}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-new"></a>}}
@@ -74,16 +66,6 @@ Create a new TileDBArray object.
 }
 \if{html}{\out{</div>}}
 }
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-class"></a>}}
-\if{latex}{\out{\hypertarget{method-class}{}}}
-\subsection{Method \code{class()}}{
-Print the name of the R6 class.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{TileDBArray$class()}\if{html}{\out{</div>}}
-}
-
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-print"></a>}}

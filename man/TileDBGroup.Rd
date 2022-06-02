@@ -18,23 +18,13 @@ Upon initialization a new group is created if one does not already exist at
 the specified \code{uri}.
 }
 }
+\section{Super class}{
+\code{\link[tiledbsc:TileDBObject]{tiledbsc::TileDBObject}} -> \code{TileDBGroup}
+}
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
 \item{\code{members}}{Named list of members in the group}
-
-\item{\code{verbose}}{Whether to print verbose output}
-
-\item{\code{config}}{optional config}
-
-\item{\code{ctx}}{optional tiledb context}
-}
-\if{html}{\out{</div>}}
-}
-\section{Active bindings}{
-\if{html}{\out{<div class="r6-active-bindings">}}
-\describe{
-\item{\code{uri}}{The URI of the TileDB group}
 }
 \if{html}{\out{</div>}}
 }
@@ -42,7 +32,6 @@ the specified \code{uri}.
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-new}{\code{TileDBGroup$new()}}
-\item \href{#method-class}{\code{TileDBGroup$class()}}
 \item \href{#method-print}{\code{TileDBGroup$print()}}
 \item \href{#method-group_exists}{\code{TileDBGroup$group_exists()}}
 \item \href{#method-tiledb_group}{\code{TileDBGroup$tiledb_group()}}
@@ -58,6 +47,14 @@ the specified \code{uri}.
 \item \href{#method-add_metadata}{\code{TileDBGroup$add_metadata()}}
 \item \href{#method-clone}{\code{TileDBGroup$clone()}}
 }
+}
+\if{html}{
+\out{<details open ><summary>Inherited methods</summary>}
+\itemize{
+\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBObject" data-id="class">}\href{../../tiledbsc/html/TileDBObject.html#method-class}{\code{tiledbsc::TileDBObject$class()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBObject" data-id="exists">}\href{../../tiledbsc/html/TileDBObject.html#method-exists}{\code{tiledbsc::TileDBObject$exists()}}\out{</span>}
+}
+\out{</details>}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-new"></a>}}
@@ -81,16 +78,6 @@ Create a new TileDBGroup object.
 }
 \if{html}{\out{</div>}}
 }
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-class"></a>}}
-\if{latex}{\out{\hypertarget{method-class}{}}}
-\subsection{Method \code{class()}}{
-Print the name of the R6 class.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{TileDBGroup$class()}\if{html}{\out{</div>}}
-}
-
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-print"></a>}}
