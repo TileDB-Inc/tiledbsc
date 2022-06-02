@@ -2,8 +2,13 @@ test_that("TileDBArray helper functions", {
   uri <- withr::local_tempdir(pattern = "test-array")
 
   expect_message(
-    TileDBArray$new(uri = uri, verbose = TRUE),
+    tdb <- TileDBArray$new(uri = uri, verbose = TRUE),
     "No TileDBArray found at"
+  )
+
+  expect_error(
+    tdb$get_object(),
+    "TileDB object does not exist"
   )
 
   # create an array
@@ -17,6 +22,7 @@ test_that("TileDBArray helper functions", {
   )
   expect_identical(tdb$uri, uri)
   expect_is(tdb$tiledb_array(), "tiledb_array")
+  expect_is(tdb$get_object(), "tiledb_array")
   expect_identical(tdb$dimnames(), index_cols)
 
   attr_cols <- setdiff(colnames(df), index_cols)

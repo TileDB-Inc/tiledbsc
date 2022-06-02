@@ -66,6 +66,15 @@ TileDBObject <- R6::R6Class(
         stop("Unknown object type")
       }
       tiledb::tiledb_object_type(uri, ctx = self$ctx) %in% expected_type
+    },
+
+    #' @description Retrieve the TileB object
+    #' @return A [`tiledb::tiledb_array`] or [`tiledb::tiledb_group`] object.
+    get_object = function() {
+      if (!self$exists()) {
+        stop("TileDB object does not exist")
+      }
+      private$object
     }
   ),
 
