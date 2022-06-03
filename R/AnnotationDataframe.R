@@ -56,10 +56,12 @@ AnnotationDataframe <- R6::R6Class(
           sprintf("Reading %s into memory from '%s'", self$class(), self$uri)
         )
       }
-      attrs <- attrs %||% character()
-      df <- self$tiledb_array(attrs = attrs, return_as = "data.frame")[]
-      dimname <- self$dimnames()
+      arr <- self$object
+      tiledb::attrs(arr) <- attrs %||% character()
+      tiledb::return_as(arr) <- "data.frame"
+      df <- arr[]
 
+      dimname <- self$dimnames()
       data.frame(
         df[setdiff(colnames(df), dimname)],
         row.names = df[[dimname]]

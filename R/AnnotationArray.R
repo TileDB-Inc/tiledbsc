@@ -53,9 +53,10 @@ AnnotationArray <- R6::R6Class(
     # @param x A [`data.frame`]
     ingest_data = function(x) {
       private$log_array_ingestion()
-      tdb_array <- tiledb::tiledb_array(self$uri, query_type = "WRITE")
-      tdb_array[] <- x
-      tiledb::tiledb_array_close(tdb_array)
+      on.exit(private$close())
+      private$open("WRITE")
+      arr <- self$object
+      arr[] <- x
     },
 
     log_array_creation = function(index_cols) {
