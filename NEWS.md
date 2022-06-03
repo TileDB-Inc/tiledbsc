@@ -1,10 +1,12 @@
 # tiledbsc (development version)
 
+## Migration to SOMA-based names
+
 This release changes the names of the 2 top-level classes in the tiledbsc package to follow new nomenclature adopted by the [single-cell data model specification](https://github.com/single-cell-data/matrix-api/blob/main/specification.md), which was implemented [here](https://github.com/single-cell-data/matrix-api/pull/28). You can read more about the rationale for this change [here](https://github.com/single-cell-data/matrix-api/issues/11#issuecomment-1109975498).
 
 Additionally, the `misc` slot has been renamed to `uns`. See below for details.
 
-## New class names
+New class names
 
 - `SCGroup` is replaced by `SOMA` (stack of matrices, annotated)
 - `SCDataset` is replaced by `SOMACollection`
@@ -28,6 +30,8 @@ For backwards compatibility:
 
 - Added `TileDBObject` base class to provide fields and methods common to both `TileDBArray`- and `TileDBGroup`-based classes
 - The `array_exists()` and `group_exists()` methods have been deprecated in favor of the more general `exists()`
+- Similar to the `TileDBGroup` class, `TileDBArray` now maintains a reference to the underlying array pointer
+- All classes gain a `objects` field to access the underlying TileDB objects directly
 
 # tiledbsc 0.1.2
 
