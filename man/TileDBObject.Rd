@@ -22,22 +22,25 @@ TileDBGroup classes.
 \if{html}{\out{<div class="r6-active-bindings">}}
 \describe{
 \item{\code{uri}}{The URI of the TileDB object.}
+
+\item{\code{object}}{Access the underlying TileB object directly (either a
+\code{\link[tiledb:tiledb_array]{tiledb::tiledb_array}} or \code{\link[tiledb:tiledb_group]{tiledb::tiledb_group}}).}
 }
 \if{html}{\out{</div>}}
 }
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-new}{\code{TileDBObject$new()}}
-\item \href{#method-class}{\code{TileDBObject$class()}}
-\item \href{#method-print}{\code{TileDBObject$print()}}
-\item \href{#method-exists}{\code{TileDBObject$exists()}}
-\item \href{#method-clone}{\code{TileDBObject$clone()}}
+\item \href{#method-TileDBObject-new}{\code{TileDBObject$new()}}
+\item \href{#method-TileDBObject-class}{\code{TileDBObject$class()}}
+\item \href{#method-TileDBObject-print}{\code{TileDBObject$print()}}
+\item \href{#method-TileDBObject-exists}{\code{TileDBObject$exists()}}
+\item \href{#method-TileDBObject-clone}{\code{TileDBObject$clone()}}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\if{latex}{\out{\hypertarget{method-new}{}}}
+\if{html}{\out{<a id="method-TileDBObject-new"></a>}}
+\if{latex}{\out{\hypertarget{method-TileDBObject-new}{}}}
 \subsection{Method \code{new()}}{
 Create a new TileDB object.
 \subsection{Usage}{
@@ -59,8 +62,8 @@ Create a new TileDB object.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-class"></a>}}
-\if{latex}{\out{\hypertarget{method-class}{}}}
+\if{html}{\out{<a id="method-TileDBObject-class"></a>}}
+\if{latex}{\out{\hypertarget{method-TileDBObject-class}{}}}
 \subsection{Method \code{class()}}{
 Print the name of the R6 class.
 \subsection{Usage}{
@@ -69,8 +72,8 @@ Print the name of the R6 class.
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-print"></a>}}
-\if{latex}{\out{\hypertarget{method-print}{}}}
+\if{html}{\out{<a id="method-TileDBObject-print"></a>}}
+\if{latex}{\out{\hypertarget{method-TileDBObject-print}{}}}
 \subsection{Method \code{print()}}{
 Print summary of the array.
 \subsection{Usage}{
@@ -79,8 +82,8 @@ Print summary of the array.
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-exists"></a>}}
-\if{latex}{\out{\hypertarget{method-exists}{}}}
+\if{html}{\out{<a id="method-TileDBObject-exists"></a>}}
+\if{latex}{\out{\hypertarget{method-TileDBObject-exists}{}}}
 \subsection{Method \code{exists()}}{
 Check if the object exists.
 \subsection{Usage}{
@@ -92,8 +95,8 @@ Check if the object exists.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-clone}{}}}
+\if{html}{\out{<a id="method-TileDBObject-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-TileDBObject-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{

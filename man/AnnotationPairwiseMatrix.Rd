@@ -19,37 +19,37 @@ columns aligned to either the observations or features of \code{X}
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-from_matrix}{\code{AnnotationPairwiseMatrix$from_matrix()}}
-\item \href{#method-to_matrix}{\code{AnnotationPairwiseMatrix$to_matrix()}}
-\item \href{#method-to_dataframe}{\code{AnnotationPairwiseMatrix$to_dataframe()}}
-\item \href{#method-to_sparse_matrix}{\code{AnnotationPairwiseMatrix$to_sparse_matrix()}}
-\item \href{#method-to_seurat_graph}{\code{AnnotationPairwiseMatrix$to_seurat_graph()}}
-\item \href{#method-clone}{\code{AnnotationPairwiseMatrix$clone()}}
+\item \href{#method-AnnotationPairwiseMatrix-from_matrix}{\code{AnnotationPairwiseMatrix$from_matrix()}}
+\item \href{#method-AnnotationPairwiseMatrix-to_matrix}{\code{AnnotationPairwiseMatrix$to_matrix()}}
+\item \href{#method-AnnotationPairwiseMatrix-to_dataframe}{\code{AnnotationPairwiseMatrix$to_dataframe()}}
+\item \href{#method-AnnotationPairwiseMatrix-to_sparse_matrix}{\code{AnnotationPairwiseMatrix$to_sparse_matrix()}}
+\item \href{#method-AnnotationPairwiseMatrix-to_seurat_graph}{\code{AnnotationPairwiseMatrix$to_seurat_graph()}}
+\item \href{#method-AnnotationPairwiseMatrix-clone}{\code{AnnotationPairwiseMatrix$clone()}}
 }
 }
-\if{html}{
-\out{<details ><summary>Inherited methods</summary>}
-\itemize{
-\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBObject" data-id="class">}\href{../../tiledbsc/html/TileDBObject.html#method-class}{\code{tiledbsc::TileDBObject$class()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBObject" data-id="exists">}\href{../../tiledbsc/html/TileDBObject.html#method-exists}{\code{tiledbsc::TileDBObject$exists()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="add_metadata">}\href{../../tiledbsc/html/TileDBArray.html#method-add_metadata}{\code{tiledbsc::TileDBArray$add_metadata()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="array_exists">}\href{../../tiledbsc/html/TileDBArray.html#method-array_exists}{\code{tiledbsc::TileDBArray$array_exists()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="attributes">}\href{../../tiledbsc/html/TileDBArray.html#method-attributes}{\code{tiledbsc::TileDBArray$attributes()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="attrnames">}\href{../../tiledbsc/html/TileDBArray.html#method-attrnames}{\code{tiledbsc::TileDBArray$attrnames()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="dimensions">}\href{../../tiledbsc/html/TileDBArray.html#method-dimensions}{\code{tiledbsc::TileDBArray$dimensions()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="dimnames">}\href{../../tiledbsc/html/TileDBArray.html#method-dimnames}{\code{tiledbsc::TileDBArray$dimnames()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="fragment_count">}\href{../../tiledbsc/html/TileDBArray.html#method-fragment_count}{\code{tiledbsc::TileDBArray$fragment_count()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="get_metadata">}\href{../../tiledbsc/html/TileDBArray.html#method-get_metadata}{\code{tiledbsc::TileDBArray$get_metadata()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="initialize">}\href{../../tiledbsc/html/TileDBArray.html#method-initialize}{\code{tiledbsc::TileDBArray$initialize()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="print">}\href{../../tiledbsc/html/TileDBArray.html#method-print}{\code{tiledbsc::TileDBArray$print()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="schema">}\href{../../tiledbsc/html/TileDBArray.html#method-schema}{\code{tiledbsc::TileDBArray$schema()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="tiledb_array">}\href{../../tiledbsc/html/TileDBArray.html#method-tiledb_array}{\code{tiledbsc::TileDBArray$tiledb_array()}}\out{</span>}
-}
-\out{</details>}
-}
+\if{html}{\out{
+<details><summary>Inherited methods</summary>
+<ul>
+<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBObject" data-id="class"><a href='../../tiledbsc/html/TileDBObject.html#method-TileDBObject-class'><code>tiledbsc::TileDBObject$class()</code></a></li>
+<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBObject" data-id="exists"><a href='../../tiledbsc/html/TileDBObject.html#method-TileDBObject-exists'><code>tiledbsc::TileDBObject$exists()</code></a></li>
+<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="add_metadata"><a href='../../tiledbsc/html/TileDBArray.html#method-TileDBArray-add_metadata'><code>tiledbsc::TileDBArray$add_metadata()</code></a></li>
+<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="array_exists"><a href='../../tiledbsc/html/TileDBArray.html#method-TileDBArray-array_exists'><code>tiledbsc::TileDBArray$array_exists()</code></a></li>
+<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="attributes"><a href='../../tiledbsc/html/TileDBArray.html#method-TileDBArray-attributes'><code>tiledbsc::TileDBArray$attributes()</code></a></li>
+<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="attrnames"><a href='../../tiledbsc/html/TileDBArray.html#method-TileDBArray-attrnames'><code>tiledbsc::TileDBArray$attrnames()</code></a></li>
+<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="dimensions"><a href='../../tiledbsc/html/TileDBArray.html#method-TileDBArray-dimensions'><code>tiledbsc::TileDBArray$dimensions()</code></a></li>
+<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="dimnames"><a href='../../tiledbsc/html/TileDBArray.html#method-TileDBArray-dimnames'><code>tiledbsc::TileDBArray$dimnames()</code></a></li>
+<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="fragment_count"><a href='../../tiledbsc/html/TileDBArray.html#method-TileDBArray-fragment_count'><code>tiledbsc::TileDBArray$fragment_count()</code></a></li>
+<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="get_metadata"><a href='../../tiledbsc/html/TileDBArray.html#method-TileDBArray-get_metadata'><code>tiledbsc::TileDBArray$get_metadata()</code></a></li>
+<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="initialize"><a href='../../tiledbsc/html/TileDBArray.html#method-TileDBArray-initialize'><code>tiledbsc::TileDBArray$initialize()</code></a></li>
+<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="print"><a href='../../tiledbsc/html/TileDBArray.html#method-TileDBArray-print'><code>tiledbsc::TileDBArray$print()</code></a></li>
+<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="schema"><a href='../../tiledbsc/html/TileDBArray.html#method-TileDBArray-schema'><code>tiledbsc::TileDBArray$schema()</code></a></li>
+<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="tiledb_array"><a href='../../tiledbsc/html/TileDBArray.html#method-TileDBArray-tiledb_array'><code>tiledbsc::TileDBArray$tiledb_array()</code></a></li>
+</ul>
+</details>
+}}
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-from_matrix"></a>}}
-\if{latex}{\out{\hypertarget{method-from_matrix}{}}}
+\if{html}{\out{<a id="method-AnnotationPairwiseMatrix-from_matrix"></a>}}
+\if{latex}{\out{\hypertarget{method-AnnotationPairwiseMatrix-from_matrix}{}}}
 \subsection{Method \code{from_matrix()}}{
 Ingest annotation matrix
 \subsection{Usage}{
@@ -71,8 +71,8 @@ contain the matrix values.}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-to_matrix"></a>}}
-\if{latex}{\out{\hypertarget{method-to_matrix}{}}}
+\if{html}{\out{<a id="method-AnnotationPairwiseMatrix-to_matrix"></a>}}
+\if{latex}{\out{\hypertarget{method-AnnotationPairwiseMatrix-to_matrix}{}}}
 \subsection{Method \code{to_matrix()}}{
 Read annotation data from TileDB into a matrix
 \subsection{Usage}{
@@ -84,8 +84,8 @@ A \code{\link{matrix}}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-to_dataframe"></a>}}
-\if{latex}{\out{\hypertarget{method-to_dataframe}{}}}
+\if{html}{\out{<a id="method-AnnotationPairwiseMatrix-to_dataframe"></a>}}
+\if{latex}{\out{\hypertarget{method-AnnotationPairwiseMatrix-to_dataframe}{}}}
 \subsection{Method \code{to_dataframe()}}{
 Read annotation data from TileDB into a data frame
 \subsection{Usage}{
@@ -105,8 +105,8 @@ A \code{\link{data.frame}}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-to_sparse_matrix"></a>}}
-\if{latex}{\out{\hypertarget{method-to_sparse_matrix}{}}}
+\if{html}{\out{<a id="method-AnnotationPairwiseMatrix-to_sparse_matrix"></a>}}
+\if{latex}{\out{\hypertarget{method-AnnotationPairwiseMatrix-to_sparse_matrix}{}}}
 \subsection{Method \code{to_sparse_matrix()}}{
 Read annotation data from TileDB into a sparse matrix
 \subsection{Usage}{
@@ -118,8 +118,8 @@ A \code{\link[Matrix:dgTMatrix-class]{Matrix::dgTMatrix}}.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-to_seurat_graph"></a>}}
-\if{latex}{\out{\hypertarget{method-to_seurat_graph}{}}}
+\if{html}{\out{<a id="method-AnnotationPairwiseMatrix-to_seurat_graph"></a>}}
+\if{latex}{\out{\hypertarget{method-AnnotationPairwiseMatrix-to_seurat_graph}{}}}
 \subsection{Method \code{to_seurat_graph()}}{
 Read annotation data from TileDB into Seurat Graph
 \subsection{Usage}{
@@ -131,8 +131,8 @@ A \code{\link[SeuratObject:Graph-class]{SeuratObject::Graph}}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-clone}{}}}
+\if{html}{\out{<a id="method-AnnotationPairwiseMatrix-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-AnnotationPairwiseMatrix-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{

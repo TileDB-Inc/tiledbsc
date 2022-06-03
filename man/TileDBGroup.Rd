@@ -31,34 +31,34 @@ the specified \code{uri}.
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-new}{\code{TileDBGroup$new()}}
-\item \href{#method-print}{\code{TileDBGroup$print()}}
-\item \href{#method-group_exists}{\code{TileDBGroup$group_exists()}}
-\item \href{#method-tiledb_group}{\code{TileDBGroup$tiledb_group()}}
-\item \href{#method-list_objects}{\code{TileDBGroup$list_objects()}}
-\item \href{#method-list_object_uris}{\code{TileDBGroup$list_object_uris()}}
-\item \href{#method-add_member}{\code{TileDBGroup$add_member()}}
-\item \href{#method-count_members}{\code{TileDBGroup$count_members()}}
-\item \href{#method-list_members}{\code{TileDBGroup$list_members()}}
-\item \href{#method-list_member_uris}{\code{TileDBGroup$list_member_uris()}}
-\item \href{#method-get_members}{\code{TileDBGroup$get_members()}}
-\item \href{#method-get_member}{\code{TileDBGroup$get_member()}}
-\item \href{#method-get_metadata}{\code{TileDBGroup$get_metadata()}}
-\item \href{#method-add_metadata}{\code{TileDBGroup$add_metadata()}}
-\item \href{#method-clone}{\code{TileDBGroup$clone()}}
+\item \href{#method-TileDBGroup-new}{\code{TileDBGroup$new()}}
+\item \href{#method-TileDBGroup-print}{\code{TileDBGroup$print()}}
+\item \href{#method-TileDBGroup-group_exists}{\code{TileDBGroup$group_exists()}}
+\item \href{#method-TileDBGroup-tiledb_group}{\code{TileDBGroup$tiledb_group()}}
+\item \href{#method-TileDBGroup-list_objects}{\code{TileDBGroup$list_objects()}}
+\item \href{#method-TileDBGroup-list_object_uris}{\code{TileDBGroup$list_object_uris()}}
+\item \href{#method-TileDBGroup-add_member}{\code{TileDBGroup$add_member()}}
+\item \href{#method-TileDBGroup-count_members}{\code{TileDBGroup$count_members()}}
+\item \href{#method-TileDBGroup-list_members}{\code{TileDBGroup$list_members()}}
+\item \href{#method-TileDBGroup-list_member_uris}{\code{TileDBGroup$list_member_uris()}}
+\item \href{#method-TileDBGroup-get_members}{\code{TileDBGroup$get_members()}}
+\item \href{#method-TileDBGroup-get_member}{\code{TileDBGroup$get_member()}}
+\item \href{#method-TileDBGroup-get_metadata}{\code{TileDBGroup$get_metadata()}}
+\item \href{#method-TileDBGroup-add_metadata}{\code{TileDBGroup$add_metadata()}}
+\item \href{#method-TileDBGroup-clone}{\code{TileDBGroup$clone()}}
 }
 }
-\if{html}{
-\out{<details open ><summary>Inherited methods</summary>}
-\itemize{
-\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBObject" data-id="class">}\href{../../tiledbsc/html/TileDBObject.html#method-class}{\code{tiledbsc::TileDBObject$class()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBObject" data-id="exists">}\href{../../tiledbsc/html/TileDBObject.html#method-exists}{\code{tiledbsc::TileDBObject$exists()}}\out{</span>}
-}
-\out{</details>}
-}
+\if{html}{\out{
+<details open><summary>Inherited methods</summary>
+<ul>
+<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBObject" data-id="class"><a href='../../tiledbsc/html/TileDBObject.html#method-TileDBObject-class'><code>tiledbsc::TileDBObject$class()</code></a></li>
+<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBObject" data-id="exists"><a href='../../tiledbsc/html/TileDBObject.html#method-TileDBObject-exists'><code>tiledbsc::TileDBObject$exists()</code></a></li>
+</ul>
+</details>
+}}
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\if{latex}{\out{\hypertarget{method-new}{}}}
+\if{html}{\out{<a id="method-TileDBGroup-new"></a>}}
+\if{latex}{\out{\hypertarget{method-TileDBGroup-new}{}}}
 \subsection{Method \code{new()}}{
 Create a new TileDBGroup object.
 \subsection{Usage}{
@@ -80,8 +80,8 @@ Create a new TileDBGroup object.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-print"></a>}}
-\if{latex}{\out{\hypertarget{method-print}{}}}
+\if{html}{\out{<a id="method-TileDBGroup-print"></a>}}
+\if{latex}{\out{\hypertarget{method-TileDBGroup-print}{}}}
 \subsection{Method \code{print()}}{
 Print summary of the group.
 \subsection{Usage}{
@@ -90,8 +90,8 @@ Print summary of the group.
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-group_exists"></a>}}
-\if{latex}{\out{\hypertarget{method-group_exists}{}}}
+\if{html}{\out{<a id="method-TileDBGroup-group_exists"></a>}}
+\if{latex}{\out{\hypertarget{method-TileDBGroup-group_exists}{}}}
 \subsection{Method \code{group_exists()}}{
 Check if the group exists.
 \subsection{Usage}{
@@ -103,8 +103,8 @@ TRUE if the group exists, FALSE otherwise.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-tiledb_group"></a>}}
-\if{latex}{\out{\hypertarget{method-tiledb_group}{}}}
+\if{html}{\out{<a id="method-TileDBGroup-tiledb_group"></a>}}
+\if{latex}{\out{\hypertarget{method-TileDBGroup-tiledb_group}{}}}
 \subsection{Method \code{tiledb_group()}}{
 Return a \code{\link{tiledb_group}} object
 \subsection{Usage}{
@@ -123,8 +123,8 @@ A \code{\link[tiledb:tiledb_group]{tiledb::tiledb_group}} object.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-list_objects"></a>}}
-\if{latex}{\out{\hypertarget{method-list_objects}{}}}
+\if{html}{\out{<a id="method-TileDBGroup-list_objects"></a>}}
+\if{latex}{\out{\hypertarget{method-TileDBGroup-list_objects}{}}}
 \subsection{Method \code{list_objects()}}{
 List the TileDB objects within the group.
 \subsection{Usage}{
@@ -144,8 +144,8 @@ A \code{data.frame} with columns \code{URI} and \code{TYPE}.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-list_object_uris"></a>}}
-\if{latex}{\out{\hypertarget{method-list_object_uris}{}}}
+\if{html}{\out{<a id="method-TileDBGroup-list_object_uris"></a>}}
+\if{latex}{\out{\hypertarget{method-TileDBGroup-list_object_uris}{}}}
 \subsection{Method \code{list_object_uris()}}{
 List URIs for TileDB objects within the group.
 \subsection{Usage}{
@@ -168,8 +168,8 @@ basename of the object.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-add_member"></a>}}
-\if{latex}{\out{\hypertarget{method-add_member}{}}}
+\if{html}{\out{<a id="method-TileDBGroup-add_member"></a>}}
+\if{latex}{\out{\hypertarget{method-TileDBGroup-add_member}{}}}
 \subsection{Method \code{add_member()}}{
 Add new member to the group.
 \subsection{Usage}{
@@ -191,8 +191,8 @@ is relative to the group's URI.}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-count_members"></a>}}
-\if{latex}{\out{\hypertarget{method-count_members}{}}}
+\if{html}{\out{<a id="method-TileDBGroup-count_members"></a>}}
+\if{latex}{\out{\hypertarget{method-TileDBGroup-count_members}{}}}
 \subsection{Method \code{count_members()}}{
 Count the number of members in the group.
 \subsection{Usage}{
@@ -204,8 +204,8 @@ Integer count of members in the group.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-list_members"></a>}}
-\if{latex}{\out{\hypertarget{method-list_members}{}}}
+\if{html}{\out{<a id="method-TileDBGroup-list_members"></a>}}
+\if{latex}{\out{\hypertarget{method-TileDBGroup-list_members}{}}}
 \subsection{Method \code{list_members()}}{
 List the members of the group.
 \subsection{Usage}{
@@ -225,8 +225,8 @@ A \code{data.frame} with columns \code{URI}, \code{TYPE}, and \code{NAME}.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-list_member_uris"></a>}}
-\if{latex}{\out{\hypertarget{method-list_member_uris}{}}}
+\if{html}{\out{<a id="method-TileDBGroup-list_member_uris"></a>}}
+\if{latex}{\out{\hypertarget{method-TileDBGroup-list_member_uris}{}}}
 \subsection{Method \code{list_member_uris()}}{
 List URIs for group members
 \subsection{Usage}{
@@ -248,8 +248,8 @@ A character vector of member URIs, named for the group member
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_members"></a>}}
-\if{latex}{\out{\hypertarget{method-get_members}{}}}
+\if{html}{\out{<a id="method-TileDBGroup-get_members"></a>}}
+\if{latex}{\out{\hypertarget{method-TileDBGroup-get_members}{}}}
 \subsection{Method \code{get_members()}}{
 Retrieve arrays within the group that meet the specified
 criteria.
@@ -269,8 +269,8 @@ criteria.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_member"></a>}}
-\if{latex}{\out{\hypertarget{method-get_member}{}}}
+\if{html}{\out{<a id="method-TileDBGroup-get_member"></a>}}
+\if{latex}{\out{\hypertarget{method-TileDBGroup-get_member}{}}}
 \subsection{Method \code{get_member()}}{
 Retrieve a group member.
 \subsection{Usage}{
@@ -286,8 +286,8 @@ Retrieve a group member.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_metadata"></a>}}
-\if{latex}{\out{\hypertarget{method-get_metadata}{}}}
+\if{html}{\out{<a id="method-TileDBGroup-get_metadata"></a>}}
+\if{latex}{\out{\hypertarget{method-TileDBGroup-get_metadata}{}}}
 \subsection{Method \code{get_metadata()}}{
 Retrieve metadata from the TileDB group.
 \subsection{Usage}{
@@ -309,8 +309,8 @@ A list of metadata values.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-add_metadata"></a>}}
-\if{latex}{\out{\hypertarget{method-add_metadata}{}}}
+\if{html}{\out{<a id="method-TileDBGroup-add_metadata"></a>}}
+\if{latex}{\out{\hypertarget{method-TileDBGroup-add_metadata}{}}}
 \subsection{Method \code{add_metadata()}}{
 Add list of metadata to the TileDB group.
 \subsection{Usage}{
@@ -331,8 +331,8 @@ NULL
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-clone}{}}}
+\if{html}{\out{<a id="method-TileDBGroup-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-TileDBGroup-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{

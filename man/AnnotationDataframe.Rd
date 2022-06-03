@@ -26,34 +26,34 @@ annotations/measurements.
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-from_dataframe}{\code{AnnotationDataframe$from_dataframe()}}
-\item \href{#method-to_dataframe}{\code{AnnotationDataframe$to_dataframe()}}
-\item \href{#method-clone}{\code{AnnotationDataframe$clone()}}
+\item \href{#method-AnnotationDataframe-from_dataframe}{\code{AnnotationDataframe$from_dataframe()}}
+\item \href{#method-AnnotationDataframe-to_dataframe}{\code{AnnotationDataframe$to_dataframe()}}
+\item \href{#method-AnnotationDataframe-clone}{\code{AnnotationDataframe$clone()}}
 }
 }
-\if{html}{
-\out{<details ><summary>Inherited methods</summary>}
-\itemize{
-\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBObject" data-id="class">}\href{../../tiledbsc/html/TileDBObject.html#method-class}{\code{tiledbsc::TileDBObject$class()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBObject" data-id="exists">}\href{../../tiledbsc/html/TileDBObject.html#method-exists}{\code{tiledbsc::TileDBObject$exists()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="add_metadata">}\href{../../tiledbsc/html/TileDBArray.html#method-add_metadata}{\code{tiledbsc::TileDBArray$add_metadata()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="array_exists">}\href{../../tiledbsc/html/TileDBArray.html#method-array_exists}{\code{tiledbsc::TileDBArray$array_exists()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="attributes">}\href{../../tiledbsc/html/TileDBArray.html#method-attributes}{\code{tiledbsc::TileDBArray$attributes()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="attrnames">}\href{../../tiledbsc/html/TileDBArray.html#method-attrnames}{\code{tiledbsc::TileDBArray$attrnames()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="dimensions">}\href{../../tiledbsc/html/TileDBArray.html#method-dimensions}{\code{tiledbsc::TileDBArray$dimensions()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="dimnames">}\href{../../tiledbsc/html/TileDBArray.html#method-dimnames}{\code{tiledbsc::TileDBArray$dimnames()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="fragment_count">}\href{../../tiledbsc/html/TileDBArray.html#method-fragment_count}{\code{tiledbsc::TileDBArray$fragment_count()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="get_metadata">}\href{../../tiledbsc/html/TileDBArray.html#method-get_metadata}{\code{tiledbsc::TileDBArray$get_metadata()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="initialize">}\href{../../tiledbsc/html/TileDBArray.html#method-initialize}{\code{tiledbsc::TileDBArray$initialize()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="print">}\href{../../tiledbsc/html/TileDBArray.html#method-print}{\code{tiledbsc::TileDBArray$print()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="schema">}\href{../../tiledbsc/html/TileDBArray.html#method-schema}{\code{tiledbsc::TileDBArray$schema()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="tiledb_array">}\href{../../tiledbsc/html/TileDBArray.html#method-tiledb_array}{\code{tiledbsc::TileDBArray$tiledb_array()}}\out{</span>}
-}
-\out{</details>}
-}
+\if{html}{\out{
+<details><summary>Inherited methods</summary>
+<ul>
+<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBObject" data-id="class"><a href='../../tiledbsc/html/TileDBObject.html#method-TileDBObject-class'><code>tiledbsc::TileDBObject$class()</code></a></li>
+<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBObject" data-id="exists"><a href='../../tiledbsc/html/TileDBObject.html#method-TileDBObject-exists'><code>tiledbsc::TileDBObject$exists()</code></a></li>
+<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="add_metadata"><a href='../../tiledbsc/html/TileDBArray.html#method-TileDBArray-add_metadata'><code>tiledbsc::TileDBArray$add_metadata()</code></a></li>
+<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="array_exists"><a href='../../tiledbsc/html/TileDBArray.html#method-TileDBArray-array_exists'><code>tiledbsc::TileDBArray$array_exists()</code></a></li>
+<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="attributes"><a href='../../tiledbsc/html/TileDBArray.html#method-TileDBArray-attributes'><code>tiledbsc::TileDBArray$attributes()</code></a></li>
+<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="attrnames"><a href='../../tiledbsc/html/TileDBArray.html#method-TileDBArray-attrnames'><code>tiledbsc::TileDBArray$attrnames()</code></a></li>
+<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="dimensions"><a href='../../tiledbsc/html/TileDBArray.html#method-TileDBArray-dimensions'><code>tiledbsc::TileDBArray$dimensions()</code></a></li>
+<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="dimnames"><a href='../../tiledbsc/html/TileDBArray.html#method-TileDBArray-dimnames'><code>tiledbsc::TileDBArray$dimnames()</code></a></li>
+<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="fragment_count"><a href='../../tiledbsc/html/TileDBArray.html#method-TileDBArray-fragment_count'><code>tiledbsc::TileDBArray$fragment_count()</code></a></li>
+<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="get_metadata"><a href='../../tiledbsc/html/TileDBArray.html#method-TileDBArray-get_metadata'><code>tiledbsc::TileDBArray$get_metadata()</code></a></li>
+<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="initialize"><a href='../../tiledbsc/html/TileDBArray.html#method-TileDBArray-initialize'><code>tiledbsc::TileDBArray$initialize()</code></a></li>
+<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="print"><a href='../../tiledbsc/html/TileDBArray.html#method-TileDBArray-print'><code>tiledbsc::TileDBArray$print()</code></a></li>
+<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="schema"><a href='../../tiledbsc/html/TileDBArray.html#method-TileDBArray-schema'><code>tiledbsc::TileDBArray$schema()</code></a></li>
+<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="tiledb_array"><a href='../../tiledbsc/html/TileDBArray.html#method-TileDBArray-tiledb_array'><code>tiledbsc::TileDBArray$tiledb_array()</code></a></li>
+</ul>
+</details>
+}}
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-from_dataframe"></a>}}
-\if{latex}{\out{\hypertarget{method-from_dataframe}{}}}
+\if{html}{\out{<a id="method-AnnotationDataframe-from_dataframe"></a>}}
+\if{latex}{\out{\hypertarget{method-AnnotationDataframe-from_dataframe}{}}}
 \subsection{Method \code{from_dataframe()}}{
 Ingest annotation data
 \subsection{Usage}{
@@ -72,8 +72,8 @@ contain the data.frame row names.}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-to_dataframe"></a>}}
-\if{latex}{\out{\hypertarget{method-to_dataframe}{}}}
+\if{html}{\out{<a id="method-AnnotationDataframe-to_dataframe"></a>}}
+\if{latex}{\out{\hypertarget{method-AnnotationDataframe-to_dataframe}{}}}
 \subsection{Method \code{to_dataframe()}}{
 Retrieve the annotation data from TileDB
 \subsection{Usage}{
@@ -94,8 +94,8 @@ dimension
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-clone}{}}}
+\if{html}{\out{<a id="method-AnnotationDataframe-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-AnnotationDataframe-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{
