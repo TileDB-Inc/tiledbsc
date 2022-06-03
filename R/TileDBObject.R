@@ -66,15 +66,6 @@ TileDBObject <- R6::R6Class(
         stop("Unknown object type")
       }
       tiledb::tiledb_object_type(uri, ctx = self$ctx) %in% expected_type
-    },
-
-    #' @description Retrieve the TileB object
-    #' @return A [`tiledb::tiledb_array`] or [`tiledb::tiledb_group`] object.
-    get_object = function() {
-      if (!self$exists()) {
-        stop("TileDB object does not exist")
-      }
-      private$object
     }
   ),
 
@@ -84,13 +75,31 @@ TileDBObject <- R6::R6Class(
     uri = function(value) {
       if (missing(value)) return(private$tiledb_uri$uri)
       stop(sprintf("'%s' is a read-only field.", "uri"))
+    },
+
+    #' @field object Access the underlying TileB object directly (either a
+    #' [`tiledb::tiledb_array`] or [`tiledb::tiledb_group`]).
+    object = function(value) {
+      if (!missing(value)) {
+        stop(sprintf("'%s' is a read-only field.", "object"))
+      }
+      # If the array was created after the object was instantiated, we need to
+      # initialize private$tiledb_object
+      if (is.null(private$tiledb_object)) {
+        if (self$exists()) {
+          private$initialize_object()
+        } else {
+          stop("TileDB object does not exist")
+        }
+      }
+      private$tiledb_object
     }
   ),
 
   private = list(
 
     # Internal pointer to the TileDB object
-    object = NULL,
+    tiledb_object = NULL,
 
     # @description Contains TileDBURI object
     tiledb_uri = NULL

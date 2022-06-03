@@ -7,7 +7,7 @@ test_that("TileDBArray helper functions", {
   )
 
   expect_error(
-    tdb$get_object(),
+    tdb$object,
     "TileDB object does not exist"
   )
 
@@ -22,7 +22,7 @@ test_that("TileDBArray helper functions", {
   )
   expect_identical(tdb$uri, uri)
   expect_is(tdb$tiledb_array(), "tiledb_array")
-  expect_is(tdb$get_object(), "tiledb_array")
+  expect_is(tdb$object, "tiledb_array")
   expect_identical(tdb$dimnames(), index_cols)
 
   attr_cols <- setdiff(colnames(df), index_cols)

@@ -130,7 +130,7 @@ TileDBGroup <- R6::R6Class(
       on.exit(private$close())
       private$open("WRITE")
       tiledb::tiledb_group_add_member(
-        grp = private$object,
+        grp = self$object,
         uri = uri,
         relative = relative,
         name = name
@@ -143,7 +143,7 @@ TileDBGroup <- R6::R6Class(
     count_members = function() {
       on.exit(private$close())
       private$open("READ")
-      tiledb::tiledb_group_member_count(private$object)
+      tiledb::tiledb_group_member_count(self$object)
     },
 
     #' @description List the members of the group.
@@ -164,7 +164,7 @@ TileDBGroup <- R6::R6Class(
       member_list <- lapply(
         X = seq_len(count) - 1L,
         FUN = tiledb::tiledb_group_member,
-        grp = private$object
+        grp = self$object
       )
 
       members$TYPE <- vapply_char(member_list, FUN = getElement, name = 1L)
@@ -233,9 +233,9 @@ TileDBGroup <- R6::R6Class(
       on.exit(private$close())
       private$open("READ")
       if (!is.null(key)) {
-        metadata <- tiledb::tiledb_group_get_metadata(private$object, key)
+        metadata <- tiledb::tiledb_group_get_metadata(self$object, key)
       } else {
-        metadata <- tiledb::tiledb_group_get_all_metadata(private$object)
+        metadata <- tiledb::tiledb_group_get_all_metadata(self$object)
         if (!is.null(prefix)) {
           metadata <- metadata[string_starts_with(names(metadata), prefix)]
         }
@@ -257,7 +257,7 @@ TileDBGroup <- R6::R6Class(
         FUN = tiledb::tiledb_group_put_metadata,
         key = paste0(prefix, names(metadata)),
         val = metadata,
-        MoreArgs = list(grp = private$object),
+        MoreArgs = list(grp = self$object),
         SIMPLIFY = FALSE
       )
     }
@@ -274,15 +274,15 @@ TileDBGroup <- R6::R6Class(
 
     open = function(mode) {
       mode <- match.arg(mode, c("READ", "WRITE"))
-      invisible(tiledb::tiledb_group_open(private$object, type = mode))
+      invisible(tiledb::tiledb_group_open(self$object, type = mode))
     },
 
     close = function() {
-      invisible(tiledb::tiledb_group_close(private$object))
+      invisible(tiledb::tiledb_group_close(self$object))
     },
 
     initialize_object = function() {
-      private$object <- tiledb::tiledb_group(self$uri, ctx = self$ctx)
+      private$tiledb_object <- tiledb::tiledb_group(self$uri, ctx = self$ctx)
       private$close()
     },
 

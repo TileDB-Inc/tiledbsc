@@ -15,7 +15,7 @@ test_that("members can be added and retrieved from a new group", {
   grp_uri <- withr::local_tempdir("new-group")
   grp <- TileDBGroup$new(uri = grp_uri, verbose = FALSE)
   expect_is(grp$tiledb_group(), "tiledb_group")
-  expect_is(grp$get_object(), "tiledb_group")
+  expect_is(grp$object, "tiledb_group")
 
   expect_equal(grp$count_members(), 0)
 
