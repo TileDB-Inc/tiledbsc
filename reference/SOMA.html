@@ -25,7 +25,7 @@ var (AnnotationDataframe): 1D labeled array with row labels for X
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tiledbsc</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.2.9002</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.2.9003</span>
       </span>
     </div>
 
@@ -129,34 +129,34 @@ dimensions of the <code>obs</code> and <code>var</code> arrays, respectively.</p
 <div class="section">
 <h3 id="public-methods">Public methods<a class="anchor" aria-label="anchor" href="#public-methods"></a></h3>
 
-<ul><li><p><a href="#method-new"><code>SOMA$new()</code></a></p></li>
-<li><p><a href="#method-from_seurat_assay"><code>SOMA$from_seurat_assay()</code></a></p></li>
-<li><p><a href="#method-to_seurat_assay"><code>SOMA$to_seurat_assay()</code></a></p></li>
-<li><p><a href="#method-add_seurat_dimreduction"><code>SOMA$add_seurat_dimreduction()</code></a></p></li>
-<li><p><a href="#method-get_seurat_dimreduction"><code>SOMA$get_seurat_dimreduction()</code></a></p></li>
-<li><p><a href="#method-get_seurat_dimreductions_list"><code>SOMA$get_seurat_dimreductions_list()</code></a></p></li>
-<li><p><a href="#method-to_seurat_object"><code>SOMA$to_seurat_object()</code></a></p></li>
-<li><p><a href="#method-to_summarized_experiment"><code>SOMA$to_summarized_experiment()</code></a></p></li>
-<li><p><a href="#method-to_single_cell_experiment"><code>SOMA$to_single_cell_experiment()</code></a></p></li>
-<li><p><a href="#method-get_annotation_matrix_arrays"><code>SOMA$get_annotation_matrix_arrays()</code></a></p></li>
-<li><p><a href="#method-get_annotation_pairwise_matrix_arrays"><code>SOMA$get_annotation_pairwise_matrix_arrays()</code></a></p></li>
-<li><p><a href="#method-clone"><code>SOMA$clone()</code></a></p></li>
-</ul></div><p><details><summary>Inherited methods</summary><ul><li><p><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBObject" data-id="class"><a href="TileDBObject.html#method-class"><code>tiledbsc::TileDBObject$class()</code></a></span></p></li>
-<li><p><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBObject" data-id="exists"><a href="TileDBObject.html#method-exists"><code>tiledbsc::TileDBObject$exists()</code></a></span></p></li>
-<li><p><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBGroup" data-id="add_member"><a href="TileDBGroup.html#method-add_member"><code>tiledbsc::TileDBGroup$add_member()</code></a></span></p></li>
-<li><p><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBGroup" data-id="add_metadata"><a href="TileDBGroup.html#method-add_metadata"><code>tiledbsc::TileDBGroup$add_metadata()</code></a></span></p></li>
-<li><p><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBGroup" data-id="count_members"><a href="TileDBGroup.html#method-count_members"><code>tiledbsc::TileDBGroup$count_members()</code></a></span></p></li>
-<li><p><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBGroup" data-id="get_member"><a href="TileDBGroup.html#method-get_member"><code>tiledbsc::TileDBGroup$get_member()</code></a></span></p></li>
-<li><p><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBGroup" data-id="get_members"><a href="TileDBGroup.html#method-get_members"><code>tiledbsc::TileDBGroup$get_members()</code></a></span></p></li>
-<li><p><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBGroup" data-id="get_metadata"><a href="TileDBGroup.html#method-get_metadata"><code>tiledbsc::TileDBGroup$get_metadata()</code></a></span></p></li>
-<li><p><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBGroup" data-id="group_exists"><a href="TileDBGroup.html#method-group_exists"><code>tiledbsc::TileDBGroup$group_exists()</code></a></span></p></li>
-<li><p><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBGroup" data-id="list_member_uris"><a href="TileDBGroup.html#method-list_member_uris"><code>tiledbsc::TileDBGroup$list_member_uris()</code></a></span></p></li>
-<li><p><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBGroup" data-id="list_members"><a href="TileDBGroup.html#method-list_members"><code>tiledbsc::TileDBGroup$list_members()</code></a></span></p></li>
-<li><p><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBGroup" data-id="list_object_uris"><a href="TileDBGroup.html#method-list_object_uris"><code>tiledbsc::TileDBGroup$list_object_uris()</code></a></span></p></li>
-<li><p><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBGroup" data-id="list_objects"><a href="TileDBGroup.html#method-list_objects"><code>tiledbsc::TileDBGroup$list_objects()</code></a></span></p></li>
-<li><p><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBGroup" data-id="print"><a href="TileDBGroup.html#method-print"><code>tiledbsc::TileDBGroup$print()</code></a></span></p></li>
-<li><p><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBGroup" data-id="tiledb_group"><a href="TileDBGroup.html#method-tiledb_group"><code>tiledbsc::TileDBGroup$tiledb_group()</code></a></span></p></li>
-</ul></details></p><hr><a id="method-new"></a><div class="section">
+<ul><li><p><a href="#method-SOMA-new"><code>SOMA$new()</code></a></p></li>
+<li><p><a href="#method-SOMA-from_seurat_assay"><code>SOMA$from_seurat_assay()</code></a></p></li>
+<li><p><a href="#method-SOMA-to_seurat_assay"><code>SOMA$to_seurat_assay()</code></a></p></li>
+<li><p><a href="#method-SOMA-add_seurat_dimreduction"><code>SOMA$add_seurat_dimreduction()</code></a></p></li>
+<li><p><a href="#method-SOMA-get_seurat_dimreduction"><code>SOMA$get_seurat_dimreduction()</code></a></p></li>
+<li><p><a href="#method-SOMA-get_seurat_dimreductions_list"><code>SOMA$get_seurat_dimreductions_list()</code></a></p></li>
+<li><p><a href="#method-SOMA-to_seurat_object"><code>SOMA$to_seurat_object()</code></a></p></li>
+<li><p><a href="#method-SOMA-to_summarized_experiment"><code>SOMA$to_summarized_experiment()</code></a></p></li>
+<li><p><a href="#method-SOMA-to_single_cell_experiment"><code>SOMA$to_single_cell_experiment()</code></a></p></li>
+<li><p><a href="#method-SOMA-get_annotation_matrix_arrays"><code>SOMA$get_annotation_matrix_arrays()</code></a></p></li>
+<li><p><a href="#method-SOMA-get_annotation_pairwise_matrix_arrays"><code>SOMA$get_annotation_pairwise_matrix_arrays()</code></a></p></li>
+<li><p><a href="#method-SOMA-clone"><code>SOMA$clone()</code></a></p></li>
+</ul></div><p><details><summary>Inherited methods</summary><ul><li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBObject" data-id="class"><a href="TileDBObject.html#method-class"><code>tiledbsc::TileDBObject$class()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBObject" data-id="exists"><a href="TileDBObject.html#method-exists"><code>tiledbsc::TileDBObject$exists()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBGroup" data-id="add_member"><a href="TileDBGroup.html#method-add_member"><code>tiledbsc::TileDBGroup$add_member()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBGroup" data-id="add_metadata"><a href="TileDBGroup.html#method-add_metadata"><code>tiledbsc::TileDBGroup$add_metadata()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBGroup" data-id="count_members"><a href="TileDBGroup.html#method-count_members"><code>tiledbsc::TileDBGroup$count_members()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBGroup" data-id="get_member"><a href="TileDBGroup.html#method-get_member"><code>tiledbsc::TileDBGroup$get_member()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBGroup" data-id="get_members"><a href="TileDBGroup.html#method-get_members"><code>tiledbsc::TileDBGroup$get_members()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBGroup" data-id="get_metadata"><a href="TileDBGroup.html#method-get_metadata"><code>tiledbsc::TileDBGroup$get_metadata()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBGroup" data-id="group_exists"><a href="TileDBGroup.html#method-group_exists"><code>tiledbsc::TileDBGroup$group_exists()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBGroup" data-id="list_member_uris"><a href="TileDBGroup.html#method-list_member_uris"><code>tiledbsc::TileDBGroup$list_member_uris()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBGroup" data-id="list_members"><a href="TileDBGroup.html#method-list_members"><code>tiledbsc::TileDBGroup$list_members()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBGroup" data-id="list_object_uris"><a href="TileDBGroup.html#method-list_object_uris"><code>tiledbsc::TileDBGroup$list_object_uris()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBGroup" data-id="list_objects"><a href="TileDBGroup.html#method-list_objects"><code>tiledbsc::TileDBGroup$list_objects()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBGroup" data-id="print"><a href="TileDBGroup.html#method-print"><code>tiledbsc::TileDBGroup$print()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBGroup" data-id="tiledb_group"><a href="TileDBGroup.html#method-tiledb_group"><code>tiledbsc::TileDBGroup$tiledb_group()</code></a></span></li>
+</ul></details></p><hr><a id="method-SOMA-new"></a><div class="section">
 <h3 id="method-new-">Method <code>new()</code><a class="anchor" aria-label="anchor" href="#method-new-"></a></h3>
 <p>Create a new SOMA. The existing array group is
 opened at the specified array <code>uri</code> if one is present, otherwise a new
@@ -186,7 +186,7 @@ array group is created.</p><div class="section">
 </dl><p></p></div>
 </div>
 
-</div><p></p><hr><a id="method-from_seurat_assay"></a><div class="section">
+</div><p></p><hr><a id="method-SOMA-from_seurat_assay"></a><div class="section">
 <h3 id="method-from-seurat-assay-">Method <code>from_seurat_assay()</code><a class="anchor" aria-label="anchor" href="#method-from-seurat-assay-"></a></h3>
 <p>Convert a Seurat Assay to a TileDB-backed sc_group.</p><div class="section">
 <h4 id="usage-1">Usage<a class="anchor" aria-label="anchor" href="#usage-1"></a></h4>
@@ -263,7 +263,7 @@ feature indicating whether it was a variable feature or not.</p>
 </div>
 
 
-</div><p></p><hr><a id="method-to_seurat_assay"></a><div class="section">
+</div><p></p><hr><a id="method-SOMA-to_seurat_assay"></a><div class="section">
 <h3 id="method-to-seurat-assay-">Method <code>to_seurat_assay()</code><a class="anchor" aria-label="anchor" href="#method-to-seurat-assay-"></a></h3>
 <p>Convert to a <code><a href="https://mojaveazure.github.io/seurat-object/reference/Assay-class.html" class="external-link">SeuratObject::Assay</a></code> object.</p><div class="section">
 <h4 id="usage-2">Usage<a class="anchor" aria-label="anchor" href="#usage-2"></a></h4>
@@ -306,7 +306,7 @@ values</p></dd>
 </dl><p></p></div>
 </div>
 
-</div><p></p><hr><a id="method-add_seurat_dimreduction"></a><div class="section">
+</div><p></p><hr><a id="method-SOMA-add_seurat_dimreduction"></a><div class="section">
 <h3 id="method-add-seurat-dimreduction-">Method <code>add_seurat_dimreduction()</code><a class="anchor" aria-label="anchor" href="#method-add-seurat-dimreduction-"></a></h3>
 <p>Convert a <code><a href="https://mojaveazure.github.io/seurat-object/reference/DimReduc-class.html" class="external-link">SeuratObject::DimReduc</a></code> object</p><div class="section">
 <h4 id="usage-3">Usage<a class="anchor" aria-label="anchor" href="#usage-3"></a></h4>
@@ -357,7 +357,7 @@ results column names (required by Seurat)</p></li>
 </div>
 
 
-</div><p></p><hr><a id="method-get_seurat_dimreduction"></a><div class="section">
+</div><p></p><hr><a id="method-SOMA-get_seurat_dimreduction"></a><div class="section">
 <h3 id="method-get-seurat-dimreduction-">Method <code>get_seurat_dimreduction()</code><a class="anchor" aria-label="anchor" href="#method-get-seurat-dimreduction-"></a></h3>
 <p>Convert to a <code><a href="https://mojaveazure.github.io/seurat-object/reference/DimReduc-class.html" class="external-link">SeuratObject::DimReduc</a></code> object.</p><div class="section">
 <h4 id="usage-4">Usage<a class="anchor" aria-label="anchor" href="#usage-4"></a></h4>
@@ -375,7 +375,7 @@ default to the first <code>obsm/dimreduction_</code> array.</p></dd>
 </dl><p></p></div>
 </div>
 
-</div><p></p><hr><a id="method-get_seurat_dimreductions_list"></a><div class="section">
+</div><p></p><hr><a id="method-SOMA-get_seurat_dimreductions_list"></a><div class="section">
 <h3 id="method-get-seurat-dimreductions-list-">Method <code>get_seurat_dimreductions_list()</code><a class="anchor" aria-label="anchor" href="#method-get-seurat-dimreductions-list-"></a></h3>
 <p>Retrieve a list of all <code><a href="https://mojaveazure.github.io/seurat-object/reference/DimReduc-class.html" class="external-link">SeuratObject::DimReduc</a></code> objects.</p><div class="section">
 <h4 id="usage-5">Usage<a class="anchor" aria-label="anchor" href="#usage-5"></a></h4>
@@ -383,7 +383,7 @@ default to the first <code>obsm/dimreduction_</code> array.</p></dd>
 </div>
 
 
-</div><p></p><hr><a id="method-to_seurat_object"></a><div class="section">
+</div><p></p><hr><a id="method-SOMA-to_seurat_object"></a><div class="section">
 <h3 id="method-to-seurat-object-">Method <code>to_seurat_object()</code><a class="anchor" aria-label="anchor" href="#method-to-seurat-object-"></a></h3>
 <p>Convert to a <a href="https://mojaveazure.github.io/seurat-object/reference/Seurat-class.html" class="external-link">SeuratObject::Seurat</a> object.</p><div class="section">
 <h4 id="usage-6">Usage<a class="anchor" aria-label="anchor" href="#usage-6"></a></h4>
@@ -399,7 +399,7 @@ default to the first <code>obsm/dimreduction_</code> array.</p></dd>
 </dl><p></p></div>
 </div>
 
-</div><p></p><hr><a id="method-to_summarized_experiment"></a><div class="section">
+</div><p></p><hr><a id="method-SOMA-to_summarized_experiment"></a><div class="section">
 <h3 id="method-to-summarized-experiment-">Method <code>to_summarized_experiment()</code><a class="anchor" aria-label="anchor" href="#method-to-summarized-experiment-"></a></h3>
 <p>Convert to a SummarizedExperiment::SummarizedExperiment
 object.</p><div class="section">
@@ -433,7 +433,7 @@ with a subset of features is included.</p>
 </div>
 
 
-</div><p></p><hr><a id="method-to_single_cell_experiment"></a><div class="section">
+</div><p></p><hr><a id="method-SOMA-to_single_cell_experiment"></a><div class="section">
 <h3 id="method-to-single-cell-experiment-">Method <code>to_single_cell_experiment()</code><a class="anchor" aria-label="anchor" href="#method-to-single-cell-experiment-"></a></h3>
 <p>Convert to a Bioconductor
 SingleCellExperiment::SingleCellExperiment object.</p><div class="section">
@@ -453,7 +453,7 @@ of the layers vector.</p></dd>
 </dl><p></p></div>
 </div>
 
-</div><p></p><hr><a id="method-get_annotation_matrix_arrays"></a><div class="section">
+</div><p></p><hr><a id="method-SOMA-get_annotation_matrix_arrays"></a><div class="section">
 <h3 id="method-get-annotation-matrix-arrays-">Method <code>get_annotation_matrix_arrays()</code><a class="anchor" aria-label="anchor" href="#method-get-annotation-matrix-arrays-"></a></h3>
 <p>Retrieve <code><a href="AnnotationMatrix.html">AnnotationMatrix</a></code> arrays in <code>obsm</code>/<code>varm</code>
 groups.</p><div class="section">
@@ -475,7 +475,7 @@ groups.</p><div class="section">
 the prefix.</p>
 </div>
 
-</div><p></p><hr><a id="method-get_annotation_pairwise_matrix_arrays"></a><div class="section">
+</div><p></p><hr><a id="method-SOMA-get_annotation_pairwise_matrix_arrays"></a><div class="section">
 <h3 id="method-get-annotation-pairwise-matrix-arrays-">Method <code>get_annotation_pairwise_matrix_arrays()</code><a class="anchor" aria-label="anchor" href="#method-get-annotation-pairwise-matrix-arrays-"></a></h3>
 <p>Retrieve <code><a href="AnnotationPairwiseMatrix.html">AnnotationPairwiseMatrix</a></code> arrays in
 <code>obsp</code>/<code>varp</code> groups.</p><div class="section">
@@ -497,7 +497,7 @@ the prefix.</p>
 the prefix.</p>
 </div>
 
-</div><p></p><hr><a id="method-clone"></a><div class="section">
+</div><p></p><hr><a id="method-SOMA-clone"></a><div class="section">
 <h3 id="method-clone-">Method <code>clone()</code><a class="anchor" aria-label="anchor" href="#method-clone-"></a></h3>
 <p>The objects of this class are cloneable with this method.</p><div class="section">
 <h4 id="usage-11">Usage<a class="anchor" aria-label="anchor" href="#usage-11"></a></h4>

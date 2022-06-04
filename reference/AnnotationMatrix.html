@@ -18,7 +18,7 @@ Single-cell Annotation Matrix"><!-- mathjax --><script src="https://cdnjs.cloudf
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tiledbsc</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.2.9002</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.2.9003</span>
       </span>
     </div>
 
@@ -91,24 +91,24 @@ features of a <code><a href="SOMA.html">SOMA</a></code>.</p>
 <div class="section">
 <h3 id="public-methods">Public methods<a class="anchor" aria-label="anchor" href="#public-methods"></a></h3>
 
-<ul><li><p><a href="#method-from_matrix"><code>AnnotationMatrix$from_matrix()</code></a></p></li>
-<li><p><a href="#method-to_matrix"><code>AnnotationMatrix$to_matrix()</code></a></p></li>
-<li><p><a href="#method-clone"><code>AnnotationMatrix$clone()</code></a></p></li>
-</ul></div><p><details><summary>Inherited methods</summary><ul><li><p><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBObject" data-id="class"><a href="TileDBObject.html#method-class"><code>tiledbsc::TileDBObject$class()</code></a></span></p></li>
-<li><p><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBObject" data-id="exists"><a href="TileDBObject.html#method-exists"><code>tiledbsc::TileDBObject$exists()</code></a></span></p></li>
-<li><p><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="add_metadata"><a href="TileDBArray.html#method-add_metadata"><code>tiledbsc::TileDBArray$add_metadata()</code></a></span></p></li>
-<li><p><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="array_exists"><a href="TileDBArray.html#method-array_exists"><code>tiledbsc::TileDBArray$array_exists()</code></a></span></p></li>
-<li><p><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="attributes"><a href="TileDBArray.html#method-attributes"><code>tiledbsc::TileDBArray$attributes()</code></a></span></p></li>
-<li><p><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="attrnames"><a href="TileDBArray.html#method-attrnames"><code>tiledbsc::TileDBArray$attrnames()</code></a></span></p></li>
-<li><p><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="dimensions"><a href="TileDBArray.html#method-dimensions"><code>tiledbsc::TileDBArray$dimensions()</code></a></span></p></li>
-<li><p><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="dimnames"><a href="TileDBArray.html#method-dimnames"><code>tiledbsc::TileDBArray$dimnames()</code></a></span></p></li>
-<li><p><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="fragment_count"><a href="TileDBArray.html#method-fragment_count"><code>tiledbsc::TileDBArray$fragment_count()</code></a></span></p></li>
-<li><p><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="get_metadata"><a href="TileDBArray.html#method-get_metadata"><code>tiledbsc::TileDBArray$get_metadata()</code></a></span></p></li>
-<li><p><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="initialize"><a href="TileDBArray.html#method-initialize"><code>tiledbsc::TileDBArray$initialize()</code></a></span></p></li>
-<li><p><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="print"><a href="TileDBArray.html#method-print"><code>tiledbsc::TileDBArray$print()</code></a></span></p></li>
-<li><p><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="schema"><a href="TileDBArray.html#method-schema"><code>tiledbsc::TileDBArray$schema()</code></a></span></p></li>
-<li><p><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="tiledb_array"><a href="TileDBArray.html#method-tiledb_array"><code>tiledbsc::TileDBArray$tiledb_array()</code></a></span></p></li>
-</ul></details></p><hr><a id="method-from_matrix"></a><div class="section">
+<ul><li><p><a href="#method-AnnotationMatrix-from_matrix"><code>AnnotationMatrix$from_matrix()</code></a></p></li>
+<li><p><a href="#method-AnnotationMatrix-to_matrix"><code>AnnotationMatrix$to_matrix()</code></a></p></li>
+<li><p><a href="#method-AnnotationMatrix-clone"><code>AnnotationMatrix$clone()</code></a></p></li>
+</ul></div><p><details><summary>Inherited methods</summary><ul><li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBObject" data-id="class"><a href="TileDBObject.html#method-class"><code>tiledbsc::TileDBObject$class()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBObject" data-id="exists"><a href="TileDBObject.html#method-exists"><code>tiledbsc::TileDBObject$exists()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="add_metadata"><a href="TileDBArray.html#method-add_metadata"><code>tiledbsc::TileDBArray$add_metadata()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="array_exists"><a href="TileDBArray.html#method-array_exists"><code>tiledbsc::TileDBArray$array_exists()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="attributes"><a href="TileDBArray.html#method-attributes"><code>tiledbsc::TileDBArray$attributes()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="attrnames"><a href="TileDBArray.html#method-attrnames"><code>tiledbsc::TileDBArray$attrnames()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="dimensions"><a href="TileDBArray.html#method-dimensions"><code>tiledbsc::TileDBArray$dimensions()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="dimnames"><a href="TileDBArray.html#method-dimnames"><code>tiledbsc::TileDBArray$dimnames()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="fragment_count"><a href="TileDBArray.html#method-fragment_count"><code>tiledbsc::TileDBArray$fragment_count()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="get_metadata"><a href="TileDBArray.html#method-get_metadata"><code>tiledbsc::TileDBArray$get_metadata()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="initialize"><a href="TileDBArray.html#method-initialize"><code>tiledbsc::TileDBArray$initialize()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="print"><a href="TileDBArray.html#method-print"><code>tiledbsc::TileDBArray$print()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="schema"><a href="TileDBArray.html#method-schema"><code>tiledbsc::TileDBArray$schema()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="tiledb_array"><a href="TileDBArray.html#method-tiledb_array"><code>tiledbsc::TileDBArray$tiledb_array()</code></a></span></li>
+</ul></details></p><hr><a id="method-AnnotationMatrix-from_matrix"></a><div class="section">
 <h3 id="method-from-matrix-">Method <code>from_matrix()</code><a class="anchor" aria-label="anchor" href="#method-from-matrix-"></a></h3>
 <p>Ingest annotation matrix</p><div class="section">
 <h4 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a></h4>
@@ -129,7 +129,7 @@ contain the matrix row names.</p></dd>
 </dl><p></p></div>
 </div>
 
-</div><p></p><hr><a id="method-to_matrix"></a><div class="section">
+</div><p></p><hr><a id="method-AnnotationMatrix-to_matrix"></a><div class="section">
 <h3 id="method-to-matrix-">Method <code>to_matrix()</code><a class="anchor" aria-label="anchor" href="#method-to-matrix-"></a></h3>
 <p>Retrieve the annotation data from TileDB</p><div class="section">
 <h4 id="usage-1">Usage<a class="anchor" aria-label="anchor" href="#usage-1"></a></h4>
@@ -141,7 +141,7 @@ contain the matrix row names.</p></dd>
 <p>A <code><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></code></p>
 </div>
 
-</div><p></p><hr><a id="method-clone"></a><div class="section">
+</div><p></p><hr><a id="method-AnnotationMatrix-clone"></a><div class="section">
 <h3 id="method-clone-">Method <code>clone()</code><a class="anchor" aria-label="anchor" href="#method-clone-"></a></h3>
 <p>The objects of this class are cloneable with this method.</p><div class="section">
 <h4 id="usage-2">Usage<a class="anchor" aria-label="anchor" href="#usage-2"></a></h4>

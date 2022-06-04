@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tiledbsc</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.2.9002</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.2.9003</span>
       </span>
     </div>
 
@@ -62,10 +62,11 @@
 
     <div class="section level2">
 <h2 class="page-header" data-toc-text="development version" id="tiledbsc-development-version">tiledbsc (development version)<a class="anchor" aria-label="anchor" href="#tiledbsc-development-version"></a></h2>
+<div class="section level3">
+<h3 id="migration-to-soma-based-names-development-version">Migration to SOMA-based names<a class="anchor" aria-label="anchor" href="#migration-to-soma-based-names-development-version"></a></h3>
 <p>This release changes the names of the 2 top-level classes in the tiledbsc package to follow new nomenclature adopted by the <a href="https://github.com/single-cell-data/matrix-api/blob/main/specification.md" class="external-link">single-cell data model specification</a>, which was implemented <a href="https://github.com/single-cell-data/matrix-api/pull/28" class="external-link">here</a>. You can read more about the rationale for this change <a href="https://github.com/single-cell-data/matrix-api/issues/11#issuecomment-1109975498" class="external-link">here</a>.</p>
 <p>Additionally, the <code>misc</code> slot has been renamed to <code>uns</code>. See below for details.</p>
-<div class="section level3">
-<h3 id="new-class-names-development-version">New class names<a class="anchor" aria-label="anchor" href="#new-class-names-development-version"></a></h3>
+<p>New class names</p>
 <ul><li>
 <code>SCGroup</code> is replaced by <code>SOMA</code> (stack of matrices, annotated)</li>
 <li>
@@ -89,6 +90,8 @@
 <ul><li>Added <code>TileDBObject</code> base class to provide fields and methods common to both <code>TileDBArray</code>- and <code>TileDBGroup</code>-based classes</li>
 <li>The <code>array_exists()</code> and <code>group_exists()</code> methods have been deprecated in favor of the more general <code><a href="https://rdrr.io/r/base/exists.html" class="external-link">exists()</a></code>
 </li>
+<li>Similar to the <code>TileDBGroup</code> class, <code>TileDBArray</code> now maintains a reference to the underlying array pointer</li>
+<li>All classes gain a <code>objects</code> field to access the underlying TileDB objects directly</li>
 </ul></div>
 </div>
     <div class="section level2">
