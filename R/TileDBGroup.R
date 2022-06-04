@@ -37,9 +37,7 @@ TileDBGroup <- R6::R6Class(
         }
         private$create_group()
       }
-
-      private$group <- tiledb::tiledb_group(self$uri, ctx = self$ctx)
-      private$group_close()
+      private$initialize_object()
 
       # Instatiate objects for existing members
       self$members <- private$instantiate_members()
@@ -129,10 +127,10 @@ TileDBGroup <- R6::R6Class(
       }
       name <- name %||% basename(uri)
 
-      on.exit(private$group_close())
-      private$group_open("WRITE")
+      on.exit(private$close())
+      private$open("WRITE")
       tiledb::tiledb_group_add_member(
-        grp = private$group,
+        grp = self$object,
         uri = uri,
         relative = relative,
         name = name
@@ -143,9 +141,9 @@ TileDBGroup <- R6::R6Class(
     #' @description Count the number of members in the group.
     #' @return Integer count of members in the group.
     count_members = function() {
-      on.exit(private$group_close())
-      private$group_open("READ")
-      tiledb::tiledb_group_member_count(private$group)
+      on.exit(private$close())
+      private$open("READ")
+      tiledb::tiledb_group_member_count(self$object)
     },
 
     #' @description List the members of the group.
@@ -161,12 +159,12 @@ TileDBGroup <- R6::R6Class(
       )
       if (count == 0) return(members)
 
-      on.exit(private$group_close())
-      private$group_open("READ")
+      on.exit(private$close())
+      private$open("READ")
       member_list <- lapply(
         X = seq_len(count) - 1L,
         FUN = tiledb::tiledb_group_member,
-        grp = private$group
+        grp = self$object
       )
 
       members$TYPE <- vapply_char(member_list, FUN = getElement, name = 1L)
@@ -232,12 +230,12 @@ TileDBGroup <- R6::R6Class(
     #'   is not NULL.
     #' @return A list of metadata values.
     get_metadata = function(key = NULL, prefix = NULL) {
-      on.exit(private$group_close())
-      private$group_open("READ")
+      on.exit(private$close())
+      private$open("READ")
       if (!is.null(key)) {
-        metadata <- tiledb::tiledb_group_get_metadata(private$group, key)
+        metadata <- tiledb::tiledb_group_get_metadata(self$object, key)
       } else {
-        metadata <- tiledb::tiledb_group_get_all_metadata(private$group)
+        metadata <- tiledb::tiledb_group_get_all_metadata(self$object)
         if (!is.null(prefix)) {
           metadata <- metadata[string_starts_with(names(metadata), prefix)]
         }
@@ -253,22 +251,19 @@ TileDBGroup <- R6::R6Class(
       stopifnot(
         "Metadata must be a named list" = is_named_list(metadata)
       )
-      on.exit(private$group_close())
-      private$group_open("WRITE")
+      on.exit(private$close())
+      private$open("WRITE")
       mapply(
         FUN = tiledb::tiledb_group_put_metadata,
         key = paste0(prefix, names(metadata)),
         val = metadata,
-        MoreArgs = list(grp = private$group),
+        MoreArgs = list(grp = self$object),
         SIMPLIFY = FALSE
       )
     }
   ),
 
   private = list(
-
-    # Internal pointer to the TileDB group
-    group = NULL,
 
     create_group = function() {
       if (self$verbose) {
@@ -277,13 +272,18 @@ TileDBGroup <- R6::R6Class(
       tiledb::tiledb_group_create(self$uri, ctx = self$ctx)
     },
 
-    group_open = function(mode) {
+    open = function(mode) {
       mode <- match.arg(mode, c("READ", "WRITE"))
-      invisible(tiledb::tiledb_group_open(private$group, type = mode))
+      invisible(tiledb::tiledb_group_open(self$object, type = mode))
     },
 
-    group_close = function() {
-      invisible(tiledb::tiledb_group_close(private$group))
+    close = function() {
+      invisible(tiledb::tiledb_group_close(self$object))
+    },
+
+    initialize_object = function() {
+      private$tiledb_object <- tiledb::tiledb_group(self$uri, ctx = self$ctx)
+      private$close()
     },
 
     # Instantiate existing group members

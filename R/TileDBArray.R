@@ -25,6 +25,7 @@ TileDBArray <- R6::R6Class(
 
       if (self$exists()) {
         msg <- sprintf("Found existing %s at '%s'", self$class(), self$uri)
+        private$initialize_object()
       } else {
         msg <- sprintf("No %s found at '%s'", self$class(), self$uri)
       }
@@ -69,18 +70,17 @@ TileDBArray <- R6::R6Class(
     #'   is not NULL.
     #' @return A list of metadata values.
     get_metadata = function(key = NULL, prefix = NULL) {
-      arr <- self$tiledb_array()
-      tiledb::tiledb_array_open(arr, "READ")
+      on.exit(private$close())
+      private$open("READ")
       if (!is.null(key)) {
-        metadata <- tiledb::tiledb_get_metadata(arr, key)
+        metadata <- tiledb::tiledb_get_metadata(self$object, key)
       } else {
         # coerce tiledb_metadata to list
-        metadata <- unclass(tiledb::tiledb_get_all_metadata(arr))
+        metadata <- unclass(tiledb::tiledb_get_all_metadata(self$object))
         if (!is.null(prefix)) {
           metadata <- metadata[string_starts_with(names(metadata), prefix)]
         }
       }
-      tiledb::tiledb_array_close(arr)
       return(metadata)
     },
 
@@ -92,23 +92,21 @@ TileDBArray <- R6::R6Class(
       stopifnot(
         "Metadata must be a named list" = is_named_list(metadata)
       )
-      arr <- self$tiledb_array()
-      tiledb::tiledb_array_open(arr, "WRITE")
+      on.exit(private$close())
+      private$open("WRITE")
       mapply(
         FUN = tiledb::tiledb_put_metadata,
         key = paste0(prefix, names(metadata)),
         val = metadata,
-        MoreArgs = list(arr = arr),
+        MoreArgs = list(arr = self$object),
         SIMPLIFY = FALSE
       )
-      tiledb::tiledb_array_close(arr)
-      return(NULL)
     },
 
     #' @description Retrieve the array schema
     #' @return A [`tiledb::tiledb_array_schema`] object
     schema = function() {
-      tiledb::schema(self$tiledb_array())
+      tiledb::schema(self$object)
     },
 
     #' @description Retrieve the array dimensions
@@ -153,8 +151,29 @@ TileDBArray <- R6::R6Class(
   ),
 
   private = list(
+
+    # Once the array has been created this initializes the TileDB array object
+    # and stores the reference in private$tiledb_object.
+    initialize_object = function() {
+      private$tiledb_object <- tiledb::tiledb_array(
+        uri = self$uri,
+        ctx = self$ctx,
+        query_layout = "UNORDERED"
+      )
+      private$close()
+    },
+
     # @description Create empty TileDB array.
     create_empty_array = function() return(NULL),
+
+    open = function(mode) {
+      mode <- match.arg(mode, c("READ", "WRITE"))
+      invisible(tiledb::tiledb_array_open(self$object, type = mode))
+    },
+
+    close = function() {
+      invisible(tiledb::tiledb_array_close(self$object))
+    },
 
     # @description Ingest data into the TileDB array.
     ingest_data = function() return(NULL)

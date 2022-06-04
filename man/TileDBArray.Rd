@@ -21,32 +21,32 @@ populate the private \code{create_empty_array()} and \code{ingest_data()} method
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-new}{\code{TileDBArray$new()}}
-\item \href{#method-print}{\code{TileDBArray$print()}}
-\item \href{#method-array_exists}{\code{TileDBArray$array_exists()}}
-\item \href{#method-tiledb_array}{\code{TileDBArray$tiledb_array()}}
-\item \href{#method-get_metadata}{\code{TileDBArray$get_metadata()}}
-\item \href{#method-add_metadata}{\code{TileDBArray$add_metadata()}}
-\item \href{#method-schema}{\code{TileDBArray$schema()}}
-\item \href{#method-dimensions}{\code{TileDBArray$dimensions()}}
-\item \href{#method-attributes}{\code{TileDBArray$attributes()}}
-\item \href{#method-dimnames}{\code{TileDBArray$dimnames()}}
-\item \href{#method-fragment_count}{\code{TileDBArray$fragment_count()}}
-\item \href{#method-attrnames}{\code{TileDBArray$attrnames()}}
-\item \href{#method-clone}{\code{TileDBArray$clone()}}
+\item \href{#method-TileDBArray-new}{\code{TileDBArray$new()}}
+\item \href{#method-TileDBArray-print}{\code{TileDBArray$print()}}
+\item \href{#method-TileDBArray-array_exists}{\code{TileDBArray$array_exists()}}
+\item \href{#method-TileDBArray-tiledb_array}{\code{TileDBArray$tiledb_array()}}
+\item \href{#method-TileDBArray-get_metadata}{\code{TileDBArray$get_metadata()}}
+\item \href{#method-TileDBArray-add_metadata}{\code{TileDBArray$add_metadata()}}
+\item \href{#method-TileDBArray-schema}{\code{TileDBArray$schema()}}
+\item \href{#method-TileDBArray-dimensions}{\code{TileDBArray$dimensions()}}
+\item \href{#method-TileDBArray-attributes}{\code{TileDBArray$attributes()}}
+\item \href{#method-TileDBArray-dimnames}{\code{TileDBArray$dimnames()}}
+\item \href{#method-TileDBArray-fragment_count}{\code{TileDBArray$fragment_count()}}
+\item \href{#method-TileDBArray-attrnames}{\code{TileDBArray$attrnames()}}
+\item \href{#method-TileDBArray-clone}{\code{TileDBArray$clone()}}
 }
 }
-\if{html}{
-\out{<details open ><summary>Inherited methods</summary>}
-\itemize{
-\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBObject" data-id="class">}\href{../../tiledbsc/html/TileDBObject.html#method-class}{\code{tiledbsc::TileDBObject$class()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBObject" data-id="exists">}\href{../../tiledbsc/html/TileDBObject.html#method-exists}{\code{tiledbsc::TileDBObject$exists()}}\out{</span>}
-}
-\out{</details>}
-}
+\if{html}{\out{
+<details open><summary>Inherited methods</summary>
+<ul>
+<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBObject" data-id="class"><a href='../../tiledbsc/html/TileDBObject.html#method-TileDBObject-class'><code>tiledbsc::TileDBObject$class()</code></a></li>
+<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBObject" data-id="exists"><a href='../../tiledbsc/html/TileDBObject.html#method-TileDBObject-exists'><code>tiledbsc::TileDBObject$exists()</code></a></li>
+</ul>
+</details>
+}}
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\if{latex}{\out{\hypertarget{method-new}{}}}
+\if{html}{\out{<a id="method-TileDBArray-new"></a>}}
+\if{latex}{\out{\hypertarget{method-TileDBArray-new}{}}}
 \subsection{Method \code{new()}}{
 Create a new TileDBArray object.
 \subsection{Usage}{
@@ -68,8 +68,8 @@ Create a new TileDBArray object.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-print"></a>}}
-\if{latex}{\out{\hypertarget{method-print}{}}}
+\if{html}{\out{<a id="method-TileDBArray-print"></a>}}
+\if{latex}{\out{\hypertarget{method-TileDBArray-print}{}}}
 \subsection{Method \code{print()}}{
 Print summary of the array.
 \subsection{Usage}{
@@ -78,8 +78,8 @@ Print summary of the array.
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-array_exists"></a>}}
-\if{latex}{\out{\hypertarget{method-array_exists}{}}}
+\if{html}{\out{<a id="method-TileDBArray-array_exists"></a>}}
+\if{latex}{\out{\hypertarget{method-TileDBArray-array_exists}{}}}
 \subsection{Method \code{array_exists()}}{
 Check if the array exists.
 \subsection{Usage}{
@@ -91,8 +91,8 @@ TRUE if the array exists, FALSE otherwise.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-tiledb_array"></a>}}
-\if{latex}{\out{\hypertarget{method-tiledb_array}{}}}
+\if{html}{\out{<a id="method-TileDBArray-tiledb_array"></a>}}
+\if{latex}{\out{\hypertarget{method-TileDBArray-tiledb_array}{}}}
 \subsection{Method \code{tiledb_array()}}{
 Return a \code{\link{TileDBArray}} object
 \subsection{Usage}{
@@ -111,8 +111,8 @@ A \code{\link[tiledb:tiledb_array]{tiledb::tiledb_array}} object.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_metadata"></a>}}
-\if{latex}{\out{\hypertarget{method-get_metadata}{}}}
+\if{html}{\out{<a id="method-TileDBArray-get_metadata"></a>}}
+\if{latex}{\out{\hypertarget{method-TileDBArray-get_metadata}{}}}
 \subsection{Method \code{get_metadata()}}{
 Retrieve metadata from the TileDB array.
 \subsection{Usage}{
@@ -134,8 +134,8 @@ A list of metadata values.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-add_metadata"></a>}}
-\if{latex}{\out{\hypertarget{method-add_metadata}{}}}
+\if{html}{\out{<a id="method-TileDBArray-add_metadata"></a>}}
+\if{latex}{\out{\hypertarget{method-TileDBArray-add_metadata}{}}}
 \subsection{Method \code{add_metadata()}}{
 Add list of metadata to the specified TileDB array.
 \subsection{Usage}{
@@ -156,8 +156,8 @@ NULL
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-schema"></a>}}
-\if{latex}{\out{\hypertarget{method-schema}{}}}
+\if{html}{\out{<a id="method-TileDBArray-schema"></a>}}
+\if{latex}{\out{\hypertarget{method-TileDBArray-schema}{}}}
 \subsection{Method \code{schema()}}{
 Retrieve the array schema
 \subsection{Usage}{
@@ -169,8 +169,8 @@ A \code{\link[tiledb:tiledb_array_schema]{tiledb::tiledb_array_schema}} object
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-dimensions"></a>}}
-\if{latex}{\out{\hypertarget{method-dimensions}{}}}
+\if{html}{\out{<a id="method-TileDBArray-dimensions"></a>}}
+\if{latex}{\out{\hypertarget{method-TileDBArray-dimensions}{}}}
 \subsection{Method \code{dimensions()}}{
 Retrieve the array dimensions
 \subsection{Usage}{
@@ -182,8 +182,8 @@ A list of \code{\link[tiledb:tiledb_dim]{tiledb::tiledb_dim}} objects
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-attributes"></a>}}
-\if{latex}{\out{\hypertarget{method-attributes}{}}}
+\if{html}{\out{<a id="method-TileDBArray-attributes"></a>}}
+\if{latex}{\out{\hypertarget{method-TileDBArray-attributes}{}}}
 \subsection{Method \code{attributes()}}{
 Retrieve the array attributes
 \subsection{Usage}{
@@ -195,8 +195,8 @@ A list of \code{\link[tiledb:tiledb_attr]{tiledb::tiledb_attr}} objects
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-dimnames"></a>}}
-\if{latex}{\out{\hypertarget{method-dimnames}{}}}
+\if{html}{\out{<a id="method-TileDBArray-dimnames"></a>}}
+\if{latex}{\out{\hypertarget{method-TileDBArray-dimnames}{}}}
 \subsection{Method \code{dimnames()}}{
 Retrieve dimension names
 \subsection{Usage}{
@@ -208,8 +208,8 @@ A character vector with the array's dimension names
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-fragment_count"></a>}}
-\if{latex}{\out{\hypertarget{method-fragment_count}{}}}
+\if{html}{\out{<a id="method-TileDBArray-fragment_count"></a>}}
+\if{latex}{\out{\hypertarget{method-TileDBArray-fragment_count}{}}}
 \subsection{Method \code{fragment_count()}}{
 Get number of fragments in the array
 \subsection{Usage}{
@@ -218,8 +218,8 @@ Get number of fragments in the array
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-attrnames"></a>}}
-\if{latex}{\out{\hypertarget{method-attrnames}{}}}
+\if{html}{\out{<a id="method-TileDBArray-attrnames"></a>}}
+\if{latex}{\out{\hypertarget{method-TileDBArray-attrnames}{}}}
 \subsection{Method \code{attrnames()}}{
 Retrieve attribute names
 \subsection{Usage}{
@@ -231,8 +231,8 @@ A character vector with the array's attribute names
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-clone}{}}}
+\if{html}{\out{<a id="method-TileDBArray-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-TileDBArray-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{

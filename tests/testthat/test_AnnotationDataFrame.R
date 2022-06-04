@@ -1,5 +1,5 @@
 test_that("annotation dataframe can be stored and retrieved", {
-  uri <- withr::local_tempdir("annot-df")
+  uri <- withr::local_tempdir("annot-df16")
 
   annotdf <- AnnotationDataframe$new(uri)
   expect_true(inherits(annotdf, "AnnotationDataframe"))
@@ -10,7 +10,9 @@ test_that("annotation dataframe can be stored and retrieved", {
 
   annotdf$from_dataframe(mtcars, index_col = "index")
   expect_true(dir.exists(annotdf$uri))
+  expect_true(annotdf$exists())
   expect_s4_class(annotdf$tiledb_array(), "tiledb_array")
+  expect_is(annotdf$object, "tiledb_array")
 
   mtcars2 <- annotdf$to_dataframe()
   expect_equal(sort(rownames(mtcars2)), sort(rownames(mtcars)))
