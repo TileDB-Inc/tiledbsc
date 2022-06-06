@@ -166,7 +166,7 @@ TileDBArray <- R6::R6Class(
       # one pair of minimum and maximum values.
       tiledb::selected_ranges(private$tiledb_object) <- lapply(
         X = dims,
-        FUN = function(x) cbind(x, x)
+        FUN = function(x) unname(cbind(x, x))
       )
     }
   ),
