@@ -67,4 +67,10 @@ expect_error(
     selected_ranges(tdb$object),
     list(Dept = cbind(c("A", "B"), c("A", "B")))
   )
+
+  # query result includes only selected ranges
+  expect_equal(
+    unique(tdb$object[]$Dept),
+    c("A", "B")
+  )
 })
