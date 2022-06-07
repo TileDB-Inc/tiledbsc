@@ -16,10 +16,10 @@ AnnotationGroup <- R6::R6Class(
     #' @description Create a new `TileDBGroup`-based Annotation class.
     #' @param uri URI for the TileDB group.
     #' @param dimension_name Optional name of the dimension shared by all
-    #' arrays.
+    #' arrays members.
     #' @param verbose Print status messages
-    initialize = function(uri, dimension_name = NULL, verbose = TRUE) {
-      super$initialize(uri, verbose)
+    initialize = function(uri, dimension_name = NULL, verbose = TRUE, config = NULL, ctx = NULL) {
+      super$initialize(uri, verbose, config, ctx)
       self$dimension_name <- dimension_name
       self
     }
