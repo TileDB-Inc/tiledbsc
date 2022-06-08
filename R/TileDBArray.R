@@ -149,6 +149,7 @@ TileDBArray <- R6::R6Class(
       )
     },
 
+    #' @description Set dimension values to slice from the array.
     #' @param dims a named list of character vectors. Each name must correspond
     #' to an array dimension. The character vectors within each element are used
     #' to set the arrays selected ranges for each corresponding dimension.
@@ -158,8 +159,7 @@ TileDBArray <- R6::R6Class(
           !is.null(dims),
         "'dims' must be a named list of character vectors" =
           is_named_list(dims) && all(vapply_lgl(dims, is.character)),
-        "All 'dims' element names must match an array dimension" =
-          all(names(dims) %in% self$dimnames())
+        assert_subset(names(dims), self$dimnames(), type = "dimension")
       )
 
       # Convert each dim vector to a two-column matrix where each row describes

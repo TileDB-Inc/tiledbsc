@@ -15,7 +15,12 @@ create_empty_test_array <- function(uri) {
 # of sub-arrays (all of which are empty) and sub-groups.
 # param n_arrays: number of arrays to create, named a1..an
 # param n_groups: number of groups to create, named g1..gn
-create_test_group_with_members <- function(uri, relative = TRUE, n_arrays = 0, n_groups = 0) {
+create_test_group_with_members <- function(
+  uri,
+  relative = TRUE,
+  n_arrays = 1,
+  n_groups = 1
+) {
   stopifnot(
     is.logical(relative),
     n_arrays >= 0,
