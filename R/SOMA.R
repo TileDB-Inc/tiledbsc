@@ -721,7 +721,7 @@ SOMA <- R6::R6Class(
       )
 
       # Ensure assay matrices all contain the same observations
-      obs_ids <- self$obs$tiledb_array(attrs = NA_character_)[]$obs_id
+      obs_ids <- self$obs$ids()
       assay_mats <- lapply(assay_mats, pad_matrix, colnames = obs_ids)
       assay_mats
     },

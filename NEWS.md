@@ -32,6 +32,7 @@ For backwards compatibility:
 - The `array_exists()` and `group_exists()` methods have been deprecated in favor of the more general `exists()`
 - Similar to the `TileDBGroup` class, `TileDBArray` now maintains a reference to the underlying array pointer
 - All classes gain a `objects` field to access the underlying TileDB objects directly
+- `AnnotationDataframe` gains `ids()` to retrieve all values from the array's dimension
 
 # tiledbsc 0.1.2
 
