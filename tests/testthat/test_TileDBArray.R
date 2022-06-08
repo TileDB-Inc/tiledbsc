@@ -49,13 +49,13 @@ test_that("TileDBArray helper functions", {
     tdb$set_query(dim = "foo"),
     "'dims' must be a named list of character vectors"
   )
-expect_error(
+  expect_error(
     tdb$set_query(dim = list(a = 1L)),
     "'dims' must be a named list of character vectors"
   )
   expect_error(
     tdb$set_query(dim = list(foo = "bar")),
-    "All 'dims' element names must match an array dimension"
+    "The following dimension does not exist: foo"
   )
 
   expect_silent(

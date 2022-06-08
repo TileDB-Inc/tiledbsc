@@ -53,3 +53,21 @@ test_that("file path construction handles remote URLs", {
     "tiledb://my/array"
   )
 })
+
+test_that("failed vector subset assertions are informative", {
+  expect_true(assert_subset(1, 1:2), 1)
+  expect_true(assert_subset("a", letters[1:2]), "a")
+  expect_error(assert_subset(list("a"), letters[1:2]))
+  expect_error(
+    assert_subset(3, 1:2),
+    "The following value does not exist: 3"
+  )
+  expect_error(
+    assert_subset(letters[1:3], letters[3:5]),
+    "The following values do not exist: a and b"
+  )
+  expect_error(
+    assert_subset(letters[1:3], letters[4:5], type = "letter"),
+    "The following letters do not exist: a, b and c"
+  )
+})

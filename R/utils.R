@@ -98,3 +98,22 @@ file_path <- function(..., fsep = .Platform$file.sep) {
   if (is_remote_uri(paths[[1]])) fsep <- "/"
   file.path(..., fsep = fsep)
 }
+
+#' Assert all values of `x` are a subset of `y`. @param x,y vectors of values
+#' @param type A character vector of length 1 used in the error message
+#' @return `TRUE` if all values of `x` are present in `y`, otherwise an
+#' informative error is thrown with the missing values.
+#' @noRd
+assert_subset <- function(x, y, type = "value") {
+  stopifnot(is.atomic(x) && is.atomic(y))
+  missing <- !x %in% y
+  if (any(missing)) {
+    stop(sprintf(
+      "The following %s%s not exist: %s",
+      type,
+      ifelse(length(missing) == 1, " does", "s do"),
+      glue::glue_collapse(x[missing], sep = ", ", last = " and ")
+    ), call. = FALSE)
+  }
+  TRUE
+}
