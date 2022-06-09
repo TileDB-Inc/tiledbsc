@@ -18,6 +18,8 @@ AnnotationGroup <- R6::R6Class(
     #' @param dimension_name Optional name of the dimension shared by all
     #' arrays members.
     #' @param verbose Print status messages
+    #' @param config optional configuration
+    #' @param ctx optional tiledb context
     initialize = function(uri, dimension_name = NULL, verbose = TRUE, config = NULL, ctx = NULL) {
       super$initialize(uri, verbose, config, ctx)
       self$dimension_name <- dimension_name

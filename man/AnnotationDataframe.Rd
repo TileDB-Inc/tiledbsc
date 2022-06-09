@@ -26,6 +26,7 @@ annotations/measurements.
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
+\item \href{#method-AnnotationDataframe-ids}{\code{AnnotationDataframe$ids()}}
 \item \href{#method-AnnotationDataframe-from_dataframe}{\code{AnnotationDataframe$from_dataframe()}}
 \item \href{#method-AnnotationDataframe-to_dataframe}{\code{AnnotationDataframe$to_dataframe()}}
 \item \href{#method-AnnotationDataframe-clone}{\code{AnnotationDataframe$clone()}}
@@ -47,10 +48,21 @@ annotations/measurements.
 <li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="initialize"><a href='../../tiledbsc/html/TileDBArray.html#method-TileDBArray-initialize'><code>tiledbsc::TileDBArray$initialize()</code></a></li>
 <li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="print"><a href='../../tiledbsc/html/TileDBArray.html#method-TileDBArray-print'><code>tiledbsc::TileDBArray$print()</code></a></li>
 <li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="schema"><a href='../../tiledbsc/html/TileDBArray.html#method-TileDBArray-schema'><code>tiledbsc::TileDBArray$schema()</code></a></li>
+<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="set_query"><a href='../../tiledbsc/html/TileDBArray.html#method-TileDBArray-set_query'><code>tiledbsc::TileDBArray$set_query()</code></a></li>
 <li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="tiledb_array"><a href='../../tiledbsc/html/TileDBArray.html#method-TileDBArray-tiledb_array'><code>tiledbsc::TileDBArray$tiledb_array()</code></a></li>
 </ul>
 </details>
 }}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-AnnotationDataframe-ids"></a>}}
+\if{latex}{\out{\hypertarget{method-AnnotationDataframe-ids}{}}}
+\subsection{Method \code{ids()}}{
+Retrieves the values from the array's dimension.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{AnnotationDataframe$ids()}\if{html}{\out{</div>}}
+}
+
+}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-AnnotationDataframe-from_dataframe"></a>}}
 \if{latex}{\out{\hypertarget{method-AnnotationDataframe-from_dataframe}{}}}
