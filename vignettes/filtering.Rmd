@@ -1,0 +1,109 @@
+---
+title: "Filtering"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Filtering}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# Setup
+
+```{r setup}
+library(tiledbsc)
+library(SeuratObject)
+```
+
+# Overview
+
+This vignette demonstrates how to leverage tiledbsc's features for subsetting and filtering data.
+
+## Dimension slicing
+
+### Low-level classes
+
+`TileDBArray` and its subclasses provide a `set_query()` method that allows you to define the ranges of the indexed dimensions to retrieve.
+
+As an example, let's ingest cell-level metdata from the `pbmc_small` dataset into an `AnnotationDataframe` indexed by the cell identifiers.
+
+```{r}
+data("pbmc_small", package = "SeuratObject")
+
+adf <- AnnotationDataframe$new(uri = file.path(tempdir(), "pbmc_small_obs"))
+adf$from_dataframe(pbmc_small[[]], index_col = "obs_id")
+adf
+```
+
+As you'd expect, reading the data back into memory recreates the same data frame with all 80 cells.
+
+```{r}
+dim(adf$to_dataframe())
+```
+
+We can use the `set_query()` method to read in a specific subset of cells by providing a named list of ranges for each dimension.
+
+```{r}
+adf$set_query(
+  dims = list(obs_id = c("AAATTCGAATCACG", "AAGCAAGAGCTTAG", "AAGCGACTTTGACG"))
+)
+```
+
+Now, the next time we call `to_dataframe()` the resulting data frame will only contain the cells we specified.
+
+```{r}
+adf$to_dataframe()
+```
+
+This functionality is also available for `AnnotationGroup`-based classes, which ostensibly contain a group of arrays that all share the same dimensions. In this case, the `dims` argument is automatically applied to all child arrays.
+
+### SOMA
+
+The `SOMA` class also provides a `set_query()` method for the same purpose. However, unlike the lower-level classes which are meant to be general-purpose,
+the `SOMA` class has well-defined requirements for the dimensions of its underlying arrays. As such, `SOMA$set_query()` provides arguments, `obs_ids` and `var_ids`, rather than the more general `dims` argument.
+designed to work with the `pbmc_small` dataset.
+
+To see this in action, let's create a `SOMA` from `pbmc_small`'s `RNA` assay.
+
+```{r}
+soma <- SOMA$new(uri = file.path(tempdir(), "pbmc_small_rna"))
+soma$from_seurat_assay(pbmc_small[["RNA"]])
+```
+
+Now let's use `set_query()` to slice 3 features of interest.
+
+```{r}
+soma$set_query(var_ids = c("PPBP", "PF4", "GNLY"))
+```
+
+Any of the individual SOMA components will respect the new query. So if we ready in the feature-level metadata from `var`, the resulting data frame contains only the features we specified.
+
+```{r}
+soma$var$to_dataframe()
+```
+
+And when we recreate the entire Seurat `Assay` from the `SOMA`, the slice is carried through to all relevant components,
+
+```{r}
+pbmc_small_rna <- soma$to_seurat_assay()
+```
+
+including the raw counts,
+
+
+```{r}
+GetAssayData(pbmc_small_rna, slot = "counts")
+```
+
+and normalized/scaled data:
+
+
+```{r}
+GetAssayData(pbmc_small_rna, slot = "data")
+```
