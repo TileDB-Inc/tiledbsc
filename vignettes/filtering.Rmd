@@ -31,7 +31,7 @@ This vignette demonstrates how to leverage tiledbsc's features for subsetting an
 
 `TileDBArray` and its subclasses provide a `set_query()` method that allows you to define the ranges of the indexed dimensions to retrieve.
 
-As an example, let's ingest cell-level metdata from the `pbmc_small` dataset into an `AnnotationDataframe` indexed by the cell identifiers.
+As an example, let's ingest cell-level metadata from the `pbmc_small` dataset into an `AnnotationDataframe` indexed by the cell identifiers.
 
 ```{r}
 data("pbmc_small", package = "SeuratObject")
@@ -66,8 +66,7 @@ This functionality is also available for `AnnotationGroup`-based classes, which 
 ### SOMA
 
 The `SOMA` class also provides a `set_query()` method for the same purpose. However, unlike the lower-level classes which are meant to be general-purpose,
-the `SOMA` class has well-defined requirements for the dimensions of its underlying arrays. As such, `SOMA$set_query()` provides arguments, `obs_ids` and `var_ids`, rather than the more general `dims` argument.
-designed to work with the `pbmc_small` dataset.
+the `SOMA` class has well-defined requirements for the dimensions of its member arrays. As such, `SOMA$set_query()` provides arguments, `obs_ids` and `var_ids`, rather than the more general `dims` argument.
 
 To see this in action, let's create a `SOMA` from `pbmc_small`'s `RNA` assay.
 
@@ -76,13 +75,13 @@ soma <- SOMA$new(uri = file.path(tempdir(), "pbmc_small_rna"))
 soma$from_seurat_assay(pbmc_small[["RNA"]])
 ```
 
-Now let's use `set_query()` to slice 3 features of interest.
+Now let's use `set_query()` to slice three features of interest.
 
 ```{r}
 soma$set_query(var_ids = c("PPBP", "PF4", "GNLY"))
 ```
 
-Any of the individual SOMA components will respect the new query. So if we ready in the feature-level metadata from `var`, the resulting data frame contains only the features we specified.
+Any of the individual SOMA components will respect the new query. So if we read in the feature-level metadata from `var`, the resulting data frame contains only the features we specified.
 
 ```{r}
 soma$var$to_dataframe()
@@ -95,7 +94,6 @@ pbmc_small_rna <- soma$to_seurat_assay()
 ```
 
 including the raw counts,
-
 
 ```{r}
 GetAssayData(pbmc_small_rna, slot = "counts")

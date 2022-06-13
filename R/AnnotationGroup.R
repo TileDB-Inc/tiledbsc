@@ -16,7 +16,7 @@ AnnotationGroup <- R6::R6Class(
     #' @description Create a new `TileDBGroup`-based Annotation class.
     #' @param uri URI for the TileDB group.
     #' @param dimension_name Optional name of the dimension shared by all
-    #' arrays members.
+    #' of the group's member arrays.
     #' @param verbose Print status messages
     #' @param config optional configuration
     #' @param ctx optional tiledb context
