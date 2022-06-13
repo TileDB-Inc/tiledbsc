@@ -178,6 +178,28 @@ TileDBArray <- R6::R6Class(
           args = list(expr = attr_filter, ta = self$object)
         )
       }
+    },
+
+    #' @description Reset the query. By default both dimension ranges and
+    #' attribute filters are cleared.
+    #' @param dims Clear the defined dimension ranges?
+    #' @param attr_filter Clear the defined attribute filters?
+    #' @return NULL
+    reset_query = function(dims = TRUE, attr_filter = TRUE) {
+      stopifnot(
+        "'dims' must be a logical" = is.logical(dims),
+        "'attr_filter' must be a logical" = is.logical(attr_filter),
+        "Nothing will be reset if 'dims' and 'attr_filter' are both FALSE"
+          = isTRUE(dims) || isTRUE(attr_filter)
+      )
+      if (isTRUE(dims)) {
+        tiledb::selected_ranges(private$tiledb_object) <- list()
+      }
+      if (isTRUE(attr_filter)) {
+        tiledb::query_condition(private$tiledb_object) <- new(
+          "tiledb_query_condition"
+        )
+      }
     }
   ),
 

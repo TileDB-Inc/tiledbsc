@@ -74,7 +74,16 @@ test_that("TileDBArray helper functions", {
     c("A", "B")
   )
 
+  # set attribute filter
   tdb <- TileDBArray$new(uri = uri, verbose = TRUE)
   tdb$set_query(attr_filter = Admit == "Admitted")
   expect_true(all(tdb$object[]$Admit == "Admitted"))
+
+  # update attribute filter
+  tdb$set_query(attr_filter = Admit != "Admitted")
+  expect_true(all(tdb$object[]$Admit == "Rejected"))
+
+  # reset attribute filter
+  tdb$reset_query()
+  expect_length(tdb$object[]$Admit, nrow(df))
 })
