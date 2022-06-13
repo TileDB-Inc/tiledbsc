@@ -69,7 +69,7 @@ Create a new \code{TileDBGroup}-based Annotation class.
 \item{\code{uri}}{URI for the TileDB group.}
 
 \item{\code{dimension_name}}{Optional name of the dimension shared by all
-arrays members.}
+of the group's member arrays.}
 
 \item{\code{verbose}}{Print status messages}
 
