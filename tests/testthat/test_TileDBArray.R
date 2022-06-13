@@ -73,4 +73,8 @@ test_that("TileDBArray helper functions", {
     unique(tdb$object[]$Dept),
     c("A", "B")
   )
+
+  tdb <- TileDBArray$new(uri = uri, verbose = TRUE)
+  tdb$set_query(attr_filter = Admit == "Admitted")
+  expect_true(all(tdb$object[]$Admit == "Admitted"))
 })
