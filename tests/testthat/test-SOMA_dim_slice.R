@@ -8,11 +8,6 @@ test_that("SOMA object can be sliced by dimension", {
   soma <- SOMA$new(uri = uri, verbose = TRUE)
   soma$from_seurat_assay(pbmc_small_rna, obs = pbmc_small[[]])
 
-  expect_error(
-    soma$set_query(),
-    "Must specify at least one dimension to slice"
-  )
-
   # slice by obs
   soma$set_query(obs_ids = obs_ids[1])
 

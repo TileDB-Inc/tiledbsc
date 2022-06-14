@@ -150,8 +150,6 @@ SOMA <- R6::R6Class(
     #' @param obs_ids,var_ids character vector containing observation- or variable-identifiers.
     set_query = function(obs_ids = NULL, var_ids = NULL) {
       stopifnot(
-        "Must specify at least one dimension to slice" =
-          !is.null(obs_ids) || !is.null(var_ids),
         "'obs_ids' must be a character vector" =
           is.null(obs_ids) || is.character(obs_ids),
         "'var_ids' must be a character vector" =
