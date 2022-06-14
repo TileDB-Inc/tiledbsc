@@ -45,4 +45,12 @@ test_that("dimension slicing is applied to all members", {
   grp$set_query(dims = list(d0 = c("a", "b")))
   expect_equal(grp$members$a1$object[]$d0, c("a", "b"))
   expect_equal(grp$members$a2$object[]$d0, "b")
+
+  # update query
+  grp$set_query(dims = list(d0 = "d"))
+  expect_equal(grp$members$a1$object[]$d0, "d")
+
+  # reset query
+  grp$reset_query()
+  expect_equal(grp$members$a1$object[]$d0, letters[1:5])
 })

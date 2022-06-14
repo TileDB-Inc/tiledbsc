@@ -44,6 +44,15 @@ AnnotationGroup <- R6::R6Class(
       for (member in names(self$members)) {
         self$members[[member]]$set_query(dims)
       }
+    },
+
+    #' @description Reset the group member queries.
+    #' @param dims Clear the defined dimension ranges?
+    #' @return NULL
+    reset_query = function(dims = TRUE) {
+      for (member in names(self$members)) {
+        self$members[[member]]$reset_query(dims)
+      }
     }
   )
 )
