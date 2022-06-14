@@ -38,24 +38,24 @@ test_that("TileDBArray helper functions", {
   # dimension slicing
   tdb <- TileDBArray$new(uri = uri, verbose = TRUE)
   expect_error(
-    tdb$set_query(dim = "foo"),
+    tdb$set_query(dims = "foo"),
     "'dims' must be a named list of character vectors"
   )
   expect_error(
-    tdb$set_query(dim = "foo"),
+    tdb$set_query(dims = "foo"),
     "'dims' must be a named list of character vectors"
   )
   expect_error(
-    tdb$set_query(dim = list(a = 1L)),
+    tdb$set_query(dims = list(a = 1L)),
     "'dims' must be a named list of character vectors"
   )
   expect_error(
-    tdb$set_query(dim = list(foo = "bar")),
+    tdb$set_query(dims = list(foo = "bar")),
     "The following dimension does not exist: foo"
   )
 
   expect_silent(
-    tdb$set_query(dim = list(Dept = c("A", "B")))
+    tdb$set_query(dims = list(Dept = c("A", "B")))
   )
 
   # verify selected ranges were set
