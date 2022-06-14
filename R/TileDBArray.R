@@ -171,8 +171,24 @@ TileDBArray <- R6::R6Class(
         )
       }
 
-      attr_filter <- substitute(attr_filter)
-      if (!is.null(attr_filter)) {
+      # check if attr_filter is NULL whether set_query was called directly from
+      # a TileDBArray or indirectly via AnnotationGroup
+      attr_filter_is_null <- (
+        !is.null(substitute(attr_filter)) &&
+        substitute(attr_filter) != "NULL"
+      )
+
+      if (attr_filter_is_null) {
+        # if the attr_filter was passed in from AnnotationGroup$set_query()
+        # then subsitute() will return a `name` instead of a `call` because
+        # the expression has been converted to a character vector and needs
+        # to be converted back to a call via str2lang
+        if (is.name(substitute(attr_filter))) {
+          attr_filter <- str2lang(attr_filter)
+        } else {
+          attr_filter <- substitute(attr_filter)
+        }
+
         tiledb::query_condition(private$tiledb_object) <- do.call(
           what = tiledb::parse_query_condition,
           args = list(expr = attr_filter, ta = self$object)
