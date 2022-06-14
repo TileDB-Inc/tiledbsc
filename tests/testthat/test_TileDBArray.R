@@ -38,10 +38,6 @@ test_that("TileDBArray helper functions", {
   # dimension slicing
   tdb <- TileDBArray$new(uri = uri, verbose = TRUE)
   expect_error(
-    tdb$set_query(),
-    "Must specify at least one dimension to slice"
-  )
-  expect_error(
     tdb$set_query(dim = "foo"),
     "'dims' must be a named list of character vectors"
   )
