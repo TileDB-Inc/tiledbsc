@@ -171,29 +171,35 @@ TileDBArray <- R6::R6Class(
         )
       }
 
-      # check if attr_filter is NULL whether set_query was called directly from
-      # a TileDBArray or indirectly via AnnotationGroup
-      attr_filter_is_null <- (
-        is.null(substitute(attr_filter)) ||
-        substitute(attr_filter) == "NULL"
+      # We have to add special handling for attr_filter to cover the case where
+      # 1) TileDBArray$set_query() was called directly and attr_filter is an
+      # unevaluated expression, and 2) when TileDBArray$set_query() was called
+      # indirectly (via AnnotationGroup$set_query()) and attr_filter has been
+      # captured and converted to a a character vector.
+
+      # capture error thrown if attr_filter is an unevaluated expression
+      # suppress warning: restarting interrupted promise evaluation
+      is_character_expression <- suppressWarnings(
+          try(is.character(attr_filter), silent = TRUE)
       )
 
-      if (!attr_filter_is_null) {
-        # if the attr_filter was passed in from AnnotationGroup$set_query()
-        # then subsitute() will return a `name` instead of a `call` because
-        # the expression has been converted to a character vector and needs
-        # to be converted back to a call via str2lang
-        if (is.name(substitute(attr_filter))) {
-          attr_filter <- str2lang(attr_filter)
-        } else {
-          attr_filter <- substitute(attr_filter)
-        }
-
-        tiledb::query_condition(private$tiledb_object) <- do.call(
-          what = tiledb::parse_query_condition,
-          args = list(expr = attr_filter, ta = self$object)
-        )
+      if (inherits(is_character_expression, "try-error")) {
+          # attr_filter is an unevaluated expression
+          captured_filter <- substitute(attr_filter)
+      } else if (is_character_expression) {
+          # attr_filter has already been captured and converted to a char vector
+          if (attr_filter == "NULL") return(NULL)
+          captured_filter <- str2lang(attr_filter)
+      } else if (is.null(attr_filter)) {
+          return(NULL)
+      } else {
+          stop("'attr_filter' is not a valid expression")
       }
+
+      tiledb::query_condition(private$tiledb_object) <- do.call(
+        what = tiledb::parse_query_condition,
+        args = list(expr = captured_filter, ta = self$object)
+      )
     },
 
     #' @description Reset the query. By default both dimension ranges and
