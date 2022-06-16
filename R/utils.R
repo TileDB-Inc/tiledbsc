@@ -21,6 +21,10 @@ is_scalar_character <- function(x) {
   is.character(x) && length(x) == 1
 }
 
+is_character_or_null <- function(x) {
+  is.character(x) || is.null(x)
+}
+
 has_character_rownames <- function(x) {
   stopifnot(is.data.frame(x))
   typeof(attr(x, "row.names")) == "character"

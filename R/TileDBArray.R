@@ -160,15 +160,21 @@ TileDBArray <- R6::R6Class(
       if (!is.null(dims)) {
         stopifnot(
           "'dims' must be a named list of character vectors" =
-            is_named_list(dims) && all(vapply_lgl(dims, is.character)),
+            is_named_list(dims) && all(vapply_lgl(dims, is_character_or_null)),
           assert_subset(names(dims), self$dimnames(), type = "dimension")
         )
-        # Convert each dim vector to a two-column matrix where each row
-        # describes one pair of minimum and maximum values.
-        tiledb::selected_ranges(private$tiledb_object) <- lapply(
-          X = dims,
-          FUN = function(x) unname(cbind(x, x))
-        )
+
+        # list of dimensions to slice discarding NULL elements
+        dims <- modifyList(list(), dims)
+
+        if (!is_empty(dims)) {
+          # Convert each dim vector to a two-column matrix where each row
+          # describes one pair of minimum and maximum values.
+          tiledb::selected_ranges(private$tiledb_object) <- lapply(
+            X = dims,
+            FUN = function(x) unname(cbind(x, x))
+          )
+        }
       }
 
       # We have to add special handling for attr_filter to cover the case where
