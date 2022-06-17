@@ -72,8 +72,10 @@ AssayMatrix <- R6::R6Class(
           sprintf("Reading %s into memory from '%s'", self$class(), self$uri)
         )
       }
-      attrs <- attrs %||% character()
-      self$tiledb_array(attrs = attrs, return_as = "data.frame")[]
+      arr <- self$object
+      tiledb::attrs(arr) <- attrs %||% character()
+      tiledb::return_as(arr) <- "data.frame"
+      arr[]
     },
 
     #' @description Retrieve assay data from TileDB as a 2D sparse matrix.

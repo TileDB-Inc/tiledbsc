@@ -33,6 +33,7 @@ populate the private \code{create_empty_array()} and \code{ingest_data()} method
 \item \href{#method-TileDBArray-dimnames}{\code{TileDBArray$dimnames()}}
 \item \href{#method-TileDBArray-fragment_count}{\code{TileDBArray$fragment_count()}}
 \item \href{#method-TileDBArray-attrnames}{\code{TileDBArray$attrnames()}}
+\item \href{#method-TileDBArray-set_query}{\code{TileDBArray$set_query()}}
 \item \href{#method-TileDBArray-clone}{\code{TileDBArray$clone()}}
 }
 }
@@ -228,6 +229,25 @@ Retrieve attribute names
 
 \subsection{Returns}{
 A character vector with the array's attribute names
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-TileDBArray-set_query"></a>}}
+\if{latex}{\out{\hypertarget{method-TileDBArray-set_query}{}}}
+\subsection{Method \code{set_query()}}{
+Set dimension values to slice from the array.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{TileDBArray$set_query(dims = NULL)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{dims}}{a named list of character vectors. Each name must correspond
+to an array dimension. The character vectors within each element are used
+to set the arrays selected ranges for each corresponding dimension.}
+}
+\if{html}{\out{</div>}}
 }
 }
 \if{html}{\out{<hr>}}

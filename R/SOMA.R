@@ -146,6 +146,43 @@ SOMA <- R6::R6Class(
 
     },
 
+    #' @description Set dimension values to slice from the array members.
+    #' @param obs_ids,var_ids character vector containing observation- or variable-identifiers.
+    set_query = function(obs_ids = NULL, var_ids = NULL) {
+      stopifnot(
+        "Must specify at least one dimension to slice" =
+          !is.null(obs_ids) || !is.null(var_ids),
+        "'obs_ids' must be a character vector" =
+          is.null(obs_ids) || is.character(obs_ids),
+        "'var_ids' must be a character vector" =
+          is.null(var_ids) || is.character(var_ids)
+      )
+
+      # list of dimensions slice discarding NULL elements
+      dims <- modifyList(list(), list(obs_id = obs_ids, var_id = var_ids))
+
+      # obs_id/var_id members
+      self$X$set_query(dims = dims)
+
+      # obs_id members
+      if ("obs_id" %in% names(dims)) {
+        self$obs$set_query(dims = dims["obs_id"])
+        self$obsm$set_query(dims = dims["obs_id"])
+        self$members$obsp$set_query(
+          dims = list(obs_id_i = dims$obs_id, obs_id_j = dims$obs_id)
+        )
+      }
+
+      # var_id members
+      if ("var_id" %in% names(dims)) {
+        self$var$set_query(dims = dims["var_id"])
+        self$varm$set_query(dims = dims["var_id"])
+        self$members$varp$set_query(
+          dims = list(var_id_i = dims$var_id, var_id_j = dims$var_id)
+        )
+      }
+    },
+
     #' @description Convert a Seurat Assay to a TileDB-backed sc_group.
     #'
     #' @details
@@ -683,7 +720,7 @@ SOMA <- R6::R6Class(
       )
 
       # Ensure assay matrices all contain the same observations
-      obs_ids <- self$obs$tiledb_array(attrs = NA_character_)[]$obs_id
+      obs_ids <- self$obs$ids()
       assay_mats <- lapply(assay_mats, pad_matrix, colnames = obs_ids)
       assay_mats
     },

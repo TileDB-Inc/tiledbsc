@@ -43,6 +43,7 @@ columns aligned to either the observations or features of \code{X}
 <li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="initialize"><a href='../../tiledbsc/html/TileDBArray.html#method-TileDBArray-initialize'><code>tiledbsc::TileDBArray$initialize()</code></a></li>
 <li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="print"><a href='../../tiledbsc/html/TileDBArray.html#method-TileDBArray-print'><code>tiledbsc::TileDBArray$print()</code></a></li>
 <li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="schema"><a href='../../tiledbsc/html/TileDBArray.html#method-TileDBArray-schema'><code>tiledbsc::TileDBArray$schema()</code></a></li>
+<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="set_query"><a href='../../tiledbsc/html/TileDBArray.html#method-TileDBArray-set_query'><code>tiledbsc::TileDBArray$set_query()</code></a></li>
 <li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="tiledb_array"><a href='../../tiledbsc/html/TileDBArray.html#method-TileDBArray-tiledb_array'><code>tiledbsc::TileDBArray$tiledb_array()</code></a></li>
 </ul>
 </details>

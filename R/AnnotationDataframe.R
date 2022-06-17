@@ -13,6 +13,15 @@ AnnotationDataframe <- R6::R6Class(
     #' @field verbose Print status messages
     verbose = TRUE,
 
+    #' @description Retrieves the values from the array's dimension.
+    ids = function() {
+      arr <- self$object
+      # TODO: Workaround bug using tiledb::attrs(arr) <- NA_character_
+      # https://github.com/TileDB-Inc/TileDB-R/pull/425
+      arr@attrs <- NA_character_
+      arr[][[1]]
+    },
+
     #' @description Ingest annotation data
     #' @param x a [`data.frame`]
     #' @param index_col Name to use for the TileDB array's dimension that will

@@ -6,7 +6,7 @@ AnnotationArray <- R6::R6Class(
   classname = "AnnotationArray",
   inherit = TileDBArray,
 
-  private= list(
+  private = list(
 
     validate_matrix = function(x) {
       stopifnot(

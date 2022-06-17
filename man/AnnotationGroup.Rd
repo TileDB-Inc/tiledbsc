@@ -23,6 +23,7 @@ arrays within the group (typically \code{obs_id} or \code{var_id}).}
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-AnnotationGroup-new}{\code{AnnotationGroup$new()}}
+\item \href{#method-AnnotationGroup-set_query}{\code{AnnotationGroup$set_query()}}
 \item \href{#method-AnnotationGroup-clone}{\code{AnnotationGroup$clone()}}
 }
 }
@@ -53,7 +54,13 @@ arrays within the group (typically \code{obs_id} or \code{var_id}).}
 \subsection{Method \code{new()}}{
 Create a new \code{TileDBGroup}-based Annotation class.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AnnotationGroup$new(uri, dimension_name = NULL, verbose = TRUE)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{AnnotationGroup$new(
+  uri,
+  dimension_name = NULL,
+  verbose = TRUE,
+  config = NULL,
+  ctx = NULL
+)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -62,9 +69,31 @@ Create a new \code{TileDBGroup}-based Annotation class.
 \item{\code{uri}}{URI for the TileDB group.}
 
 \item{\code{dimension_name}}{Optional name of the dimension shared by all
-arrays.}
+of the group's member arrays.}
 
 \item{\code{verbose}}{Print status messages}
+
+\item{\code{config}}{optional configuration}
+
+\item{\code{ctx}}{optional tiledb context}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-AnnotationGroup-set_query"></a>}}
+\if{latex}{\out{\hypertarget{method-AnnotationGroup-set_query}{}}}
+\subsection{Method \code{set_query()}}{
+Set dimension values to slice from the array members.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{AnnotationGroup$set_query(dims = NULL)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{dims}}{a named list of character vectors. Each must correspond to a
+dimension shared by all array members.}
 }
 \if{html}{\out{</div>}}
 }

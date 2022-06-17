@@ -147,6 +147,27 @@ TileDBArray <- R6::R6Class(
         FUN.VALUE = vector("character", 1L),
         USE.NAMES = FALSE
       )
+    },
+
+    #' @description Set dimension values to slice from the array.
+    #' @param dims a named list of character vectors. Each name must correspond
+    #' to an array dimension. The character vectors within each element are used
+    #' to set the arrays selected ranges for each corresponding dimension.
+    set_query = function(dims = NULL) {
+      stopifnot(
+        "Must specify at least one dimension to slice" =
+          !is.null(dims),
+        "'dims' must be a named list of character vectors" =
+          is_named_list(dims) && all(vapply_lgl(dims, is.character)),
+        assert_subset(names(dims), self$dimnames(), type = "dimension")
+      )
+
+      # Convert each dim vector to a two-column matrix where each row describes
+      # one pair of minimum and maximum values.
+      tiledb::selected_ranges(private$tiledb_object) <- lapply(
+        X = dims,
+        FUN = function(x) unname(cbind(x, x))
+      )
     }
   ),
 

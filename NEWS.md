@@ -26,12 +26,24 @@ For backwards compatibility:
 - if a `misc` group exists within a `SOMACollection` or `SOMA` on disk, it will be accessible via the `uns` field of the parent class
 - the deprecated `SCDataset` and `SCGroup` will continue to provide a `misc` field (actually an active binding that aliases the `uns` slot) so users can continue to use the old name
 
+## Dimension slicing
+
+The following classes now have a `set_query()` method to define the ranges of the indexed dimensions to slice:
+
+- `TileDBArray` and its subclasses
+- `AnnotationGroup` and its subclasses
+- `SOMA`
+
+See the new *Filtering* vignette for details.
+
 ## Additional changes
 
 - Added `TileDBObject` base class to provide fields and methods common to both `TileDBArray`- and `TileDBGroup`-based classes
 - The `array_exists()` and `group_exists()` methods have been deprecated in favor of the more general `exists()`
 - Similar to the `TileDBGroup` class, `TileDBArray` now maintains a reference to the underlying array pointer
-- All classes gain a `objects` field to access the underlying TileDB objects directly
+- All classes gain an `objects` field to provide direct access to the underlying TileDB objects
+- Added missing `config`/`ctx` fields to `AnnotationGroup`
+- `AnnotationDataframe` gains `ids()` to retrieve all values from the array's dimension
 
 # tiledbsc 0.1.2
 

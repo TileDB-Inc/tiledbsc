@@ -16,12 +16,34 @@ AnnotationGroup <- R6::R6Class(
     #' @description Create a new `TileDBGroup`-based Annotation class.
     #' @param uri URI for the TileDB group.
     #' @param dimension_name Optional name of the dimension shared by all
-    #' arrays.
+    #' of the group's member arrays.
     #' @param verbose Print status messages
-    initialize = function(uri, dimension_name = NULL, verbose = TRUE) {
-      super$initialize(uri, verbose)
+    #' @param config optional configuration
+    #' @param ctx optional tiledb context
+    initialize = function(uri, dimension_name = NULL, verbose = TRUE, config = NULL, ctx = NULL) {
+      super$initialize(uri, verbose, config, ctx)
       self$dimension_name <- dimension_name
       self
+    },
+
+    #' @description Set dimension values to slice from the array members.
+    #' @param dims a named list of character vectors. Each must correspond to a
+    #' dimension shared by all array members.
+    set_query = function(dims = NULL) {
+      stopifnot(
+        "Must specify at least one dimension to slice" =
+          !is.null(dims),
+        "'dims' must be a named list of character vectors" =
+          is_named_list(dims) && all(vapply_lgl(dims, is.character))
+          # TODO: Utilize AnnotationGroup's dimension_name field for validation
+        # "All 'dims' element names must match an array dimension" =
+          # all(names(dims) %in% self$dimension_name)
+      )
+
+      # Assuming all members are TileDBArrays
+      for (member in names(self$members)) {
+        self$members[[member]]$set_query(dims)
+      }
     }
   )
 )

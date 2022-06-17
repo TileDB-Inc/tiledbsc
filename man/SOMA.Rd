@@ -46,6 +46,7 @@ dimensions of the \code{obs} and \code{var} arrays, respectively.}
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-SOMA-new}{\code{SOMA$new()}}
+\item \href{#method-SOMA-set_query}{\code{SOMA$set_query()}}
 \item \href{#method-SOMA-from_seurat_assay}{\code{SOMA$from_seurat_assay()}}
 \item \href{#method-SOMA-to_seurat_assay}{\code{SOMA$to_seurat_assay()}}
 \item \href{#method-SOMA-add_seurat_dimreduction}{\code{SOMA$add_seurat_dimreduction()}}
@@ -101,6 +102,23 @@ array group is created.
 \item{\code{config}}{optional configuration}
 
 \item{\code{ctx}}{optional tiledb context}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-SOMA-set_query"></a>}}
+\if{latex}{\out{\hypertarget{method-SOMA-set_query}{}}}
+\subsection{Method \code{set_query()}}{
+Set dimension values to slice from the array members.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{SOMA$set_query(obs_ids = NULL, var_ids = NULL)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{obs_ids, var_ids}}{character vector containing observation- or variable-identifiers.}
 }
 \if{html}{\out{</div>}}
 }
