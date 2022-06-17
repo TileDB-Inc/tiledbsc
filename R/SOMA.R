@@ -215,6 +215,15 @@ SOMA <- R6::R6Class(
       )
     },
 
+    #' @description Reset query dimensions and attribute filters.
+    #' @return NULL
+    reset_query = function() {
+      indexed_members <- setdiff(names(self$members), c("uns", "misc"))
+      for (member in indexed_members) {
+        self$members[[member]]$reset_query()
+      }
+    },
+
     #' @description Convert a Seurat Assay to a TileDB-backed sc_group.
     #'
     #' @details

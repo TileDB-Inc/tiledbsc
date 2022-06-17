@@ -65,4 +65,9 @@ test_that("SOMA object can be sliced by dimension", {
 
   pbmc_small_rna2 <- soma$to_seurat_assay()
   expect_equal(dim(pbmc_small_rna2), c(5, 3))
+
+  # reset the query
+  soma$reset_query()
+  pbmc_small_rna3 <- soma$to_seurat_assay()
+  expect_equal(dim(pbmc_small_rna3), dim(pbmc_small_rna))
 })
