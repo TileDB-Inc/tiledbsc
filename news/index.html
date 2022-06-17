@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tiledbsc</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.2.9003</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.2.9004</span>
       </span>
     </div>
 
@@ -32,6 +32,9 @@
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu"><li>
+      <a href="../articles/filtering.html">Filtering</a>
+    </li>
+    <li>
       <a href="../articles/introduction.html">Introduction</a>
     </li>
     <li>
@@ -86,12 +89,26 @@
 <p>For backwards compatibility: - if a <code>misc</code> group exists within a <code>SOMACollection</code> or <code>SOMA</code> on disk, it will be accessible via the <code>uns</code> field of the parent class - the deprecated <code>SCDataset</code> and <code>SCGroup</code> will continue to provide a <code>misc</code> field (actually an active binding that aliases the <code>uns</code> slot) so users can continue to use the old name</p>
 </div>
 <div class="section level3">
+<h3 id="dimension-slicing-development-version">Dimension slicing<a class="anchor" aria-label="anchor" href="#dimension-slicing-development-version"></a></h3>
+<p>The following classes now have a <code>set_query()</code> method to define the ranges of the indexed dimensions to slice:</p>
+<ul><li>
+<code>TileDBArray</code> and its subclasses</li>
+<li>
+<code>AnnotationGroup</code> and its subclasses</li>
+<li><code>SOMA</code></li>
+</ul><p>See the new <em>Filtering</em> vignette for details.</p>
+</div>
+<div class="section level3">
 <h3 id="additional-changes-development-version">Additional changes<a class="anchor" aria-label="anchor" href="#additional-changes-development-version"></a></h3>
 <ul><li>Added <code>TileDBObject</code> base class to provide fields and methods common to both <code>TileDBArray</code>- and <code>TileDBGroup</code>-based classes</li>
 <li>The <code>array_exists()</code> and <code>group_exists()</code> methods have been deprecated in favor of the more general <code><a href="https://rdrr.io/r/base/exists.html" class="external-link">exists()</a></code>
 </li>
 <li>Similar to the <code>TileDBGroup</code> class, <code>TileDBArray</code> now maintains a reference to the underlying array pointer</li>
-<li>All classes gain a <code>objects</code> field to access the underlying TileDB objects directly</li>
+<li>All classes gain an <code>objects</code> field to provide direct access to the underlying TileDB objects</li>
+<li>Added missing <code>config</code>/<code>ctx</code> fields to <code>AnnotationGroup</code>
+</li>
+<li>
+<code>AnnotationDataframe</code> gains <code>ids()</code> to retrieve all values from the array’s dimension</li>
 </ul></div>
 </div>
     <div class="section level2">
@@ -153,7 +170,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
 </div>
 
       </footer></div>

@@ -25,7 +25,7 @@ var (AnnotationDataframe): 1D labeled array with row labels for X
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tiledbsc</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.2.9003</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.2.9004</span>
       </span>
     </div>
 
@@ -40,6 +40,9 @@ var (AnnotationDataframe): 1D labeled array with row labels for X
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu"><li>
+      <a href="../articles/filtering.html">Filtering</a>
+    </li>
+    <li>
       <a href="../articles/introduction.html">Introduction</a>
     </li>
     <li>
@@ -130,6 +133,7 @@ dimensions of the <code>obs</code> and <code>var</code> arrays, respectively.</p
 <h3 id="public-methods">Public methods<a class="anchor" aria-label="anchor" href="#public-methods"></a></h3>
 
 <ul><li><p><a href="#method-SOMA-new"><code>SOMA$new()</code></a></p></li>
+<li><p><a href="#method-SOMA-set_query"><code>SOMA$set_query()</code></a></p></li>
 <li><p><a href="#method-SOMA-from_seurat_assay"><code>SOMA$from_seurat_assay()</code></a></p></li>
 <li><p><a href="#method-SOMA-to_seurat_assay"><code>SOMA$to_seurat_assay()</code></a></p></li>
 <li><p><a href="#method-SOMA-add_seurat_dimreduction"><code>SOMA$add_seurat_dimreduction()</code></a></p></li>
@@ -186,10 +190,26 @@ array group is created.</p><div class="section">
 </dl><p></p></div>
 </div>
 
+</div><p></p><hr><a id="method-SOMA-set_query"></a><div class="section">
+<h3 id="method-set-query-">Method <code>set_query()</code><a class="anchor" aria-label="anchor" href="#method-set-query-"></a></h3>
+<p>Set dimension values to slice from the array members.</p><div class="section">
+<h4 id="usage-1">Usage<a class="anchor" aria-label="anchor" href="#usage-1"></a></h4>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">SOMA</span><span class="op">$</span><span class="fu">set_query</span><span class="op">(</span>obs_ids <span class="op">=</span> <span class="cn">NULL</span>, var_ids <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></code></pre></div><p></p></div>
+</div>
+
+<div class="section">
+<h4 id="arguments-1">Arguments<a class="anchor" aria-label="anchor" href="#arguments-1"></a></h4>
+<p></p><div class="arguments"><dl><dt><code>obs_ids, var_ids</code></dt>
+<dd><p>character vector containing observation- or variable-identifiers.</p></dd>
+
+
+</dl><p></p></div>
+</div>
+
 </div><p></p><hr><a id="method-SOMA-from_seurat_assay"></a><div class="section">
 <h3 id="method-from-seurat-assay-">Method <code>from_seurat_assay()</code><a class="anchor" aria-label="anchor" href="#method-from-seurat-assay-"></a></h3>
 <p>Convert a Seurat Assay to a TileDB-backed sc_group.</p><div class="section">
-<h4 id="usage-1">Usage<a class="anchor" aria-label="anchor" href="#usage-1"></a></h4>
+<h4 id="usage-2">Usage<a class="anchor" aria-label="anchor" href="#usage-2"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">SOMA</span><span class="op">$</span><span class="fu">from_seurat_assay</span><span class="op">(</span>
   <span class="va">object</span>,
   obs <span class="op">=</span> <span class="cn">NULL</span>,
@@ -199,7 +219,7 @@ array group is created.</p><div class="section">
 </div>
 
 <div class="section">
-<h4 id="arguments-1">Arguments<a class="anchor" aria-label="anchor" href="#arguments-1"></a></h4>
+<h4 id="arguments-2">Arguments<a class="anchor" aria-label="anchor" href="#arguments-2"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>object</code></dt>
 <dd><p>A <code><a href="https://mojaveazure.github.io/seurat-object/reference/Assay-class.html" class="external-link">SeuratObject::Assay</a></code> object</p></dd>
 
@@ -266,7 +286,7 @@ feature indicating whether it was a variable feature or not.</p>
 </div><p></p><hr><a id="method-SOMA-to_seurat_assay"></a><div class="section">
 <h3 id="method-to-seurat-assay-">Method <code>to_seurat_assay()</code><a class="anchor" aria-label="anchor" href="#method-to-seurat-assay-"></a></h3>
 <p>Convert to a <code><a href="https://mojaveazure.github.io/seurat-object/reference/Assay-class.html" class="external-link">SeuratObject::Assay</a></code> object.</p><div class="section">
-<h4 id="usage-2">Usage<a class="anchor" aria-label="anchor" href="#usage-2"></a></h4>
+<h4 id="usage-3">Usage<a class="anchor" aria-label="anchor" href="#usage-3"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">SOMA</span><span class="op">$</span><span class="fu">to_seurat_assay</span><span class="op">(</span>
   layers <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"counts"</span>, <span class="st">"data"</span>, <span class="st">"scale.data"</span><span class="op">)</span>,
   min_cells <span class="op">=</span> <span class="fl">0</span>,
@@ -277,7 +297,7 @@ feature indicating whether it was a variable feature or not.</p>
 </div>
 
 <div class="section">
-<h4 id="arguments-2">Arguments<a class="anchor" aria-label="anchor" href="#arguments-2"></a></h4>
+<h4 id="arguments-3">Arguments<a class="anchor" aria-label="anchor" href="#arguments-3"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>layers</code></dt>
 <dd><p>A vector of assay layer names to retrieve. Must match one
 or more of the available <code>X</code> <code><a href="AssayMatrix.html">AssayMatrix</a></code> layers.</p></dd>
@@ -309,12 +329,12 @@ values</p></dd>
 </div><p></p><hr><a id="method-SOMA-add_seurat_dimreduction"></a><div class="section">
 <h3 id="method-add-seurat-dimreduction-">Method <code>add_seurat_dimreduction()</code><a class="anchor" aria-label="anchor" href="#method-add-seurat-dimreduction-"></a></h3>
 <p>Convert a <code><a href="https://mojaveazure.github.io/seurat-object/reference/DimReduc-class.html" class="external-link">SeuratObject::DimReduc</a></code> object</p><div class="section">
-<h4 id="usage-3">Usage<a class="anchor" aria-label="anchor" href="#usage-3"></a></h4>
+<h4 id="usage-4">Usage<a class="anchor" aria-label="anchor" href="#usage-4"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">SOMA</span><span class="op">$</span><span class="fu">add_seurat_dimreduction</span><span class="op">(</span><span class="va">object</span>, technique <span class="op">=</span> <span class="cn">NULL</span>, metadata <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="arguments-3">Arguments<a class="anchor" aria-label="anchor" href="#arguments-3"></a></h4>
+<h4 id="arguments-4">Arguments<a class="anchor" aria-label="anchor" href="#arguments-4"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>object</code></dt>
 <dd><p>A <code><a href="https://mojaveazure.github.io/seurat-object/reference/DimReduc-class.html" class="external-link">SeuratObject::DimReduc</a></code> object</p></dd>
 
@@ -360,12 +380,12 @@ results column names (required by Seurat)</p></li>
 </div><p></p><hr><a id="method-SOMA-get_seurat_dimreduction"></a><div class="section">
 <h3 id="method-get-seurat-dimreduction-">Method <code>get_seurat_dimreduction()</code><a class="anchor" aria-label="anchor" href="#method-get-seurat-dimreduction-"></a></h3>
 <p>Convert to a <code><a href="https://mojaveazure.github.io/seurat-object/reference/DimReduc-class.html" class="external-link">SeuratObject::DimReduc</a></code> object.</p><div class="section">
-<h4 id="usage-4">Usage<a class="anchor" aria-label="anchor" href="#usage-4"></a></h4>
+<h4 id="usage-5">Usage<a class="anchor" aria-label="anchor" href="#usage-5"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">SOMA</span><span class="op">$</span><span class="fu">get_seurat_dimreduction</span><span class="op">(</span>technique <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="arguments-4">Arguments<a class="anchor" aria-label="anchor" href="#arguments-4"></a></h4>
+<h4 id="arguments-5">Arguments<a class="anchor" aria-label="anchor" href="#arguments-5"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>technique</code></dt>
 <dd><p>Name of the dimensionality reduction technique. Used to
 identify which <code>obsm</code>/<code>varm</code> array will be retrieved. If <code>NULL</code>, we
@@ -378,7 +398,7 @@ default to the first <code>obsm/dimreduction_</code> array.</p></dd>
 </div><p></p><hr><a id="method-SOMA-get_seurat_dimreductions_list"></a><div class="section">
 <h3 id="method-get-seurat-dimreductions-list-">Method <code>get_seurat_dimreductions_list()</code><a class="anchor" aria-label="anchor" href="#method-get-seurat-dimreductions-list-"></a></h3>
 <p>Retrieve a list of all <code><a href="https://mojaveazure.github.io/seurat-object/reference/DimReduc-class.html" class="external-link">SeuratObject::DimReduc</a></code> objects.</p><div class="section">
-<h4 id="usage-5">Usage<a class="anchor" aria-label="anchor" href="#usage-5"></a></h4>
+<h4 id="usage-6">Usage<a class="anchor" aria-label="anchor" href="#usage-6"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">SOMA</span><span class="op">$</span><span class="fu">get_seurat_dimreductions_list</span><span class="op">(</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
@@ -386,12 +406,12 @@ default to the first <code>obsm/dimreduction_</code> array.</p></dd>
 </div><p></p><hr><a id="method-SOMA-to_seurat_object"></a><div class="section">
 <h3 id="method-to-seurat-object-">Method <code>to_seurat_object()</code><a class="anchor" aria-label="anchor" href="#method-to-seurat-object-"></a></h3>
 <p>Convert to a <a href="https://mojaveazure.github.io/seurat-object/reference/Seurat-class.html" class="external-link">SeuratObject::Seurat</a> object.</p><div class="section">
-<h4 id="usage-6">Usage<a class="anchor" aria-label="anchor" href="#usage-6"></a></h4>
+<h4 id="usage-7">Usage<a class="anchor" aria-label="anchor" href="#usage-7"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">SOMA</span><span class="op">$</span><span class="fu">to_seurat_object</span><span class="op">(</span>project <span class="op">=</span> <span class="st">"SeuratProject"</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="arguments-5">Arguments<a class="anchor" aria-label="anchor" href="#arguments-5"></a></h4>
+<h4 id="arguments-6">Arguments<a class="anchor" aria-label="anchor" href="#arguments-6"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>project</code></dt>
 <dd><p><code><a href="https://mojaveazure.github.io/seurat-object/reference/Project.html" class="external-link">SeuratObject::Project</a></code> name for the <code>Seurat</code> object</p></dd>
 
@@ -403,12 +423,12 @@ default to the first <code>obsm/dimreduction_</code> array.</p></dd>
 <h3 id="method-to-summarized-experiment-">Method <code>to_summarized_experiment()</code><a class="anchor" aria-label="anchor" href="#method-to-summarized-experiment-"></a></h3>
 <p>Convert to a SummarizedExperiment::SummarizedExperiment
 object.</p><div class="section">
-<h4 id="usage-7">Usage<a class="anchor" aria-label="anchor" href="#usage-7"></a></h4>
+<h4 id="usage-8">Usage<a class="anchor" aria-label="anchor" href="#usage-8"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">SOMA</span><span class="op">$</span><span class="fu">to_summarized_experiment</span><span class="op">(</span>layers <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"counts"</span>, <span class="st">"data"</span>, <span class="st">"scale.data"</span><span class="op">)</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="arguments-6">Arguments<a class="anchor" aria-label="anchor" href="#arguments-6"></a></h4>
+<h4 id="arguments-7">Arguments<a class="anchor" aria-label="anchor" href="#arguments-7"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>layers</code></dt>
 <dd><p>A vector of assay layer names to retrieve. Must match one
 or more of the available <code>X</code> <code><a href="AssayMatrix.html">AssayMatrix</a></code> layers. If <code>layers</code> is
@@ -437,12 +457,12 @@ with a subset of features is included.</p>
 <h3 id="method-to-single-cell-experiment-">Method <code>to_single_cell_experiment()</code><a class="anchor" aria-label="anchor" href="#method-to-single-cell-experiment-"></a></h3>
 <p>Convert to a Bioconductor
 SingleCellExperiment::SingleCellExperiment object.</p><div class="section">
-<h4 id="usage-8">Usage<a class="anchor" aria-label="anchor" href="#usage-8"></a></h4>
+<h4 id="usage-9">Usage<a class="anchor" aria-label="anchor" href="#usage-9"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">SOMA</span><span class="op">$</span><span class="fu">to_single_cell_experiment</span><span class="op">(</span>layers <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"counts"</span>, <span class="st">"data"</span><span class="op">)</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="arguments-7">Arguments<a class="anchor" aria-label="anchor" href="#arguments-7"></a></h4>
+<h4 id="arguments-8">Arguments<a class="anchor" aria-label="anchor" href="#arguments-8"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>layers</code></dt>
 <dd><p>A vector of assay layer names to retrieve. Must match one
 or more of the available <code>X</code> <code><a href="AssayMatrix.html">AssayMatrix</a></code> layers. If <code>layers</code> is
@@ -457,12 +477,12 @@ of the layers vector.</p></dd>
 <h3 id="method-get-annotation-matrix-arrays-">Method <code>get_annotation_matrix_arrays()</code><a class="anchor" aria-label="anchor" href="#method-get-annotation-matrix-arrays-"></a></h3>
 <p>Retrieve <code><a href="AnnotationMatrix.html">AnnotationMatrix</a></code> arrays in <code>obsm</code>/<code>varm</code>
 groups.</p><div class="section">
-<h4 id="usage-9">Usage<a class="anchor" aria-label="anchor" href="#usage-9"></a></h4>
+<h4 id="usage-10">Usage<a class="anchor" aria-label="anchor" href="#usage-10"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">SOMA</span><span class="op">$</span><span class="fu">get_annotation_matrix_arrays</span><span class="op">(</span>prefix <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="arguments-8">Arguments<a class="anchor" aria-label="anchor" href="#arguments-8"></a></h4>
+<h4 id="arguments-9">Arguments<a class="anchor" aria-label="anchor" href="#arguments-9"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>prefix</code></dt>
 <dd><p>String prefix to filter the array names.</p></dd>
 
@@ -479,12 +499,12 @@ the prefix.</p>
 <h3 id="method-get-annotation-pairwise-matrix-arrays-">Method <code>get_annotation_pairwise_matrix_arrays()</code><a class="anchor" aria-label="anchor" href="#method-get-annotation-pairwise-matrix-arrays-"></a></h3>
 <p>Retrieve <code><a href="AnnotationPairwiseMatrix.html">AnnotationPairwiseMatrix</a></code> arrays in
 <code>obsp</code>/<code>varp</code> groups.</p><div class="section">
-<h4 id="usage-10">Usage<a class="anchor" aria-label="anchor" href="#usage-10"></a></h4>
+<h4 id="usage-11">Usage<a class="anchor" aria-label="anchor" href="#usage-11"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">SOMA</span><span class="op">$</span><span class="fu">get_annotation_pairwise_matrix_arrays</span><span class="op">(</span>prefix <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="arguments-9">Arguments<a class="anchor" aria-label="anchor" href="#arguments-9"></a></h4>
+<h4 id="arguments-10">Arguments<a class="anchor" aria-label="anchor" href="#arguments-10"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>prefix</code></dt>
 <dd><p>String prefix to filter the array names.</p></dd>
 
@@ -500,12 +520,12 @@ the prefix.</p>
 </div><p></p><hr><a id="method-SOMA-clone"></a><div class="section">
 <h3 id="method-clone-">Method <code>clone()</code><a class="anchor" aria-label="anchor" href="#method-clone-"></a></h3>
 <p>The objects of this class are cloneable with this method.</p><div class="section">
-<h4 id="usage-11">Usage<a class="anchor" aria-label="anchor" href="#usage-11"></a></h4>
+<h4 id="usage-12">Usage<a class="anchor" aria-label="anchor" href="#usage-12"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">SOMA</span><span class="op">$</span><span class="fu">clone</span><span class="op">(</span>deep <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="arguments-10">Arguments<a class="anchor" aria-label="anchor" href="#arguments-10"></a></h4>
+<h4 id="arguments-11">Arguments<a class="anchor" aria-label="anchor" href="#arguments-11"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>deep</code></dt>
 <dd><p>Whether to make a deep clone.</p></dd>
 
@@ -529,7 +549,7 @@ the prefix.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
 </div>
 
       </footer></div>
