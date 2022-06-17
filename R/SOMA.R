@@ -146,7 +146,19 @@ SOMA <- R6::R6Class(
 
     },
 
-    #' @description Set dimension values to slice from the array members.
+    #' @description Set query parameters to slice by dimension values or filter
+    #' by attribute values.
+    #'
+    #' @details
+    #' A SOMA can be filtered in two ways:
+    #'
+    #' 1. dimension slicing: providing a vector of cell- or feature-identifiers to `obs_ids` and/or `var_ids`, respectively.
+    #' 2. attribute filtering: providing logical expressions that reference
+    #' attributes within the `obs` and `var` arrays.
+    #'
+    #' Filters are applied automatically to all members of a SOMA with the
+    #' exception of `uns`.
+    #'
     #' @param obs_ids,var_ids character vector containing observation- or
     #' variable-identifiers.
     #' @param obs_attr_filter,var_attr_filter a TileDB query condition for
