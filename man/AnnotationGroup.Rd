@@ -24,6 +24,7 @@ arrays within the group (typically \code{obs_id} or \code{var_id}).}
 \itemize{
 \item \href{#method-AnnotationGroup-new}{\code{AnnotationGroup$new()}}
 \item \href{#method-AnnotationGroup-set_query}{\code{AnnotationGroup$set_query()}}
+\item \href{#method-AnnotationGroup-reset_query}{\code{AnnotationGroup$reset_query()}}
 \item \href{#method-AnnotationGroup-clone}{\code{AnnotationGroup$clone()}}
 }
 }
@@ -86,7 +87,7 @@ of the group's member arrays.}
 \subsection{Method \code{set_query()}}{
 Set dimension values to slice from the array members.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AnnotationGroup$set_query(dims = NULL)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{AnnotationGroup$set_query(dims = NULL, attr_filter = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -94,8 +95,33 @@ Set dimension values to slice from the array members.
 \describe{
 \item{\code{dims}}{a named list of character vectors. Each must correspond to a
 dimension shared by all array members.}
+
+\item{\code{attr_filter}}{a TileDB query condition for attribute filtering
+pushdown.}
 }
 \if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-AnnotationGroup-reset_query"></a>}}
+\if{latex}{\out{\hypertarget{method-AnnotationGroup-reset_query}{}}}
+\subsection{Method \code{reset_query()}}{
+Reset the group member queries.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{AnnotationGroup$reset_query(dims = TRUE, attr_filter = TRUE)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{dims}}{Clear the defined dimension ranges?}
+
+\item{\code{attr_filter}}{Clear the defined attribute filters?}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+NULL
 }
 }
 \if{html}{\out{<hr>}}

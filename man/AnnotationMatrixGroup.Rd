@@ -36,6 +36,7 @@ Class for representing a TileDB group containing one or more
 <li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBGroup" data-id="print"><a href='../../tiledbsc/html/TileDBGroup.html#method-TileDBGroup-print'><code>tiledbsc::TileDBGroup$print()</code></a></li>
 <li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBGroup" data-id="tiledb_group"><a href='../../tiledbsc/html/TileDBGroup.html#method-TileDBGroup-tiledb_group'><code>tiledbsc::TileDBGroup$tiledb_group()</code></a></li>
 <li><span class="pkg-link" data-pkg="tiledbsc" data-topic="AnnotationGroup" data-id="initialize"><a href='../../tiledbsc/html/AnnotationGroup.html#method-AnnotationGroup-initialize'><code>tiledbsc::AnnotationGroup$initialize()</code></a></li>
+<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="AnnotationGroup" data-id="reset_query"><a href='../../tiledbsc/html/AnnotationGroup.html#method-AnnotationGroup-reset_query'><code>tiledbsc::AnnotationGroup$reset_query()</code></a></li>
 <li><span class="pkg-link" data-pkg="tiledbsc" data-topic="AnnotationGroup" data-id="set_query"><a href='../../tiledbsc/html/AnnotationGroup.html#method-AnnotationGroup-set_query'><code>tiledbsc::AnnotationGroup$set_query()</code></a></li>
 </ul>
 </details>
