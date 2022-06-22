@@ -103,5 +103,6 @@ TileDBObject <- R6::R6Class(
 
     # @description Contains TileDBURI object
     tiledb_uri = NULL
+
   )
 )

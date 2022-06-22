@@ -182,6 +182,14 @@ TileDBArray <- R6::R6Class(
         query_layout = "UNORDERED"
       )
       private$close()
+      private$write_object_type_metadata()
+    },
+
+    write_object_type_metadata = function() {
+      meta <- list()
+      meta[[SOMA_OBJECT_TYPE_METADATA_KEY]] <- class(self)[1]
+      meta[[SOMA_ENCODING_VERSION_METADATA_KEY]] <- SOMA_ENCODING_VERSION
+      self$add_metadata(meta) # TileDBArray or TileDBGroup
     },
 
     # @description Create empty TileDB array.
