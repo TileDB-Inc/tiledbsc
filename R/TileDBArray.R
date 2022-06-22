@@ -182,7 +182,6 @@ TileDBArray <- R6::R6Class(
         query_layout = "UNORDERED"
       )
       private$close()
-      private$write_object_type_metadata()
     },
 
     write_object_type_metadata = function() {

@@ -270,6 +270,7 @@ TileDBGroup <- R6::R6Class(
         message(sprintf("Creating new %s at '%s'", self$class(), self$uri))
       }
       tiledb::tiledb_group_create(self$uri, ctx = self$ctx)
+      private$write_object_type_metadata()
     },
 
     open = function(mode) {
@@ -284,7 +285,6 @@ TileDBGroup <- R6::R6Class(
     initialize_object = function() {
       private$tiledb_object <- tiledb::tiledb_group(self$uri, ctx = self$ctx)
       private$close()
-      private$write_object_type_metadata()
     },
 
     write_object_type_metadata = function() {

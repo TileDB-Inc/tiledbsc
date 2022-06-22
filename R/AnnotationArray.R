@@ -47,6 +47,7 @@ AnnotationArray <- R6::R6Class(
         capacity = capacity,
         mode = "schema_only"
       )
+      private$write_object_type_metadata()
     },
 
     # @description Ingest assay/annotation data into the TileDB array
