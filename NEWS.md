@@ -44,6 +44,7 @@ See the new *Filtering* vignette for details.
 - All classes gain an `objects` field to provide direct access to the underlying TileDB objects
 - Added missing `config`/`ctx` fields to `AnnotationGroup`
 - `AnnotationDataframe` gains `ids()` to retrieve all values from the array's dimension
+- `soma_object_type` and `soma_encoding_version` metadata are written to groups/arrays at write time
 
 # tiledbsc 0.1.2
 

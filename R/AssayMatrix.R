@@ -183,6 +183,7 @@ AssayMatrix <- R6::R6Class(
 
       private$log_array_creation(index_cols)
       tiledb::tiledb_array_create(uri = self$uri, schema = tdb_schema)
+      private$write_object_type_metadata()
     },
 
     # @description Ingest assay data into the TileDB array.
