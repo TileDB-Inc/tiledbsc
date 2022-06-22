@@ -129,5 +129,9 @@ test_that("metadata can be set and retrieved from a group", {
   grp$add_metadata(md)
   expect_equivalent(grp$get_metadata(key = "foo"), "bar")
   expect_equivalent(grp$get_metadata(prefix = "foo"), md["foo"])
-  expect_equivalent(grp$get_metadata(), md)
+  # There are system-added metadata values so we shouldn't assume the ones we wrote
+  # are the only ones there are.
+  readmd <- grp$get_metadata()
+  expect_equivalent(readmd[["baz"]], "qux")
+  expect_equivalent(readmd[["foo"]], "bar")
 })
