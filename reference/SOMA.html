@@ -25,7 +25,7 @@ var (AnnotationDataframe): 1D labeled array with row labels for X
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tiledbsc</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.2.9005</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.2.9006</span>
       </span>
     </div>
 
@@ -134,6 +134,7 @@ dimensions of the <code>obs</code> and <code>var</code> arrays, respectively.</p
 
 <ul><li><p><a href="#method-SOMA-new"><code>SOMA$new()</code></a></p></li>
 <li><p><a href="#method-SOMA-set_query"><code>SOMA$set_query()</code></a></p></li>
+<li><p><a href="#method-SOMA-reset_query"><code>SOMA$reset_query()</code></a></p></li>
 <li><p><a href="#method-SOMA-from_seurat_assay"><code>SOMA$from_seurat_assay()</code></a></p></li>
 <li><p><a href="#method-SOMA-to_seurat_assay"><code>SOMA$to_seurat_assay()</code></a></p></li>
 <li><p><a href="#method-SOMA-add_seurat_dimreduction"><code>SOMA$add_seurat_dimreduction()</code></a></p></li>
@@ -166,7 +167,7 @@ dimensions of the <code>obs</code> and <code>var</code> arrays, respectively.</p
 opened at the specified array <code>uri</code> if one is present, otherwise a new
 array group is created.</p><div class="section">
 <h4 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span class="va"><a href="../reference/SOMA.html">SOMA</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">uri</span>, verbose <span class="op">=</span> <span class="cn">TRUE</span>, config <span class="op">=</span> <span class="cn">NULL</span>, ctx <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></code></pre></div><p></p></div>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va"><a href="../reference/SOMA.html">SOMA</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">uri</span>, verbose <span class="op">=</span> <span class="cn">TRUE</span>, config <span class="op">=</span> <span class="cn">NULL</span>, ctx <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
@@ -192,30 +193,63 @@ array group is created.</p><div class="section">
 
 </div><p></p><hr><a id="method-SOMA-set_query"></a><div class="section">
 <h3 id="method-set-query-">Method <code>set_query()</code><a class="anchor" aria-label="anchor" href="#method-set-query-"></a></h3>
-<p>Set dimension values to slice from the array members.</p><div class="section">
+<p>Set query parameters to slice by dimension values or filter
+by attribute values.</p><div class="section">
 <h4 id="usage-1">Usage<a class="anchor" aria-label="anchor" href="#usage-1"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">SOMA</span><span class="op">$</span><span class="fu">set_query</span><span class="op">(</span>obs_ids <span class="op">=</span> <span class="cn">NULL</span>, var_ids <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></code></pre></div><p></p></div>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">SOMA</span><span class="op">$</span><span class="fu">set_query</span><span class="op">(</span></span>
+<span>  obs_ids <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  var_ids <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  obs_attr_filter <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  var_attr_filter <span class="op">=</span> <span class="cn">NULL</span></span>
+<span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
 <h4 id="arguments-1">Arguments<a class="anchor" aria-label="anchor" href="#arguments-1"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>obs_ids, var_ids</code></dt>
-<dd><p>character vector containing observation- or variable-identifiers.</p></dd>
+<dd><p>character vector containing observation- or
+variable-identifiers.</p></dd>
+
+
+<dt><code>obs_attr_filter, var_attr_filter</code></dt>
+<dd><p>a TileDB query condition for
+attribute filtering pushdown.</p></dd>
 
 
 </dl><p></p></div>
+</div>
+<div class="section">
+<h4 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h4>
+<p>A SOMA can be filtered in two ways:</p><ol><li><p>dimension slicing: providing a vector of cell- or feature-identifiers to <code>obs_ids</code> and/or <code>var_ids</code>, respectively.</p></li>
+<li><p>attribute filtering: providing logical expressions that reference
+attributes within the <code>obs</code> and <code>var</code> arrays.</p></li>
+</ol><p>Filters are applied automatically to all members of a SOMA with the
+exception of <code>uns</code>.</p>
+</div>
+
+
+</div><p></p><hr><a id="method-SOMA-reset_query"></a><div class="section">
+<h3 id="method-reset-query-">Method <code>reset_query()</code><a class="anchor" aria-label="anchor" href="#method-reset-query-"></a></h3>
+<p>Reset query dimensions and attribute filters.</p><div class="section">
+<h4 id="usage-2">Usage<a class="anchor" aria-label="anchor" href="#usage-2"></a></h4>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">SOMA</span><span class="op">$</span><span class="fu">reset_query</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
+</div>
+
+<div class="section">
+<h4 id="returns">Returns<a class="anchor" aria-label="anchor" href="#returns"></a></h4>
+<p>NULL</p>
 </div>
 
 </div><p></p><hr><a id="method-SOMA-from_seurat_assay"></a><div class="section">
 <h3 id="method-from-seurat-assay-">Method <code>from_seurat_assay()</code><a class="anchor" aria-label="anchor" href="#method-from-seurat-assay-"></a></h3>
 <p>Convert a Seurat Assay to a TileDB-backed sc_group.</p><div class="section">
-<h4 id="usage-2">Usage<a class="anchor" aria-label="anchor" href="#usage-2"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">SOMA</span><span class="op">$</span><span class="fu">from_seurat_assay</span><span class="op">(</span>
-  <span class="va">object</span>,
-  obs <span class="op">=</span> <span class="cn">NULL</span>,
-  var <span class="op">=</span> <span class="cn">TRUE</span>,
-  layers <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"counts"</span>, <span class="st">"data"</span>, <span class="st">"scale.data"</span><span class="op">)</span>
-<span class="op">)</span></code></pre></div><p></p></div>
+<h4 id="usage-3">Usage<a class="anchor" aria-label="anchor" href="#usage-3"></a></h4>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">SOMA</span><span class="op">$</span><span class="fu">from_seurat_assay</span><span class="op">(</span></span>
+<span>  <span class="va">object</span>,</span>
+<span>  obs <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  var <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  layers <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"counts"</span>, <span class="st">"data"</span>, <span class="st">"scale.data"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
@@ -245,7 +279,7 @@ combination of <code>"counts"</code>, <code>"data"</code>, <code>"scale.data"</c
 </dl><p></p></div>
 </div>
 <div class="section">
-<h4 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h4>
+<h4 id="details-1">Details<a class="anchor" aria-label="anchor" href="#details-1"></a></h4>
 
 <div class="section">
 <h5 id="assay-data">Assay data<a class="anchor" aria-label="anchor" href="#assay-data"></a></h5>
@@ -286,14 +320,14 @@ feature indicating whether it was a variable feature or not.</p>
 </div><p></p><hr><a id="method-SOMA-to_seurat_assay"></a><div class="section">
 <h3 id="method-to-seurat-assay-">Method <code>to_seurat_assay()</code><a class="anchor" aria-label="anchor" href="#method-to-seurat-assay-"></a></h3>
 <p>Convert to a <code><a href="https://mojaveazure.github.io/seurat-object/reference/Assay-class.html" class="external-link">SeuratObject::Assay</a></code> object.</p><div class="section">
-<h4 id="usage-3">Usage<a class="anchor" aria-label="anchor" href="#usage-3"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">SOMA</span><span class="op">$</span><span class="fu">to_seurat_assay</span><span class="op">(</span>
-  layers <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"counts"</span>, <span class="st">"data"</span>, <span class="st">"scale.data"</span><span class="op">)</span>,
-  min_cells <span class="op">=</span> <span class="fl">0</span>,
-  min_features <span class="op">=</span> <span class="fl">0</span>,
-  check_matrix <span class="op">=</span> <span class="cn">FALSE</span>,
-  <span class="va">...</span>
-<span class="op">)</span></code></pre></div><p></p></div>
+<h4 id="usage-4">Usage<a class="anchor" aria-label="anchor" href="#usage-4"></a></h4>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">SOMA</span><span class="op">$</span><span class="fu">to_seurat_assay</span><span class="op">(</span></span>
+<span>  layers <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"counts"</span>, <span class="st">"data"</span>, <span class="st">"scale.data"</span><span class="op">)</span>,</span>
+<span>  min_cells <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  min_features <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  check_matrix <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
@@ -329,8 +363,8 @@ values</p></dd>
 </div><p></p><hr><a id="method-SOMA-add_seurat_dimreduction"></a><div class="section">
 <h3 id="method-add-seurat-dimreduction-">Method <code>add_seurat_dimreduction()</code><a class="anchor" aria-label="anchor" href="#method-add-seurat-dimreduction-"></a></h3>
 <p>Convert a <code><a href="https://mojaveazure.github.io/seurat-object/reference/DimReduc-class.html" class="external-link">SeuratObject::DimReduc</a></code> object</p><div class="section">
-<h4 id="usage-4">Usage<a class="anchor" aria-label="anchor" href="#usage-4"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">SOMA</span><span class="op">$</span><span class="fu">add_seurat_dimreduction</span><span class="op">(</span><span class="va">object</span>, technique <span class="op">=</span> <span class="cn">NULL</span>, metadata <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></code></pre></div><p></p></div>
+<h4 id="usage-5">Usage<a class="anchor" aria-label="anchor" href="#usage-5"></a></h4>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">SOMA</span><span class="op">$</span><span class="fu">add_seurat_dimreduction</span><span class="op">(</span><span class="va">object</span>, technique <span class="op">=</span> <span class="cn">NULL</span>, metadata <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
@@ -351,7 +385,7 @@ the <code>key</code> slot is used to determine the technique.</p></dd>
 </dl><p></p></div>
 </div>
 <div class="section">
-<h4 id="details-1">Details<a class="anchor" aria-label="anchor" href="#details-1"></a></h4>
+<h4 id="details-2">Details<a class="anchor" aria-label="anchor" href="#details-2"></a></h4>
 
 <div class="section">
 <h5 id="on-disk-format">On-Disk Format<a class="anchor" aria-label="anchor" href="#on-disk-format"></a></h5>
@@ -380,8 +414,8 @@ results column names (required by Seurat)</p></li>
 </div><p></p><hr><a id="method-SOMA-get_seurat_dimreduction"></a><div class="section">
 <h3 id="method-get-seurat-dimreduction-">Method <code>get_seurat_dimreduction()</code><a class="anchor" aria-label="anchor" href="#method-get-seurat-dimreduction-"></a></h3>
 <p>Convert to a <code><a href="https://mojaveazure.github.io/seurat-object/reference/DimReduc-class.html" class="external-link">SeuratObject::DimReduc</a></code> object.</p><div class="section">
-<h4 id="usage-5">Usage<a class="anchor" aria-label="anchor" href="#usage-5"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">SOMA</span><span class="op">$</span><span class="fu">get_seurat_dimreduction</span><span class="op">(</span>technique <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></code></pre></div><p></p></div>
+<h4 id="usage-6">Usage<a class="anchor" aria-label="anchor" href="#usage-6"></a></h4>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">SOMA</span><span class="op">$</span><span class="fu">get_seurat_dimreduction</span><span class="op">(</span>technique <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
@@ -398,16 +432,16 @@ default to the first <code>obsm/dimreduction_</code> array.</p></dd>
 </div><p></p><hr><a id="method-SOMA-get_seurat_dimreductions_list"></a><div class="section">
 <h3 id="method-get-seurat-dimreductions-list-">Method <code>get_seurat_dimreductions_list()</code><a class="anchor" aria-label="anchor" href="#method-get-seurat-dimreductions-list-"></a></h3>
 <p>Retrieve a list of all <code><a href="https://mojaveazure.github.io/seurat-object/reference/DimReduc-class.html" class="external-link">SeuratObject::DimReduc</a></code> objects.</p><div class="section">
-<h4 id="usage-6">Usage<a class="anchor" aria-label="anchor" href="#usage-6"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">SOMA</span><span class="op">$</span><span class="fu">get_seurat_dimreductions_list</span><span class="op">(</span><span class="op">)</span></code></pre></div><p></p></div>
+<h4 id="usage-7">Usage<a class="anchor" aria-label="anchor" href="#usage-7"></a></h4>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">SOMA</span><span class="op">$</span><span class="fu">get_seurat_dimreductions_list</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 
 </div><p></p><hr><a id="method-SOMA-to_seurat_object"></a><div class="section">
 <h3 id="method-to-seurat-object-">Method <code>to_seurat_object()</code><a class="anchor" aria-label="anchor" href="#method-to-seurat-object-"></a></h3>
 <p>Convert to a <a href="https://mojaveazure.github.io/seurat-object/reference/Seurat-class.html" class="external-link">SeuratObject::Seurat</a> object.</p><div class="section">
-<h4 id="usage-7">Usage<a class="anchor" aria-label="anchor" href="#usage-7"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">SOMA</span><span class="op">$</span><span class="fu">to_seurat_object</span><span class="op">(</span>project <span class="op">=</span> <span class="st">"SeuratProject"</span><span class="op">)</span></code></pre></div><p></p></div>
+<h4 id="usage-8">Usage<a class="anchor" aria-label="anchor" href="#usage-8"></a></h4>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">SOMA</span><span class="op">$</span><span class="fu">to_seurat_object</span><span class="op">(</span>project <span class="op">=</span> <span class="st">"SeuratProject"</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
@@ -423,8 +457,8 @@ default to the first <code>obsm/dimreduction_</code> array.</p></dd>
 <h3 id="method-to-summarized-experiment-">Method <code>to_summarized_experiment()</code><a class="anchor" aria-label="anchor" href="#method-to-summarized-experiment-"></a></h3>
 <p>Convert to a SummarizedExperiment::SummarizedExperiment
 object.</p><div class="section">
-<h4 id="usage-8">Usage<a class="anchor" aria-label="anchor" href="#usage-8"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">SOMA</span><span class="op">$</span><span class="fu">to_summarized_experiment</span><span class="op">(</span>layers <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"counts"</span>, <span class="st">"data"</span>, <span class="st">"scale.data"</span><span class="op">)</span><span class="op">)</span></code></pre></div><p></p></div>
+<h4 id="usage-9">Usage<a class="anchor" aria-label="anchor" href="#usage-9"></a></h4>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">SOMA</span><span class="op">$</span><span class="fu">to_summarized_experiment</span><span class="op">(</span>layers <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"counts"</span>, <span class="st">"data"</span>, <span class="st">"scale.data"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
@@ -439,7 +473,7 @@ of the layers vector.</p></dd>
 </dl><p></p></div>
 </div>
 <div class="section">
-<h4 id="details-2">Details<a class="anchor" aria-label="anchor" href="#details-2"></a></h4>
+<h4 id="details-3">Details<a class="anchor" aria-label="anchor" href="#details-3"></a></h4>
 
 <div class="section">
 <h5 id="layers">Layers<a class="anchor" aria-label="anchor" href="#layers"></a></h5>
@@ -457,8 +491,8 @@ with a subset of features is included.</p>
 <h3 id="method-to-single-cell-experiment-">Method <code>to_single_cell_experiment()</code><a class="anchor" aria-label="anchor" href="#method-to-single-cell-experiment-"></a></h3>
 <p>Convert to a Bioconductor
 SingleCellExperiment::SingleCellExperiment object.</p><div class="section">
-<h4 id="usage-9">Usage<a class="anchor" aria-label="anchor" href="#usage-9"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">SOMA</span><span class="op">$</span><span class="fu">to_single_cell_experiment</span><span class="op">(</span>layers <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"counts"</span>, <span class="st">"data"</span><span class="op">)</span><span class="op">)</span></code></pre></div><p></p></div>
+<h4 id="usage-10">Usage<a class="anchor" aria-label="anchor" href="#usage-10"></a></h4>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">SOMA</span><span class="op">$</span><span class="fu">to_single_cell_experiment</span><span class="op">(</span>layers <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"counts"</span>, <span class="st">"data"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
@@ -477,8 +511,8 @@ of the layers vector.</p></dd>
 <h3 id="method-get-annotation-matrix-arrays-">Method <code>get_annotation_matrix_arrays()</code><a class="anchor" aria-label="anchor" href="#method-get-annotation-matrix-arrays-"></a></h3>
 <p>Retrieve <code><a href="AnnotationMatrix.html">AnnotationMatrix</a></code> arrays in <code>obsm</code>/<code>varm</code>
 groups.</p><div class="section">
-<h4 id="usage-10">Usage<a class="anchor" aria-label="anchor" href="#usage-10"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">SOMA</span><span class="op">$</span><span class="fu">get_annotation_matrix_arrays</span><span class="op">(</span>prefix <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></code></pre></div><p></p></div>
+<h4 id="usage-11">Usage<a class="anchor" aria-label="anchor" href="#usage-11"></a></h4>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">SOMA</span><span class="op">$</span><span class="fu">get_annotation_matrix_arrays</span><span class="op">(</span>prefix <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
@@ -490,7 +524,7 @@ groups.</p><div class="section">
 </dl><p></p></div>
 </div>
 <div class="section">
-<h4 id="returns">Returns<a class="anchor" aria-label="anchor" href="#returns"></a></h4>
+<h4 id="returns-1">Returns<a class="anchor" aria-label="anchor" href="#returns-1"></a></h4>
 <p>A list with <code>"obsm"</code>/<code>"varm"</code> slots containing arrays matching
 the prefix.</p>
 </div>
@@ -499,8 +533,8 @@ the prefix.</p>
 <h3 id="method-get-annotation-pairwise-matrix-arrays-">Method <code>get_annotation_pairwise_matrix_arrays()</code><a class="anchor" aria-label="anchor" href="#method-get-annotation-pairwise-matrix-arrays-"></a></h3>
 <p>Retrieve <code><a href="AnnotationPairwiseMatrix.html">AnnotationPairwiseMatrix</a></code> arrays in
 <code>obsp</code>/<code>varp</code> groups.</p><div class="section">
-<h4 id="usage-11">Usage<a class="anchor" aria-label="anchor" href="#usage-11"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">SOMA</span><span class="op">$</span><span class="fu">get_annotation_pairwise_matrix_arrays</span><span class="op">(</span>prefix <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></code></pre></div><p></p></div>
+<h4 id="usage-12">Usage<a class="anchor" aria-label="anchor" href="#usage-12"></a></h4>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">SOMA</span><span class="op">$</span><span class="fu">get_annotation_pairwise_matrix_arrays</span><span class="op">(</span>prefix <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
@@ -512,7 +546,7 @@ the prefix.</p>
 </dl><p></p></div>
 </div>
 <div class="section">
-<h4 id="returns-1">Returns<a class="anchor" aria-label="anchor" href="#returns-1"></a></h4>
+<h4 id="returns-2">Returns<a class="anchor" aria-label="anchor" href="#returns-2"></a></h4>
 <p>A list with <code>"obsp"</code>/<code>"varp"</code> slots containing arrays matching
 the prefix.</p>
 </div>
@@ -520,8 +554,8 @@ the prefix.</p>
 </div><p></p><hr><a id="method-SOMA-clone"></a><div class="section">
 <h3 id="method-clone-">Method <code>clone()</code><a class="anchor" aria-label="anchor" href="#method-clone-"></a></h3>
 <p>The objects of this class are cloneable with this method.</p><div class="section">
-<h4 id="usage-12">Usage<a class="anchor" aria-label="anchor" href="#usage-12"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">SOMA</span><span class="op">$</span><span class="fu">clone</span><span class="op">(</span>deep <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div><p></p></div>
+<h4 id="usage-13">Usage<a class="anchor" aria-label="anchor" href="#usage-13"></a></h4>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">SOMA</span><span class="op">$</span><span class="fu">clone</span><span class="op">(</span>deep <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
@@ -549,7 +583,7 @@ the prefix.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
 </div>
 
       </footer></div>

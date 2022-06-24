@@ -34,7 +34,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tiledbsc</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.2.9005</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.2.9006</span>
       </span>
     </div>
 
@@ -99,9 +99,9 @@
 <h2 id="setup">Setup<a class="anchor" aria-label="anchor" href="#setup"></a>
 </h2>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/TileDB-Inc/tiledbsc" class="external-link">tiledbsc</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://mojaveazure.github.io/seurat-object/" class="external-link">SeuratObject</a></span><span class="op">)</span>
-<span class="co">#&gt; Attaching sp</span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/TileDB-Inc/tiledbsc" class="external-link">tiledbsc</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://mojaveazure.github.io/seurat-object/" class="external-link">SeuratObject</a></span><span class="op">)</span></span>
+<span><span class="co">#&gt; Attaching sp</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
@@ -113,19 +113,19 @@
 </h2>
 <p>As in the Introduction we’ll use the <code>pbmc_small</code> dataset from the <em>SeuratObject</em> package.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"pbmc_small"</span>, package <span class="op">=</span> <span class="st">"SeuratObject"</span><span class="op">)</span>
-<span class="va">pbmc_small</span>
-<span class="co">#&gt; An object of class Seurat </span>
-<span class="co">#&gt; 230 features across 80 samples within 1 assay </span>
-<span class="co">#&gt; Active assay: RNA (230 features, 20 variable features)</span>
-<span class="co">#&gt;  2 dimensional reductions calculated: pca, tsne</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"pbmc_small"</span>, package <span class="op">=</span> <span class="st">"SeuratObject"</span><span class="op">)</span></span>
+<span><span class="va">pbmc_small</span></span>
+<span><span class="co">#&gt; An object of class Seurat </span></span>
+<span><span class="co">#&gt; 230 features across 80 samples within 1 assay </span></span>
+<span><span class="co">#&gt; Active assay: RNA (230 features, 20 variable features)</span></span>
+<span><span class="co">#&gt;  2 dimensional reductions calculated: pca, tsne</span></span></code></pre></div>
 <p>We’ll start by creating a Seurat <code>Assay</code> object that contains only raw RNA counts</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">pbmc_small_rna</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://mojaveazure.github.io/seurat-object/reference/CreateAssayObject.html" class="external-link">CreateAssayObject</a></span><span class="op">(</span>
-  counts <span class="op">=</span> <span class="fu"><a href="https://mojaveazure.github.io/seurat-object/reference/AssayData.html" class="external-link">GetAssayData</a></span><span class="op">(</span><span class="va">pbmc_small</span><span class="op">[[</span><span class="st">"RNA"</span><span class="op">]</span><span class="op">]</span>, <span class="st">"counts"</span><span class="op">)</span>
-<span class="op">)</span>
-
-<span class="fu"><a href="https://mojaveazure.github.io/seurat-object/reference/Key.html" class="external-link">Key</a></span><span class="op">(</span><span class="va">pbmc_small_rna</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://mojaveazure.github.io/seurat-object/reference/Key.html" class="external-link">Key</a></span><span class="op">(</span><span class="va">pbmc_small</span><span class="op">[[</span><span class="st">"RNA"</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">pbmc_small_rna</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://mojaveazure.github.io/seurat-object/reference/CreateAssayObject.html" class="external-link">CreateAssayObject</a></span><span class="op">(</span></span>
+<span>  counts <span class="op">=</span> <span class="fu"><a href="https://mojaveazure.github.io/seurat-object/reference/AssayData.html" class="external-link">GetAssayData</a></span><span class="op">(</span><span class="va">pbmc_small</span><span class="op">[[</span><span class="st">"RNA"</span><span class="op">]</span><span class="op">]</span>, <span class="st">"counts"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://mojaveazure.github.io/seurat-object/reference/Key.html" class="external-link">Key</a></span><span class="op">(</span><span class="va">pbmc_small_rna</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://mojaveazure.github.io/seurat-object/reference/Key.html" class="external-link">Key</a></span><span class="op">(</span><span class="va">pbmc_small</span><span class="op">[[</span><span class="st">"RNA"</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
 <p>and then ingest this into a new <code>SOMA</code> on disk:</p>
 <p>This performed the following operations:</p>
 <ul>
@@ -137,10 +137,10 @@
 </ul>
 <p>Printing out the <code>X</code> group, we can see it contains only a single member, <code>counts</code>.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">soma</span><span class="op">$</span><span class="va">X</span>
-<span class="co">#&gt;   uri: /tmp/RtmpdilXk4/pbmc_small_rna/X </span>
-<span class="co">#&gt; &lt;AssayMatrixGroup&gt;</span>
-<span class="co">#&gt;   arrays: counts</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">soma</span><span class="op">$</span><span class="va">X</span></span>
+<span><span class="co">#&gt;   uri: /tmp/RtmpynZZKm/pbmc_small_rna/X </span></span>
+<span><span class="co">#&gt; &lt;AssayMatrixGroup&gt;</span></span>
+<span><span class="co">#&gt;   arrays: counts</span></span></code></pre></div>
 <p><em>Note: A Seurat <code>Assay</code> instantiated with data passed to the <code>counts</code> argument will store a reference to the same matrix in both the <code>counts</code> and <code>data</code> slots (i.e., <code>GetAssayData(pbmc_small_rna, "counts")</code> and <code>GetAssayData(pbmc_small_rna, "data")</code>). To avoid redundantly storing data on disk, </em>tiledbsc* only ingests data from <code>data</code> when it is not identical to <code>counts</code>.*</p>
 </div>
 <div class="section level2">
@@ -148,54 +148,54 @@
 </h2>
 <p>Now let’s populate <code>pbmc_small_rna</code>’s <code>counts</code> slot with normalized counts.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">pbmc_small_rna</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://mojaveazure.github.io/seurat-object/reference/AssayData.html" class="external-link">SetAssayData</a></span><span class="op">(</span>
-  <span class="va">pbmc_small_rna</span>,
-  slot <span class="op">=</span> <span class="st">"data"</span>,
-  new.data <span class="op">=</span> <span class="fu"><a href="https://mojaveazure.github.io/seurat-object/reference/AssayData.html" class="external-link">GetAssayData</a></span><span class="op">(</span><span class="va">pbmc_small</span><span class="op">[[</span><span class="st">"RNA"</span><span class="op">]</span><span class="op">]</span>, <span class="st">"data"</span><span class="op">)</span>
-<span class="op">)</span>
-
-<span class="va">pbmc_small_rna</span>
-<span class="co">#&gt; Assay data with 230 features for 80 cells</span>
-<span class="co">#&gt; First 10 features:</span>
-<span class="co">#&gt;  MS4A1, CD79B, CD79A, HLA-DRA, TCL1A, HLA-DQB1, HVCN1, HLA-DMB, LTB,</span>
-<span class="co">#&gt; LINC00926</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">pbmc_small_rna</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://mojaveazure.github.io/seurat-object/reference/AssayData.html" class="external-link">SetAssayData</a></span><span class="op">(</span></span>
+<span>  <span class="va">pbmc_small_rna</span>,</span>
+<span>  slot <span class="op">=</span> <span class="st">"data"</span>,</span>
+<span>  new.data <span class="op">=</span> <span class="fu"><a href="https://mojaveazure.github.io/seurat-object/reference/AssayData.html" class="external-link">GetAssayData</a></span><span class="op">(</span><span class="va">pbmc_small</span><span class="op">[[</span><span class="st">"RNA"</span><span class="op">]</span><span class="op">]</span>, <span class="st">"data"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">pbmc_small_rna</span></span>
+<span><span class="co">#&gt; Assay data with 230 features for 80 cells</span></span>
+<span><span class="co">#&gt; First 10 features:</span></span>
+<span><span class="co">#&gt;  MS4A1, CD79B, CD79A, HLA-DRA, TCL1A, HLA-DQB1, HVCN1, HLA-DMB, LTB,</span></span>
+<span><span class="co">#&gt; LINC00926</span></span></code></pre></div>
 <p>At this point, <code>counts</code> and <code>data</code> contain different transformations of the same matrix but only the <code>counts</code> data has been written to disk.</p>
 <p>We could simply rerun <code>soma$from_seurat_assay(pbmc_small_rna)</code> to update the <code>SCGroup</code> and ingest the normalized counts matrix into <code>X/data</code>, however, this would perform another full conversion of the entire <code>Assay</code> object. As a result, data from the <code>counts</code> slot would be <em>re-ingested</em> into <code>X/counts</code> and feature-level metadata would be re-ingested into <code>var</code>.</p>
 <p>To avoid these redudndant ingestions, use the <code>layers</code> argument to specify which of the assay slots (<code>counts</code>, <code>data</code>, or <code>scale.data</code>) should be ingested. We also set <code>var = FALSE</code> to prevent re-ingestion of the feature-level metadata since it hasn’t changed.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">soma</span><span class="op">$</span><span class="fu">from_seurat_assay</span><span class="op">(</span><span class="va">pbmc_small_rna</span>, layers <span class="op">=</span> <span class="st">"data"</span>, var <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-<span class="co">#&gt; No AssayMatrix found at '/tmp/RtmpdilXk4/pbmc_small_rna/X/data'</span>
-<span class="co">#&gt; Creating new AssayMatrix array with index [var_id,obs_id] at '/tmp/RtmpdilXk4/pbmc_small_rna/X/data'</span>
-<span class="co">#&gt; Ingesting AssayMatrix data into: /tmp/RtmpdilXk4/pbmc_small_rna/X/data</span>
-<span class="co">#&gt; Finished converting Seurat Assay with key [rna_] to SOMA</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">soma</span><span class="op">$</span><span class="fu">from_seurat_assay</span><span class="op">(</span><span class="va">pbmc_small_rna</span>, layers <span class="op">=</span> <span class="st">"data"</span>, var <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="co">#&gt; No AssayMatrix found at '/tmp/RtmpynZZKm/pbmc_small_rna/X/data'</span></span>
+<span><span class="co">#&gt; Creating new AssayMatrix array with index [var_id,obs_id] at '/tmp/RtmpynZZKm/pbmc_small_rna/X/data'</span></span>
+<span><span class="co">#&gt; Ingesting AssayMatrix data into: /tmp/RtmpynZZKm/pbmc_small_rna/X/data</span></span>
+<span><span class="co">#&gt; Finished converting Seurat Assay with key [rna_] to SOMA</span></span></code></pre></div>
 <p>Printing out the <code>X</code> group again reveals that it now contains 2 members: <code>counts</code> and <code>data</code>.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">soma</span><span class="op">$</span><span class="va">X</span>
-<span class="co">#&gt;   uri: /tmp/RtmpdilXk4/pbmc_small_rna/X </span>
-<span class="co">#&gt; &lt;AssayMatrixGroup&gt;</span>
-<span class="co">#&gt;   arrays: counts, data</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">soma</span><span class="op">$</span><span class="va">X</span></span>
+<span><span class="co">#&gt;   uri: /tmp/RtmpynZZKm/pbmc_small_rna/X </span></span>
+<span><span class="co">#&gt; &lt;AssayMatrixGroup&gt;</span></span>
+<span><span class="co">#&gt;   arrays: counts, data</span></span></code></pre></div>
 <p>Let’s repeat this process for the scaled/centered version of the data that’s stored in the <code>scale.data</code> slot.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">pbmc_small_rna</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://mojaveazure.github.io/seurat-object/reference/AssayData.html" class="external-link">SetAssayData</a></span><span class="op">(</span>
-  <span class="va">pbmc_small_rna</span>,
-  slot <span class="op">=</span> <span class="st">"scale.data"</span>,
-  new.data <span class="op">=</span> <span class="fu"><a href="https://mojaveazure.github.io/seurat-object/reference/AssayData.html" class="external-link">GetAssayData</a></span><span class="op">(</span><span class="va">pbmc_small</span><span class="op">[[</span><span class="st">"RNA"</span><span class="op">]</span><span class="op">]</span>, <span class="st">"scale.data"</span><span class="op">)</span>
-<span class="op">)</span>
-
-<span class="va">soma</span><span class="op">$</span><span class="fu">from_seurat_assay</span><span class="op">(</span><span class="va">pbmc_small_rna</span>, layers <span class="op">=</span> <span class="st">"scale.data"</span>, var <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-<span class="co">#&gt; Skipping ingestion of 'data' because it is identical to 'counts'</span>
-<span class="co">#&gt; No AssayMatrix found at '/tmp/RtmpdilXk4/pbmc_small_rna/X/scale.data'</span>
-<span class="co">#&gt; Creating new AssayMatrix array with index [var_id,obs_id] at '/tmp/RtmpdilXk4/pbmc_small_rna/X/scale.data'</span>
-<span class="co">#&gt; Ingesting AssayMatrix data into: /tmp/RtmpdilXk4/pbmc_small_rna/X/scale.data</span>
-<span class="co">#&gt; Finished converting Seurat Assay with key [rna_] to SOMA</span>
-<span class="va">soma</span><span class="op">$</span><span class="va">X</span>
-<span class="co">#&gt;   uri: /tmp/RtmpdilXk4/pbmc_small_rna/X </span>
-<span class="co">#&gt; &lt;AssayMatrixGroup&gt;</span>
-<span class="co">#&gt;   arrays: counts, data, scale.data</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">pbmc_small_rna</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://mojaveazure.github.io/seurat-object/reference/AssayData.html" class="external-link">SetAssayData</a></span><span class="op">(</span></span>
+<span>  <span class="va">pbmc_small_rna</span>,</span>
+<span>  slot <span class="op">=</span> <span class="st">"scale.data"</span>,</span>
+<span>  new.data <span class="op">=</span> <span class="fu"><a href="https://mojaveazure.github.io/seurat-object/reference/AssayData.html" class="external-link">GetAssayData</a></span><span class="op">(</span><span class="va">pbmc_small</span><span class="op">[[</span><span class="st">"RNA"</span><span class="op">]</span><span class="op">]</span>, <span class="st">"scale.data"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">soma</span><span class="op">$</span><span class="fu">from_seurat_assay</span><span class="op">(</span><span class="va">pbmc_small_rna</span>, layers <span class="op">=</span> <span class="st">"scale.data"</span>, var <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Skipping ingestion of 'data' because it is identical to 'counts'</span></span>
+<span><span class="co">#&gt; No AssayMatrix found at '/tmp/RtmpynZZKm/pbmc_small_rna/X/scale.data'</span></span>
+<span><span class="co">#&gt; Creating new AssayMatrix array with index [var_id,obs_id] at '/tmp/RtmpynZZKm/pbmc_small_rna/X/scale.data'</span></span>
+<span><span class="co">#&gt; Ingesting AssayMatrix data into: /tmp/RtmpynZZKm/pbmc_small_rna/X/scale.data</span></span>
+<span><span class="co">#&gt; Finished converting Seurat Assay with key [rna_] to SOMA</span></span>
+<span><span class="va">soma</span><span class="op">$</span><span class="va">X</span></span>
+<span><span class="co">#&gt;   uri: /tmp/RtmpynZZKm/pbmc_small_rna/X </span></span>
+<span><span class="co">#&gt; &lt;AssayMatrixGroup&gt;</span></span>
+<span><span class="co">#&gt;   arrays: counts, data, scale.data</span></span></code></pre></div>
 <p>The <code>X</code> group now contains 3 arrays, each of which has only been written to a single time. We can verify this by counting the number of fragments contained within any of individual arrays:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">soma</span><span class="op">$</span><span class="va">X</span><span class="op">$</span><span class="va">members</span><span class="op">$</span><span class="va">count</span><span class="op">$</span><span class="fu">fragment_count</span><span class="op">(</span><span class="op">)</span>
-<span class="co">#&gt; [1] 1</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">soma</span><span class="op">$</span><span class="va">X</span><span class="op">$</span><span class="va">members</span><span class="op">$</span><span class="va">count</span><span class="op">$</span><span class="fu">fragment_count</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 1</span></span></code></pre></div>
 <p>TileDB creates a new fragment each time a write is performed, so 1 fragment confirms the array has been written to only once.</p>
 </div>
 <div class="section level2">
@@ -204,66 +204,66 @@
 <p>If the data in your Seurat <code>Assay</code> <em>has</em> changed since it was ingested into TileDB, you can follow the same basic process to update the array.</p>
 <p>Here, we’ll aritifically shift all of the values in the <code>scale.data</code> slot by 1 and then re-ingest the updated data into the <code>scale.data</code> layer on disk:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">pbmc_small_rna</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://mojaveazure.github.io/seurat-object/reference/AssayData.html" class="external-link">SetAssayData</a></span><span class="op">(</span>
-  <span class="va">pbmc_small_rna</span>,
-  slot <span class="op">=</span> <span class="st">"scale.data"</span>,
-  new.data <span class="op">=</span> <span class="fu"><a href="https://mojaveazure.github.io/seurat-object/reference/AssayData.html" class="external-link">GetAssayData</a></span><span class="op">(</span><span class="va">pbmc_small</span><span class="op">[[</span><span class="st">"RNA"</span><span class="op">]</span><span class="op">]</span>, <span class="st">"scale.data"</span><span class="op">)</span> <span class="op">+</span> <span class="fl">1</span>
-<span class="op">)</span>
-
-<span class="va">soma</span><span class="op">$</span><span class="fu">from_seurat_assay</span><span class="op">(</span><span class="va">pbmc_small_rna</span>, layers <span class="op">=</span> <span class="st">"scale.data"</span>, var <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-<span class="co">#&gt; Skipping ingestion of 'data' because it is identical to 'counts'</span>
-<span class="co">#&gt; Found existing AssayMatrix at '/tmp/RtmpdilXk4/pbmc_small_rna/X/scale.data'</span>
-<span class="co">#&gt; Updating existing AssayMatrix at '/tmp/RtmpdilXk4/pbmc_small_rna/X/scale.data'</span>
-<span class="co">#&gt; Ingesting AssayMatrix data into: /tmp/RtmpdilXk4/pbmc_small_rna/X/scale.data</span>
-<span class="co">#&gt; Finished converting Seurat Assay with key [rna_] to SOMA</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">pbmc_small_rna</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://mojaveazure.github.io/seurat-object/reference/AssayData.html" class="external-link">SetAssayData</a></span><span class="op">(</span></span>
+<span>  <span class="va">pbmc_small_rna</span>,</span>
+<span>  slot <span class="op">=</span> <span class="st">"scale.data"</span>,</span>
+<span>  new.data <span class="op">=</span> <span class="fu"><a href="https://mojaveazure.github.io/seurat-object/reference/AssayData.html" class="external-link">GetAssayData</a></span><span class="op">(</span><span class="va">pbmc_small</span><span class="op">[[</span><span class="st">"RNA"</span><span class="op">]</span><span class="op">]</span>, <span class="st">"scale.data"</span><span class="op">)</span> <span class="op">+</span> <span class="fl">1</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">soma</span><span class="op">$</span><span class="fu">from_seurat_assay</span><span class="op">(</span><span class="va">pbmc_small_rna</span>, layers <span class="op">=</span> <span class="st">"scale.data"</span>, var <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Skipping ingestion of 'data' because it is identical to 'counts'</span></span>
+<span><span class="co">#&gt; Found existing AssayMatrix at '/tmp/RtmpynZZKm/pbmc_small_rna/X/scale.data'</span></span>
+<span><span class="co">#&gt; Updating existing AssayMatrix at '/tmp/RtmpynZZKm/pbmc_small_rna/X/scale.data'</span></span>
+<span><span class="co">#&gt; Ingesting AssayMatrix data into: /tmp/RtmpynZZKm/pbmc_small_rna/X/scale.data</span></span>
+<span><span class="co">#&gt; Finished converting Seurat Assay with key [rna_] to SOMA</span></span></code></pre></div>
 <p>Now let’s verify that number of fragments in each <code>X</code>’s layers:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span>
-  <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">soma</span><span class="op">$</span><span class="va">X</span><span class="op">$</span><span class="va">members</span><span class="op">)</span>,
-  <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">soma</span><span class="op">$</span><span class="va">X</span><span class="op">$</span><span class="va">members</span><span class="op">[[</span><span class="va">x</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="fu">fragment_count</span><span class="op">(</span><span class="op">)</span>
-<span class="op">)</span>
-<span class="co">#&gt;     counts       data scale.data </span>
-<span class="co">#&gt;          1          1          2</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">soma</span><span class="op">$</span><span class="va">X</span><span class="op">$</span><span class="va">members</span><span class="op">)</span>,</span>
+<span>  <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">soma</span><span class="op">$</span><span class="va">X</span><span class="op">$</span><span class="va">members</span><span class="op">[[</span><span class="va">x</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="fu">fragment_count</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt;     counts       data scale.data </span></span>
+<span><span class="co">#&gt;          1          1          2</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="session">Session<a class="anchor" aria-label="anchor" href="#session"></a>
 </h2>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span>
-<span class="co">#&gt; R version 4.2.0 (2022-04-22)</span>
-<span class="co">#&gt; Platform: x86_64-pc-linux-gnu (64-bit)</span>
-<span class="co">#&gt; Running under: Ubuntu 20.04.4 LTS</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Matrix products: default</span>
-<span class="co">#&gt; BLAS:   /usr/lib/x86_64-linux-gnu/blas/libblas.so.3.9.0</span>
-<span class="co">#&gt; LAPACK: /usr/lib/x86_64-linux-gnu/lapack/liblapack.so.3.9.0</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; locale:</span>
-<span class="co">#&gt;  [1] LC_CTYPE=C.UTF-8       LC_NUMERIC=C           LC_TIME=C.UTF-8       </span>
-<span class="co">#&gt;  [4] LC_COLLATE=C.UTF-8     LC_MONETARY=C.UTF-8    LC_MESSAGES=C.UTF-8   </span>
-<span class="co">#&gt;  [7] LC_PAPER=C.UTF-8       LC_NAME=C              LC_ADDRESS=C          </span>
-<span class="co">#&gt; [10] LC_TELEPHONE=C         LC_MEASUREMENT=C.UTF-8 LC_IDENTIFICATION=C   </span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; attached base packages:</span>
-<span class="co">#&gt; [1] stats     graphics  grDevices utils     datasets  methods   base     </span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; other attached packages:</span>
-<span class="co">#&gt; [1] sp_1.5-0            SeuratObject_4.1.0  tiledbsc_0.1.2.9005</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; loaded via a namespace (and not attached):</span>
-<span class="co">#&gt;  [1] Rcpp_1.0.8.3       progressr_0.10.1   bslib_0.3.1        compiler_4.2.0    </span>
-<span class="co">#&gt;  [5] jquerylib_0.1.4    tools_4.2.0        digest_0.6.29      bit_4.0.4         </span>
-<span class="co">#&gt;  [9] jsonlite_1.8.0     evaluate_0.15      memoise_2.0.1      nanotime_0.3.6    </span>
-<span class="co">#&gt; [13] lattice_0.20-45    rlang_1.0.2        Matrix_1.4-1       cli_3.3.0         </span>
-<span class="co">#&gt; [17] RcppCCTZ_0.2.10    parallel_4.2.0     yaml_2.3.5         pkgdown_2.0.4     </span>
-<span class="co">#&gt; [21] xfun_0.31          fastmap_1.1.0      stringr_1.4.0      knitr_1.39        </span>
-<span class="co">#&gt; [25] rgeos_0.5-9        globals_0.15.0     desc_1.4.1         fs_1.5.2          </span>
-<span class="co">#&gt; [29] sass_0.4.1         systemfonts_1.0.4  triebeard_0.3.0    rprojroot_2.0.3   </span>
-<span class="co">#&gt; [33] bit64_4.0.5        grid_4.2.0         glue_1.6.2         listenv_0.8.0     </span>
-<span class="co">#&gt; [37] R6_2.5.1           textshaping_0.3.6  future.apply_1.9.0 parallelly_1.32.0 </span>
-<span class="co">#&gt; [41] rmarkdown_2.14     purrr_0.3.4        tiledb_0.13.0      magrittr_2.0.3    </span>
-<span class="co">#&gt; [45] urltools_1.7.3     codetools_0.2-18   htmltools_0.5.2    future_1.26.1     </span>
-<span class="co">#&gt; [49] ragg_1.2.2         stringi_1.7.6      cachem_1.0.6       zoo_1.8-10</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt; R version 4.2.1 (2022-06-23)</span></span>
+<span><span class="co">#&gt; Platform: x86_64-pc-linux-gnu (64-bit)</span></span>
+<span><span class="co">#&gt; Running under: Ubuntu 20.04.4 LTS</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Matrix products: default</span></span>
+<span><span class="co">#&gt; BLAS:   /usr/lib/x86_64-linux-gnu/blas/libblas.so.3.9.0</span></span>
+<span><span class="co">#&gt; LAPACK: /usr/lib/x86_64-linux-gnu/lapack/liblapack.so.3.9.0</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; locale:</span></span>
+<span><span class="co">#&gt;  [1] LC_CTYPE=C.UTF-8       LC_NUMERIC=C           LC_TIME=C.UTF-8       </span></span>
+<span><span class="co">#&gt;  [4] LC_COLLATE=C.UTF-8     LC_MONETARY=C.UTF-8    LC_MESSAGES=C.UTF-8   </span></span>
+<span><span class="co">#&gt;  [7] LC_PAPER=C.UTF-8       LC_NAME=C              LC_ADDRESS=C          </span></span>
+<span><span class="co">#&gt; [10] LC_TELEPHONE=C         LC_MEASUREMENT=C.UTF-8 LC_IDENTIFICATION=C   </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; attached base packages:</span></span>
+<span><span class="co">#&gt; [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; other attached packages:</span></span>
+<span><span class="co">#&gt; [1] sp_1.5-0            SeuratObject_4.1.0  tiledbsc_0.1.2.9006</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>
+<span><span class="co">#&gt;  [1] Rcpp_1.0.8.3       progressr_0.10.1   bslib_0.3.1        compiler_4.2.1    </span></span>
+<span><span class="co">#&gt;  [5] jquerylib_0.1.4    tools_4.2.1        digest_0.6.29      bit_4.0.4         </span></span>
+<span><span class="co">#&gt;  [9] jsonlite_1.8.0     evaluate_0.15      memoise_2.0.1      nanotime_0.3.6    </span></span>
+<span><span class="co">#&gt; [13] lattice_0.20-45    rlang_1.0.2        Matrix_1.4-1       cli_3.3.0         </span></span>
+<span><span class="co">#&gt; [17] RcppCCTZ_0.2.10    parallel_4.2.1     yaml_2.3.5         pkgdown_2.0.5     </span></span>
+<span><span class="co">#&gt; [21] xfun_0.31          fastmap_1.1.0      stringr_1.4.0      knitr_1.39        </span></span>
+<span><span class="co">#&gt; [25] rgeos_0.5-9        globals_0.15.0     desc_1.4.1         fs_1.5.2          </span></span>
+<span><span class="co">#&gt; [29] sass_0.4.1         systemfonts_1.0.4  triebeard_0.3.0    rprojroot_2.0.3   </span></span>
+<span><span class="co">#&gt; [33] bit64_4.0.5        grid_4.2.1         glue_1.6.2         listenv_0.8.0     </span></span>
+<span><span class="co">#&gt; [37] R6_2.5.1           textshaping_0.3.6  future.apply_1.9.0 parallelly_1.32.0 </span></span>
+<span><span class="co">#&gt; [41] rmarkdown_2.14     purrr_0.3.4        tiledb_0.14.0      magrittr_2.0.3    </span></span>
+<span><span class="co">#&gt; [45] urltools_1.7.3     codetools_0.2-18   htmltools_0.5.2    future_1.26.1     </span></span>
+<span><span class="co">#&gt; [49] ragg_1.2.2         stringi_1.7.6      cachem_1.0.6       zoo_1.8-10</span></span></code></pre></div>
 </div>
   </div>
 
@@ -284,7 +284,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
 </div>
 
       </footer>
