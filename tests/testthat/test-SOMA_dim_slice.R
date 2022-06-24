@@ -1,5 +1,6 @@
 test_that("SOMA object can be sliced by dimension", {
-  uri <- withr::local_tempdir("soma-dim-slice2")
+  uri <- withr::local_tempdir("soma-dim-slice")
+  if (tiledb_vfs_is_dir(uri)) tiledb_vfs_remove_dir(uri)
 
   pbmc_small_rna <- pbmc_small[["RNA"]]
   var_ids <- c("PPBP", "VDAC3")
@@ -7,11 +8,6 @@ test_that("SOMA object can be sliced by dimension", {
 
   soma <- SOMA$new(uri = uri, verbose = TRUE)
   soma$from_seurat_assay(pbmc_small_rna, obs = pbmc_small[[]])
-
-  expect_error(
-    soma$set_query(),
-    "Must specify at least one dimension to slice"
-  )
 
   # slice by obs
   soma$set_query(obs_ids = obs_ids[1])
@@ -37,4 +33,41 @@ test_that("SOMA object can be sliced by dimension", {
 
   pbmc_small_rna2 <- soma$to_seurat_assay()
   expect_equal(dim(pbmc_small_rna2), c(2, 3))
+
+
+  # var attribute filter (obs attributes are at Seurat object level)
+  soma <- SOMA$new(uri = uri)
+  soma$set_query(var_attr_filter = vst.mean > 5)
+
+  obs <- soma$obs$to_dataframe()
+  expect_equal(nrow(obs), 80)
+  var <- soma$var$to_dataframe()
+  expect_equal(nrow(var), 12)
+
+  mat_counts <- soma$X$members$counts$to_matrix()
+  expect_equal(dim(mat_counts), c(12, 80))
+
+  # var attribute filter + obs/var dimension slicing
+  soma$set_query(
+    var_attr_filter = vst.mean > 5,
+    obs_ids = obs_ids,
+    # NCOA4 doesn't meet the attribute filter
+    var_ids = c("COTL1", "CST3", "HLA-DPA1", "HLA-DPB1", "HLA-DRA", "NCOA4")
+  )
+
+  obs <- soma$obs$to_dataframe()
+  expect_equal(nrow(obs), 3)
+  var <- soma$var$to_dataframe()
+  expect_equal(nrow(var), 5)
+
+  mat_counts <- soma$X$members$counts$to_matrix()
+  expect_equal(dim(mat_counts), c(5, 3))
+
+  pbmc_small_rna2 <- soma$to_seurat_assay()
+  expect_equal(dim(pbmc_small_rna2), c(5, 3))
+
+  # reset the query
+  soma$reset_query()
+  pbmc_small_rna3 <- soma$to_seurat_assay()
+  expect_equal(dim(pbmc_small_rna3), dim(pbmc_small_rna))
 })

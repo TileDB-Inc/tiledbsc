@@ -34,6 +34,7 @@ populate the private \code{create_empty_array()} and \code{ingest_data()} method
 \item \href{#method-TileDBArray-fragment_count}{\code{TileDBArray$fragment_count()}}
 \item \href{#method-TileDBArray-attrnames}{\code{TileDBArray$attrnames()}}
 \item \href{#method-TileDBArray-set_query}{\code{TileDBArray$set_query()}}
+\item \href{#method-TileDBArray-reset_query}{\code{TileDBArray$reset_query()}}
 \item \href{#method-TileDBArray-clone}{\code{TileDBArray$clone()}}
 }
 }
@@ -237,7 +238,7 @@ A character vector with the array's attribute names
 \subsection{Method \code{set_query()}}{
 Set dimension values to slice from the array.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{TileDBArray$set_query(dims = NULL)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{TileDBArray$set_query(dims = NULL, attr_filter = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -246,8 +247,34 @@ Set dimension values to slice from the array.
 \item{\code{dims}}{a named list of character vectors. Each name must correspond
 to an array dimension. The character vectors within each element are used
 to set the arrays selected ranges for each corresponding dimension.}
+
+\item{\code{attr_filter}}{a TileDB query condition for attribute filtering.
+pushdown.}
 }
 \if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-TileDBArray-reset_query"></a>}}
+\if{latex}{\out{\hypertarget{method-TileDBArray-reset_query}{}}}
+\subsection{Method \code{reset_query()}}{
+Reset the query. By default both dimension ranges and
+attribute filters are cleared.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{TileDBArray$reset_query(dims = TRUE, attr_filter = TRUE)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{dims}}{Clear the defined dimension ranges?}
+
+\item{\code{attr_filter}}{Clear the defined attribute filters?}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+NULL
 }
 }
 \if{html}{\out{<hr>}}

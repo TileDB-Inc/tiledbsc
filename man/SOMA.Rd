@@ -47,6 +47,7 @@ dimensions of the \code{obs} and \code{var} arrays, respectively.}
 \itemize{
 \item \href{#method-SOMA-new}{\code{SOMA$new()}}
 \item \href{#method-SOMA-set_query}{\code{SOMA$set_query()}}
+\item \href{#method-SOMA-reset_query}{\code{SOMA$reset_query()}}
 \item \href{#method-SOMA-from_seurat_assay}{\code{SOMA$from_seurat_assay()}}
 \item \href{#method-SOMA-to_seurat_assay}{\code{SOMA$to_seurat_assay()}}
 \item \href{#method-SOMA-add_seurat_dimreduction}{\code{SOMA$add_seurat_dimreduction()}}
@@ -110,17 +111,52 @@ array group is created.
 \if{html}{\out{<a id="method-SOMA-set_query"></a>}}
 \if{latex}{\out{\hypertarget{method-SOMA-set_query}{}}}
 \subsection{Method \code{set_query()}}{
-Set dimension values to slice from the array members.
+Set query parameters to slice by dimension values or filter
+by attribute values.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{SOMA$set_query(obs_ids = NULL, var_ids = NULL)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{SOMA$set_query(
+  obs_ids = NULL,
+  var_ids = NULL,
+  obs_attr_filter = NULL,
+  var_attr_filter = NULL
+)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{obs_ids, var_ids}}{character vector containing observation- or variable-identifiers.}
+\item{\code{obs_ids, var_ids}}{character vector containing observation- or
+variable-identifiers.}
+
+\item{\code{obs_attr_filter, var_attr_filter}}{a TileDB query condition for
+attribute filtering pushdown.}
 }
 \if{html}{\out{</div>}}
+}
+\subsection{Details}{
+A SOMA can be filtered in two ways:
+\enumerate{
+\item dimension slicing: providing a vector of cell- or feature-identifiers to \code{obs_ids} and/or \code{var_ids}, respectively.
+\item attribute filtering: providing logical expressions that reference
+attributes within the \code{obs} and \code{var} arrays.
+}
+
+Filters are applied automatically to all members of a SOMA with the
+exception of \code{uns}.
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-SOMA-reset_query"></a>}}
+\if{latex}{\out{\hypertarget{method-SOMA-reset_query}{}}}
+\subsection{Method \code{reset_query()}}{
+Reset query dimensions and attribute filters.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{SOMA$reset_query()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+NULL
 }
 }
 \if{html}{\out{<hr>}}

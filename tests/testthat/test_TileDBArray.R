@@ -38,28 +38,24 @@ test_that("TileDBArray helper functions", {
   # dimension slicing
   tdb <- TileDBArray$new(uri = uri, verbose = TRUE)
   expect_error(
-    tdb$set_query(),
-    "Must specify at least one dimension to slice"
-  )
-  expect_error(
-    tdb$set_query(dim = "foo"),
+    tdb$set_query(dims = "foo"),
     "'dims' must be a named list of character vectors"
   )
   expect_error(
-    tdb$set_query(dim = "foo"),
+    tdb$set_query(dims = "foo"),
     "'dims' must be a named list of character vectors"
   )
   expect_error(
-    tdb$set_query(dim = list(a = 1L)),
+    tdb$set_query(dims = list(a = 1L)),
     "'dims' must be a named list of character vectors"
   )
   expect_error(
-    tdb$set_query(dim = list(foo = "bar")),
+    tdb$set_query(dims = list(foo = "bar")),
     "The following dimension does not exist: foo"
   )
 
   expect_silent(
-    tdb$set_query(dim = list(Dept = c("A", "B")))
+    tdb$set_query(dims = list(Dept = c("A", "B")))
   )
 
   # verify selected ranges were set
@@ -73,4 +69,17 @@ test_that("TileDBArray helper functions", {
     unique(tdb$object[]$Dept),
     c("A", "B")
   )
+
+  # set attribute filter
+  tdb <- TileDBArray$new(uri = uri, verbose = TRUE)
+  tdb$set_query(attr_filter = Admit == "Admitted")
+  expect_true(all(tdb$object[]$Admit == "Admitted"))
+
+  # update attribute filter
+  tdb$set_query(attr_filter = Admit != "Admitted")
+  expect_true(all(tdb$object[]$Admit == "Rejected"))
+
+  # reset attribute filter
+  tdb$reset_query()
+  expect_length(tdb$object[]$Admit, nrow(df))
 })

@@ -16,6 +16,10 @@ AnnotationDataframe <- R6::R6Class(
     #' @description Retrieves the values from the array's dimension.
     ids = function() {
       arr <- self$object
+
+      # Reset query layout to avoid (sc18770)
+      tiledb::query_layout(arr) <- character()
+
       # TODO: Workaround bug using tiledb::attrs(arr) <- NA_character_
       # https://github.com/TileDB-Inc/TileDB-R/pull/425
       arr@attrs <- NA_character_

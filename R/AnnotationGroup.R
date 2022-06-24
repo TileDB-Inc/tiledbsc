@@ -29,20 +29,31 @@ AnnotationGroup <- R6::R6Class(
     #' @description Set dimension values to slice from the array members.
     #' @param dims a named list of character vectors. Each must correspond to a
     #' dimension shared by all array members.
-    set_query = function(dims = NULL) {
-      stopifnot(
-        "Must specify at least one dimension to slice" =
-          !is.null(dims),
-        "'dims' must be a named list of character vectors" =
-          is_named_list(dims) && all(vapply_lgl(dims, is.character))
+    #' @param attr_filter a TileDB query condition for attribute filtering
+    #' pushdown.
+    set_query = function(dims = NULL, attr_filter = NULL) {
+      # stopifnot(
           # TODO: Utilize AnnotationGroup's dimension_name field for validation
         # "All 'dims' element names must match an array dimension" =
           # all(names(dims) %in% self$dimension_name)
-      )
+      # )
+
+      # capture unevaluated expression as a character vector
+      attr_filter <- deparse(substitute(attr_filter))
 
       # Assuming all members are TileDBArrays
       for (member in names(self$members)) {
-        self$members[[member]]$set_query(dims)
+        self$members[[member]]$set_query(dims, attr_filter)
+      }
+    },
+
+    #' @description Reset the group member queries.
+    #' @param dims Clear the defined dimension ranges?
+    #' @param attr_filter Clear the defined attribute filters?
+    #' @return NULL
+    reset_query = function(dims = TRUE, attr_filter = TRUE) {
+      for (member in names(self$members)) {
+        self$members[[member]]$reset_query(dims, attr_filter)
       }
     }
   )

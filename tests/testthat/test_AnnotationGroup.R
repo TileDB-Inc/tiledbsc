@@ -19,7 +19,7 @@ test_that("an AnnotationGroup's dimension name can be manually defined", {
 })
 
 test_that("dimension slicing is applied to all members", {
-  grp_uri <- withr::local_tempdir("nested-group-02")
+  grp_uri <- withr::local_tempdir("nested-group")
   create_test_group_with_members(grp_uri, n_arrays = 2, n_groups = 0)
 
   # populate the arrays
@@ -42,7 +42,29 @@ test_that("dimension slicing is applied to all members", {
     "The following dimension does not exist: foo",
   )
 
+  # query results only include selected ranges from the member arrays
   grp$set_query(dims = list(d0 = c("a", "b")))
   expect_equal(grp$members$a1$object[]$d0, c("a", "b"))
   expect_equal(grp$members$a2$object[]$d0, "b")
+
+  # update the selected range
+  grp$set_query(dims = list(d0 = "d"))
+  expect_equal(grp$members$a1$object[]$d0, "d")
+
+  # reset query
+  grp$reset_query()
+  expect_equal(grp$members$a1$object[]$d0, letters[1:5])
+
+  # set attribute filter on the member arrays
+  grp$set_query(attr_filter = a == 3)
+  expect_equal(grp$members$a1$object[]$a, 3)
+  expect_equal(grp$members$a2$object[]$a, 3)
+
+  # update attribute filter
+  grp$set_query(attr_filter = a != 3)
+  expect_equal(grp$members$a1$object[]$a, c(1, 2, 4, 5))
+
+  # include attribute filter and a selected range
+  grp$set_query(attr_filter = a == 1, dims = list(d0 = "a"))
+  expect_true(is_empty(grp$members$a2$object[]$d0))
 })
