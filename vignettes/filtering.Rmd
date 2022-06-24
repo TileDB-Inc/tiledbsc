@@ -23,13 +23,15 @@ library(SeuratObject)
 
 # Overview
 
-This vignette demonstrates how to leverage tiledbsc's features for subsetting and filtering data.
+This vignette demonstrates how to leverage tiledbsc's features for subsetting and filtering data stored as a SOMA.
+
+As described in `?SOMA`, there are two primary approaches for subsetting: dimension slicing and attribute filtering, both of which are described in this vignette and are performed using the `set_query()` method, provided by all tiledbsc objects.
 
 ## Dimension slicing
 
 ### Low-level classes
 
-`TileDBArray` and its subclasses provide a `set_query()` method that allows you to define the ranges of the indexed dimensions to retrieve.
+tiledbsc objects within a SOMA are indexed by a set of common cell- or feature-identifiers, which are efficiently sliced by providing a list of dimension identifiers.
 
 As an example, let's ingest cell-level metadata from the `pbmc_small` dataset into an `AnnotationDataframe` indexed by the cell identifiers.
 
@@ -61,9 +63,15 @@ Now, the next time we call `to_dataframe()` the resulting data frame will only c
 adf$to_dataframe()
 ```
 
+To clear this query and again read in all cells, we can use the `reset_query()` method.
+
+```{r}
+adf$reset_query()
+```
+
 This functionality is also available for `AnnotationGroup`-based classes, which ostensibly contain a group of arrays that all share the same dimensions. In this case, the `dims` argument is automatically applied to all child arrays.
 
-### SOMA
+### High-level classes
 
 The `SOMA` class also provides a `set_query()` method for the same purpose. However, unlike the lower-level classes which are meant to be general-purpose,
 the `SOMA` class has well-defined requirements for the dimensions of its member arrays. As such, `SOMA$set_query()` provides arguments, `obs_ids` and `var_ids`, rather than the more general `dims` argument.
@@ -101,7 +109,39 @@ GetAssayData(pbmc_small_rna, slot = "counts")
 
 and normalized/scaled data:
 
-
 ```{r}
 GetAssayData(pbmc_small_rna, slot = "data")
 ```
+
+Again, to retrieve all of the original data we need to reset the query:
+
+```{r}
+soma$reset_query()
+```
+
+## Attribute Filtering
+
+In addition to dimension slicing, `set_query()` allows you to filter query results using attribute filters. As a reminder, in TileDB parlance attributes are the non-dimensions (i.e., unindexed) components of a dataset.
+
+This is particularly useful for filtering SOMAs based on cell- and feature-level metadata stored in the `obs` and `var` arrays. For example, let's filter out genes with a `vst.mean` <= 5.
+
+Unlink dimension slicing, attribute filters are applied immediately to the `obs` or `var` arrays, and the identifiers that passed the filter are used to slice the data at read time.
+
+```{r}
+soma$set_query(var_attr_filter = vst.mean > 5)
+```
+
+With `verbose=TRUE`, running the above command will print a message indicating how many identifiers were selected. Now, when we read the data back into memory the resulting `Assay` will only include the 12 selected features.
+
+```{r}
+soma$to_seurat_assay()
+```
+
+These two filtering methods can also be combined. For example, let's apply the same attribute filter as above but only on the subset of features previously identified as highly-variable.
+
+```{r}
+vfs <- pbmc_small_rna@var.features
+soma$set_query(var_ids = vfs, var_attr_filter = vst.mean > 5)
+```
+
+This approach can be more performant because the filter is selectively applied to the subset of indexed identifiers.
