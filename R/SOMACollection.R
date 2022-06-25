@@ -59,7 +59,7 @@ SOMACollection <- R6::R6Class(
     #' by attribute values that are applied to all SOMAs within the collection.
     #'
     #' @details
-    #' See [`SOMA$set_query`] for details.
+    #' See `SOMA$set_query()` for more information about querying mechanics.
     #'
     #' @param obs_ids,var_ids character vector containing observation- or
     #' variable-identifiers.

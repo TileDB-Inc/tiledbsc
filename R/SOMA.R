@@ -152,12 +152,24 @@ SOMA <- R6::R6Class(
     #' @details
     #' A SOMA can be filtered in two ways:
     #'
-    #' 1. dimension slicing: providing a vector of cell- or feature-identifiers to `obs_ids` and/or `var_ids`, respectively.
-    #' 2. attribute filtering: providing logical expressions that reference
-    #' attributes within the `obs` and `var` arrays.
+    #' 1. dimension slicing: vectors of cell- or feature-identifiers passed to
+    #' `obs_ids` and/or `var_ids`, respectively, which are applied to the
+    #' [selected ranges][tiledb::selected_ranges()] of member arrays with the
+    #' appropriate dimension(s).
+    #' 2. attribute filtering: logical expressions that reference
+    #' attributes within the `obs` and `var` arrays are applied to each array's
+    #' [query condition][tiledb::query_condition()].
+    #'
+    #' Dimension slicing is applied whenever an array member is accessed,
+    #' causing only data for the specified identifiers to be read into memory.
+    #'
+    #' Attribute filters are applied immediately to `obs` and/or `var` and the
+    #' identifiers that pass the specified conditions are applied to the
+    #' [selected ranges][tiledb::selected_ranges()] of member arrays with the
+    #' appropriate dimension(s).
     #'
     #' Filters are applied automatically to all members of a SOMA with the
-    #' exception of `uns`.
+    #' exception of `uns`
     #'
     #' @param obs_ids,var_ids character vector containing observation- or
     #' variable-identifiers.
