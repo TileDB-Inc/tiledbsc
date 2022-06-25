@@ -136,13 +136,25 @@ attribute filtering pushdown.}
 \subsection{Details}{
 A SOMA can be filtered in two ways:
 \enumerate{
-\item dimension slicing: providing a vector of cell- or feature-identifiers to \code{obs_ids} and/or \code{var_ids}, respectively.
-\item attribute filtering: providing logical expressions that reference
-attributes within the \code{obs} and \code{var} arrays.
+\item dimension slicing: vectors of cell- or feature-identifiers passed to
+\code{obs_ids} and/or \code{var_ids}, respectively, which are applied to the
+\link[tiledb:selected_ranges-tiledb_array-method]{selected ranges} of member arrays with the
+appropriate dimension(s).
+\item attribute filtering: logical expressions that reference
+attributes within the \code{obs} and \code{var} arrays are applied to each array's
+\link[tiledb:query_condition-tiledb_array-method]{query condition}.
 }
 
+Dimension slicing is applied whenever an array member is accessed,
+causing only data for the specified identifiers to be read into memory.
+
+Attribute filters are applied immediately to \code{obs} and/or \code{var} and the
+identifiers that pass the specified conditions are applied to the
+\link[tiledb:selected_ranges-tiledb_array-method]{selected ranges} of member arrays with the
+appropriate dimension(s).
+
 Filters are applied automatically to all members of a SOMA with the
-exception of \code{uns}.
+exception of \code{uns}
 }
 
 }

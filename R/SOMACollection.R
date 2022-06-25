@@ -55,6 +55,53 @@ SOMACollection <- R6::R6Class(
       self
     },
 
+    #' @description Set query parameters to slice by dimension values or filter
+    #' by attribute values that are applied to all SOMAs within the collection.
+    #'
+    #' @details
+    #' See `SOMA$set_query()` for more information about querying mechanics.
+    #'
+    #' @param obs_ids,var_ids character vector containing observation- or
+    #' variable-identifiers.
+    #' @param obs_attr_filter,var_attr_filter a TileDB query condition for
+    #' attribute filtering pushdown.
+    set_query = function(
+      obs_ids = NULL,
+      var_ids = NULL,
+      obs_attr_filter = NULL,
+      var_attr_filter = NULL
+    ) {
+      stopifnot(
+        "SOMACollection must contain a SOMA to query" =
+          length(self$somas) > 0,
+        "'obs_ids' must be a character vector" =
+          is.null(obs_ids) || is.character(obs_ids),
+        "'var_ids' must be a character vector" =
+          is.null(var_ids) || is.character(var_ids)
+      )
+
+      # capture unevaluated expressions as character vectors
+      obs_attr_filter <- deparse(substitute(obs_attr_filter))
+      var_attr_filter <- deparse(substitute(var_attr_filter))
+
+      for (soma in names(self$somas)) {
+        self$members[[soma]]$set_query(
+          obs_ids = obs_ids,
+          var_ids = var_ids,
+          obs_attr_filter = obs_attr_filter,
+          var_attr_filter = var_attr_filter
+        )
+      }
+    },
+
+    #' @description Reset query dimensions and attribute filters.
+    #' @return NULL
+    reset_query = function() {
+      stopifnot("No SOMAs to reset" = length(self$somas) > 0)
+      for (member in names(self$somas)) {
+        self$members[[member]]$reset_query()
+      }
+    },
 
     #' @description Convert a Seurat object to a TileDB-backed `SOMACollection`.
     #'

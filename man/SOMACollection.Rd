@@ -28,6 +28,8 @@ Class for representing a \code{SOMACollection}, which may contain of one or more
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-SOMACollection-new}{\code{SOMACollection$new()}}
+\item \href{#method-SOMACollection-set_query}{\code{SOMACollection$set_query()}}
+\item \href{#method-SOMACollection-reset_query}{\code{SOMACollection$reset_query()}}
 \item \href{#method-SOMACollection-from_seurat}{\code{SOMACollection$from_seurat()}}
 \item \href{#method-SOMACollection-to_seurat}{\code{SOMACollection$to_seurat()}}
 \item \href{#method-SOMACollection-soma_uris}{\code{SOMACollection$soma_uris()}}
@@ -81,6 +83,50 @@ TileDB group.
 \item{\code{ctx}}{optional tiledb context}
 }
 \if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-SOMACollection-set_query"></a>}}
+\if{latex}{\out{\hypertarget{method-SOMACollection-set_query}{}}}
+\subsection{Method \code{set_query()}}{
+Set query parameters to slice by dimension values or filter
+by attribute values that are applied to all SOMAs within the collection.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{SOMACollection$set_query(
+  obs_ids = NULL,
+  var_ids = NULL,
+  obs_attr_filter = NULL,
+  var_attr_filter = NULL
+)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{obs_ids, var_ids}}{character vector containing observation- or
+variable-identifiers.}
+
+\item{\code{obs_attr_filter, var_attr_filter}}{a TileDB query condition for
+attribute filtering pushdown.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Details}{
+See \code{SOMA$set_query()} for more information about querying mechanics.
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-SOMACollection-reset_query"></a>}}
+\if{latex}{\out{\hypertarget{method-SOMACollection-reset_query}{}}}
+\subsection{Method \code{reset_query()}}{
+Reset query dimensions and attribute filters.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{SOMACollection$reset_query()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+NULL
 }
 }
 \if{html}{\out{<hr>}}
