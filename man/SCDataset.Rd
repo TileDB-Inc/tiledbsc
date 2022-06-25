@@ -46,6 +46,8 @@ renamed to \code{\link{SOMACollection}}.
 <li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBGroup" data-id="print"><a href='../../tiledbsc/html/TileDBGroup.html#method-TileDBGroup-print'><code>tiledbsc::TileDBGroup$print()</code></a></li>
 <li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBGroup" data-id="tiledb_group"><a href='../../tiledbsc/html/TileDBGroup.html#method-TileDBGroup-tiledb_group'><code>tiledbsc::TileDBGroup$tiledb_group()</code></a></li>
 <li><span class="pkg-link" data-pkg="tiledbsc" data-topic="SOMACollection" data-id="from_seurat"><a href='../../tiledbsc/html/SOMACollection.html#method-SOMACollection-from_seurat'><code>tiledbsc::SOMACollection$from_seurat()</code></a></li>
+<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="SOMACollection" data-id="reset_query"><a href='../../tiledbsc/html/SOMACollection.html#method-SOMACollection-reset_query'><code>tiledbsc::SOMACollection$reset_query()</code></a></li>
+<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="SOMACollection" data-id="set_query"><a href='../../tiledbsc/html/SOMACollection.html#method-SOMACollection-set_query'><code>tiledbsc::SOMACollection$set_query()</code></a></li>
 <li><span class="pkg-link" data-pkg="tiledbsc" data-topic="SOMACollection" data-id="soma_uris"><a href='../../tiledbsc/html/SOMACollection.html#method-SOMACollection-soma_uris'><code>tiledbsc::SOMACollection$soma_uris()</code></a></li>
 <li><span class="pkg-link" data-pkg="tiledbsc" data-topic="SOMACollection" data-id="to_seurat"><a href='../../tiledbsc/html/SOMACollection.html#method-SOMACollection-to_seurat'><code>tiledbsc::SOMACollection$to_seurat()</code></a></li>
 </ul>
