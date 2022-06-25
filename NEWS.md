@@ -26,13 +26,22 @@ For backwards compatibility:
 - if a `misc` group exists within a `SOMACollection` or `SOMA` on disk, it will be accessible via the `uns` field of the parent class
 - the deprecated `SCDataset` and `SCGroup` will continue to provide a `misc` field (actually an active binding that aliases the `uns` slot) so users can continue to use the old name
 
-## Dimension slicing
+## Dimension slicing and attribute filtering
 
-The following classes now have a `set_query()` method to define the ranges of the indexed dimensions to slice:
+It's now possible to read only a specific subset of data into memory.
+
+The following classes now have a `set_query()` method:
 
 - `TileDBArray` and its subclasses
 - `AnnotationGroup` and its subclasses
 - `SOMA`
+- `SOMACollection`
+
+
+With `set_query()` you can specify:
+
+- the ranges of the indexed dimensions to slice
+- attribute filter conditions
 
 See the new *Filtering* vignette for details.
 
