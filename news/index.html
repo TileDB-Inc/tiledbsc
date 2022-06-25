@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tiledbsc</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.2.9006</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.2.9007</span>
       </span>
     </div>
 
@@ -89,13 +89,18 @@
 <p>For backwards compatibility: - if a <code>misc</code> group exists within a <code>SOMACollection</code> or <code>SOMA</code> on disk, it will be accessible via the <code>uns</code> field of the parent class - the deprecated <code>SCDataset</code> and <code>SCGroup</code> will continue to provide a <code>misc</code> field (actually an active binding that aliases the <code>uns</code> slot) so users can continue to use the old name</p>
 </div>
 <div class="section level3">
-<h3 id="dimension-slicing-development-version">Dimension slicing<a class="anchor" aria-label="anchor" href="#dimension-slicing-development-version"></a></h3>
-<p>The following classes now have a <code>set_query()</code> method to define the ranges of the indexed dimensions to slice:</p>
+<h3 id="dimension-slicing-and-attribute-filtering-development-version">Dimension slicing and attribute filtering<a class="anchor" aria-label="anchor" href="#dimension-slicing-and-attribute-filtering-development-version"></a></h3>
+<p>It’s now possible to read only a specific subset of data into memory.</p>
+<p>The following classes now have a <code>set_query()</code> method:</p>
 <ul><li>
 <code>TileDBArray</code> and its subclasses</li>
 <li>
 <code>AnnotationGroup</code> and its subclasses</li>
 <li><code>SOMA</code></li>
+<li><code>SOMACollection</code></li>
+</ul><p>With <code>set_query()</code> you can specify:</p>
+<ul><li>the ranges of the indexed dimensions to slice</li>
+<li>attribute filter conditions</li>
 </ul><p>See the new <em>Filtering</em> vignette for details.</p>
 </div>
 <div class="section level3">

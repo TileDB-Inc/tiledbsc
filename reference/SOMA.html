@@ -25,7 +25,7 @@ var (AnnotationDataframe): 1D labeled array with row labels for X
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tiledbsc</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.2.9006</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.2.9007</span>
       </span>
     </div>
 
@@ -220,11 +220,21 @@ attribute filtering pushdown.</p></dd>
 </div>
 <div class="section">
 <h4 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h4>
-<p>A SOMA can be filtered in two ways:</p><ol><li><p>dimension slicing: providing a vector of cell- or feature-identifiers to <code>obs_ids</code> and/or <code>var_ids</code>, respectively.</p></li>
-<li><p>attribute filtering: providing logical expressions that reference
-attributes within the <code>obs</code> and <code>var</code> arrays.</p></li>
-</ol><p>Filters are applied automatically to all members of a SOMA with the
-exception of <code>uns</code>.</p>
+<p>A SOMA can be filtered in two ways:</p><ol><li><p>dimension slicing: vectors of cell- or feature-identifiers passed to
+<code>obs_ids</code> and/or <code>var_ids</code>, respectively, which are applied to the
+selected ranges of member arrays with the
+appropriate dimension(s).</p></li>
+<li><p>attribute filtering: logical expressions that reference
+attributes within the <code>obs</code> and <code>var</code> arrays are applied to each array's
+query condition.</p></li>
+</ol><p>Dimension slicing is applied whenever an array member is accessed,
+causing only data for the specified identifiers to be read into memory.</p>
+<p>Attribute filters are applied immediately to <code>obs</code> and/or <code>var</code> and the
+identifiers that pass the specified conditions are applied to the
+selected ranges of member arrays with the
+appropriate dimension(s).</p>
+<p>Filters are applied automatically to all members of a SOMA with the
+exception of <code>uns</code></p>
 </div>
 
 

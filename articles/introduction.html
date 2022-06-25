@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tiledbsc</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.2.9006</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.2.9007</span>
       </span>
     </div>
 
@@ -133,68 +133,68 @@
 <p>This first step is to create a new <code>SOMACollection</code> object and provide a URI where the dataset should be created:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">soco</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/SOMACollection.html">SOMACollection</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>uri <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"soco"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; No SOMACollection currently exists at '/tmp/RtmpknIIcb/soco'</span></span>
-<span><span class="co">#&gt; Creating new SOMACollection at '/tmp/RtmpknIIcb/soco'</span></span>
-<span><span class="co">#&gt; No TileDBGroup currently exists at '/tmp/RtmpknIIcb/soco/uns'</span></span>
-<span><span class="co">#&gt; Creating new TileDBGroup at '/tmp/RtmpknIIcb/soco/uns'</span></span></code></pre></div>
+<span><span class="co">#&gt; No SOMACollection currently exists at '/tmp/RtmpXlPfrH/soco'</span></span>
+<span><span class="co">#&gt; Creating new SOMACollection at '/tmp/RtmpXlPfrH/soco'</span></span>
+<span><span class="co">#&gt; No TileDBGroup currently exists at '/tmp/RtmpXlPfrH/soco/uns'</span></span>
+<span><span class="co">#&gt; Creating new TileDBGroup at '/tmp/RtmpXlPfrH/soco/uns'</span></span></code></pre></div>
 <p>Next, we’ll pass the entire <code>pbmc_small</code> object directly to <code>from_seurat()</code> and one <code>SOMA</code> will be created for each <code>Assay</code> object:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">soco</span><span class="op">$</span><span class="fu">from_seurat</span><span class="op">(</span>object <span class="op">=</span> <span class="va">pbmc_small</span><span class="op">)</span></span>
-<span><span class="co">#&gt; No SOMA currently exists at '/tmp/RtmpknIIcb/soco/soma_RNA'</span></span>
-<span><span class="co">#&gt; Creating new SOMA at '/tmp/RtmpknIIcb/soco/soma_RNA'</span></span>
-<span><span class="co">#&gt; No AnnotationDataframe found at '/tmp/RtmpknIIcb/soco/soma_RNA/obs'</span></span>
-<span><span class="co">#&gt; No AnnotationDataframe found at '/tmp/RtmpknIIcb/soco/soma_RNA/var'</span></span>
-<span><span class="co">#&gt; No AssayMatrixGroup currently exists at '/tmp/RtmpknIIcb/soco/soma_RNA/X'</span></span>
-<span><span class="co">#&gt; Creating new AssayMatrixGroup at '/tmp/RtmpknIIcb/soco/soma_RNA/X'</span></span>
-<span><span class="co">#&gt; No AnnotationMatrixGroup currently exists at '/tmp/RtmpknIIcb/soco/soma_RNA/obsm'</span></span>
-<span><span class="co">#&gt; Creating new AnnotationMatrixGroup at '/tmp/RtmpknIIcb/soco/soma_RNA/obsm'</span></span>
-<span><span class="co">#&gt; No AnnotationMatrixGroup currently exists at '/tmp/RtmpknIIcb/soco/soma_RNA/varm'</span></span>
-<span><span class="co">#&gt; Creating new AnnotationMatrixGroup at '/tmp/RtmpknIIcb/soco/soma_RNA/varm'</span></span>
-<span><span class="co">#&gt; No AnnotationPairwiseMatrixGroup currently exists at '/tmp/RtmpknIIcb/soco/soma_RNA/obsp'</span></span>
-<span><span class="co">#&gt; Creating new AnnotationPairwiseMatrixGroup at '/tmp/RtmpknIIcb/soco/soma_RNA/obsp'</span></span>
-<span><span class="co">#&gt; No AnnotationPairwiseMatrixGroup currently exists at '/tmp/RtmpknIIcb/soco/soma_RNA/varp'</span></span>
-<span><span class="co">#&gt; Creating new AnnotationPairwiseMatrixGroup at '/tmp/RtmpknIIcb/soco/soma_RNA/varp'</span></span>
-<span><span class="co">#&gt; No TileDBGroup currently exists at '/tmp/RtmpknIIcb/soco/soma_RNA/uns'</span></span>
-<span><span class="co">#&gt; Creating new TileDBGroup at '/tmp/RtmpknIIcb/soco/soma_RNA/uns'</span></span>
-<span><span class="co">#&gt; Creating new AnnotationDataframe array with index [obs_id] at '/tmp/RtmpknIIcb/soco/soma_RNA/obs'</span></span>
-<span><span class="co">#&gt; Ingesting AnnotationDataframe data into: /tmp/RtmpknIIcb/soco/soma_RNA/obs</span></span>
-<span><span class="co">#&gt; Creating new AnnotationDataframe array with index [var_id] at '/tmp/RtmpknIIcb/soco/soma_RNA/var'</span></span>
-<span><span class="co">#&gt; Ingesting AnnotationDataframe data into: /tmp/RtmpknIIcb/soco/soma_RNA/var</span></span>
-<span><span class="co">#&gt; No AssayMatrix found at '/tmp/RtmpknIIcb/soco/soma_RNA/X/counts'</span></span>
-<span><span class="co">#&gt; Creating new AssayMatrix array with index [var_id,obs_id] at '/tmp/RtmpknIIcb/soco/soma_RNA/X/counts'</span></span>
-<span><span class="co">#&gt; Ingesting AssayMatrix data into: /tmp/RtmpknIIcb/soco/soma_RNA/X/counts</span></span>
-<span><span class="co">#&gt; No AssayMatrix found at '/tmp/RtmpknIIcb/soco/soma_RNA/X/data'</span></span>
-<span><span class="co">#&gt; Creating new AssayMatrix array with index [var_id,obs_id] at '/tmp/RtmpknIIcb/soco/soma_RNA/X/data'</span></span>
-<span><span class="co">#&gt; Ingesting AssayMatrix data into: /tmp/RtmpknIIcb/soco/soma_RNA/X/data</span></span>
-<span><span class="co">#&gt; No AssayMatrix found at '/tmp/RtmpknIIcb/soco/soma_RNA/X/scale.data'</span></span>
-<span><span class="co">#&gt; Creating new AssayMatrix array with index [var_id,obs_id] at '/tmp/RtmpknIIcb/soco/soma_RNA/X/scale.data'</span></span>
-<span><span class="co">#&gt; Ingesting AssayMatrix data into: /tmp/RtmpknIIcb/soco/soma_RNA/X/scale.data</span></span>
+<span><span class="co">#&gt; No SOMA currently exists at '/tmp/RtmpXlPfrH/soco/soma_RNA'</span></span>
+<span><span class="co">#&gt; Creating new SOMA at '/tmp/RtmpXlPfrH/soco/soma_RNA'</span></span>
+<span><span class="co">#&gt; No AnnotationDataframe found at '/tmp/RtmpXlPfrH/soco/soma_RNA/obs'</span></span>
+<span><span class="co">#&gt; No AnnotationDataframe found at '/tmp/RtmpXlPfrH/soco/soma_RNA/var'</span></span>
+<span><span class="co">#&gt; No AssayMatrixGroup currently exists at '/tmp/RtmpXlPfrH/soco/soma_RNA/X'</span></span>
+<span><span class="co">#&gt; Creating new AssayMatrixGroup at '/tmp/RtmpXlPfrH/soco/soma_RNA/X'</span></span>
+<span><span class="co">#&gt; No AnnotationMatrixGroup currently exists at '/tmp/RtmpXlPfrH/soco/soma_RNA/obsm'</span></span>
+<span><span class="co">#&gt; Creating new AnnotationMatrixGroup at '/tmp/RtmpXlPfrH/soco/soma_RNA/obsm'</span></span>
+<span><span class="co">#&gt; No AnnotationMatrixGroup currently exists at '/tmp/RtmpXlPfrH/soco/soma_RNA/varm'</span></span>
+<span><span class="co">#&gt; Creating new AnnotationMatrixGroup at '/tmp/RtmpXlPfrH/soco/soma_RNA/varm'</span></span>
+<span><span class="co">#&gt; No AnnotationPairwiseMatrixGroup currently exists at '/tmp/RtmpXlPfrH/soco/soma_RNA/obsp'</span></span>
+<span><span class="co">#&gt; Creating new AnnotationPairwiseMatrixGroup at '/tmp/RtmpXlPfrH/soco/soma_RNA/obsp'</span></span>
+<span><span class="co">#&gt; No AnnotationPairwiseMatrixGroup currently exists at '/tmp/RtmpXlPfrH/soco/soma_RNA/varp'</span></span>
+<span><span class="co">#&gt; Creating new AnnotationPairwiseMatrixGroup at '/tmp/RtmpXlPfrH/soco/soma_RNA/varp'</span></span>
+<span><span class="co">#&gt; No TileDBGroup currently exists at '/tmp/RtmpXlPfrH/soco/soma_RNA/uns'</span></span>
+<span><span class="co">#&gt; Creating new TileDBGroup at '/tmp/RtmpXlPfrH/soco/soma_RNA/uns'</span></span>
+<span><span class="co">#&gt; Creating new AnnotationDataframe array with index [obs_id] at '/tmp/RtmpXlPfrH/soco/soma_RNA/obs'</span></span>
+<span><span class="co">#&gt; Ingesting AnnotationDataframe data into: /tmp/RtmpXlPfrH/soco/soma_RNA/obs</span></span>
+<span><span class="co">#&gt; Creating new AnnotationDataframe array with index [var_id] at '/tmp/RtmpXlPfrH/soco/soma_RNA/var'</span></span>
+<span><span class="co">#&gt; Ingesting AnnotationDataframe data into: /tmp/RtmpXlPfrH/soco/soma_RNA/var</span></span>
+<span><span class="co">#&gt; No AssayMatrix found at '/tmp/RtmpXlPfrH/soco/soma_RNA/X/counts'</span></span>
+<span><span class="co">#&gt; Creating new AssayMatrix array with index [var_id,obs_id] at '/tmp/RtmpXlPfrH/soco/soma_RNA/X/counts'</span></span>
+<span><span class="co">#&gt; Ingesting AssayMatrix data into: /tmp/RtmpXlPfrH/soco/soma_RNA/X/counts</span></span>
+<span><span class="co">#&gt; No AssayMatrix found at '/tmp/RtmpXlPfrH/soco/soma_RNA/X/data'</span></span>
+<span><span class="co">#&gt; Creating new AssayMatrix array with index [var_id,obs_id] at '/tmp/RtmpXlPfrH/soco/soma_RNA/X/data'</span></span>
+<span><span class="co">#&gt; Ingesting AssayMatrix data into: /tmp/RtmpXlPfrH/soco/soma_RNA/X/data</span></span>
+<span><span class="co">#&gt; No AssayMatrix found at '/tmp/RtmpXlPfrH/soco/soma_RNA/X/scale.data'</span></span>
+<span><span class="co">#&gt; Creating new AssayMatrix array with index [var_id,obs_id] at '/tmp/RtmpXlPfrH/soco/soma_RNA/X/scale.data'</span></span>
+<span><span class="co">#&gt; Ingesting AssayMatrix data into: /tmp/RtmpXlPfrH/soco/soma_RNA/X/scale.data</span></span>
 <span><span class="co">#&gt; Finished converting Seurat Assay with key [rna_] to SOMA</span></span>
-<span><span class="co">#&gt; No AnnotationMatrix found at '/tmp/RtmpknIIcb/soco/soma_RNA/varm/dimreduction_pca'</span></span>
-<span><span class="co">#&gt; Creating new AnnotationMatrix array with index [var_id] at '/tmp/RtmpknIIcb/soco/soma_RNA/varm/dimreduction_pca'</span></span>
-<span><span class="co">#&gt; Ingesting AnnotationMatrix data into: /tmp/RtmpknIIcb/soco/soma_RNA/varm/dimreduction_pca</span></span>
-<span><span class="co">#&gt; No AnnotationMatrix found at '/tmp/RtmpknIIcb/soco/soma_RNA/obsm/dimreduction_pca'</span></span>
-<span><span class="co">#&gt; Creating new AnnotationMatrix array with index [obs_id] at '/tmp/RtmpknIIcb/soco/soma_RNA/obsm/dimreduction_pca'</span></span>
-<span><span class="co">#&gt; Ingesting AnnotationMatrix data into: /tmp/RtmpknIIcb/soco/soma_RNA/obsm/dimreduction_pca</span></span>
-<span><span class="co">#&gt; No AnnotationMatrix found at '/tmp/RtmpknIIcb/soco/soma_RNA/obsm/dimreduction_tsne'</span></span>
-<span><span class="co">#&gt; Creating new AnnotationMatrix array with index [obs_id] at '/tmp/RtmpknIIcb/soco/soma_RNA/obsm/dimreduction_tsne'</span></span>
-<span><span class="co">#&gt; Ingesting AnnotationMatrix data into: /tmp/RtmpknIIcb/soco/soma_RNA/obsm/dimreduction_tsne</span></span>
-<span><span class="co">#&gt; No AnnotationPairwiseMatrix found at '/tmp/RtmpknIIcb/soco/soma_RNA/obsp/graph_snn'</span></span>
-<span><span class="co">#&gt; Creating new AnnotationPairwiseMatrix array with index [obs_id_i,obs_id_j] at '/tmp/RtmpknIIcb/soco/soma_RNA/obsp/graph_snn'</span></span>
-<span><span class="co">#&gt; Ingesting AnnotationPairwiseMatrix data into: /tmp/RtmpknIIcb/soco/soma_RNA/obsp/graph_snn</span></span>
-<span><span class="co">#&gt; No CommandsArray found at '/tmp/RtmpknIIcb/soco/uns/commands'</span></span>
-<span><span class="co">#&gt; Creating new CommandsArray array with index [index] at '/tmp/RtmpknIIcb/soco/uns/commands'</span></span>
-<span><span class="co">#&gt; Ingesting CommandsArray data into: /tmp/RtmpknIIcb/soco/uns/commands</span></span>
+<span><span class="co">#&gt; No AnnotationMatrix found at '/tmp/RtmpXlPfrH/soco/soma_RNA/varm/dimreduction_pca'</span></span>
+<span><span class="co">#&gt; Creating new AnnotationMatrix array with index [var_id] at '/tmp/RtmpXlPfrH/soco/soma_RNA/varm/dimreduction_pca'</span></span>
+<span><span class="co">#&gt; Ingesting AnnotationMatrix data into: /tmp/RtmpXlPfrH/soco/soma_RNA/varm/dimreduction_pca</span></span>
+<span><span class="co">#&gt; No AnnotationMatrix found at '/tmp/RtmpXlPfrH/soco/soma_RNA/obsm/dimreduction_pca'</span></span>
+<span><span class="co">#&gt; Creating new AnnotationMatrix array with index [obs_id] at '/tmp/RtmpXlPfrH/soco/soma_RNA/obsm/dimreduction_pca'</span></span>
+<span><span class="co">#&gt; Ingesting AnnotationMatrix data into: /tmp/RtmpXlPfrH/soco/soma_RNA/obsm/dimreduction_pca</span></span>
+<span><span class="co">#&gt; No AnnotationMatrix found at '/tmp/RtmpXlPfrH/soco/soma_RNA/obsm/dimreduction_tsne'</span></span>
+<span><span class="co">#&gt; Creating new AnnotationMatrix array with index [obs_id] at '/tmp/RtmpXlPfrH/soco/soma_RNA/obsm/dimreduction_tsne'</span></span>
+<span><span class="co">#&gt; Ingesting AnnotationMatrix data into: /tmp/RtmpXlPfrH/soco/soma_RNA/obsm/dimreduction_tsne</span></span>
+<span><span class="co">#&gt; No AnnotationPairwiseMatrix found at '/tmp/RtmpXlPfrH/soco/soma_RNA/obsp/graph_snn'</span></span>
+<span><span class="co">#&gt; Creating new AnnotationPairwiseMatrix array with index [obs_id_i,obs_id_j] at '/tmp/RtmpXlPfrH/soco/soma_RNA/obsp/graph_snn'</span></span>
+<span><span class="co">#&gt; Ingesting AnnotationPairwiseMatrix data into: /tmp/RtmpXlPfrH/soco/soma_RNA/obsp/graph_snn</span></span>
+<span><span class="co">#&gt; No CommandsArray found at '/tmp/RtmpXlPfrH/soco/uns/commands'</span></span>
+<span><span class="co">#&gt; Creating new CommandsArray array with index [index] at '/tmp/RtmpXlPfrH/soco/uns/commands'</span></span>
+<span><span class="co">#&gt; Ingesting CommandsArray data into: /tmp/RtmpXlPfrH/soco/uns/commands</span></span>
 <span><span class="co">#&gt; Finished converting Seurat object to SOMACollection</span></span></code></pre></div>
 <p>Examining the directory structure, you can see the top-level <code>SOMACollection</code> directory now contains a single <code>soma_RNA</code> sub-directory, corresponding to <code>pbmc_small</code>’s only assay, <code>"RNA"</code>:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/dir_tree.html" class="external-link">dir_tree</a></span><span class="op">(</span><span class="va">soco</span><span class="op">$</span><span class="va">uri</span>, recurse <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #0000BB; font-weight: bold;">/tmp/RtmpknIIcb/soco</span></span></span>
+<span><span class="co">#&gt; <span style="color: #0000BB; font-weight: bold;">/tmp/RtmpXlPfrH/soco</span></span></span>
 <span><span class="co">#&gt; ├── <span style="color: #0000BB; font-weight: bold;">__group</span></span></span>
-<span><span class="co">#&gt; │   ├── __1656100863964_1656100863964_a35ace34d6bf4eeaa670c9e8202cb05a</span></span>
-<span><span class="co">#&gt; │   └── __1656100864184_1656100864184_0b2956647d934bd892937b07c33695de</span></span>
+<span><span class="co">#&gt; │   ├── __1656182149386_1656182149386_de83ad1bf8574e7dbdf496ba0ada6dde</span></span>
+<span><span class="co">#&gt; │   └── __1656182149616_1656182149616_9fa5a9c291724f2db4f21e1761fee066</span></span>
 <span><span class="co">#&gt; ├── <span style="color: #0000BB; font-weight: bold;">__meta</span></span></span>
-<span><span class="co">#&gt; │   └── __1656100863941_1656100863941_179d183f82074d3288f778bcbb913efb</span></span>
+<span><span class="co">#&gt; │   └── __1656182149362_1656182149362_c59f592ab46e42adb132c0b709aadecb</span></span>
 <span><span class="co">#&gt; ├── __tiledb_group.tdb</span></span>
 <span><span class="co">#&gt; ├── <span style="color: #0000BB; font-weight: bold;">soma_RNA</span></span></span>
 <span><span class="co">#&gt; │   ├── <span style="color: #0000BB; font-weight: bold;">X</span></span></span>
@@ -222,17 +222,17 @@
 <p>To close the loop we can then read the on-disk <code>SOMACollection</code> back into memory as a <code>Seurat</code> object.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">soco</span><span class="op">$</span><span class="fu">to_seurat</span><span class="op">(</span>project <span class="op">=</span> <span class="st">"SOCO Example"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Reading AssayMatrix into memory from '/tmp/RtmpknIIcb/soco/soma_RNA/X/counts'</span></span>
-<span><span class="co">#&gt; Reading AssayMatrix into memory from '/tmp/RtmpknIIcb/soco/soma_RNA/X/data'</span></span>
-<span><span class="co">#&gt; Reading AssayMatrix into memory from '/tmp/RtmpknIIcb/soco/soma_RNA/X/scale.data'</span></span>
-<span><span class="co">#&gt; Reading AnnotationDataframe into memory from '/tmp/RtmpknIIcb/soco/soma_RNA/var'</span></span>
-<span><span class="co">#&gt; Reading AnnotationDataframe into memory from '/tmp/RtmpknIIcb/soco/soma_RNA/obs'</span></span>
+<span><span class="co">#&gt; Reading AssayMatrix into memory from '/tmp/RtmpXlPfrH/soco/soma_RNA/X/counts'</span></span>
+<span><span class="co">#&gt; Reading AssayMatrix into memory from '/tmp/RtmpXlPfrH/soco/soma_RNA/X/data'</span></span>
+<span><span class="co">#&gt; Reading AssayMatrix into memory from '/tmp/RtmpXlPfrH/soco/soma_RNA/X/scale.data'</span></span>
+<span><span class="co">#&gt; Reading AnnotationDataframe into memory from '/tmp/RtmpXlPfrH/soco/soma_RNA/var'</span></span>
+<span><span class="co">#&gt; Reading AnnotationDataframe into memory from '/tmp/RtmpXlPfrH/soco/soma_RNA/obs'</span></span>
 <span><span class="co">#&gt; Found 2 dim reduction arrays</span></span>
-<span><span class="co">#&gt; Reading AnnotationMatrix into memory from '/tmp/RtmpknIIcb/soco/soma_RNA/obsm/dimreduction_pca'</span></span>
-<span><span class="co">#&gt; Reading AnnotationMatrix into memory from '/tmp/RtmpknIIcb/soco/soma_RNA/varm/dimreduction_pca'</span></span>
+<span><span class="co">#&gt; Reading AnnotationMatrix into memory from '/tmp/RtmpXlPfrH/soco/soma_RNA/obsm/dimreduction_pca'</span></span>
+<span><span class="co">#&gt; Reading AnnotationMatrix into memory from '/tmp/RtmpXlPfrH/soco/soma_RNA/varm/dimreduction_pca'</span></span>
 <span><span class="co">#&gt; Found 1 dim reduction arrays</span></span>
-<span><span class="co">#&gt; Reading AnnotationMatrix into memory from '/tmp/RtmpknIIcb/soco/soma_RNA/obsm/dimreduction_tsne'</span></span>
-<span><span class="co">#&gt; Reading AnnotationPairwiseMatrix into dataframe from '/tmp/RtmpknIIcb/soco/soma_RNA/obsp/graph_snn'</span></span>
+<span><span class="co">#&gt; Reading AnnotationMatrix into memory from '/tmp/RtmpXlPfrH/soco/soma_RNA/obsm/dimreduction_tsne'</span></span>
+<span><span class="co">#&gt; Reading AnnotationPairwiseMatrix into dataframe from '/tmp/RtmpXlPfrH/soco/soma_RNA/obsp/graph_snn'</span></span>
 <span><span class="co">#&gt; Reading command history into memory</span></span>
 <span><span class="co">#&gt; An object of class Seurat </span></span>
 <span><span class="co">#&gt; 230 features across 80 samples within 1 assay </span></span>
@@ -245,63 +245,63 @@
 <p>Conversions can happen at multiple levels of the API. For example, we can operate directly on a Seurat <code>Assay</code> using <code>SOMA</code>. The workflow is largely the same:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">soma</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/SOMA.html">SOMA</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>uri <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"soma"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; No SOMA currently exists at '/tmp/RtmpknIIcb/soma'</span></span>
-<span><span class="co">#&gt; Creating new SOMA at '/tmp/RtmpknIIcb/soma'</span></span>
-<span><span class="co">#&gt; No AnnotationDataframe found at '/tmp/RtmpknIIcb/soma/obs'</span></span>
-<span><span class="co">#&gt; No AnnotationDataframe found at '/tmp/RtmpknIIcb/soma/var'</span></span>
-<span><span class="co">#&gt; No AssayMatrixGroup currently exists at '/tmp/RtmpknIIcb/soma/X'</span></span>
-<span><span class="co">#&gt; Creating new AssayMatrixGroup at '/tmp/RtmpknIIcb/soma/X'</span></span>
-<span><span class="co">#&gt; No AnnotationMatrixGroup currently exists at '/tmp/RtmpknIIcb/soma/obsm'</span></span>
-<span><span class="co">#&gt; Creating new AnnotationMatrixGroup at '/tmp/RtmpknIIcb/soma/obsm'</span></span>
-<span><span class="co">#&gt; No AnnotationMatrixGroup currently exists at '/tmp/RtmpknIIcb/soma/varm'</span></span>
-<span><span class="co">#&gt; Creating new AnnotationMatrixGroup at '/tmp/RtmpknIIcb/soma/varm'</span></span>
-<span><span class="co">#&gt; No AnnotationPairwiseMatrixGroup currently exists at '/tmp/RtmpknIIcb/soma/obsp'</span></span>
-<span><span class="co">#&gt; Creating new AnnotationPairwiseMatrixGroup at '/tmp/RtmpknIIcb/soma/obsp'</span></span>
-<span><span class="co">#&gt; No AnnotationPairwiseMatrixGroup currently exists at '/tmp/RtmpknIIcb/soma/varp'</span></span>
-<span><span class="co">#&gt; Creating new AnnotationPairwiseMatrixGroup at '/tmp/RtmpknIIcb/soma/varp'</span></span>
-<span><span class="co">#&gt; No TileDBGroup currently exists at '/tmp/RtmpknIIcb/soma/uns'</span></span>
-<span><span class="co">#&gt; Creating new TileDBGroup at '/tmp/RtmpknIIcb/soma/uns'</span></span>
+<span><span class="co">#&gt; No SOMA currently exists at '/tmp/RtmpXlPfrH/soma'</span></span>
+<span><span class="co">#&gt; Creating new SOMA at '/tmp/RtmpXlPfrH/soma'</span></span>
+<span><span class="co">#&gt; No AnnotationDataframe found at '/tmp/RtmpXlPfrH/soma/obs'</span></span>
+<span><span class="co">#&gt; No AnnotationDataframe found at '/tmp/RtmpXlPfrH/soma/var'</span></span>
+<span><span class="co">#&gt; No AssayMatrixGroup currently exists at '/tmp/RtmpXlPfrH/soma/X'</span></span>
+<span><span class="co">#&gt; Creating new AssayMatrixGroup at '/tmp/RtmpXlPfrH/soma/X'</span></span>
+<span><span class="co">#&gt; No AnnotationMatrixGroup currently exists at '/tmp/RtmpXlPfrH/soma/obsm'</span></span>
+<span><span class="co">#&gt; Creating new AnnotationMatrixGroup at '/tmp/RtmpXlPfrH/soma/obsm'</span></span>
+<span><span class="co">#&gt; No AnnotationMatrixGroup currently exists at '/tmp/RtmpXlPfrH/soma/varm'</span></span>
+<span><span class="co">#&gt; Creating new AnnotationMatrixGroup at '/tmp/RtmpXlPfrH/soma/varm'</span></span>
+<span><span class="co">#&gt; No AnnotationPairwiseMatrixGroup currently exists at '/tmp/RtmpXlPfrH/soma/obsp'</span></span>
+<span><span class="co">#&gt; Creating new AnnotationPairwiseMatrixGroup at '/tmp/RtmpXlPfrH/soma/obsp'</span></span>
+<span><span class="co">#&gt; No AnnotationPairwiseMatrixGroup currently exists at '/tmp/RtmpXlPfrH/soma/varp'</span></span>
+<span><span class="co">#&gt; Creating new AnnotationPairwiseMatrixGroup at '/tmp/RtmpXlPfrH/soma/varp'</span></span>
+<span><span class="co">#&gt; No TileDBGroup currently exists at '/tmp/RtmpXlPfrH/soma/uns'</span></span>
+<span><span class="co">#&gt; Creating new TileDBGroup at '/tmp/RtmpXlPfrH/soma/uns'</span></span>
 <span><span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/dir_tree.html" class="external-link">dir_tree</a></span><span class="op">(</span><span class="va">soma</span><span class="op">$</span><span class="va">uri</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #0000BB; font-weight: bold;">/tmp/RtmpknIIcb/soma</span></span></span>
+<span><span class="co">#&gt; <span style="color: #0000BB; font-weight: bold;">/tmp/RtmpXlPfrH/soma</span></span></span>
 <span><span class="co">#&gt; ├── <span style="color: #0000BB; font-weight: bold;">X</span></span></span>
 <span><span class="co">#&gt; │   ├── <span style="color: #0000BB; font-weight: bold;">__group</span></span></span>
 <span><span class="co">#&gt; │   ├── <span style="color: #0000BB; font-weight: bold;">__meta</span></span></span>
-<span><span class="co">#&gt; │   │   └── __1656100865499_1656100865499_4c23f13c1dd547f2972fae9e9c2ef87d</span></span>
+<span><span class="co">#&gt; │   │   └── __1656182151002_1656182151002_2634a21d5f8747199b962b854728477e</span></span>
 <span><span class="co">#&gt; │   └── __tiledb_group.tdb</span></span>
 <span><span class="co">#&gt; ├── <span style="color: #0000BB; font-weight: bold;">__group</span></span></span>
-<span><span class="co">#&gt; │   ├── __1656100865506_1656100865506_6984a2c359094901a98b22ea3a965610</span></span>
-<span><span class="co">#&gt; │   ├── __1656100865517_1656100865517_1dd53e1005e74aa49cd18c21894a7104</span></span>
-<span><span class="co">#&gt; │   ├── __1656100865528_1656100865528_e22e97bfcace4fd68cd8dbe27cd9a361</span></span>
-<span><span class="co">#&gt; │   ├── __1656100865539_1656100865539_fabec6fb80b04e7ea6ddcce9b3ce2d56</span></span>
-<span><span class="co">#&gt; │   ├── __1656100865550_1656100865550_442d93e3ef6f436da7bbb28d019469d3</span></span>
-<span><span class="co">#&gt; │   └── __1656100865561_1656100865561_c86f0ca244084b57a79fd9369c7b08e4</span></span>
+<span><span class="co">#&gt; │   ├── __1656182151009_1656182151009_7e0e97d25b55489a8d25fafd8388117a</span></span>
+<span><span class="co">#&gt; │   ├── __1656182151020_1656182151020_c8f1e732b23947a1a279bc77b2f7c259</span></span>
+<span><span class="co">#&gt; │   ├── __1656182151032_1656182151032_b727257778f84dc290b2c2813435c14a</span></span>
+<span><span class="co">#&gt; │   ├── __1656182151043_1656182151043_e5fc3cff43664605b9bd52202bf6e3c8</span></span>
+<span><span class="co">#&gt; │   ├── __1656182151055_1656182151055_d1287dc901cf4a2fb8dbf69b13b6a9f9</span></span>
+<span><span class="co">#&gt; │   └── __1656182151066_1656182151066_527a5d04544140fbb47eabafb20ad45d</span></span>
 <span><span class="co">#&gt; ├── <span style="color: #0000BB; font-weight: bold;">__meta</span></span></span>
-<span><span class="co">#&gt; │   └── __1656100865488_1656100865488_bf80359f1ccd46a7a6a4d7363c0984c4</span></span>
+<span><span class="co">#&gt; │   └── __1656182150990_1656182150990_3d583d9cadeb48f791912fb1129d495a</span></span>
 <span><span class="co">#&gt; ├── __tiledb_group.tdb</span></span>
 <span><span class="co">#&gt; ├── <span style="color: #0000BB; font-weight: bold;">obsm</span></span></span>
 <span><span class="co">#&gt; │   ├── <span style="color: #0000BB; font-weight: bold;">__group</span></span></span>
 <span><span class="co">#&gt; │   ├── <span style="color: #0000BB; font-weight: bold;">__meta</span></span></span>
-<span><span class="co">#&gt; │   │   └── __1656100865511_1656100865511_595603ad27e347998b60ffdfbbeb4b00</span></span>
+<span><span class="co">#&gt; │   │   └── __1656182151013_1656182151013_a8eb43016c43478cbfed68bf4e8e66d8</span></span>
 <span><span class="co">#&gt; │   └── __tiledb_group.tdb</span></span>
 <span><span class="co">#&gt; ├── <span style="color: #0000BB; font-weight: bold;">obsp</span></span></span>
 <span><span class="co">#&gt; │   ├── <span style="color: #0000BB; font-weight: bold;">__group</span></span></span>
 <span><span class="co">#&gt; │   ├── <span style="color: #0000BB; font-weight: bold;">__meta</span></span></span>
-<span><span class="co">#&gt; │   │   └── __1656100865533_1656100865533_745adebba4044e658f8590e7eb5d54c9</span></span>
+<span><span class="co">#&gt; │   │   └── __1656182151036_1656182151036_8d3582999e85494e9eb9d6a5fa10f876</span></span>
 <span><span class="co">#&gt; │   └── __tiledb_group.tdb</span></span>
 <span><span class="co">#&gt; ├── <span style="color: #0000BB; font-weight: bold;">uns</span></span></span>
 <span><span class="co">#&gt; │   ├── <span style="color: #0000BB; font-weight: bold;">__group</span></span></span>
 <span><span class="co">#&gt; │   ├── <span style="color: #0000BB; font-weight: bold;">__meta</span></span></span>
-<span><span class="co">#&gt; │   │   └── __1656100865554_1656100865554_c6cd43868d81425aa8a2d4d040440c48</span></span>
+<span><span class="co">#&gt; │   │   └── __1656182151059_1656182151059_4d2c68fe5c92486cb44a4f7d6a23d23f</span></span>
 <span><span class="co">#&gt; │   └── __tiledb_group.tdb</span></span>
 <span><span class="co">#&gt; ├── <span style="color: #0000BB; font-weight: bold;">varm</span></span></span>
 <span><span class="co">#&gt; │   ├── <span style="color: #0000BB; font-weight: bold;">__group</span></span></span>
 <span><span class="co">#&gt; │   ├── <span style="color: #0000BB; font-weight: bold;">__meta</span></span></span>
-<span><span class="co">#&gt; │   │   └── __1656100865522_1656100865522_2e87f27f16884f9aa1fdb6b397a62f4a</span></span>
+<span><span class="co">#&gt; │   │   └── __1656182151025_1656182151025_4303100b77b54717ab58863841f152cd</span></span>
 <span><span class="co">#&gt; │   └── __tiledb_group.tdb</span></span>
 <span><span class="co">#&gt; └── <span style="color: #0000BB; font-weight: bold;">varp</span></span></span>
 <span><span class="co">#&gt;     ├── <span style="color: #0000BB; font-weight: bold;">__group</span></span></span>
 <span><span class="co">#&gt;     ├── <span style="color: #0000BB; font-weight: bold;">__meta</span></span></span>
-<span><span class="co">#&gt;     │   └── __1656100865543_1656100865543_562bf6d4d6f0458aabc87b9579e1936e</span></span>
+<span><span class="co">#&gt;     │   └── __1656182151047_1656182151047_e556fbfe1efc4aec9c19d11aa292013f</span></span>
 <span><span class="co">#&gt;     └── __tiledb_group.tdb</span></span></code></pre></div>
 <p>Then we’ll pass <code>RNA</code> assay from <code>pbmc_small</code> to the <code>from_seurat_assay()</code> method of the <code>SOMA</code> class.</p>
 <p><em>Note: Because cell-level metadata is stored in the parent <code>Seurat</code> object, we need to provide this data separately.</em></p>
@@ -310,24 +310,24 @@
 <span>  object <span class="op">=</span> <span class="va">pbmc_small</span><span class="op">[[</span><span class="st">"RNA"</span><span class="op">]</span><span class="op">]</span>,</span>
 <span>  obs <span class="op">=</span> <span class="va">pbmc_small</span><span class="op">[[</span><span class="op">]</span><span class="op">]</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; Creating new AnnotationDataframe array with index [obs_id] at '/tmp/RtmpknIIcb/soma/obs'</span></span>
-<span><span class="co">#&gt; Ingesting AnnotationDataframe data into: /tmp/RtmpknIIcb/soma/obs</span></span>
-<span><span class="co">#&gt; Creating new AnnotationDataframe array with index [var_id] at '/tmp/RtmpknIIcb/soma/var'</span></span>
-<span><span class="co">#&gt; Ingesting AnnotationDataframe data into: /tmp/RtmpknIIcb/soma/var</span></span>
-<span><span class="co">#&gt; No AssayMatrix found at '/tmp/RtmpknIIcb/soma/X/counts'</span></span>
-<span><span class="co">#&gt; Creating new AssayMatrix array with index [var_id,obs_id] at '/tmp/RtmpknIIcb/soma/X/counts'</span></span>
-<span><span class="co">#&gt; Ingesting AssayMatrix data into: /tmp/RtmpknIIcb/soma/X/counts</span></span>
-<span><span class="co">#&gt; No AssayMatrix found at '/tmp/RtmpknIIcb/soma/X/data'</span></span>
-<span><span class="co">#&gt; Creating new AssayMatrix array with index [var_id,obs_id] at '/tmp/RtmpknIIcb/soma/X/data'</span></span>
-<span><span class="co">#&gt; Ingesting AssayMatrix data into: /tmp/RtmpknIIcb/soma/X/data</span></span>
-<span><span class="co">#&gt; No AssayMatrix found at '/tmp/RtmpknIIcb/soma/X/scale.data'</span></span>
-<span><span class="co">#&gt; Creating new AssayMatrix array with index [var_id,obs_id] at '/tmp/RtmpknIIcb/soma/X/scale.data'</span></span>
-<span><span class="co">#&gt; Ingesting AssayMatrix data into: /tmp/RtmpknIIcb/soma/X/scale.data</span></span>
+<span><span class="co">#&gt; Creating new AnnotationDataframe array with index [obs_id] at '/tmp/RtmpXlPfrH/soma/obs'</span></span>
+<span><span class="co">#&gt; Ingesting AnnotationDataframe data into: /tmp/RtmpXlPfrH/soma/obs</span></span>
+<span><span class="co">#&gt; Creating new AnnotationDataframe array with index [var_id] at '/tmp/RtmpXlPfrH/soma/var'</span></span>
+<span><span class="co">#&gt; Ingesting AnnotationDataframe data into: /tmp/RtmpXlPfrH/soma/var</span></span>
+<span><span class="co">#&gt; No AssayMatrix found at '/tmp/RtmpXlPfrH/soma/X/counts'</span></span>
+<span><span class="co">#&gt; Creating new AssayMatrix array with index [var_id,obs_id] at '/tmp/RtmpXlPfrH/soma/X/counts'</span></span>
+<span><span class="co">#&gt; Ingesting AssayMatrix data into: /tmp/RtmpXlPfrH/soma/X/counts</span></span>
+<span><span class="co">#&gt; No AssayMatrix found at '/tmp/RtmpXlPfrH/soma/X/data'</span></span>
+<span><span class="co">#&gt; Creating new AssayMatrix array with index [var_id,obs_id] at '/tmp/RtmpXlPfrH/soma/X/data'</span></span>
+<span><span class="co">#&gt; Ingesting AssayMatrix data into: /tmp/RtmpXlPfrH/soma/X/data</span></span>
+<span><span class="co">#&gt; No AssayMatrix found at '/tmp/RtmpXlPfrH/soma/X/scale.data'</span></span>
+<span><span class="co">#&gt; Creating new AssayMatrix array with index [var_id,obs_id] at '/tmp/RtmpXlPfrH/soma/X/scale.data'</span></span>
+<span><span class="co">#&gt; Ingesting AssayMatrix data into: /tmp/RtmpXlPfrH/soma/X/scale.data</span></span>
 <span><span class="co">#&gt; Finished converting Seurat Assay with key [rna_] to SOMA</span></span></code></pre></div>
 <p>Examine the directory structure of the <code>soma</code> we can see the <code>X</code>, <code>var</code>, and <code>obs</code> arrays have all been created.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/dir_tree.html" class="external-link">dir_tree</a></span><span class="op">(</span><span class="va">soma</span><span class="op">$</span><span class="va">uri</span>, recurse <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #0000BB; font-weight: bold;">/tmp/RtmpknIIcb/soma</span></span></span>
+<span><span class="co">#&gt; <span style="color: #0000BB; font-weight: bold;">/tmp/RtmpXlPfrH/soma</span></span></span>
 <span><span class="co">#&gt; ├── <span style="color: #0000BB; font-weight: bold;">X</span></span></span>
 <span><span class="co">#&gt; ├── <span style="color: #0000BB; font-weight: bold;">__group</span></span></span>
 <span><span class="co">#&gt; ├── <span style="color: #0000BB; font-weight: bold;">__meta</span></span></span>
@@ -351,14 +351,14 @@
 <p>Easy choice. <code>"RNA"</code> can then be used to index the corresponding <code>SOMA</code>:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">soco</span><span class="op">$</span><span class="va">members</span><span class="op">$</span><span class="va">RNA</span></span>
-<span><span class="co">#&gt;   uri: /tmp/RtmpknIIcb/soco/soma_RNA </span></span>
+<span><span class="co">#&gt;   uri: /tmp/RtmpXlPfrH/soco/soma_RNA </span></span>
 <span><span class="co">#&gt; &lt;SOMA&gt;</span></span>
 <span><span class="co">#&gt;   arrays: obs, var </span></span>
 <span><span class="co">#&gt;   groups: obsm, obsp, uns, varm, varp, X</span></span></code></pre></div>
 <p>We can see we have access to a variety of fields and methods, but <code>obs</code> is the one we’re after.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">soco</span><span class="op">$</span><span class="va">members</span><span class="op">$</span><span class="va">RNA</span><span class="op">$</span><span class="va">obs</span><span class="op">$</span><span class="fu">to_dataframe</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Reading AnnotationDataframe into memory from '/tmp/RtmpknIIcb/soco/soma_RNA/obs'</span></span>
+<span><span class="co">#&gt; Reading AnnotationDataframe into memory from '/tmp/RtmpXlPfrH/soco/soma_RNA/obs'</span></span>
 <span><span class="co">#&gt;                   orig.ident nCount_RNA nFeature_RNA RNA_snn_res.0.8</span></span>
 <span><span class="co">#&gt; AAATTCGAATCACG SeuratProject        327           62               1</span></span>
 <span><span class="co">#&gt; AAGCAAGAGCTTAG SeuratProject        126           48               0</span></span>
@@ -489,7 +489,7 @@
 <p>This is a <code>AnnotationDataframe</code> object, which includes a method for reading the data into R as a <code>data.frame</code>:</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">soco</span><span class="op">$</span><span class="va">members</span><span class="op">$</span><span class="va">RNA</span><span class="op">$</span><span class="va">obs</span><span class="op">$</span><span class="fu">to_dataframe</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Reading AnnotationDataframe into memory from '/tmp/RtmpknIIcb/soco/soma_RNA/obs'</span></span>
+<span><span class="co">#&gt; Reading AnnotationDataframe into memory from '/tmp/RtmpXlPfrH/soco/soma_RNA/obs'</span></span>
 <span><span class="co">#&gt;                   orig.ident nCount_RNA nFeature_RNA RNA_snn_res.0.8</span></span>
 <span><span class="co">#&gt; AAATTCGAATCACG SeuratProject        327           62               1</span></span>
 <span><span class="co">#&gt; AAGCAAGAGCTTAG SeuratProject        126           48               0</span></span>
@@ -586,7 +586,7 @@
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; other attached packages:</span></span>
 <span><span class="co">#&gt; [1] sp_1.5-0            SeuratObject_4.1.0  tiledb_0.14.0      </span></span>
-<span><span class="co">#&gt; [4] fs_1.5.2            tiledbsc_0.1.2.9006</span></span>
+<span><span class="co">#&gt; [4] fs_1.5.2            tiledbsc_0.1.2.9007</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>
 <span><span class="co">#&gt;  [1] zoo_1.8-10         xfun_0.31          bslib_0.3.1        purrr_0.3.4       </span></span>
@@ -603,7 +603,7 @@
 <span><span class="co">#&gt; [45] cli_3.3.0          tools_4.2.1        magrittr_2.0.3     sass_0.4.1        </span></span>
 <span><span class="co">#&gt; [49] tibble_3.1.7       pkgconfig_2.0.3    crayon_1.5.1       future.apply_1.9.0</span></span>
 <span><span class="co">#&gt; [53] ellipsis_0.3.2     Matrix_1.4-1       nanotime_0.3.6     rmarkdown_2.14    </span></span>
-<span><span class="co">#&gt; [57] R6_2.5.1           globals_0.15.0     compiler_4.2.1</span></span></code></pre></div>
+<span><span class="co">#&gt; [57] R6_2.5.1           globals_0.15.1     compiler_4.2.1</span></span></code></pre></div>
 <!-- links -->
 </div>
   </div>
