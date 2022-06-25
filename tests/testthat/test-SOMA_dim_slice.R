@@ -1,6 +1,5 @@
 test_that("SOMA object can be sliced by dimension", {
   uri <- withr::local_tempdir("soma-dim-slice")
-  if (tiledb_vfs_is_dir(uri)) tiledb_vfs_remove_dir(uri)
 
   pbmc_small_rna <- pbmc_small[["RNA"]]
   var_ids <- c("PPBP", "VDAC3")
