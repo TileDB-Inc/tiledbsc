@@ -22,8 +22,17 @@ test_that("annotation dataframe can be stored and retrieved", {
   expect_true(annotdf$exists())
   expect_s4_class(annotdf$tiledb_array(), "tiledb_array")
   expect_is(annotdf$object, "tiledb_array")
+
+  # data types
+  expect_equal(tiledb::datatype(annotdf$attributes()[["character"]]), "ASCII")
+  expect_equal(tiledb::datatype(annotdf$attributes()[["double"]]), "FLOAT64")
+  expect_equal(tiledb::datatype(annotdf$attributes()[["integer"]]), "INT32")
+  expect_equal(tiledb::datatype(annotdf$attributes()[["logical"]]), "BOOL")
+
+  # helpers
   expect_setequal(annotdf$ids(), rownames(df))
 
+  # retrieved dataframe
   df2 <- annotdf$to_dataframe()
   expect_setequal(rownames(df2), rownames(df))
   expect_setequal(colnames(df2), colnames(df))
