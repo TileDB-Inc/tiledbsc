@@ -291,6 +291,11 @@ SOMA <- R6::R6Class(
     #' `highly_variable` attribute in `var` that records `1` or `0` for each
     #' feature indicating whether it was a variable feature or not.
     #'
+    #' ## Metadata
+    #'
+    #' * `key` (optional): Contains value of the the Seurat `Assay`'s `key` slot
+    #'   if it is set.
+    #'
     #' @param object A [`SeuratObject::Assay`] object
     #' @param var Should the `Assay`'s' feature-level annotations be ingested
     #' into the `var` array? If `FALSE` and the `var` array does not yet exist
