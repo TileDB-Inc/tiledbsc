@@ -27,7 +27,7 @@ AnnotationArray <- R6::R6Class(
     # @param capacity Capacity of sparse fragments (default: 10000)
     create_empty_array = function(
       x,
-      index_cols,
+      index_cols = NULL,
       cell_order = "ROW_MAJOR",
       tile_order = "ROW_MAJOR",
       capacity = 10000) {
