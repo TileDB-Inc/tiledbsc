@@ -138,7 +138,6 @@ test_that("obs and var are created when even no annotations are present", {
     counts = SeuratObject::GetAssayData(pbmc_small[["RNA"]], "counts")
   )
   expect_equal(ncol(assay[[]]), 0L)
-  SeuratObject::Key(assay) <- "RNA"
 
   expect_warning(
     scgroup <- SCGroup$new(uri = uri),
@@ -307,7 +306,6 @@ test_that("an assay with empty feature metdata can be converted", {
   assay <- SeuratObject::CreateAssayObject(
     counts = SeuratObject::GetAssayData(pbmc_small[["RNA"]], "counts")
   )
-  SeuratObject::Key(assay) <- "RNA"
   expect_length(assay[[]], 0L)
 
   expect_warning(
@@ -325,7 +323,6 @@ test_that("individual layers can be added or updated", {
   assay <- SeuratObject::CreateAssayObject(
     counts = SeuratObject::GetAssayData(pbmc_small[["RNA"]], "counts")
   )
-  SeuratObject::Key(assay) <- "RNA"
 
   expect_warning(
     scgroup <- SCGroup$new(uri = uri, verbose = FALSE),
