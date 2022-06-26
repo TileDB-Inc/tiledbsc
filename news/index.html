@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tiledbsc</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.2.9007</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.2.9008</span>
       </span>
     </div>
 
@@ -116,6 +116,10 @@
 <code>AnnotationDataframe</code> gains <code>ids()</code> to retrieve all values from the array’s dimension</li>
 <li>
 <code>soma_object_type</code> and <code>soma_encoding_version</code> metadata are written to groups/arrays at write time</li>
+<li>Minimum required version of tiledb-r is now 0.14.0, which also updates TileDB to version 2.10</li>
+<li>
+<code>AnnotationDataframe$from_dataframe()</code> no longer coerces <code>logical</code> columns to <code>integer</code>s, as TileDB 2.10 provides support for <code>BOOL</code> data types</li>
+<li>Messages about updating existing arrays are only printed in verbose mode</li>
 </ul></div>
 </div>
     <div class="section level2">
