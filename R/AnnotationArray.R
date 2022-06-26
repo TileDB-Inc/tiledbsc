@@ -31,14 +31,14 @@
 #' If duplicates were allowed the result would be:
 #'
 #' ```r
-#' $id
-#' [1] "a" "a"
-#'
-#' $value
-#' [1] 1 2
-#'
-#' attr(,"query_status")
-#' [1] "COMPLETE"
+#' ## $id
+#' ## [1] "a" "a"
+#' ##
+#' ## $value
+#' ## [1] 1 2
+#' ##
+#' ## attr(,"query_status")
+#' ## [1] "COMPLETE"
 #' ```
 #'
 #'
