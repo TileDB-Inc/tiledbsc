@@ -56,6 +56,7 @@ See the new *Filtering* vignette for details.
 - `soma_object_type` and `soma_encoding_version` metadata are written to groups/arrays at write time
 - Minimum required version of tiledb-r is now 0.14.0, which also updates TileDB to version 2.10
 - `AnnotationDataframe$from_dataframe()` no longer coerces `logical` columns to `integer`s, as TileDB 2.10 provides support for `BOOL` data types
+- Messages about updating existing arrays are only printed in verbose mode
 
 # tiledbsc 0.1.2
 
