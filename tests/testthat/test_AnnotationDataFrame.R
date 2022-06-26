@@ -25,12 +25,9 @@ test_that("annotation dataframe can be stored and retrieved", {
   expect_setequal(annotdf$ids(), rownames(df))
 
   df2 <- annotdf$to_dataframe()
-  expect_equal(sort(rownames(df2)), sort(rownames(df)))
-  expect_equal(sort(colnames(df2)), sort(colnames(df)))
-
-  rlabs <- rownames(df)
-  clabs <- colnames(df)
-  expect_identical(df2[rlabs, clabs], df[rlabs, clabs])
+  expect_setequal(rownames(df2), rownames(df))
+  expect_setequal(colnames(df2), colnames(df))
+  expect_identical(df2, df)
 })
 
 test_that("an empty dataframe can be stored and retrieved", {
@@ -43,5 +40,5 @@ test_that("an empty dataframe can be stored and retrieved", {
 
   df2 <- annotdf$to_dataframe()
   expect_length(df2, 0)
-  expect_equal(sort(rownames(df2)), sort(rownames(df)))
+  expect_setequal(rownames(df2), rownames(df))
 })
