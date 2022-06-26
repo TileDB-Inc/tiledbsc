@@ -48,7 +48,11 @@ AnnotationDataframe <- R6::R6Class(
         )
         private$create_empty_array(x, index_col, capacity = capacity)
       } else {
-        message(sprintf("Updating existing %s at '%s'", self$class(), self$uri))
+        if (self$verbose) {
+          message(
+            sprintf("Updating existing %s at '%s'", self$class(), self$uri)
+          )
+        }
       }
       private$ingest_data(x)
     },
