@@ -45,6 +45,8 @@ AnnotationArray <- R6::R6Class(
         cell_order = cell_order,
         tile_order = tile_order,
         capacity = capacity,
+        sparse = TRUE,
+        allows_dups = FALSE,
         mode = "schema_only"
       )
       private$write_object_type_metadata()
