@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tiledbsc</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.2.9008</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.2.9009</span>
       </span>
     </div>
 
@@ -120,6 +120,7 @@
 <li>
 <code>AnnotationDataframe$from_dataframe()</code> no longer coerces <code>logical</code> columns to <code>integer</code>s, as TileDB 2.10 provides support for <code>BOOL</code> data types</li>
 <li>Messages about updating existing arrays are only printed in verbose mode</li>
+<li>Disable duplicates for <code>AnnotationArray</code>s so updates will overwrite existing cells</li>
 </ul></div>
 </div>
     <div class="section level2">
