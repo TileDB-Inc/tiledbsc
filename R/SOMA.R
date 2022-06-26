@@ -381,10 +381,9 @@ SOMA <- R6::R6Class(
         )
       }
 
+      # Store value of the Assay object's key as metadata
       assay_key <- SeuratObject::Key(object)
-      if (identical(assay_key, character(0))) {
-        message("Null assay_key; no metadata found")
-      } else {
+      if (!is_empty(assay_key)) {
         self$X$add_metadata(list(key = assay_key))
       }
 
@@ -474,7 +473,10 @@ SOMA <- R6::R6Class(
       }
 
       # set metadata
-      SeuratObject::Key(assay_obj) <- self$X$get_metadata(key = "key")
+      assay_key <- self$X$get_metadata(key = "key")
+      if (!is.null(assay_key)) {
+        SeuratObject::Key(assay_obj) <- self$X$get_metadata(key = "key")
+      }
       return(assay_obj)
     },
 
