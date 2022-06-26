@@ -57,6 +57,7 @@ See the new *Filtering* vignette for details.
 - Minimum required version of tiledb-r is now 0.14.0, which also updates TileDB to version 2.10
 - `AnnotationDataframe$from_dataframe()` no longer coerces `logical` columns to `integer`s, as TileDB 2.10 provides support for `BOOL` data types
 - Messages about updating existing arrays are only printed in verbose mode
+- Disable duplicates for `AnnotationArray`s so updates will overwrite existing cells
 
 # tiledbsc 0.1.2
 

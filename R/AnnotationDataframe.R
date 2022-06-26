@@ -19,10 +19,7 @@ AnnotationDataframe <- R6::R6Class(
 
       # Reset query layout to avoid (sc18770)
       tiledb::query_layout(arr) <- character()
-
-      # TODO: Workaround bug using tiledb::attrs(arr) <- NA_character_
-      # https://github.com/TileDB-Inc/TileDB-R/pull/425
-      arr@attrs <- NA_character_
+      tiledb::attrs(arr) <- NA_character_
       arr[][[1]]
     },
 

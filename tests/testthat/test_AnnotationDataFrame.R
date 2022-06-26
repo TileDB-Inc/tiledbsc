@@ -51,3 +51,16 @@ test_that("an empty dataframe can be stored and retrieved", {
   expect_length(df2, 0)
   expect_setequal(rownames(df2), rownames(df))
 })
+
+test_that("updates overwrite existing cells", {
+  uri <- withr::local_tempdir("annot-df-updates")
+  df <- data.frame(row.names = "a", value = 1)
+
+  annotdf <- AnnotationDataframe$new(uri)
+  annotdf$from_dataframe(df, index_col = "index")
+  expect_identical(annotdf$to_dataframe(), df)
+
+  df2 <- data.frame(row.names = "a", value = 2)
+  annotdf$from_dataframe(df2, index_col = "index")
+  expect_identical(annotdf$to_dataframe(), df2)
+})
