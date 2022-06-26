@@ -4,10 +4,55 @@
 \alias{AnnotationArray}
 \title{Base class for Annotation Arrays}
 \description{
-Base class for Annotation Arrays
-
-Base class for Annotation Arrays
+This is a base class for Annotation arrays that provides common methods for
+creating empty arrays and ingesting data.
 }
+\section{Duplicates}{
+
+Duplicates are always disabled in the schemas created for \code{AnnotationArray}
+objects to guarantee each array cell is associated with a unique value. This
+also means that updates to an array cell will overwrite the previous value
+(although previous values are still available via time-travel). For example,
+consider the following \code{AnnotationDataframe} (a child of \code{AnnotationArray})
+with a single cell:
+
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{uri <- file.path(tempdir(), "annotdf")
+df <- data.frame(value = 1, row.names = "a")
+annotdf <- AnnotationDataframe$new(uri, verbose = FALSE)
+annotdf$from_dataframe(df, "id")
+}\if{html}{\out{</div>}}
+
+If we update the cell to \code{value = 2} the previous value \code{1} will be
+overwritten.
+
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{df$value <- 2
+annotdf$from_dataframe(df, "id")
+annotdf$object[]
+}\if{html}{\out{</div>}}
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{## $id
+## [1] "a"
+## 
+## $value
+## [1] 2
+## 
+## attr(,"query_status")
+## [1] "COMPLETE"
+}\if{html}{\out{</div>}}
+
+If duplicates were allowed the result would be:
+
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{$id
+[1] "a" "a"
+
+$value
+[1] 1 2
+
+attr(,"query_status")
+[1] "COMPLETE"
+}\if{html}{\out{</div>}}
+}
+
 \section{Super classes}{
 \code{\link[tiledbsc:TileDBObject]{tiledbsc::TileDBObject}} -> \code{\link[tiledbsc:TileDBArray]{tiledbsc::TileDBArray}} -> \code{AnnotationArray}
 }
