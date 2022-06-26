@@ -1,27 +1,42 @@
 test_that("annotation dataframe can be stored and retrieved", {
   uri <- withr::local_tempdir("annot-df")
 
+  df <- data.frame(
+    character = c("A", "B", "C"),
+    double = c(1.0, 2.0, 3.0),
+    integer = c(1L, 2L, 3L),
+    logical = c(TRUE, FALSE, TRUE)
+  )
+
   annotdf <- AnnotationDataframe$new(uri)
   expect_true(inherits(annotdf, "AnnotationDataframe"))
   expect_error(
-    annotdf$from_dataframe(data.frame(mtcars, row.names = NULL), "obs_id"),
+    annotdf$from_dataframe(df, index_col = "index"),
     "'x' must have character row names"
   )
 
-  annotdf$from_dataframe(mtcars, index_col = "index")
+  rownames(df) <- c("a", "b", "c")
+  annotdf$from_dataframe(df, index_col = "index")
+
   expect_true(dir.exists(annotdf$uri))
   expect_true(annotdf$exists())
   expect_s4_class(annotdf$tiledb_array(), "tiledb_array")
   expect_is(annotdf$object, "tiledb_array")
-  expect_setequal(annotdf$ids(), rownames(mtcars))
 
-  mtcars2 <- annotdf$to_dataframe()
-  expect_equal(sort(rownames(mtcars2)), sort(rownames(mtcars)))
-  expect_equal(sort(colnames(mtcars2)), sort(colnames(mtcars)))
+  # data types
+  expect_equal(tiledb::datatype(annotdf$attributes()[["character"]]), "ASCII")
+  expect_equal(tiledb::datatype(annotdf$attributes()[["double"]]), "FLOAT64")
+  expect_equal(tiledb::datatype(annotdf$attributes()[["integer"]]), "INT32")
+  expect_equal(tiledb::datatype(annotdf$attributes()[["logical"]]), "BOOL")
 
-  rlabs <- rownames(mtcars)
-  clabs <- colnames(mtcars)
-  expect_identical(mtcars2[rlabs, clabs], mtcars[rlabs, clabs])
+  # helpers
+  expect_setequal(annotdf$ids(), rownames(df))
+
+  # retrieved dataframe
+  df2 <- annotdf$to_dataframe()
+  expect_setequal(rownames(df2), rownames(df))
+  expect_setequal(colnames(df2), colnames(df))
+  expect_identical(df2, df)
 })
 
 test_that("an empty dataframe can be stored and retrieved", {
@@ -34,5 +49,5 @@ test_that("an empty dataframe can be stored and retrieved", {
 
   df2 <- annotdf$to_dataframe()
   expect_length(df2, 0)
-  expect_equal(sort(rownames(df2)), sort(rownames(df)))
+  expect_setequal(rownames(df2), rownames(df))
 })

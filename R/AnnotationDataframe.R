@@ -37,11 +37,6 @@ AnnotationDataframe <- R6::R6Class(
         "'index_col' must be a scalar character" = is_scalar_character(index_col)
       )
 
-      # logicals are not supported by tiledb::fromDataFrame so we convert
-      # them to integers
-      logical_cols <- vapply_lgl(x, is.logical)
-      x[logical_cols] <- as.data.frame(lapply(x[logical_cols], as.integer))
-
       # convert rownames to a column
       x[[index_col]] <- rownames(x)
       if (!self$exists()) {
@@ -53,7 +48,11 @@ AnnotationDataframe <- R6::R6Class(
         )
         private$create_empty_array(x, index_col, capacity = capacity)
       } else {
-        message(sprintf("Updating existing %s at '%s'", self$class(), self$uri))
+        if (self$verbose) {
+          message(
+            sprintf("Updating existing %s at '%s'", self$class(), self$uri)
+          )
+        }
       }
       private$ingest_data(x)
     },
