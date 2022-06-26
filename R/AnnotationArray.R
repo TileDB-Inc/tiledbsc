@@ -1,5 +1,47 @@
 #' Base class for Annotation Arrays
 #'
+#' @description
+#' This is a base class for Annotation arrays that provides common methods for
+#' creating empty arrays and ingesting data.
+#'
+#' @section Duplicates:
+#' Duplicates are always disabled in the schemas created for `AnnotationArray`
+#' objects to guarantee each array cell is associated with a unique value. This
+#' also means that updates to an array cell will overwrite the previous value
+#' (although previous values are still available via time-travel). For example,
+#' consider the following `AnnotationDataframe` (a child of `AnnotationArray`)
+#' with a single cell:
+#'
+#' ```{r}
+#' uri <- file.path(tempdir(), "annotdf")
+#' df <- data.frame(value = 1, row.names = "a")
+#' annotdf <- AnnotationDataframe$new(uri, verbose = FALSE)
+#' annotdf$from_dataframe(df, "id")
+#' ```
+#'
+#' If we update the cell to `value = 2` the previous value `1` will be
+#' overwritten.
+#'
+#' ```{r}
+#' df$value <- 2
+#' annotdf$from_dataframe(df, "id")
+#' annotdf$object[]
+#' ```
+#'
+#' If duplicates were allowed the result would be:
+#'
+#' ```r
+#' $id
+#' [1] "a" "a"
+#'
+#' $value
+#' [1] 1 2
+#'
+#' attr(,"query_status")
+#' [1] "COMPLETE"
+#' ```
+#'
+#'
 #' @importFrom R6 R6Class
 #' @export
 AnnotationArray <- R6::R6Class(
