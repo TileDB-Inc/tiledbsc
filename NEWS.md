@@ -1,8 +1,8 @@
-# tiledbsc (development version)
+# tiledbsc 0.1.3
 
 ## Migration to SOMA-based names
 
-This release changes the names of the 2 top-level classes in the tiledbsc package to follow new nomenclature adopted by the [single-cell data model specification](https://github.com/single-cell-data/matrix-api/blob/main/specification.md), which was implemented [here](https://github.com/single-cell-data/matrix-api/pull/28). You can read more about the rationale for this change [here](https://github.com/single-cell-data/matrix-api/issues/11#issuecomment-1109975498).
+This release changes the names of the 2 top-level classes in the tiledbsc package to follow new nomenclature adopted by the [single-cell data model specification](https://github.com/single-cell-data/soma), which was implemented [here](https://github.com/single-cell-data/soma/pull/28). You can read more about the rationale for this change [here](https://github.com/single-cell-data/soma/issues/11#issuecomment-1109975498).
 
 Additionally, the `misc` slot has been renamed to `uns`. See below for details.
 
@@ -20,7 +20,7 @@ To ease the transition, the `SCDataset` and `SCGroup` classes are still availabl
 
 ## New location for miscellaneous/unstructured data
 
-Previously, the `SCDataset` and `SCGroup` classes included a TileDB group called `misc` that was intended for miscellaneous/unstructured data. To better align with the SOMA matrix-api specification this group has been renamed to `uns`. Practically, this means new `SOMA`s and `SOMACollection`s will create TileDB groups named `uns`, rather than `misc`. And these groups can be accessed with the `SOMA` and `SOMACollection` classes using `SOMA$uns`.
+Previously, the `SCDataset` and `SCGroup` classes included a TileDB group called `misc` that was intended for miscellaneous/unstructured data. To better align with the SOMA specification this group has been renamed to `uns`. Practically, this means new `SOMA`s and `SOMACollection`s will create TileDB groups named `uns`, rather than `misc`. And these groups can be accessed with the `SOMA` and `SOMACollection` classes using `SOMA$uns`.
 
 For backwards compatibility:
 - if a `misc` group exists within a `SOMACollection` or `SOMA` on disk, it will be accessible via the `uns` field of the parent class
@@ -67,7 +67,7 @@ Improve handling of Seurat objects with empty cell identities (#58).
 
 tiledbsc now uses the enhanced Group API's introduced in TileDB v2.8 and TileDB-R 0.12.0.
 
-*Note: The next version of tiledbsc will migrate to the new SOMA-based naming scheme described [here](https://github.com/single-cell-data/matrix-api/issues/27).*
+*Note: The next version of tiledbsc will migrate to the new SOMA-based naming scheme described [here](https://github.com/single-cell-data/soma/issues/27).*
 ## On-disk changes
 
 Group-level metadata is now natively supported by TileDB so `TileDBGroup`-based classes no longer create nested `__tiledb_group_metadata` arrays for the purpose of storing group-level metadata.
