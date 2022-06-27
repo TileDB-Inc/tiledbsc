@@ -16,6 +16,7 @@ test_that("AssayMatrix object can be created from a dgCMatrix", {
   expect_setequal(unique(df2$j), colnames(mat))
 
   mat2 <- assaymat$to_matrix()
+  expect_s4_class(mat2, "dgTMatrix")
   expect_equal(sort(rownames(mat2)), sort(rownames(mat)))
   expect_equal(sort(colnames(mat2)), sort(colnames(mat)))
 
