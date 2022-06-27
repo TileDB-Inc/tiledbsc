@@ -4,7 +4,7 @@
 [![R-CMD-check](https://github.com/TileDB-Inc/tiledbsc/workflows/R-CMD-check/badge.svg)](https://github.com/TileDB-Inc/tiledbsc/actions)
 <!-- badges: end -->
 
-This is a POC R implementation of the proposed [Unified Single-cell Data Model](https://github.com/single-cell-data/matrix-api).
+This is a POC R implementation of the proposed [Unified Single-cell Data Model](https://github.com/single-cell-data/SOMA).
 
 ## Installation
 

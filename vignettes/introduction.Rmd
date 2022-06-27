@@ -188,4 +188,4 @@ tiledb::tiledb_vfs_remove_dir(data_dir)
 
 <!-- links -->
 [tiledb-r]: https://tiledb-inc.github.io/TileDB-R/
-[matrix-api-spec]: https://github.com/single-cell-data/matrix-api/blob/main/specification.md
+[matrix-api-spec]: https://github.com/single-cell-data/soma/blob/main/specification.md

@@ -27,7 +27,7 @@ Authors@R: c(
            role = c("cph", "fnd"))
     )
 URL: https://github.com/TileDB-Inc/tiledbsc,
-    https://github.com/single-cell-data/matrix-api
+    https://github.com/single-cell-data/SOMA
 BugReports: https://github.com/TileDB-Inc/tiledbsc/issues
 License: MIT + file LICENSE
 Encoding: UTF-8
