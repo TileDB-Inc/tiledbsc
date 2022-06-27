@@ -93,7 +93,7 @@ AssayMatrix <- R6::R6Class(
       stopifnot(is_scalar_character(attr))
 
       assay_data <- self$to_dataframe(attrs = attr)
-      assay_dims <- vapply(assay_data[1:2], n_unique, FUN.VALUE = integer(1L))
+      assay_dims <- vapply_int(assay_data[1:2], n_unique)
       row_labels <- unique(assay_data[[1]])
       col_labels <- unique(assay_data[[2]])
 
