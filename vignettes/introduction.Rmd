@@ -109,7 +109,7 @@ fs::dir_tree(soma$uri, recurse = FALSE)
 
 Any of the underlying TileDB arrays can be accessed directly from a `SOMACollection` object by navigating its internal classes.
 
-As an example, let's access the cell-level metadata. Recall from the [`matrix-api spec`][matrix-api-spec] that cell-level metadata is stored in the `obs` array of an `SOMA`. Therefore, we must first access a specific `SOMA` within the `SOMACollection`'s `somas` slot. Let's generate a list of the available `SOMA`s:
+As an example, let's access the cell-level metadata. Recall from the [*SOMA* spec][soma-spec] that cell-level metadata is stored in the `obs` array of an `SOMA`. Therefore, we must first access a specific `SOMA` within the `SOMACollection`'s `somas` slot. Let's generate a list of the available `SOMA`s:
 
 ```{r}
 names(soco$somas)
@@ -188,4 +188,4 @@ tiledb::tiledb_vfs_remove_dir(data_dir)
 
 <!-- links -->
 [tiledb-r]: https://tiledb-inc.github.io/TileDB-R/
-[matrix-api-spec]: https://github.com/single-cell-data/soma/blob/main/specification.md
+[soma-spec]: https://github.com/single-cell-data/soma

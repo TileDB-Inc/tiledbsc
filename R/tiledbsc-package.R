@@ -1,6 +1,6 @@
 #' @details The API is designed around R6-based classes corresponding to the
 #' components described in the [data model
-#' specification](https://github.com/single-cell-data/soma/blob/main/specification.md).
+#' specification](https://github.com/single-cell-data/soma).
 #'
 #' @keywords internal
 #' @import tiledb
