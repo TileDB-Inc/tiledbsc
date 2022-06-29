@@ -40,7 +40,7 @@ test_that("members can be added and retrieved from a new group", {
   )
 
   # objects are present but not yet members
-  expect_equal(grp$list_objects()$TYPE, c("ARRAY", "GROUP"))
+  expect_setequal(grp$list_objects()$TYPE, c("ARRAY", "GROUP"))
   expect_equal(grp$count_members(), 0)
 
   # add sub-array/group as members
@@ -54,7 +54,7 @@ test_that("members can be added and retrieved from a new group", {
 
   grp$add_member(g1, relative = FALSE)
   expect_equal(grp$count_members(), 2)
-  expect_setequal(grp$list_members()$TYPE, c("GROUP", "ARRAY"))
+  expect_setequal(grp$list_members()$TYPE, c("ARRAY", "GROUP"))
 
   # group member list
   expect_true(is.list(grp$members))
