@@ -69,8 +69,9 @@ AssayMatrix <- R6::R6Class(
     #' @description Retrieve the assay data from TileDB
     #' @param attrs Specify one or more attributes to retrieve. If `NULL`,
     #' all attributes are retrieved.
+    #' @param batched logical, if `TRUE`, the data is retrieved in batches.
     #' @return A [`Matrix::dgTMatrix-class`].
-    to_dataframe = function(attrs = NULL) {
+    to_dataframe = function(attrs = NULL, batched = FALSE) {
       if (self$verbose) {
         message(
           sprintf("Reading %s into memory from '%s'", self$class(), self$uri)
@@ -79,20 +80,35 @@ AssayMatrix <- R6::R6Class(
       arr <- self$object
       tiledb::attrs(arr) <- attrs %||% character()
       tiledb::return_as(arr) <- "data.frame"
-      arr[]
+
+      if (batched) {
+        if (self$verbose) message("...reading in batches")
+        batcher <- tiledb:::createBatched(arr)
+        results <- list()
+        i <- 1
+        while(isFALSE(tiledb::completedBatched(batcher))) {
+          if (self$verbose) message(sprintf("...retrieving batch %d", i))
+          results[[i]] <- tiledb::fetchBatched(arr, batcher)
+          i <- i + 1
+        }
+        results <- vctrs::vec_rbind(!!!results)
+      } else {
+        results <- arr[]
+      }
+      results
     },
 
     #' @description Retrieve assay data from TileDB as a 2D sparse matrix.
     #' @param attr The name of the attribute layer to retrieve. If `NULL`, the
     #' first layer is returned.
     #' @return A [`Matrix::dgTMatrix-class`].
-    to_matrix = function(attr = NULL) {
+    to_matrix = function(attr = NULL, batched = FALSE) {
       if (is.null(attr)) {
         attr <- self$attrnames()[1]
       }
       stopifnot(is_scalar_character(attr))
 
-      assay_data <- self$to_dataframe(attrs = attr)
+      assay_data <- self$to_dataframe(attrs = attr, batched = batched)
       assay_dims <- vapply_int(assay_data[1:2], n_unique)
       row_labels <- unique(assay_data[[1]])
       col_labels <- unique(assay_data[[2]])

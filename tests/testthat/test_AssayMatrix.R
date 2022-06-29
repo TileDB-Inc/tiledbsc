@@ -26,3 +26,31 @@ test_that("AssayMatrix object can be created from a dgCMatrix", {
   clabs <- colnames(mat2)
   expect_equal(mat1[rlabs, clabs], mat2[rlabs, clabs])
 })
+
+test_that("Incomplete queries can be completed via batching", {
+  uri <- withr::local_tempdir("assay-matrix-batched")
+
+  nr <- 1e3
+  nc <- 1e2
+  set.seed(1)
+  smat <- Matrix::rsparsematrix(
+    nrow = nr,
+    ncol = nc,
+    density = 0.8,
+    rand.x = function(n) as.integer(runif(n, min = 1, max = 100)),
+    repr = "T"
+  )
+  dimnames(smat) <- list(paste0("i", seq_len(nr)), paste0("j", seq_len(nc)))
+
+  assaymat <- AssayMatrix$new(uri = uri, verbose = TRUE)
+  assaymat$from_matrix(smat, index_cols = c("i", "j"), value_col = "counts")
+
+  set_allocation_size_preference(5e5)
+  df1 <- assaymat$to_dataframe(batched = FALSE)
+  df2 <- assaymat$to_dataframe(batched = TRUE)
+  expect_equal(dim(df1), dim(df2))
+})
+
+test_that("user allocation has returned to its default size", {
+  expect_equal(tiledb::get_allocation_size_preference(), 10485760)
+})
