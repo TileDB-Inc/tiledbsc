@@ -27,7 +27,7 @@ AssayMatrix <- R6::R6Class(
     #' contain the matrix values.
     from_matrix = function(x, index_cols, value_col = "value") {
       if (inherits(x, "dgCMatrix")) {
-          message("Converting to dgTMatrix")
+        if (self$verbose) message("Converting to dgTMatrix")
           x <- as(x, "dgTMatrix")
         }
       stopifnot(
