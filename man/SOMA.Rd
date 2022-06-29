@@ -78,6 +78,7 @@ dimensions of the \code{obs} and \code{var} arrays, respectively.}
 <li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBGroup" data-id="list_object_uris"><a href='../../tiledbsc/html/TileDBGroup.html#method-TileDBGroup-list_object_uris'><code>tiledbsc::TileDBGroup$list_object_uris()</code></a></li>
 <li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBGroup" data-id="list_objects"><a href='../../tiledbsc/html/TileDBGroup.html#method-TileDBGroup-list_objects'><code>tiledbsc::TileDBGroup$list_objects()</code></a></li>
 <li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBGroup" data-id="print"><a href='../../tiledbsc/html/TileDBGroup.html#method-TileDBGroup-print'><code>tiledbsc::TileDBGroup$print()</code></a></li>
+<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBGroup" data-id="remove_member"><a href='../../tiledbsc/html/TileDBGroup.html#method-TileDBGroup-remove_member'><code>tiledbsc::TileDBGroup$remove_member()</code></a></li>
 <li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBGroup" data-id="tiledb_group"><a href='../../tiledbsc/html/TileDBGroup.html#method-TileDBGroup-tiledb_group'><code>tiledbsc::TileDBGroup$tiledb_group()</code></a></li>
 </ul>
 </details>
@@ -231,6 +232,13 @@ identifiers in the array dimension.
 Variable features in the \code{var.features} slot are maintained by creating a
 \code{highly_variable} attribute in \code{var} that records \code{1} or \code{0} for each
 feature indicating whether it was a variable feature or not.
+}
+
+\subsection{Metadata}{
+\itemize{
+\item \code{key} (optional): Contains value of the the Seurat \code{Assay}'s \code{key} slot
+if it is set.
+}
 }
 }
 

@@ -38,6 +38,7 @@ the specified \code{uri}.
 \item \href{#method-TileDBGroup-list_objects}{\code{TileDBGroup$list_objects()}}
 \item \href{#method-TileDBGroup-list_object_uris}{\code{TileDBGroup$list_object_uris()}}
 \item \href{#method-TileDBGroup-add_member}{\code{TileDBGroup$add_member()}}
+\item \href{#method-TileDBGroup-remove_member}{\code{TileDBGroup$remove_member()}}
 \item \href{#method-TileDBGroup-count_members}{\code{TileDBGroup$count_members()}}
 \item \href{#method-TileDBGroup-list_members}{\code{TileDBGroup$list_members()}}
 \item \href{#method-TileDBGroup-list_member_uris}{\code{TileDBGroup$list_member_uris()}}
@@ -186,6 +187,23 @@ the object's URI is used.}
 
 \item{\code{relative}}{A logical value indicating whether the new member's URI
 is relative to the group's URI.}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-TileDBGroup-remove_member"></a>}}
+\if{latex}{\out{\hypertarget{method-TileDBGroup-remove_member}{}}}
+\subsection{Method \code{remove_member()}}{
+Remove member from the group.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{TileDBGroup$remove_member(name)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{name}}{The name of the member to remove.}
 }
 \if{html}{\out{</div>}}
 }
