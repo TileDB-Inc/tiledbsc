@@ -1,3 +1,7 @@
+# tiledbsc (development version)
+
+* Members can now be removed from `TileDBGroup`s with `remove_member()`
+
 # tiledbsc 0.1.3
 
 ## Migration to SOMA-based names

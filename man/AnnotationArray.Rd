@@ -42,14 +42,14 @@ annotdf$object[]
 
 If duplicates were allowed the result would be:
 
-\if{html}{\out{<div class="sourceCode r">}}\preformatted{$id
-[1] "a" "a"
-
-$value
-[1] 1 2
-
-attr(,"query_status")
-[1] "COMPLETE"
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{## $id
+## [1] "a" "a"
+##
+## $value
+## [1] 1 2
+##
+## attr(,"query_status")
+## [1] "COMPLETE"
 }\if{html}{\out{</div>}}
 }
 

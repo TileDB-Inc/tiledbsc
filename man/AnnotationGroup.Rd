@@ -45,6 +45,7 @@ arrays within the group (typically \code{obs_id} or \code{var_id}).}
 <li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBGroup" data-id="list_object_uris"><a href='../../tiledbsc/html/TileDBGroup.html#method-TileDBGroup-list_object_uris'><code>tiledbsc::TileDBGroup$list_object_uris()</code></a></li>
 <li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBGroup" data-id="list_objects"><a href='../../tiledbsc/html/TileDBGroup.html#method-TileDBGroup-list_objects'><code>tiledbsc::TileDBGroup$list_objects()</code></a></li>
 <li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBGroup" data-id="print"><a href='../../tiledbsc/html/TileDBGroup.html#method-TileDBGroup-print'><code>tiledbsc::TileDBGroup$print()</code></a></li>
+<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBGroup" data-id="remove_member"><a href='../../tiledbsc/html/TileDBGroup.html#method-TileDBGroup-remove_member'><code>tiledbsc::TileDBGroup$remove_member()</code></a></li>
 <li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBGroup" data-id="tiledb_group"><a href='../../tiledbsc/html/TileDBGroup.html#method-TileDBGroup-tiledb_group'><code>tiledbsc::TileDBGroup$tiledb_group()</code></a></li>
 </ul>
 </details>

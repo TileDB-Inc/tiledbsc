@@ -138,6 +138,18 @@ TileDBGroup <- R6::R6Class(
       self$members[[name]] <- object
     },
 
+    #' @description Remove member from the group.
+    #' @param name The name of the member to remove.
+    #' @export
+    remove_member = function(name) {
+      on.exit(private$close())
+      private$open("WRITE")
+      tiledb::tiledb_group_remove_member(
+        grp = self$object,
+        uri = name
+      )
+    },
+
     #' @description Count the number of members in the group.
     #' @return Integer count of members in the group.
     count_members = function() {

@@ -4,19 +4,19 @@
 \name{tiledbsc-package}
 \alias{tiledbsc}
 \alias{tiledbsc-package}
-\title{tiledbsc: TileDB Single Cell API}
+\title{tiledbsc: TileDB Single Cell SOMA API}
 \description{
-Store and retrieve single cell data using TileDB and the on-disk format proposed in the Unified Single Cell Data Model and API. Users can import from and export to in-memory formats used by popular toolchains like Seurat and Bioconductor SingleCellExperiment.
+Interface for working with 'TileDB'-based Stack of Matrices, Annotated ('SOMA'): an open data model for representing annotated matrices, like those commonly used for single cell data analysis. Users can import from and export to in-memory formats used by popular toolchains like 'Seurat', 'Bioconductor', and even 'AnnData' using the companion Python package.
 }
 \details{
 The API is designed around R6-based classes corresponding to the
-components described in the \href{https://github.com/single-cell-data/matrix-api/blob/main/specification.md}{data model specification}.
+components described in the \href{https://github.com/single-cell-data/soma}{data model specification}.
 }
 \seealso{
 Useful links:
 \itemize{
   \item \url{https://github.com/TileDB-Inc/tiledbsc}
-  \item \url{https://github.com/single-cell-data/matrix-api}
+  \item \url{https://github.com/single-cell-data/SOMA}
   \item Report bugs at \url{https://github.com/TileDB-Inc/tiledbsc/issues}
 }
 
