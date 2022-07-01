@@ -69,7 +69,8 @@ AssayMatrix <- R6::R6Class(
     #' @description Retrieve the assay data from TileDB
     #' @param attrs Specify one or more attributes to retrieve. If `NULL`,
     #' all attributes are retrieved.
-    #' @param batched logical, if `TRUE`, the data is retrieved in batches.
+    #' @param batched logical, if `TRUE`, batched query mode is enabled,
+    #' which provides the ability to detect partial query results and resubmit #' until completion.
     #' @return A [`Matrix::dgTMatrix-class`].
     to_dataframe = function(attrs = NULL, batched = FALSE) {
       if (self$verbose) {
@@ -101,6 +102,8 @@ AssayMatrix <- R6::R6Class(
     #' @description Retrieve assay data from TileDB as a 2D sparse matrix.
     #' @param attr The name of the attribute layer to retrieve. If `NULL`, the
     #' first layer is returned.
+    #' @param batched logical, if `TRUE`, batched query mode is enabled,
+    #' which provides the ability to detect partial query results and resubmit #' until completion.
     #' @return A [`Matrix::dgTMatrix-class`].
     to_matrix = function(attr = NULL, batched = FALSE) {
       if (is.null(attr)) {
