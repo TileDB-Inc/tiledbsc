@@ -29,6 +29,7 @@ test_that("AssayMatrix object can be created from a dgCMatrix", {
 
 test_that("Incomplete queries can be completed via batching", {
   uri <- withr::local_tempdir("assay-matrix-batched")
+  with_allocation_size_preference(5e5)
 
   nr <- 1e3
   nc <- 1e2
@@ -45,7 +46,6 @@ test_that("Incomplete queries can be completed via batching", {
   assaymat <- AssayMatrix$new(uri = uri, verbose = TRUE)
   assaymat$from_matrix(smat, index_cols = c("i", "j"), value_col = "counts")
 
-  set_allocation_size_preference(5e5)
   df1 <- assaymat$to_dataframe(batched = FALSE)
   df2 <- assaymat$to_dataframe(batched = TRUE)
   expect_equal(dim(df1), dim(df2))
