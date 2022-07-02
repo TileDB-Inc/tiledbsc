@@ -15,6 +15,7 @@
 ## Fixes
 
 * Matrix conversion message from `AssayMatrix` now respects the `verbose` option
+* Upon initialization `SOMA` now  looks for a `raw` group and warns the user it will be ignored. Currently tiledbsc-py creates a `raw` group when converting anndata objects where `.raw` is populated. However, Seurat/BioC objects do not have an obvious place to store this data, so ignoring it improves compatibility.
 
 ## Build and Test Systems
 

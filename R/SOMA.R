@@ -750,6 +750,19 @@ SOMA <- R6::R6Class(
     # metadata).
     instantiate_members = function() {
       members <- self$list_members()
+
+      # Currently tiledbsc-py creates a `raw` group when converting anndata
+      # objects where `.raw` is populated. However, Seurat/BioC objects do not
+      # have an obvious place to store this data, so we ignore it for now.
+      if ("raw" %in% members$NAME) {
+        warning(
+          "Ignoring unsupported 'raw' group",
+          call. = FALSE,
+          immediate. = TRUE
+        )
+        members <- members[members$NAME != "raw", ]
+      }
+
       named_uris <- setNames(members$URI, members$NAME)
 
       # TODO: Remove when SCDataset/SCGroup/misc is defunct
