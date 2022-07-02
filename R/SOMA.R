@@ -413,12 +413,16 @@ SOMA <- R6::R6Class(
     #' detected.
     #' @param check_matrix Check counts matrix for NA, NaN, Inf, and non-integer
     #' values
+    #' @param batch_mode logical, if `TRUE`, batch query mode is enabled for
+    #' retrieving `X` layers. See
+    #' [`AssayMatrix$to_dataframe()`][`AssayMatrix`] for more information.
     #' @param ... Arguments passed to [`SeuratObject::as.sparse`]
     to_seurat_assay = function(
       layers = c("counts", "data", "scale.data"),
       min_cells = 0,
       min_features = 0,
       check_matrix = FALSE,
+      batch_mode = FALSE,
       ...) {
 
       stopifnot(
@@ -427,7 +431,7 @@ SOMA <- R6::R6Class(
       )
 
       layers <- private$check_layers(layers)
-      assay_mats <- private$get_assay_matrices(layers)
+      assay_mats <- private$get_assay_matrices(layers, batch_mode)
 
       # Seurat doesn't allow us to supply data for both the `counts` and `data`
       # slots simultaneously, so we have to update the `data` slot separately.
@@ -649,12 +653,16 @@ SOMA <- R6::R6Class(
     #' or more of the available `X` [`AssayMatrix`] layers. If `layers` is
     #' *named* (e.g., `c(logdata = "counts")`) the assays will adopt the names
     #' of the layers vector.
+    #' @param batch_mode logical, if `TRUE`, batch query mode is enabled for
+    #' retrieving `X` layers. See
+    #' [`AssayMatrix$to_dataframe()`][`AssayMatrix`] for more information.
     to_summarized_experiment = function(
-      layers = c("counts", "data", "scale.data")
+      layers = c("counts", "data", "scale.data"),
+      batch_mode = FALSE
     ) {
       check_package("SummarizedExperiment")
       layers <- private$check_layers(layers)
-      assay_mats <- private$get_assay_matrices(layers)
+      assay_mats <- private$get_assay_matrices(layers, batch_mode)
 
       # switch to bioc assay names
       if (is_named(layers)) {
@@ -680,12 +688,16 @@ SOMA <- R6::R6Class(
     #' or more of the available `X` [`AssayMatrix`] layers. If `layers` is
     #' *named* (e.g., `c(logdata = "counts")`) the assays will adopt the names
     #' of the layers vector.
+    #' @param batch_mode logical, if `TRUE`, batch query mode is enabled for
+    #' retrieving `X` layers. See
+    #' [`AssayMatrix$to_dataframe()`][`AssayMatrix`] for more information.
     to_single_cell_experiment = function(
-      layers = c("counts", "data")
+      layers = c("counts", "data"),
+      batch_mode = FALSE
     ) {
       check_package("SingleCellExperiment")
       sce_obj <- as(
-        object = self$to_summarized_experiment(layers),
+        object = self$to_summarized_experiment(layers, batch_mode),
         Class = "SingleCellExperiment"
       )
 
@@ -803,11 +815,11 @@ SOMA <- R6::R6Class(
     # Returns a named list of `dgTMatrix objects`, each of which is padded if
     # it doesn't contain the full set of obs identifiers (i.e., cell/sample
     # names).
-    get_assay_matrices = function(layers) {
+    get_assay_matrices = function(layers, batch_mode) {
 
       assay_mats <- lapply(
         self$X$members[layers],
-        function(x) x$to_matrix()
+        function(x) x$to_matrix(batch_mode = batch_mode)
       )
 
       # Ensure assay matrices all contain the same observations
