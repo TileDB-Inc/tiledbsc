@@ -69,10 +69,10 @@ AssayMatrix <- R6::R6Class(
     #' @description Retrieve the assay data from TileDB
     #' @param attrs Specify one or more attributes to retrieve. If `NULL`,
     #' all attributes are retrieved.
-    #' @param batched logical, if `TRUE`, batched query mode is enabled,
+    #' @param batch_mode logical, if `TRUE`, batch query mode is enabled,
     #' which provides the ability to detect partial query results and resubmit #' until completion.
     #' @return A [`Matrix::dgTMatrix-class`].
-    to_dataframe = function(attrs = NULL, batched = FALSE) {
+    to_dataframe = function(attrs = NULL, batch_mode = FALSE) {
       if (self$verbose) {
         message(
           sprintf("Reading %s into memory from '%s'", self$class(), self$uri)
@@ -82,7 +82,7 @@ AssayMatrix <- R6::R6Class(
       tiledb::attrs(arr) <- attrs %||% character()
       tiledb::return_as(arr) <- "data.frame"
 
-      if (batched) {
+      if (batch_mode) {
         if (self$verbose) message("...reading in batches")
         batcher <- tiledb:::createBatched(arr)
         results <- list()
@@ -102,16 +102,16 @@ AssayMatrix <- R6::R6Class(
     #' @description Retrieve assay data from TileDB as a 2D sparse matrix.
     #' @param attr The name of the attribute layer to retrieve. If `NULL`, the
     #' first layer is returned.
-    #' @param batched logical, if `TRUE`, batched query mode is enabled,
+    #' @param batch_mode logical, if `TRUE`, batch query mode is enabled,
     #' which provides the ability to detect partial query results and resubmit #' until completion.
     #' @return A [`Matrix::dgTMatrix-class`].
-    to_matrix = function(attr = NULL, batched = FALSE) {
+    to_matrix = function(attr = NULL, batch_mode = FALSE) {
       if (is.null(attr)) {
         attr <- self$attrnames()[1]
       }
       stopifnot(is_scalar_character(attr))
 
-      assay_data <- self$to_dataframe(attrs = attr, batched = batched)
+      assay_data <- self$to_dataframe(attrs = attr, batch_mode = batch_mode)
       assay_dims <- vapply_int(assay_data[1:2], n_unique)
       row_labels <- unique(assay_data[[1]])
       col_labels <- unique(assay_data[[2]])

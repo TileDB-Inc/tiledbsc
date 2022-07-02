@@ -46,8 +46,8 @@ test_that("Incomplete queries can be completed via batching", {
   assaymat <- AssayMatrix$new(uri = uri, verbose = TRUE)
   assaymat$from_matrix(smat, index_cols = c("i", "j"), value_col = "counts")
 
-  df1 <- assaymat$to_dataframe(batched = FALSE)
-  df2 <- assaymat$to_dataframe(batched = TRUE)
+  df1 <- assaymat$to_dataframe(batch_mode = FALSE)
+  df2 <- assaymat$to_dataframe(batch_mode = TRUE)
   expect_equal(dim(df1), dim(df2))
 })
 
