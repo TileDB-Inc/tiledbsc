@@ -102,6 +102,18 @@ test_that("Seurat Assay can be recreated from an existing SOMA", {
     SeuratObject::GetAssayData(assay2, "data")[var_ids, obs_ids],
     SeuratObject::GetAssayData(assay1, "data")[var_ids, obs_ids]
   )
+
+  # Seurat assay conversion with batch mode on
+  with_allocation_size_preference(1e4)
+  expect_message(
+    assay3 <- soma$to_seurat_assay(batch_mode = TRUE, layers = "counts"),
+    "...reading in batches"
+  )
+
+  expect_identical(
+    SeuratObject::GetAssayData(assay3, "counts")[var_ids, obs_ids],
+    SeuratObject::GetAssayData(assay1, "counts")[var_ids, obs_ids]
+  )
 })
 
 test_that("Individual layers can be retrieved from an existing SOMA", {
