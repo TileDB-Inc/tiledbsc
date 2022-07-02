@@ -1,6 +1,24 @@
 # tiledbsc (development version)
 
+## Features
+
+* Added `batch_mode` option to methods that read `X` layers (i.e., `AssayMatrix` objects) into memory. When enabled, batch mode leverages the family of `Batched` classes added to tiledb-r in version [0.14.0](https://github.com/TileDB-Inc/TileDB-R/releases/tag/0.14.0) to detect partial query results and resubmit until all results are retrieved. This feature is currently disabled by default and only applies to `X` layers (which are typically the largest arrays). You can enable batch mode from the following methods:
+  - `SOMACollection$to_seurat()`
+  - `SOMA$to_seurat_assay()`
+  - `SOMA$to_summarized_experiment()`
+  - `SOMA$to_single_cell_experiment()`
+  - `AssayMatrix$to_dataframe()`
+  - `AssayMatrix$to_matrix()`
+
 * Members can now be removed from `TileDBGroup`s with `remove_member()`
+
+## Fixes
+
+* Matrix conversion message from `AssayMatrix` now respects the `verbose` option
+
+## Build and Test Systems
+
+- Added `with_allocation_size_preference()` helper to temporarily set the allocation size preference for testing.
 
 # tiledbsc 0.1.3
 
