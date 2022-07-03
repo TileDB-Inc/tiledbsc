@@ -8,6 +8,9 @@
 #' - `obs` ([`AnnotationDataframe`]): 1D labeled array with column labels for
 #'   `X`
 #' - `var` ([`AnnotationDataframe`]): 1D labeled array with row labels for `X`
+#' @param batch_mode logical, if `TRUE`, batch query mode is enabled for
+#' retrieving `X` layers. See [`AssayMatrix$to_dataframe()`][`AssayMatrix`] for
+#' more information.
 #' @importFrom SeuratObject AddMetaData Loadings Embeddings VariableFeatures
 #' @importFrom SeuratObject GetAssayData CreateAssayObject SetAssayData
 #' @export
@@ -413,9 +416,6 @@ SOMA <- R6::R6Class(
     #' detected.
     #' @param check_matrix Check counts matrix for NA, NaN, Inf, and non-integer
     #' values
-    #' @param batch_mode logical, if `TRUE`, batch query mode is enabled for
-    #' retrieving `X` layers. See
-    #' [`AssayMatrix$to_dataframe()`][`AssayMatrix`] for more information.
     #' @param ... Arguments passed to [`SeuratObject::as.sparse`]
     to_seurat_assay = function(
       layers = c("counts", "data", "scale.data"),
@@ -653,9 +653,6 @@ SOMA <- R6::R6Class(
     #' or more of the available `X` [`AssayMatrix`] layers. If `layers` is
     #' *named* (e.g., `c(logdata = "counts")`) the assays will adopt the names
     #' of the layers vector.
-    #' @param batch_mode logical, if `TRUE`, batch query mode is enabled for
-    #' retrieving `X` layers. See
-    #' [`AssayMatrix$to_dataframe()`][`AssayMatrix`] for more information.
     to_summarized_experiment = function(
       layers = c("counts", "data", "scale.data"),
       batch_mode = FALSE
@@ -688,9 +685,6 @@ SOMA <- R6::R6Class(
     #' or more of the available `X` [`AssayMatrix`] layers. If `layers` is
     #' *named* (e.g., `c(logdata = "counts")`) the assays will adopt the names
     #' of the layers vector.
-    #' @param batch_mode logical, if `TRUE`, batch query mode is enabled for
-    #' retrieving `X` layers. See
-    #' [`AssayMatrix$to_dataframe()`][`AssayMatrix`] for more information.
     to_single_cell_experiment = function(
       layers = c("counts", "data"),
       batch_mode = FALSE

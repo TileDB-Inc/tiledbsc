@@ -6,7 +6,9 @@
 #' that share the same dimensions and non-empty coordinates.
 #'
 #' Used for the `X` field of [`SOMA`].
-
+#' @param batch_mode logical, if `TRUE`, batch query mode is enabled, which
+#' provides the ability to detect partial query results and resubmit until
+#' all results are retrieved.
 #' @importFrom Matrix sparseMatrix
 #' @export
 
@@ -69,8 +71,6 @@ AssayMatrix <- R6::R6Class(
     #' @description Retrieve the assay data from TileDB
     #' @param attrs Specify one or more attributes to retrieve. If `NULL`,
     #' all attributes are retrieved.
-    #' @param batch_mode logical, if `TRUE`, batch query mode is enabled,
-    #' which provides the ability to detect partial query results and resubmit #' until completion.
     #' @return A [`Matrix::dgTMatrix-class`].
     to_dataframe = function(attrs = NULL, batch_mode = FALSE) {
       if (self$verbose) {
@@ -102,8 +102,6 @@ AssayMatrix <- R6::R6Class(
     #' @description Retrieve assay data from TileDB as a 2D sparse matrix.
     #' @param attr The name of the attribute layer to retrieve. If `NULL`, the
     #' first layer is returned.
-    #' @param batch_mode logical, if `TRUE`, batch query mode is enabled,
-    #' which provides the ability to detect partial query results and resubmit #' until completion.
     #' @return A [`Matrix::dgTMatrix-class`].
     to_matrix = function(attr = NULL, batch_mode = FALSE) {
       if (is.null(attr)) {

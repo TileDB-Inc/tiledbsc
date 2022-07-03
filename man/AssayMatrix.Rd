@@ -112,8 +112,9 @@ Retrieve the assay data from TileDB
 \item{\code{attrs}}{Specify one or more attributes to retrieve. If \code{NULL},
 all attributes are retrieved.}
 
-\item{\code{batch_mode}}{logical, if \code{TRUE}, batch query mode is enabled,
-which provides the ability to detect partial query results and resubmit #' until completion.}
+\item{\code{batch_mode}}{logical, if \code{TRUE}, batch query mode is enabled, which
+provides the ability to detect partial query results and resubmit until
+all results are retrieved.}
 }
 \if{html}{\out{</div>}}
 }
@@ -136,8 +137,9 @@ Retrieve assay data from TileDB as a 2D sparse matrix.
 \item{\code{attr}}{The name of the attribute layer to retrieve. If \code{NULL}, the
 first layer is returned.}
 
-\item{\code{batch_mode}}{logical, if \code{TRUE}, batch query mode is enabled,
-which provides the ability to detect partial query results and resubmit #' until completion.}
+\item{\code{batch_mode}}{logical, if \code{TRUE}, batch query mode is enabled, which
+provides the ability to detect partial query results and resubmit until
+all results are retrieved.}
 }
 \if{html}{\out{</div>}}
 }

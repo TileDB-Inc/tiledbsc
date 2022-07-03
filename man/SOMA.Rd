@@ -276,8 +276,8 @@ detected.}
 values}
 
 \item{\code{batch_mode}}{logical, if \code{TRUE}, batch query mode is enabled for
-retrieving \code{X} layers. See
-\code{\link[=AssayMatrix]{AssayMatrix$to_dataframe()}} for more information.}
+retrieving \code{X} layers. See \code{\link[=AssayMatrix]{AssayMatrix$to_dataframe()}} for
+more information.}
 
 \item{\code{...}}{Arguments passed to \code{\link[SeuratObject:as.sparse]{SeuratObject::as.sparse}}}
 }
@@ -395,8 +395,8 @@ or more of the available \code{X} \code{\link{AssayMatrix}} layers. If \code{lay
 of the layers vector.}
 
 \item{\code{batch_mode}}{logical, if \code{TRUE}, batch query mode is enabled for
-retrieving \code{X} layers. See
-\code{\link[=AssayMatrix]{AssayMatrix$to_dataframe()}} for more information.}
+retrieving \code{X} layers. See \code{\link[=AssayMatrix]{AssayMatrix$to_dataframe()}} for
+more information.}
 }
 \if{html}{\out{</div>}}
 }
@@ -432,8 +432,8 @@ or more of the available \code{X} \code{\link{AssayMatrix}} layers. If \code{lay
 of the layers vector.}
 
 \item{\code{batch_mode}}{logical, if \code{TRUE}, batch query mode is enabled for
-retrieving \code{X} layers. See
-\code{\link[=AssayMatrix]{AssayMatrix$to_dataframe()}} for more information.}
+retrieving \code{X} layers. See \code{\link[=AssayMatrix]{AssayMatrix$to_dataframe()}} for
+more information.}
 }
 \if{html}{\out{</div>}}
 }
