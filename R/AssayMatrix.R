@@ -30,8 +30,8 @@ AssayMatrix <- R6::R6Class(
     from_matrix = function(x, index_cols, value_col = "value") {
       if (inherits(x, "dgCMatrix")) {
         if (self$verbose) message("Converting to dgTMatrix")
-          x <- as(x, "dgTMatrix")
-        }
+        x <- as(x, "dgTMatrix")
+      }
       stopifnot(
         "'x' must be a dgTMatrix" = inherits(x, "dgTMatrix"),
         "Must provide 'index_cols' to name the index columns" = !missing(index_cols),
