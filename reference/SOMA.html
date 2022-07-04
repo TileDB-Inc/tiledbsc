@@ -25,7 +25,7 @@ var (AnnotationDataframe): 1D labeled array with row labels for X
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tiledbsc</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.3.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.3.9001</span>
       </span>
     </div>
 
@@ -344,6 +344,7 @@ if it is set.</p></li>
 <span>  min_cells <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  min_features <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  check_matrix <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  batch_mode <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
@@ -369,6 +370,12 @@ detected.</p></dd>
 <dt><code>check_matrix</code></dt>
 <dd><p>Check counts matrix for NA, NaN, Inf, and non-integer
 values</p></dd>
+
+
+<dt><code>batch_mode</code></dt>
+<dd><p>logical, if <code>TRUE</code>, batch query mode is enabled for
+retrieving <code>X</code> layers. See <code><a href="AssayMatrix.html">AssayMatrix$to_dataframe()</a></code> for
+more information.</p></dd>
 
 
 <dt><code>...</code></dt>
@@ -476,7 +483,10 @@ default to the first <code>obsm/dimreduction_</code> array.</p></dd>
 <p>Convert to a SummarizedExperiment::SummarizedExperiment
 object.</p><div class="section">
 <h4 id="usage-9">Usage<a class="anchor" aria-label="anchor" href="#usage-9"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">SOMA</span><span class="op">$</span><span class="fu">to_summarized_experiment</span><span class="op">(</span>layers <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"counts"</span>, <span class="st">"data"</span>, <span class="st">"scale.data"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div><p></p></div>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">SOMA</span><span class="op">$</span><span class="fu">to_summarized_experiment</span><span class="op">(</span></span>
+<span>  layers <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"counts"</span>, <span class="st">"data"</span>, <span class="st">"scale.data"</span><span class="op">)</span>,</span>
+<span>  batch_mode <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
@@ -486,6 +496,12 @@ object.</p><div class="section">
 or more of the available <code>X</code> <code><a href="AssayMatrix.html">AssayMatrix</a></code> layers. If <code>layers</code> is
 <em>named</em> (e.g., <code>c(logdata = "counts")</code>) the assays will adopt the names
 of the layers vector.</p></dd>
+
+
+<dt><code>batch_mode</code></dt>
+<dd><p>logical, if <code>TRUE</code>, batch query mode is enabled for
+retrieving <code>X</code> layers. See <code><a href="AssayMatrix.html">AssayMatrix$to_dataframe()</a></code> for
+more information.</p></dd>
 
 
 </dl><p></p></div>
@@ -510,7 +526,10 @@ with a subset of features is included.</p>
 <p>Convert to a Bioconductor
 SingleCellExperiment::SingleCellExperiment object.</p><div class="section">
 <h4 id="usage-10">Usage<a class="anchor" aria-label="anchor" href="#usage-10"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">SOMA</span><span class="op">$</span><span class="fu">to_single_cell_experiment</span><span class="op">(</span>layers <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"counts"</span>, <span class="st">"data"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div><p></p></div>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">SOMA</span><span class="op">$</span><span class="fu">to_single_cell_experiment</span><span class="op">(</span></span>
+<span>  layers <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"counts"</span>, <span class="st">"data"</span><span class="op">)</span>,</span>
+<span>  batch_mode <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
@@ -520,6 +539,12 @@ SingleCellExperiment::SingleCellExperiment object.</p><div class="section">
 or more of the available <code>X</code> <code><a href="AssayMatrix.html">AssayMatrix</a></code> layers. If <code>layers</code> is
 <em>named</em> (e.g., <code>c(logdata = "counts")</code>) the assays will adopt the names
 of the layers vector.</p></dd>
+
+
+<dt><code>batch_mode</code></dt>
+<dd><p>logical, if <code>TRUE</code>, batch query mode is enabled for
+retrieving <code>X</code> layers. See <code><a href="AssayMatrix.html">AssayMatrix$to_dataframe()</a></code> for
+more information.</p></dd>
 
 
 </dl><p></p></div>

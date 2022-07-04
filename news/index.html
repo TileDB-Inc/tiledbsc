@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tiledbsc</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.3.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.3.9001</span>
       </span>
     </div>
 
@@ -65,8 +65,27 @@
 
     <div class="section level2">
 <h2 class="page-header" data-toc-text="development version" id="tiledbsc-development-version">tiledbsc (development version)<a class="anchor" aria-label="anchor" href="#tiledbsc-development-version"></a></h2>
-<ul><li>Members can now be removed from <code>TileDBGroup</code>s with <code>remove_member()</code>
-</li></ul></div>
+<div class="section level3">
+<h3 id="features-development-version">Features<a class="anchor" aria-label="anchor" href="#features-development-version"></a></h3>
+<ul><li>Added <code>batch_mode</code> option to methods that read <code>X</code> layers (i.e., <code>AssayMatrix</code> objects) into memory. When enabled, batch mode leverages the family of <code>Batched</code> classes added to tiledb-r in version <a href="https://github.com/TileDB-Inc/TileDB-R/releases/tag/0.14.0" class="external-link">0.14.0</a> to detect partial query results and resubmit until all results are retrieved. This feature is currently disabled by default and only applies to <code>X</code> layers (which are typically the largest arrays). You can enable batch mode from the following methods:<ul><li><code>SOMACollection$to_seurat()</code></li>
+<li><code>SOMA$to_seurat_assay()</code></li>
+<li><code>SOMA$to_summarized_experiment()</code></li>
+<li><code>SOMA$to_single_cell_experiment()</code></li>
+<li><code>AssayMatrix$to_dataframe()</code></li>
+<li><code>AssayMatrix$to_matrix()</code></li>
+</ul></li>
+<li>Members can now be removed from <code>TileDBGroup</code>s with <code>remove_member()</code>
+</li>
+</ul></div>
+<div class="section level3">
+<h3 id="fixes-development-version">Fixes<a class="anchor" aria-label="anchor" href="#fixes-development-version"></a></h3>
+<ul><li>Matrix conversion message from <code>AssayMatrix</code> now respects the <code>verbose</code> option</li>
+<li>Upon initialization <code>SOMA</code> now looks for a <code>raw</code> group and warns the user it will be ignored. Currently tiledbsc-py creates a <code>raw</code> group when converting anndata objects where <code>.raw</code> is populated. However, Seurat/BioC objects do not have an obvious place to store this data, so ignoring it improves compatibility.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="build-and-test-systems-development-version">Build and Test Systems<a class="anchor" aria-label="anchor" href="#build-and-test-systems-development-version"></a></h3>
+<ul><li>Added <code>with_allocation_size_preference()</code> helper to temporarily set the allocation size preference for testing.</li></ul></div>
+</div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.1.3" id="tiledbsc-013">tiledbsc 0.1.3<a class="anchor" aria-label="anchor" href="#tiledbsc-013"></a></h2>
 <div class="section level3">
