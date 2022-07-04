@@ -95,6 +95,7 @@ dataframe_to_dgtmatrix <- function(x, index_cols = c("i", "j")) {
 #' @importFrom Matrix nnzero
 are_layerable <- function(x, y) {
   stopifnot(is_matrix(x) && is_matrix(y))
+  if (identical(x, y)) return(TRUE)
   dimnames_match <- identical(dimnames(x), dimnames(y))
   nonemptycells_match <- Matrix::nnzero(x) == Matrix::nnzero(y)
   dimnames_match && nonemptycells_match

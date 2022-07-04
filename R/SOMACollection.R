@@ -198,10 +198,16 @@ SOMACollection <- R6::R6Class(
 
     #' @description Convert to a [SeuratObject::Seurat] object.
     #' @param project [`SeuratObject::Project`] name for the `Seurat` object
-    to_seurat = function(project = "SeuratProject") {
+    #' @param batch_mode logical, if `TRUE`, batch query mode is enabled for
+    #' retrieving `X` layers. See
+    #' [`AssayMatrix$to_dataframe()`][`AssayMatrix`] for more information.
+    to_seurat = function(project = "SeuratProject", batch_mode = FALSE) {
       stopifnot(is_scalar_character(project))
 
-      assays <- lapply(self$somas, function(x) x$to_seurat_assay())
+      assays <- lapply(
+        X = self$somas,
+        FUN = function(x) x$to_seurat_assay(batch_mode = batch_mode)
+      )
       nassays <- length(assays)
 
       # cell-level obs metadata is stored in each soma, so for now we

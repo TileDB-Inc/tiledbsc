@@ -103,7 +103,7 @@ other columns are ingested as attributes.}
 \subsection{Method \code{to_dataframe()}}{
 Retrieve the assay data from TileDB
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AssayMatrix$to_dataframe(attrs = NULL)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{AssayMatrix$to_dataframe(attrs = NULL, batch_mode = FALSE)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -111,6 +111,10 @@ Retrieve the assay data from TileDB
 \describe{
 \item{\code{attrs}}{Specify one or more attributes to retrieve. If \code{NULL},
 all attributes are retrieved.}
+
+\item{\code{batch_mode}}{logical, if \code{TRUE}, batch query mode is enabled, which
+provides the ability to detect partial query results and resubmit until
+all results are retrieved.}
 }
 \if{html}{\out{</div>}}
 }
@@ -124,7 +128,7 @@ A \code{\link[Matrix:dgTMatrix-class]{Matrix::dgTMatrix}}.
 \subsection{Method \code{to_matrix()}}{
 Retrieve assay data from TileDB as a 2D sparse matrix.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AssayMatrix$to_matrix(attr = NULL)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{AssayMatrix$to_matrix(attr = NULL, batch_mode = FALSE)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -132,6 +136,10 @@ Retrieve assay data from TileDB as a 2D sparse matrix.
 \describe{
 \item{\code{attr}}{The name of the attribute layer to retrieve. If \code{NULL}, the
 first layer is returned.}
+
+\item{\code{batch_mode}}{logical, if \code{TRUE}, batch query mode is enabled, which
+provides the ability to detect partial query results and resubmit until
+all results are retrieved.}
 }
 \if{html}{\out{</div>}}
 }

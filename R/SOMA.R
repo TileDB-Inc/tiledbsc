@@ -8,6 +8,9 @@
 #' - `obs` ([`AnnotationDataframe`]): 1D labeled array with column labels for
 #'   `X`
 #' - `var` ([`AnnotationDataframe`]): 1D labeled array with row labels for `X`
+#' @param batch_mode logical, if `TRUE`, batch query mode is enabled for
+#' retrieving `X` layers. See [`AssayMatrix$to_dataframe()`][`AssayMatrix`] for
+#' more information.
 #' @importFrom SeuratObject AddMetaData Loadings Embeddings VariableFeatures
 #' @importFrom SeuratObject GetAssayData CreateAssayObject SetAssayData
 #' @export
@@ -419,6 +422,7 @@ SOMA <- R6::R6Class(
       min_cells = 0,
       min_features = 0,
       check_matrix = FALSE,
+      batch_mode = FALSE,
       ...) {
 
       stopifnot(
@@ -427,7 +431,7 @@ SOMA <- R6::R6Class(
       )
 
       layers <- private$check_layers(layers)
-      assay_mats <- private$get_assay_matrices(layers)
+      assay_mats <- private$get_assay_matrices(layers, batch_mode)
 
       # Seurat doesn't allow us to supply data for both the `counts` and `data`
       # slots simultaneously, so we have to update the `data` slot separately.
@@ -650,11 +654,12 @@ SOMA <- R6::R6Class(
     #' *named* (e.g., `c(logdata = "counts")`) the assays will adopt the names
     #' of the layers vector.
     to_summarized_experiment = function(
-      layers = c("counts", "data", "scale.data")
+      layers = c("counts", "data", "scale.data"),
+      batch_mode = FALSE
     ) {
       check_package("SummarizedExperiment")
       layers <- private$check_layers(layers)
-      assay_mats <- private$get_assay_matrices(layers)
+      assay_mats <- private$get_assay_matrices(layers, batch_mode)
 
       # switch to bioc assay names
       if (is_named(layers)) {
@@ -681,11 +686,12 @@ SOMA <- R6::R6Class(
     #' *named* (e.g., `c(logdata = "counts")`) the assays will adopt the names
     #' of the layers vector.
     to_single_cell_experiment = function(
-      layers = c("counts", "data")
+      layers = c("counts", "data"),
+      batch_mode = FALSE
     ) {
       check_package("SingleCellExperiment")
       sce_obj <- as(
-        object = self$to_summarized_experiment(layers),
+        object = self$to_summarized_experiment(layers, batch_mode),
         Class = "SingleCellExperiment"
       )
 
@@ -738,6 +744,19 @@ SOMA <- R6::R6Class(
     # metadata).
     instantiate_members = function() {
       members <- self$list_members()
+
+      # Currently tiledbsc-py creates a `raw` group when converting anndata
+      # objects where `.raw` is populated. However, Seurat/BioC objects do not
+      # have an obvious place to store this data, so we ignore it for now.
+      if ("raw" %in% members$NAME) {
+        warning(
+          "Ignoring unsupported 'raw' group",
+          call. = FALSE,
+          immediate. = TRUE
+        )
+        members <- members[members$NAME != "raw", ]
+      }
+
       named_uris <- setNames(members$URI, members$NAME)
 
       # TODO: Remove when SCDataset/SCGroup/misc is defunct
@@ -803,11 +822,11 @@ SOMA <- R6::R6Class(
     # Returns a named list of `dgTMatrix objects`, each of which is padded if
     # it doesn't contain the full set of obs identifiers (i.e., cell/sample
     # names).
-    get_assay_matrices = function(layers) {
+    get_assay_matrices = function(layers, batch_mode) {
 
       assay_mats <- lapply(
         self$X$members[layers],
-        function(x) x$to_matrix()
+        function(x) x$to_matrix(batch_mode = batch_mode)
       )
 
       # Ensure assay matrices all contain the same observations

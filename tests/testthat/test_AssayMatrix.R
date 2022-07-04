@@ -9,9 +9,16 @@ test_that("AssayMatrix object can be created from a dgCMatrix", {
   expect_true(dir.exists(uri))
   expect_s4_class(assaymat$tiledb_array(), "tiledb_array")
 
+  df2 <- assaymat$to_dataframe()
+  expect_s3_class(df2, "data.frame")
+  expect_equal(attr(df2, "query_status"), "COMPLETE")
+  expect_setequal(unique(df2$i), rownames(mat))
+  expect_setequal(unique(df2$j), colnames(mat))
+
   mat2 <- assaymat$to_matrix()
-  expect_equal(sort(rownames(mat2)), sort(rownames(mat)))
-  expect_equal(sort(colnames(mat2)), sort(colnames(mat)))
+  expect_s4_class(mat2, "dgTMatrix")
+  expect_setequal(rownames(mat2), rownames(mat))
+  expect_setequal(colnames(mat2), colnames(mat))
 
   # coerce to dgTMatrix so we can compare directly
   mat1 <- as(mat, "dgTMatrix")
@@ -20,17 +27,30 @@ test_that("AssayMatrix object can be created from a dgCMatrix", {
   expect_equal(mat1[rlabs, clabs], mat2[rlabs, clabs])
 })
 
+test_that("Incomplete queries can be completed via batching", {
+  uri <- withr::local_tempdir("assay-matrix-batched")
+  with_allocation_size_preference(5e5)
 
-test_that("matrices can be added to an AssayMatrixGroup", {
-  uri <- withr::local_tempdir("assay-matrix-group")
-  mat <- SeuratObject::GetAssayData(pbmc_small[["RNA"]], "counts")
-
-  assaymats <- AssayMatrixGroup$new(uri = uri, dimension_name = c("obs_id", "var_id"))
-  expect_length(assaymats$members, 0)
-
-  assaymats$add_assay_matrix(
-    data = SeuratObject::GetAssayData(pbmc_small[["RNA"]], "counts"),
-    name = "counts"
+  nr <- 1e3
+  nc <- 1e2
+  set.seed(1)
+  smat <- Matrix::rsparsematrix(
+    nrow = nr,
+    ncol = nc,
+    density = 0.8,
+    rand.x = function(n) as.integer(runif(n, min = 1, max = 100)),
+    repr = "T"
   )
-  expect_true(inherits(assaymats$members[["counts"]], "AssayMatrix"))
+  dimnames(smat) <- list(paste0("i", seq_len(nr)), paste0("j", seq_len(nc)))
+
+  assaymat <- AssayMatrix$new(uri = uri, verbose = TRUE)
+  assaymat$from_matrix(smat, index_cols = c("i", "j"), value_col = "counts")
+
+  df1 <- assaymat$to_dataframe(batch_mode = FALSE)
+  df2 <- assaymat$to_dataframe(batch_mode = TRUE)
+  expect_equal(dim(df1), dim(df2))
+})
+
+test_that("user allocation has returned to its default size", {
+  expect_equal(tiledb::get_allocation_size_preference(), 10485760)
 })

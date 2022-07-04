@@ -6,7 +6,9 @@
 #' that share the same dimensions and non-empty coordinates.
 #'
 #' Used for the `X` field of [`SOMA`].
-
+#' @param batch_mode logical, if `TRUE`, batch query mode is enabled, which
+#' provides the ability to detect partial query results and resubmit until
+#' all results are retrieved.
 #' @importFrom Matrix sparseMatrix
 #' @export
 
@@ -27,9 +29,9 @@ AssayMatrix <- R6::R6Class(
     #' contain the matrix values.
     from_matrix = function(x, index_cols, value_col = "value") {
       if (inherits(x, "dgCMatrix")) {
-          message("Converting to dgTMatrix")
-          x <- as(x, "dgTMatrix")
-        }
+        if (self$verbose) message("Converting to dgTMatrix")
+        x <- as(x, "dgTMatrix")
+      }
       stopifnot(
         "'x' must be a dgTMatrix" = inherits(x, "dgTMatrix"),
         "Must provide 'index_cols' to name the index columns" = !missing(index_cols),
@@ -70,7 +72,7 @@ AssayMatrix <- R6::R6Class(
     #' @param attrs Specify one or more attributes to retrieve. If `NULL`,
     #' all attributes are retrieved.
     #' @return A [`Matrix::dgTMatrix-class`].
-    to_dataframe = function(attrs = NULL) {
+    to_dataframe = function(attrs = NULL, batch_mode = FALSE) {
       if (self$verbose) {
         message(
           sprintf("Reading %s into memory from '%s'", self$class(), self$uri)
@@ -79,21 +81,36 @@ AssayMatrix <- R6::R6Class(
       arr <- self$object
       tiledb::attrs(arr) <- attrs %||% character()
       tiledb::return_as(arr) <- "data.frame"
-      arr[]
+
+      if (batch_mode) {
+        if (self$verbose) message("...reading in batches")
+        batcher <- tiledb:::createBatched(arr)
+        results <- list()
+        i <- 1
+        while(isFALSE(tiledb::completedBatched(batcher))) {
+          if (self$verbose) message(sprintf("...retrieving batch %d", i))
+          results[[i]] <- tiledb::fetchBatched(arr, batcher)
+          i <- i + 1
+        }
+        results <- vctrs::vec_rbind(!!!results)
+      } else {
+        results <- arr[]
+      }
+      results
     },
 
     #' @description Retrieve assay data from TileDB as a 2D sparse matrix.
     #' @param attr The name of the attribute layer to retrieve. If `NULL`, the
     #' first layer is returned.
     #' @return A [`Matrix::dgTMatrix-class`].
-    to_matrix = function(attr = NULL) {
+    to_matrix = function(attr = NULL, batch_mode = FALSE) {
       if (is.null(attr)) {
         attr <- self$attrnames()[1]
       }
       stopifnot(is_scalar_character(attr))
 
-      assay_data <- self$to_dataframe(attrs = attr)
-      assay_dims <- vapply(assay_data[1:2], n_unique, FUN.VALUE = integer(1L))
+      assay_data <- self$to_dataframe(attrs = attr, batch_mode = batch_mode)
+      assay_dims <- vapply_int(assay_data[1:2], n_unique)
       row_labels <- unique(assay_data[[1]])
       col_labels <- unique(assay_data[[2]])
 

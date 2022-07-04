@@ -254,6 +254,7 @@ Convert to a \code{\link[SeuratObject:Assay-class]{SeuratObject::Assay}} object.
   min_cells = 0,
   min_features = 0,
   check_matrix = FALSE,
+  batch_mode = FALSE,
   ...
 )}\if{html}{\out{</div>}}
 }
@@ -273,6 +274,10 @@ detected.}
 
 \item{\code{check_matrix}}{Check counts matrix for NA, NaN, Inf, and non-integer
 values}
+
+\item{\code{batch_mode}}{logical, if \code{TRUE}, batch query mode is enabled for
+retrieving \code{X} layers. See \code{\link[=AssayMatrix]{AssayMatrix$to_dataframe()}} for
+more information.}
 
 \item{\code{...}}{Arguments passed to \code{\link[SeuratObject:as.sparse]{SeuratObject::as.sparse}}}
 }
@@ -375,7 +380,10 @@ Convert to a \link[SeuratObject:Seurat-class]{SeuratObject::Seurat} object.
 Convert to a \link[SummarizedExperiment:RangedSummarizedExperiment-class]{SummarizedExperiment::SummarizedExperiment}
 object.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{SOMA$to_summarized_experiment(layers = c("counts", "data", "scale.data"))}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{SOMA$to_summarized_experiment(
+  layers = c("counts", "data", "scale.data"),
+  batch_mode = FALSE
+)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -385,6 +393,10 @@ object.
 or more of the available \code{X} \code{\link{AssayMatrix}} layers. If \code{layers} is
 \emph{named} (e.g., \code{c(logdata = "counts")}) the assays will adopt the names
 of the layers vector.}
+
+\item{\code{batch_mode}}{logical, if \code{TRUE}, batch query mode is enabled for
+retrieving \code{X} layers. See \code{\link[=AssayMatrix]{AssayMatrix$to_dataframe()}} for
+more information.}
 }
 \if{html}{\out{</div>}}
 }
@@ -405,7 +417,10 @@ with a subset of features is included.
 Convert to a Bioconductor
 \link[SingleCellExperiment:SingleCellExperiment]{SingleCellExperiment::SingleCellExperiment} object.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{SOMA$to_single_cell_experiment(layers = c("counts", "data"))}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{SOMA$to_single_cell_experiment(
+  layers = c("counts", "data"),
+  batch_mode = FALSE
+)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -415,6 +430,10 @@ Convert to a Bioconductor
 or more of the available \code{X} \code{\link{AssayMatrix}} layers. If \code{layers} is
 \emph{named} (e.g., \code{c(logdata = "counts")}) the assays will adopt the names
 of the layers vector.}
+
+\item{\code{batch_mode}}{logical, if \code{TRUE}, batch query mode is enabled for
+retrieving \code{X} layers. See \code{\link[=AssayMatrix]{AssayMatrix$to_dataframe()}} for
+more information.}
 }
 \if{html}{\out{</div>}}
 }
