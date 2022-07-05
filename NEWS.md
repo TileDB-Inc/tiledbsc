@@ -12,14 +12,20 @@
 
 * Members can now be removed from `TileDBGroup`s with `remove_member()`
 
+## Changes
+
+* Removed vestigial code for merging non-layerable COO data.frames, which was previously used to add ingest dense `scaled.data` from a Seurat `Assay` as an attribute of the `X` array, along with `counts`/`data`. This is no longer necessary as each layer is now ingested into a separate array within the `X` group (#73).
 ## Fixes
 
 * Matrix conversion message from `AssayMatrix` now respects the `verbose` option
 * Upon initialization `SOMA` now  looks for a `raw` group and warns the user it will be ignored. Currently tiledbsc-py creates a `raw` group when converting anndata objects where `.raw` is populated. However, Seurat/BioC objects do not have an obvious place to store this data, so ignoring it improves compatibility.
+* Fixed a non-user-facing issue with the internal `dgtmatrix_to_dataframe()` function used to convert unordered `dgTMatrix` objects to COO data frames (#73).
+
 
 ## Build and Test Systems
 
 - Added `with_allocation_size_preference()` helper to temporarily set the allocation size preference for testing.
+- Tests were added to verify the internal `dgtmatrix_to_dataframe()` will error out if an input list contains non-layerable matrices.
 
 # tiledbsc 0.1.3
 
