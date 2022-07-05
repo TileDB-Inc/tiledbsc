@@ -73,4 +73,16 @@ test_that("conversion of a list dgTMatrix's to COO data frame", {
     mats[[2]][ilabs, jlabs],
     mats2[[2]][ilabs, jlabs]
   )
+
+  mats[[3]] <- SeuratObject::GetAssayData(pbmc_small, "scale.data")
+  expect_error(
+    dgtmatrix_to_dataframe(mats),
+    "When 'x' is a list all elements must contain a dgTMatrix"
+  )
+
+  mats[[3]] <- as(mats[[3]], "dgTMatrix")
+  expect_error(
+    dgtmatrix_to_dataframe(mats),
+    "Matrix 1 and 3 are not layerable"
+  )
 })
