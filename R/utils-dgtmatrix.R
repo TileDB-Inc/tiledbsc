@@ -41,21 +41,17 @@ dgtmatrix_to_dataframe <- function(x, index_cols = c("i", "j"), value_cols = NUL
   )
   colnames(index_data) <- index_cols
 
-  # To accommodate the specific case of a matrix containing scaled data from
-  # seurat that contains only a subset of the features, we coerce to a
-  # data.frame table and perform a left merge to automatically fill in missing
-  # values as NA
+  # Add 1 column of values to the coo coordinates for each of the layerable
+  # matrices
   nmats <- length(x)
   for (i in seq_len(nmats)) {
     value_col <- value_cols[i]
-    if (are_layerable(x[[1]], x[[i]])) {
-      index_data[[value_col]] <- x[[i]]@x
-    } else {
-      value_tbl <- as.data.frame.table(as.matrix(x[[i]]))
-      colnames(value_tbl) <- c(index_cols, value_col)
-      index_data <- merge(index_data, value_tbl, by = index_cols, all.x = TRUE)
+    if (!are_layerable(x[[1]], x[[i]])) {
+      stop(sprintf("Matrix 1 and %i are not layerable", i))
     }
+    index_data[[value_col]] <- x[[i]]@x
   }
+
   return(index_data)
 }
 
