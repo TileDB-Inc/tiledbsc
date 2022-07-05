@@ -1,22 +1,54 @@
 
 test_that("conversion of dgTMatrix to COO data frame", {
-  mat <- as(GetAssayData(pbmc_small, "counts"), "dgTMatrix")
-  df <- dgtmatrix_to_dataframe(mat)
-  testthat::expect_true(is.data.frame(df))
+  # create an ordered dgTMatrix by starting with an ordered dgCMatrix and
+  # coercing that to a dgTMatrix
+  omat <- as(create_sparse_matrix_with_string_dims(repr = "C"), "dgTMatrix")
 
-  ilabs <- unique(df$i)
-  expect_true(all(ilabs %in% rownames(mat)))
+  # create an unordered dgTMatrix
+  umat <- create_sparse_matrix_with_string_dims(repr = "T")
 
-  jlabs <- unique(df$j)
-  expect_true(all(jlabs %in% colnames(mat)))
+  # verify coorindates are in column-major order
+  expect_true(
+    identical(
+      omat@x,
+      Filter(function(x) x != 0, as.numeric(omat))
+    )
+  )
 
-  mat2 <- dataframe_to_dgtmatrix(df)[[1]]
+  # verify coorindates are *not* in column-major order
+  expect_false(
+    identical(
+      umat@x,
+      Filter(function(x) x != 0, as.numeric(umat))
+    )
+  )
+
+  # but materialized coordinates are identical
+  expect_true(all(umat == omat))
+
+  # verify round-tripping of omat to coo and back
+  odf <- dgtmatrix_to_dataframe(omat)
+  expect_true(is.data.frame(odf))
+
+  ilabs <- unique(odf$i)
+  jlabs <- unique(odf$j)
+  expect_setequal(ilabs, rownames(omat))
+  expect_setequal(jlabs, colnames(omat))
+
+  omat2 <- dataframe_to_dgtmatrix(odf)[[1]]
   expect_identical(
-    mat[ilabs, jlabs],
-    mat2[ilabs, jlabs]
+    omat2[ilabs, jlabs],
+    omat[ilabs, jlabs]
+  )
+
+  # verify round-tripping of umat to coo and back
+  udf <- dgtmatrix_to_dataframe(umat)
+  umat2 <- dataframe_to_dgtmatrix(udf)[[1]]
+  expect_identical(
+    umat2[ilabs, jlabs],
+    umat[ilabs, jlabs]
   )
 })
-
 
 test_that("conversion of a list dgTMatrix's to COO data frame", {
   mats <- list(
@@ -40,5 +72,17 @@ test_that("conversion of a list dgTMatrix's to COO data frame", {
   expect_identical(
     mats[[2]][ilabs, jlabs],
     mats2[[2]][ilabs, jlabs]
+  )
+
+  mats[[3]] <- SeuratObject::GetAssayData(pbmc_small, "scale.data")
+  expect_error(
+    dgtmatrix_to_dataframe(mats),
+    "When 'x' is a list all elements must contain a dgTMatrix"
+  )
+
+  mats[[3]] <- as(mats[[3]], "dgTMatrix")
+  expect_error(
+    dgtmatrix_to_dataframe(mats),
+    "Matrix 1 and 3 are not layerable"
   )
 })
