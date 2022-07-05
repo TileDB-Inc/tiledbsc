@@ -49,7 +49,7 @@ dgtmatrix_to_dataframe <- function(x, index_cols = c("i", "j"), value_cols = NUL
   for (i in seq_len(nmats)) {
     value_col <- value_cols[i]
     if (are_layerable(x[[1]], x[[i]])) {
-      index_data[[value_col]] <- x[[i]][row_labels, col_labels]@x
+      index_data[[value_col]] <- x[[i]]@x
     } else {
       value_tbl <- as.data.frame.table(as.matrix(x[[i]]))
       colnames(value_tbl) <- c(index_cols, value_col)
