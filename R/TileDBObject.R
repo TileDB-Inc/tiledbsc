@@ -51,11 +51,6 @@ TileDBObject <- R6::R6Class(
     #' @description Check if the object exists.
     #' @return `TRUE`` if the object exists, `FALSE` otherwise.
     exists = function() {
-      if (private$tiledb_uri$is_tiledb_cloud_creation_uri()) {
-        uri <- private$tiledb_uri$object_uri
-      } else {
-        uri <- self$uri
-      }
       if (self$class() == "TileDBGroup") {
         expected_type <- c("ARRAY", "GROUP")
       } else if (inherits(self, "TileDBArray")) {
@@ -65,7 +60,7 @@ TileDBObject <- R6::R6Class(
       } else {
         stop("Unknown object type")
       }
-      tiledb::tiledb_object_type(uri, ctx = self$ctx) %in% expected_type
+      tiledb::tiledb_object_type(self$uri, ctx = self$ctx) %in% expected_type
     }
   ),
 
