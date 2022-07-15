@@ -10,8 +10,8 @@
 #' @param x any matrix-like object coercible to a `TsparseMatrix` or a list of
 #' matrix-like objects that all share the same dimensions and non-zero
 #' coordinates (i.e., are *layerable*).
-#' @returns A `data.frame` with columns for the i/j indices, and a value column
-#' for each of the matrices included in `x`
+#' @returns A `data.frame` with factor columns for the i/j indices, and a value
+#' column for each of the matrices included in `x`
 #' @importFrom Matrix mat2triplet
 #' @noRd
 matrix_to_coo <- function(x, index_cols = c("i", "j"), value_cols = NULL) {
@@ -70,11 +70,26 @@ matrix_to_coo <- function(x, index_cols = c("i", "j"), value_cols = NULL) {
     }
   }
 
-  # materialize dimension names from the first matrix for the coo index columns
+  # Dimension names from the first matrix are used for the coo index columns.
+
+  # To avoid materializing strings values for the index columns we use factors
+  # instead. We don't need all the overhead of factor() because we already have
+  # integer indices that map to the dimension names of the matrix, so we build
+  # them manually using structure().
+
   i_col <- index_cols[1]
   j_col <- index_cols[2]
-  coo[[i_col]] <- rownames(x[[1]])[coo[[i_col]]]
-  coo[[j_col]] <- colnames(x[[1]])[coo[[j_col]]]
+
+  coo[[i_col]] <- structure(
+    coo[[i_col]],
+    levels = rownames(x[[1]]),
+    class = "factor"
+  )
+  coo[[j_col]] <- structure(
+    coo[[j_col]],
+    levels = colnames(x[[1]]),
+    class = "factor"
+  )
 
   # reset rownames in case they were ordered
   as.data.frame(coo, row.names = NULL)
