@@ -39,18 +39,34 @@ matrix_to_coo <- function(x, index_cols = c("i", "j"), value_cols = NULL) {
   # Convert all matrices to COO format.
   # Add 1 column of values to the coo df for each additional layerable matrix
   for (i in seq_along(x)) {
+    value_col <- value_cols[i]
     if (!are_layerable(x[[1]], x[[i]])) {
       stop(sprintf("Matrix 1 and %i are not layerable", i))
     }
 
-    # apply user specific index and value column names
-    coo_i <-  as.data.frame(Matrix::mat2triplet(x[[i]]))
-    colnames(coo_i) <- c(index_cols, value_cols[i])
+    # convert to COO format w/ user specified index and value column names
+    coo_i <- as.data.frame(
+      setNames(
+        Matrix::mat2triplet(x[[i]]),
+        nm = c(index_cols, value_col)
+      )
+    )
+
+
+    # When there are multiple matrices we need to order coordinates by index
+    # values so we can efficiently/correctly merge them together
+    if (length(x) > 1) {
+      coord_order <- order(
+        coo_i[[index_cols[1]]],
+        coo_i[[index_cols[2]]]
+      )
+      coo_i <- coo_i[coord_order,]
+    }
 
     if (i == 1) {
       coo <- coo_i
     } else {
-      coo <- merge(x = coo, y = coo_i, by = index_cols, sort = FALSE)
+      coo[[value_col]] <- coo_i[[value_col]]
     }
   }
 
@@ -60,5 +76,6 @@ matrix_to_coo <- function(x, index_cols = c("i", "j"), value_cols = NULL) {
   coo[[i_col]] <- rownames(x[[1]])[coo[[i_col]]]
   coo[[j_col]] <- colnames(x[[1]])[coo[[j_col]]]
 
-  coo
+  # reset rownames in case they were ordered
+  as.data.frame(coo, row.names = NULL)
 }

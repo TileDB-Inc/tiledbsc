@@ -48,6 +48,10 @@ test_that("conversion of dgTMatrix to COO data frame", {
     umat2[ilabs, jlabs],
     umat[ilabs, jlabs]
   )
+
+  # convert list of dgtMatrix objects with heterogenous coordinate ordering
+  df <- matrix_to_coo(list(ordered = omat, unordered = umat))
+  expect_identical(df$ordered, df$unordered)
 })
 
 test_that("conversion of a list dgTMatrix's to COO data frame", {
