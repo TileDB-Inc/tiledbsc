@@ -28,8 +28,8 @@ AnnotationPairwiseMatrix <- R6::R6Class(
       )
       private$validate_matrix(x)
 
-      x <- dgtmatrix_to_dataframe(
-        x = as(x, "dgTMatrix"),
+      x <- matrix_to_coo(
+        x = x,
         index_cols = index_cols,
         value_col = value_col
       )

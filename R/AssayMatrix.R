@@ -39,7 +39,7 @@ AssayMatrix <- R6::R6Class(
       )
 
       self$from_dataframe(
-        dgtmatrix_to_dataframe(x, index_cols = index_cols, value_cols = value_col),
+        matrix_to_coo(x, index_cols = index_cols, value_cols = value_col),
         index_cols = index_cols
       )
     },
