@@ -13,16 +13,15 @@ AnnotationPairwiseMatrix <- R6::R6Class(
   public = list(
 
     #' @description Ingest annotation matrix
-    #' @param x a [`matrix`] with charater vectors used for row/column names
+    #' @param x any `matrix`-like object coercible to a
+    #' [`TsparseMatrix`][`Matrix::TsparseMatrix-class`] with string dimensions.
     #' @param index_cols Names to use for the TileDB array's dimensions that
     #' will contain the matrix row/column names.
     #' @param value_col Name to use for the TileDB array's attribute that will
     #' contain the matrix values.
     from_matrix = function(x, index_cols, value_col = "value") {
-      if (missing(index_cols)) {
-        stop("Must define 'index_cols' to provide a dimension names")
-      }
       stopifnot(
+        "Must provide 'index_cols' to name the index columns" = !missing(index_cols),
         "'index_cols' must be a character vector of length 2" = length(index_cols) == 2,
         "'value_col' must be a scalar character" = is_scalar_character(value_col)
       )

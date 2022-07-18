@@ -21,22 +21,18 @@ AssayMatrix <- R6::R6Class(
     verbose = TRUE,
 
     #' @description Ingest assay data from a sparse matrix
-    #' @param x a [`Matrix::dgCMatrix-class`] or [`Matrix::dgTMatrix-class`]
-    #' with string dimensions
+    #' @param x any `matrix`-like object coercible to a
+    #' [`TsparseMatrix`][`Matrix::TsparseMatrix-class`] with string dimensions.
     #' @param index_cols Names to use for the TileDB array's dimensions that
     #' will contain the matrix row/column names.
     #' @param value_col Name to use for the TileDB array's attribute that will
     #' contain the matrix values.
     from_matrix = function(x, index_cols, value_col = "value") {
-      if (inherits(x, "dgCMatrix")) {
-        if (self$verbose) message("Converting to dgTMatrix")
-        x <- as(x, "dgTMatrix")
-      }
       stopifnot(
-        "'x' must be a dgTMatrix" = inherits(x, "dgTMatrix"),
         "Must provide 'index_cols' to name the index columns" = !missing(index_cols),
         "'value_col' must be scalar" = is_scalar_character(value_col)
       )
+      private$validate_matrix(x)
 
       self$from_dataframe(
         matrix_to_coo(x, index_cols = index_cols, value_cols = value_col),
