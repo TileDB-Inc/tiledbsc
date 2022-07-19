@@ -378,8 +378,7 @@ SOMA <- R6::R6Class(
         }
       }
 
-      # create a list of non-empty dgTMatrix objects
-      assay_mats <- lapply(assay_mats, FUN = as, Class = "dgTMatrix")
+      # create a list of non-empty matrices
       assay_mats <- Filter(Negate(is_empty), assay_mats)
 
       for (assay in names(assay_mats)) {

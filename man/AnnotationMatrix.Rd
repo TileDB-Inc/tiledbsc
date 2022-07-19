@@ -64,7 +64,8 @@ Ingest annotation matrix
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{x}}{a \code{\link{matrix}} with charater vectors used for row/column names}
+\item{\code{x}}{any \code{matrix}-like object coercible to a
+\code{\link[Matrix:TsparseMatrix-class]{TsparseMatrix}} with string dimensions.}
 
 \item{\code{index_col}}{Name to use for the TileDB array's dimension that will
 contain the matrix row names.}

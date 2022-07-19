@@ -14,14 +14,13 @@ AnnotationMatrix <- R6::R6Class(
     verbose = TRUE,
 
     #' @description Ingest annotation matrix
-    #' @param x a [`matrix`] with charater vectors used for row/column names
+    #' @param x any `matrix`-like object coercible to a
+    #' [`TsparseMatrix`][`Matrix::TsparseMatrix-class`] with string dimensions.
     #' @param index_col Name to use for the TileDB array's dimension that will
     #' contain the matrix row names.
     from_matrix = function(x, index_col) {
-      if (missing(index_col)) {
-        stop("Must define 'index_col' to provide a dimension name")
-      }
       stopifnot(
+        "Must define 'index_col' to provide a dimension name" = !missing(index_col),
         "'index_col' must be a scalar character" = is_scalar_character(index_col)
       )
       private$validate_matrix(x)

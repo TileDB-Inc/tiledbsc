@@ -27,7 +27,7 @@ test_that("conversion of dgTMatrix to COO data frame", {
   expect_true(all(umat == omat))
 
   # verify round-tripping of omat to coo and back
-  odf <- dgtmatrix_to_dataframe(omat)
+  odf <- matrix_to_coo(omat)
   expect_true(is.data.frame(odf))
 
   ilabs <- unique(odf$i)
@@ -42,12 +42,16 @@ test_that("conversion of dgTMatrix to COO data frame", {
   )
 
   # verify round-tripping of umat to coo and back
-  udf <- dgtmatrix_to_dataframe(umat)
+  udf <- matrix_to_coo(umat)
   umat2 <- dataframe_to_dgtmatrix(udf)[[1]]
   expect_identical(
     umat2[ilabs, jlabs],
     umat[ilabs, jlabs]
   )
+
+  # convert list of dgtMatrix objects with heterogenous coordinate ordering
+  df <- matrix_to_coo(list(ordered = omat, unordered = umat))
+  expect_identical(df$ordered, df$unordered)
 })
 
 test_that("conversion of a list dgTMatrix's to COO data frame", {
@@ -57,7 +61,7 @@ test_that("conversion of a list dgTMatrix's to COO data frame", {
   )
   mats <- lapply(mats, FUN = as, Class = "dgTMatrix")
 
-  df <- dgtmatrix_to_dataframe(mats)
+  df <- matrix_to_coo(mats)
   testthat::expect_true(is.data.frame(df))
   testthat::expect_equal(ncol(df), 4)
 
@@ -75,14 +79,10 @@ test_that("conversion of a list dgTMatrix's to COO data frame", {
   )
 
   mats[[3]] <- SeuratObject::GetAssayData(pbmc_small, "scale.data")
-  expect_error(
-    dgtmatrix_to_dataframe(mats),
-    "When 'x' is a list all elements must contain a dgTMatrix"
-  )
 
   mats[[3]] <- as(mats[[3]], "dgTMatrix")
   expect_error(
-    dgtmatrix_to_dataframe(mats),
+    matrix_to_coo(mats),
     "Matrix 1 and 3 are not layerable"
   )
 })
