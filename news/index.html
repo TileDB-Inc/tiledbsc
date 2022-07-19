@@ -79,10 +79,14 @@
 </ul></div>
 <div class="section level3">
 <h3 id="changes-development-version">Changes<a class="anchor" aria-label="anchor" href="#changes-development-version"></a></h3>
-<ul><li><p>Removed vestigial code for merging non-layerable COO data.frames, which was previously used to add ingest dense <code>scaled.data</code> from a Seurat <code>Assay</code> as an attribute of the <code>X</code> array, along with <code>counts</code>/<code>data</code>. This is no longer necessary as each layer is now ingested into a separate array within the <code>X</code> group (<a href="https://github.com/TileDB-Inc/tiledbsc/issues/73" class="external-link">#73</a>). ## Fixes</p></li>
-<li><p>Matrix conversion message from <code>AssayMatrix</code> now respects the <code>verbose</code> option</p></li>
-<li><p>Upon initialization <code>SOMA</code> now looks for a <code>raw</code> group and warns the user it will be ignored. Currently tiledbsc-py creates a <code>raw</code> group when converting anndata objects where <code>.raw</code> is populated. However, Seurat/BioC objects do not have an obvious place to store this data, so ignoring it improves compatibility.</p></li>
-<li><p>Fixed a non-user-facing issue with the internal <code>dgtmatrix_to_dataframe()</code> function used to convert unordered <code>dgTMatrix</code> objects to COO data frames (<a href="https://github.com/TileDB-Inc/tiledbsc/issues/73" class="external-link">#73</a>).</p></li>
+<ul><li>Removed vestigial code for merging non-layerable COO data.frames, which was previously used to add ingest dense <code>scaled.data</code> from a Seurat <code>Assay</code> as an attribute of the <code>X</code> array, along with <code>counts</code>/<code>data</code>. This is no longer necessary as each layer is now ingested into a separate array within the <code>X</code> group (<a href="https://github.com/TileDB-Inc/tiledbsc/issues/73" class="external-link">#73</a>).</li>
+<li>The internal utility <code>dgtmatrix_to_dataframe()</code> was replaced with <code>matrix_to_coo()</code>, which converts Matrix-like objects to COO data frames much more efficiently (<a href="https://github.com/TileDB-Inc/tiledbsc/issues/75" class="external-link">#75</a>).</li>
+</ul></div>
+<div class="section level3">
+<h3 id="fixes-development-version">Fixes<a class="anchor" aria-label="anchor" href="#fixes-development-version"></a></h3>
+<ul><li>Matrix conversion message from <code>AssayMatrix</code> now respects the <code>verbose</code> option</li>
+<li>Upon initialization <code>SOMA</code> now looks for a <code>raw</code> group and warns the user it will be ignored. Currently tiledbsc-py creates a <code>raw</code> group when converting anndata objects where <code>.raw</code> is populated. However, Seurat/BioC objects do not have an obvious place to store this data, so ignoring it improves compatibility.</li>
+<li>Fixed a non-user-facing issue with the internal <code>dgtmatrix_to_dataframe()</code> function used to convert unordered <code>dgTMatrix</code> objects to COO data frames (<a href="https://github.com/TileDB-Inc/tiledbsc/issues/73" class="external-link">#73</a>).</li>
 </ul></div>
 <div class="section level3">
 <h3 id="build-and-test-systems-development-version">Build and Test Systems<a class="anchor" aria-label="anchor" href="#build-and-test-systems-development-version"></a></h3>
@@ -209,7 +213,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>
