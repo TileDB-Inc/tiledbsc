@@ -17,3 +17,11 @@ create_sparse_matrix_with_string_dims <- function(nrows = 10, ncols = 5, seed = 
   )
   smat
 }
+
+create_test_soco <- function(uri, verbose = FALSE) {
+  soco <- SOMACollection$new(uri)
+  mat <- create_sparse_matrix_with_string_dims(nrows = 100, ncols = 10)
+  sobj <- SeuratObject::CreateSeuratObject(counts = mat)
+  soco$from_seurat(sobj)
+  soco
+}
