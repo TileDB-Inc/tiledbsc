@@ -1,0 +1,83 @@
+#' Partition-wise Processing
+#'
+#' Apply a function to use specified partitions of assay data in a SOMA X layer.
+#'
+#' Reads all values from either the `obs` or `var` dimension the `SOMA` and
+#' divides them into `partition_count` partitions. If a query was previously
+#' applied to the `SOMA`, then that subset of dimensions is partitioned instead.
+#'
+#' The function `fun` must accept a [`dgTMatrix`], which is how each partition
+#' is read into memory.
+#'
+#' @param x A [`SOMA`] object.
+#' @param fun The callback function to apply to each partition of data.
+#' @param partition_dim Should the data be partitioned by `"obs"` or `"var"`?
+#' @param partition_count The number of partitions to create.
+#' @param layer The name of the `X` layer to apply the function to (defaults to
+#' the first layer).
+#' @param verbose Whether to print progress messages.
+#' @export
+partition_apply <- function(x, fun, partition_dim, partition_count, layer = NULL, verbose = TRUE) {
+
+  stopifnot(
+    "'x' must be a SOMA" = inherits(x, what = "SOMA"),
+    "'partition_dim' must be a scalar character" =
+      is_scalar_character(partition_dim),
+    "'partition_dim' must be either 'obs' or 'var'" =
+      partition_dim %in% c("obs", "var"),
+    "'partition_count' must be a scalar numeric" =
+      is_scalar_numeric(partition_count),
+    "'partition_count' must be greater than 0" =
+      partition_count > 0
+  )
+
+  layers <- names(x$X$members)
+  if (is.null(layer)) layer <- layers[1]
+  if (!layer %in% layers) {
+    stop("'layer' must be one of: ", string_collapse(layers), call. = FALSE)
+  }
+  assay_mat <- x$X$members[[layer]]
+  assay_mat$verbose <- FALSE
+
+  # Retrieve dimension values for partitioning
+  dimname <- paste0(partition_dim, "_id")
+  if (verbose) message(sprintf("Building '%s' partitions", partition_dim))
+  dim_df <- x[[partition_dim]]
+
+  # Check for existing selected ranges so previous queries are respected
+  sliced_values <- tiledb::selected_ranges(dim_df$object)[[dimname]]
+  if (is_empty(sliced_values)) {
+    if (verbose) message(sprintf("...reading all values from '%s'", partition_dim))
+    dim_values <- dim_df$ids()
+  } else {
+    if (verbose) message(sprintf("...reading sliced values from '%s'", partition_dim))
+    dim_values <- sliced_values[, 1]
+  }
+
+  stopifnot(
+    "'partitition_count' exceeds the length of the dimension" =
+      partition_count <= length(dim_values)
+  )
+
+  partitions <- split(
+    x = dim_values,
+    f = cut(seq_along(dim_values), breaks = partition_count, labels = FALSE)
+  )
+
+  if (verbose) message(sprintf("Applying function to %d partitions", partition_count))
+  results <- vector(mode = "list", length = partition_count)
+
+  for (i in seq_along(partitions)) {
+    if (verbose) message(sprintf("...retrieving partition %d", i))
+    partition <- setNames(list(partitions[[i]]), nm = dimname)
+    assay_mat$set_query(dims = partition)
+    mat <- assay_mat$to_matrix()
+    if (verbose) {
+      message(sprintf("...retrieved matrix with dims (%d, %d)", nrow(mat), ncol(mat)))
+    }
+    if (verbose) message(sprintf("...applying fun to partition %d", i))
+    results[[i]] <- do.call(fun, args = list(mat))
+  }
+
+  results
+}

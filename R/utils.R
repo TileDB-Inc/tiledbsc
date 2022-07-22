@@ -21,6 +21,10 @@ is_scalar_character <- function(x) {
   is.character(x) && length(x) == 1
 }
 
+is_scalar_numeric <- function(x) {
+  is.numeric(x) && length(x) == 1
+}
+
 is_character_or_null <- function(x) {
   is.character(x) || is.null(x)
 }
