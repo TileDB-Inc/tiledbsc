@@ -71,3 +71,26 @@ test_that("failed vector subset assertions are informative", {
     "The following letters do not exist: a, b and c"
   )
 })
+
+test_that("padding a matrix works", {
+  mat_full <- create_sparse_matrix_with_string_dims(10, 5)
+  expect_error(pad_matrix(mat_full))
+  pad_matrix(mat_full, colnames = "HI")
+
+  # padding columns
+  mat_sub <- mat_full[, 1:3]
+  mat_pad <- pad_matrix(mat_sub, colnames = colnames(mat_full))
+  expect_equal(colnames(mat_pad), colnames(mat_full))
+  expect_equal(sum(mat_pad[, "j4"]), 0)
+  expect_equal(sum(mat_pad[, "j5"]), 0)
+
+  # padding rows
+  mat_sub <- mat_full[1:3, ]
+  mat_pad <- pad_matrix(mat_sub, rownames = rownames(mat_full))
+  expect_equal(rownames(mat_pad), rownames(mat_full))
+
+  # padding both
+  mat_sub <- mat_full[1:3, 1:5]
+  mat_pad <- pad_matrix(mat_sub, rownames(mat_full), colnames(mat_full))
+  expect_equal(dim(mat_pad), dim(mat_full))
+})
