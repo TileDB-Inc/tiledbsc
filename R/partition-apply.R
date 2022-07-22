@@ -1,6 +1,7 @@
 #' Partition-wise Processing
 #'
-#' Apply a function to use specified partitions of assay data in a SOMA X layer.
+#' Apply a function to user specified partitions of assay data in a SOMA X
+#' layer.
 #'
 #' Reads all values from either the `obs` or `var` dimension the `SOMA` and
 #' divides them into `partition_count` partitions. If a query was previously
@@ -15,9 +16,15 @@
 #' @param partition_count The number of partitions to create.
 #' @param layer The name of the `X` layer to apply the function to (defaults to
 #' the first layer).
+#' @param combine How should the partitioned results be combined? Can be one of:
+#' - `NULL`: (default) return the list of partitioned results without combining
+#' - `"c"`: concatenate results into a vector
+#' - `"rbind"`: combine matrices by rows
+#' - `"cbind"`: combine matrices by columns
+#'
 #' @param verbose Whether to print progress messages.
 #' @export
-partition_apply <- function(x, fun, partition_dim, partition_count, layer = NULL, verbose = TRUE) {
+partition_apply <- function(x, fun, partition_dim, partition_count, layer = NULL, combine = NULL, verbose = TRUE) {
 
   stopifnot(
     "'x' must be a SOMA" = inherits(x, what = "SOMA"),
@@ -28,7 +35,9 @@ partition_apply <- function(x, fun, partition_dim, partition_count, layer = NULL
     "'partition_count' must be a scalar numeric" =
       is_scalar_numeric(partition_count),
     "'partition_count' must be greater than 0" =
-      partition_count > 0
+      partition_count > 0,
+    "Invalid 'combine' value" =
+      is.null(combine) || combine %in% c("c", "rbind", "cbind")
   )
 
   layers <- names(x$X$members)
@@ -77,6 +86,20 @@ partition_apply <- function(x, fun, partition_dim, partition_count, layer = NULL
     }
     if (verbose) message(sprintf("...applying fun to partition %d", i))
     results[[i]] <- do.call(fun, args = list(mat))
+  }
+
+  if (!is.null(combine)) {
+    if (verbose) message(sprintf("Combining results using '%s'", combine))
+    if (combine == "cbind") {
+      # make sure all matrices contain the same number of rows
+      all_rows <- unique(unlist(lapply(results, rownames), use.names = FALSE))
+      results <- lapply(results, pad_matrix, rownames = all_rows)
+    } else if (combine == "rbind") {
+      # make sure all matrices contain the same number of columns
+      all_cols <- unique(unlist(lapply(results, colnames), use.names = FALSE))
+      results <- lapply(results, pad_matrix, colnames = all_cols)
+    }
+    results <- do.call(combine, args = results)
   }
 
   results
