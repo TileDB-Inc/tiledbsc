@@ -95,6 +95,27 @@ AssayMatrix <- R6::R6Class(
       results
     },
 
+    #' @description Apply a function to batches of the assay data.
+    batch_apply = function(fun) {
+      dims <- self$dimnames()
+      arr <- self$object
+      tiledb::return_as(arr) <- "data.frame"
+      batcher <- tiledb:::createBatched(arr)
+      results <- list()
+      i <- 1
+      while(isFALSE(tiledb::completedBatched(batcher))) {
+        if (self$verbose) message(sprintf("...retrieving batch %d", i))
+        browser()
+        batch <- dataframe_to_dgtmatrix(
+          tiledb::fetchBatched(arr, batcher),
+          index_cols = dims
+        )[[1]]
+        results[[i]] <- do.call(fun, args = list(batch))
+        i <- i + 1
+      }
+      results
+    },
+
     #' @description Retrieve assay data from TileDB as a 2D sparse matrix.
     #' @param attr The name of the attribute layer to retrieve. If `NULL`, the
     #' first layer is returned.
