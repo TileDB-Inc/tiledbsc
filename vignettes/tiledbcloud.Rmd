@@ -1,0 +1,112 @@
+---
+title: "tiledbcloud"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{tiledbcloud}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+## Overview
+
+TileDB Cloud simplifies and accelerates single-cell analysis workflows by providing:
+
+- easily and securely share datasets with individuals or organizations, or make them publicly available
+- build analyses using R or Python with hosted Jupyter notebooks
+- a severless compute platform for running distributed analyses
+
+Here we'll look at the mechanics of using tiledbsc with TileDB Cloud to store,
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(tiledbsc)
+```
+
+
+## Populate a SOMACollection in TileDB Cloud
+
+As in the [Introduction vignette][vignetteintro] we'll use the `pbmc_small` dataset from the *SeuratObject* package because it's readily available and includes cell embeddings, feature loadings, and shared nearest neighbor results.
+
+```{r}
+data("pbmc_small", package = "SeuratObject")
+pbmc_small
+```
+
+Ingest the the `pbmc_small` Seurat object into a `SOMACollection` that's stored on S3 and registered through TileDB Cloud.
+
+Note this assumes you:
+
+- have a TileDB Cloud account
+- registered [cloud credentials][cloudcreds] for AWS
+- provided a [default S3 storage path][cloudpath]
+- are [logged into TileDB Cloud][cloudrlogin] in your environment
+
+This uses a special URI composed of:
+
+- your TileDB namespace (e.g., `aaronwolen`)
+- an S3 path where the dataset will be created
+
+
+
+```r
+soco <- SOMACollection$new(uri = "tiledb://aaronwolen/pbmc3k-soco")
+soco
+```
+
+```{r}
+https://tiledb-inc.github.io/TileDB-Cloud-R/articles/Login.html
+```
+
+
+## Attribute Filtering
+
+```{r}
+soco <- SOMACollection$new(uri = "tiledb://aaronwolen/pbmc3k-soco")
+soco
+```
+
+```{r}
+soma <- soco$get_member("RNA")
+soma
+```
+
+```{r}
+obs <- soma$obs$to_dataframe()
+summary(obs)
+head(obs)
+```
+
+```{r}
+table(obs$seurat_annotations)
+```
+
+```{r}
+soma$set_query(obs_attr_filter = nCount_RNA > 1000)
+```
+
+```{r}
+soma$set_query(obs_attr_filter = seurat_annotations == "B" && nCount_RNA > 1000)
+```
+
+Retrieve the Seurat assay
+
+```{r}
+soma$to_seurat_assay()
+```
+
+```{r}
+soma$to_summarized_experiment()
+```
+
+<!-- links -->
+[tiledbcloud]: https://cloud.tiledb.com
+[vignetteintro]: https://tiledb-inc.github.io/tiledbsc/articles/introduction.html
+[cloudcreds]: https://cloud.tiledb.com/user-settings/credentials
+[cloudpath]: https://cloud.tiledb.com/user-settings/storage-paths
+[cloudrlogin]: https://tiledb-inc.github.io/TileDB-Cloud-R/articles/Login.html
