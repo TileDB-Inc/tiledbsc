@@ -9,3 +9,4 @@
 ^LICENSE\.md$
 ^\.github$
 ^data-raw$
+^Makefile$
