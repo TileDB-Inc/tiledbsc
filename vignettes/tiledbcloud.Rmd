@@ -55,21 +55,24 @@ This uses a special URI composed of:
 
 
 ```r
-soco <- SOMACollection$new(uri = "tiledb://aaronwolen/pbmc3k-soco")
+soco <- SOMACollection$new("tiledb://aaronwolen/s3://mybucket/pbmc3k-soco")
 soco
 ```
 
-```{r}
-https://tiledb-inc.github.io/TileDB-Cloud-R/articles/Login.html
-```
+You can view the new SOMACollection directly on TileDB Cloud at `https://cloud.tiledb.com/groups/aaronwolen/pbmc3k-soco/`, where you can introspect the various dataset components, share, view activity logs, and more.
+
+You can also access it directly via R (or Python) using its TileDB Cloud URI, `tiledb://<namespace>/pbmc3k-soco`.
 
 
 ## Attribute Filtering
 
+For the subsequent examples we'll use a SOMACollection that's publicly accessible on TileDB Cloud, 2,700 peripheral blood mononuclear cells (PBMC) from 10X genomics.
+
 ```{r}
 soco <- SOMACollection$new(uri = "tiledb://aaronwolen/pbmc3k-soco")
 soco
 ```
+
 
 ```{r}
 soma <- soco$get_member("RNA")
