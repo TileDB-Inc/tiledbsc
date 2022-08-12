@@ -119,19 +119,19 @@
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"pbmc_small"</span>, package <span class="op">=</span> <span class="st">"SeuratObject"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">adf</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/AnnotationDataframe.html">AnnotationDataframe</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>uri <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"pbmc_small_obs"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; No AnnotationDataframe found at '/tmp/RtmpLqAI82/pbmc_small_obs'</span></span>
+<span><span class="co">#&gt; No AnnotationDataframe found at '/tmp/RtmpN0xZ3i/pbmc_small_obs'</span></span>
 <span><span class="va">adf</span><span class="op">$</span><span class="fu">from_dataframe</span><span class="op">(</span><span class="va">pbmc_small</span><span class="op">[[</span><span class="op">]</span><span class="op">]</span>, index_col <span class="op">=</span> <span class="st">"obs_id"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Creating new AnnotationDataframe array with index [obs_id] at '/tmp/RtmpLqAI82/pbmc_small_obs'</span></span>
-<span><span class="co">#&gt; Ingesting AnnotationDataframe data into: /tmp/RtmpLqAI82/pbmc_small_obs</span></span>
+<span><span class="co">#&gt; Creating new AnnotationDataframe array with index [obs_id] at '/tmp/RtmpN0xZ3i/pbmc_small_obs'</span></span>
+<span><span class="co">#&gt; Ingesting AnnotationDataframe data into: /tmp/RtmpN0xZ3i/pbmc_small_obs</span></span>
 <span><span class="va">adf</span></span>
-<span><span class="co">#&gt;   uri: /tmp/RtmpLqAI82/pbmc_small_obs </span></span>
+<span><span class="co">#&gt;   uri: /tmp/RtmpN0xZ3i/pbmc_small_obs </span></span>
 <span><span class="co">#&gt; &lt;AnnotationDataframe&gt;</span></span>
 <span><span class="co">#&gt;   dimensions: obs_id </span></span>
 <span><span class="co">#&gt;   attributes: orig.ident, nCount_RNA, nFeature_RNA, RNA_snn_res.0.8, letter.idents, groups,...</span></span></code></pre></div>
 <p>As you’d expect, reading the data back into memory recreates the same data frame with all 80 cells.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">adf</span><span class="op">$</span><span class="fu">to_dataframe</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Reading AnnotationDataframe into memory from '/tmp/RtmpLqAI82/pbmc_small_obs'</span></span>
+<span><span class="co">#&gt; Reading AnnotationDataframe into memory from '/tmp/RtmpN0xZ3i/pbmc_small_obs'</span></span>
 <span><span class="co">#&gt; [1] 80  7</span></span></code></pre></div>
 <p>We can use the <code>set_query()</code> method to read in a specific subset of cells by providing a named list of ranges for each dimension.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
@@ -142,7 +142,7 @@
 <p>Now, the next time we call <code>to_dataframe()</code> the resulting data frame will only contain the cells we specified.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">adf</span><span class="op">$</span><span class="fu">to_dataframe</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Reading AnnotationDataframe into memory from '/tmp/RtmpLqAI82/pbmc_small_obs'</span></span>
+<span><span class="co">#&gt; Reading AnnotationDataframe into memory from '/tmp/RtmpN0xZ3i/pbmc_small_obs'</span></span>
 <span><span class="co">#&gt;                   orig.ident nCount_RNA nFeature_RNA RNA_snn_res.0.8</span></span>
 <span><span class="co">#&gt; AAATTCGAATCACG SeuratProject        327           62               1</span></span>
 <span><span class="co">#&gt; AAGCAAGAGCTTAG SeuratProject        126           48               0</span></span>
@@ -163,36 +163,36 @@
 <p>To see this in action, let’s create a <code>SOMA</code> from <code>pbmc_small</code>’s <code>RNA</code> assay.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">soma</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/SOMA.html">SOMA</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>uri <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"pbmc_small_rna"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; No SOMA currently exists at '/tmp/RtmpLqAI82/pbmc_small_rna'</span></span>
-<span><span class="co">#&gt; Creating new SOMA at '/tmp/RtmpLqAI82/pbmc_small_rna'</span></span>
-<span><span class="co">#&gt; No AnnotationDataframe found at '/tmp/RtmpLqAI82/pbmc_small_rna/obs'</span></span>
-<span><span class="co">#&gt; No AnnotationDataframe found at '/tmp/RtmpLqAI82/pbmc_small_rna/var'</span></span>
-<span><span class="co">#&gt; No AssayMatrixGroup currently exists at '/tmp/RtmpLqAI82/pbmc_small_rna/X'</span></span>
-<span><span class="co">#&gt; Creating new AssayMatrixGroup at '/tmp/RtmpLqAI82/pbmc_small_rna/X'</span></span>
-<span><span class="co">#&gt; No AnnotationMatrixGroup currently exists at '/tmp/RtmpLqAI82/pbmc_small_rna/obsm'</span></span>
-<span><span class="co">#&gt; Creating new AnnotationMatrixGroup at '/tmp/RtmpLqAI82/pbmc_small_rna/obsm'</span></span>
-<span><span class="co">#&gt; No AnnotationMatrixGroup currently exists at '/tmp/RtmpLqAI82/pbmc_small_rna/varm'</span></span>
-<span><span class="co">#&gt; Creating new AnnotationMatrixGroup at '/tmp/RtmpLqAI82/pbmc_small_rna/varm'</span></span>
-<span><span class="co">#&gt; No AnnotationPairwiseMatrixGroup currently exists at '/tmp/RtmpLqAI82/pbmc_small_rna/obsp'</span></span>
-<span><span class="co">#&gt; Creating new AnnotationPairwiseMatrixGroup at '/tmp/RtmpLqAI82/pbmc_small_rna/obsp'</span></span>
-<span><span class="co">#&gt; No AnnotationPairwiseMatrixGroup currently exists at '/tmp/RtmpLqAI82/pbmc_small_rna/varp'</span></span>
-<span><span class="co">#&gt; Creating new AnnotationPairwiseMatrixGroup at '/tmp/RtmpLqAI82/pbmc_small_rna/varp'</span></span>
-<span><span class="co">#&gt; No TileDBGroup currently exists at '/tmp/RtmpLqAI82/pbmc_small_rna/uns'</span></span>
-<span><span class="co">#&gt; Creating new TileDBGroup at '/tmp/RtmpLqAI82/pbmc_small_rna/uns'</span></span>
+<span><span class="co">#&gt; No SOMA currently exists at '/tmp/RtmpN0xZ3i/pbmc_small_rna'</span></span>
+<span><span class="co">#&gt; Creating new SOMA at '/tmp/RtmpN0xZ3i/pbmc_small_rna'</span></span>
+<span><span class="co">#&gt; No AnnotationDataframe found at '/tmp/RtmpN0xZ3i/pbmc_small_rna/obs'</span></span>
+<span><span class="co">#&gt; No AnnotationDataframe found at '/tmp/RtmpN0xZ3i/pbmc_small_rna/var'</span></span>
+<span><span class="co">#&gt; No AssayMatrixGroup currently exists at '/tmp/RtmpN0xZ3i/pbmc_small_rna/X'</span></span>
+<span><span class="co">#&gt; Creating new AssayMatrixGroup at '/tmp/RtmpN0xZ3i/pbmc_small_rna/X'</span></span>
+<span><span class="co">#&gt; No AnnotationMatrixGroup currently exists at '/tmp/RtmpN0xZ3i/pbmc_small_rna/obsm'</span></span>
+<span><span class="co">#&gt; Creating new AnnotationMatrixGroup at '/tmp/RtmpN0xZ3i/pbmc_small_rna/obsm'</span></span>
+<span><span class="co">#&gt; No AnnotationMatrixGroup currently exists at '/tmp/RtmpN0xZ3i/pbmc_small_rna/varm'</span></span>
+<span><span class="co">#&gt; Creating new AnnotationMatrixGroup at '/tmp/RtmpN0xZ3i/pbmc_small_rna/varm'</span></span>
+<span><span class="co">#&gt; No AnnotationPairwiseMatrixGroup currently exists at '/tmp/RtmpN0xZ3i/pbmc_small_rna/obsp'</span></span>
+<span><span class="co">#&gt; Creating new AnnotationPairwiseMatrixGroup at '/tmp/RtmpN0xZ3i/pbmc_small_rna/obsp'</span></span>
+<span><span class="co">#&gt; No AnnotationPairwiseMatrixGroup currently exists at '/tmp/RtmpN0xZ3i/pbmc_small_rna/varp'</span></span>
+<span><span class="co">#&gt; Creating new AnnotationPairwiseMatrixGroup at '/tmp/RtmpN0xZ3i/pbmc_small_rna/varp'</span></span>
+<span><span class="co">#&gt; No TileDBGroup currently exists at '/tmp/RtmpN0xZ3i/pbmc_small_rna/uns'</span></span>
+<span><span class="co">#&gt; Creating new TileDBGroup at '/tmp/RtmpN0xZ3i/pbmc_small_rna/uns'</span></span>
 <span><span class="va">soma</span><span class="op">$</span><span class="fu">from_seurat_assay</span><span class="op">(</span><span class="va">pbmc_small</span><span class="op">[[</span><span class="st">"RNA"</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Creating new AnnotationDataframe array with index [obs_id] at '/tmp/RtmpLqAI82/pbmc_small_rna/obs'</span></span>
-<span><span class="co">#&gt; Ingesting AnnotationDataframe data into: /tmp/RtmpLqAI82/pbmc_small_rna/obs</span></span>
-<span><span class="co">#&gt; Creating new AnnotationDataframe array with index [var_id] at '/tmp/RtmpLqAI82/pbmc_small_rna/var'</span></span>
-<span><span class="co">#&gt; Ingesting AnnotationDataframe data into: /tmp/RtmpLqAI82/pbmc_small_rna/var</span></span>
-<span><span class="co">#&gt; No AssayMatrix found at '/tmp/RtmpLqAI82/pbmc_small_rna/X/counts'</span></span>
-<span><span class="co">#&gt; Creating new AssayMatrix array with index [var_id,obs_id] at '/tmp/RtmpLqAI82/pbmc_small_rna/X/counts'</span></span>
-<span><span class="co">#&gt; Ingesting AssayMatrix data into: /tmp/RtmpLqAI82/pbmc_small_rna/X/counts</span></span>
-<span><span class="co">#&gt; No AssayMatrix found at '/tmp/RtmpLqAI82/pbmc_small_rna/X/data'</span></span>
-<span><span class="co">#&gt; Creating new AssayMatrix array with index [var_id,obs_id] at '/tmp/RtmpLqAI82/pbmc_small_rna/X/data'</span></span>
-<span><span class="co">#&gt; Ingesting AssayMatrix data into: /tmp/RtmpLqAI82/pbmc_small_rna/X/data</span></span>
-<span><span class="co">#&gt; No AssayMatrix found at '/tmp/RtmpLqAI82/pbmc_small_rna/X/scale.data'</span></span>
-<span><span class="co">#&gt; Creating new AssayMatrix array with index [var_id,obs_id] at '/tmp/RtmpLqAI82/pbmc_small_rna/X/scale.data'</span></span>
-<span><span class="co">#&gt; Ingesting AssayMatrix data into: /tmp/RtmpLqAI82/pbmc_small_rna/X/scale.data</span></span>
+<span><span class="co">#&gt; Creating new AnnotationDataframe array with index [obs_id] at '/tmp/RtmpN0xZ3i/pbmc_small_rna/obs'</span></span>
+<span><span class="co">#&gt; Ingesting AnnotationDataframe data into: /tmp/RtmpN0xZ3i/pbmc_small_rna/obs</span></span>
+<span><span class="co">#&gt; Creating new AnnotationDataframe array with index [var_id] at '/tmp/RtmpN0xZ3i/pbmc_small_rna/var'</span></span>
+<span><span class="co">#&gt; Ingesting AnnotationDataframe data into: /tmp/RtmpN0xZ3i/pbmc_small_rna/var</span></span>
+<span><span class="co">#&gt; No AssayMatrix found at '/tmp/RtmpN0xZ3i/pbmc_small_rna/X/counts'</span></span>
+<span><span class="co">#&gt; Creating new AssayMatrix array with index [var_id,obs_id] at '/tmp/RtmpN0xZ3i/pbmc_small_rna/X/counts'</span></span>
+<span><span class="co">#&gt; Ingesting AssayMatrix data into: /tmp/RtmpN0xZ3i/pbmc_small_rna/X/counts</span></span>
+<span><span class="co">#&gt; No AssayMatrix found at '/tmp/RtmpN0xZ3i/pbmc_small_rna/X/data'</span></span>
+<span><span class="co">#&gt; Creating new AssayMatrix array with index [var_id,obs_id] at '/tmp/RtmpN0xZ3i/pbmc_small_rna/X/data'</span></span>
+<span><span class="co">#&gt; Ingesting AssayMatrix data into: /tmp/RtmpN0xZ3i/pbmc_small_rna/X/data</span></span>
+<span><span class="co">#&gt; No AssayMatrix found at '/tmp/RtmpN0xZ3i/pbmc_small_rna/X/scale.data'</span></span>
+<span><span class="co">#&gt; Creating new AssayMatrix array with index [var_id,obs_id] at '/tmp/RtmpN0xZ3i/pbmc_small_rna/X/scale.data'</span></span>
+<span><span class="co">#&gt; Ingesting AssayMatrix data into: /tmp/RtmpN0xZ3i/pbmc_small_rna/X/scale.data</span></span>
 <span><span class="co">#&gt; Finished converting Seurat Assay with key [rna_] to SOMA</span></span></code></pre></div>
 <p>Now let’s use <code>set_query()</code> to slice three features of interest.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
@@ -200,68 +200,68 @@
 <p>Any of the individual SOMA components will respect the new query. So if we read in the feature-level metadata from <code>var</code>, the resulting data frame contains only the features we specified.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">soma</span><span class="op">$</span><span class="va">var</span><span class="op">$</span><span class="fu">to_dataframe</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Reading AnnotationDataframe into memory from '/tmp/RtmpLqAI82/pbmc_small_rna/var'</span></span>
+<span><span class="co">#&gt; Reading AnnotationDataframe into memory from '/tmp/RtmpN0xZ3i/pbmc_small_rna/var'</span></span>
 <span><span class="co">#&gt;      vst.mean vst.variance vst.variance.expected vst.variance.standardized</span></span>
-<span><span class="co">#&gt; PPBP    5.325    231.81709              93.14856                  2.488681</span></span>
-<span><span class="co">#&gt; PF4     2.150     65.24304              21.48275                  1.939028</span></span>
 <span><span class="co">#&gt; GNLY    2.400     43.76203              24.07857                  1.817468</span></span>
+<span><span class="co">#&gt; PF4     2.150     65.24304              21.48275                  1.939028</span></span>
+<span><span class="co">#&gt; PPBP    5.325    231.81709              93.14856                  2.488681</span></span>
 <span><span class="co">#&gt;      vst.variable highly_variable</span></span>
-<span><span class="co">#&gt; PPBP         TRUE            TRUE</span></span>
+<span><span class="co">#&gt; GNLY         TRUE            TRUE</span></span>
 <span><span class="co">#&gt; PF4          TRUE            TRUE</span></span>
-<span><span class="co">#&gt; GNLY         TRUE            TRUE</span></span></code></pre></div>
+<span><span class="co">#&gt; PPBP         TRUE            TRUE</span></span></code></pre></div>
 <p>And when we recreate the entire Seurat <code>Assay</code> from the <code>SOMA</code>, the slice is carried through to all relevant components,</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pbmc_small_rna</span> <span class="op">&lt;-</span> <span class="va">soma</span><span class="op">$</span><span class="fu">to_seurat_assay</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Reading AssayMatrix into memory from '/tmp/RtmpLqAI82/pbmc_small_rna/X/counts'</span></span>
-<span><span class="co">#&gt; Reading AssayMatrix into memory from '/tmp/RtmpLqAI82/pbmc_small_rna/X/data'</span></span>
-<span><span class="co">#&gt; Reading AssayMatrix into memory from '/tmp/RtmpLqAI82/pbmc_small_rna/X/scale.data'</span></span>
-<span><span class="co">#&gt; Reading AnnotationDataframe into memory from '/tmp/RtmpLqAI82/pbmc_small_rna/var'</span></span></code></pre></div>
+<span><span class="co">#&gt; Reading AssayMatrix into memory from '/tmp/RtmpN0xZ3i/pbmc_small_rna/X/counts'</span></span>
+<span><span class="co">#&gt; Reading AssayMatrix into memory from '/tmp/RtmpN0xZ3i/pbmc_small_rna/X/data'</span></span>
+<span><span class="co">#&gt; Reading AssayMatrix into memory from '/tmp/RtmpN0xZ3i/pbmc_small_rna/X/scale.data'</span></span>
+<span><span class="co">#&gt; Reading AnnotationDataframe into memory from '/tmp/RtmpN0xZ3i/pbmc_small_rna/var'</span></span></code></pre></div>
 <p>including the raw counts,</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://mojaveazure.github.io/seurat-object/reference/AssayData.html" class="external-link">GetAssayData</a></span><span class="op">(</span><span class="va">pbmc_small_rna</span>, slot <span class="op">=</span> <span class="st">"counts"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; 3 x 80 sparse Matrix of class "dgCMatrix"</span></span>
-<span><span class="co">#&gt;    [[ suppressing 80 column names 'AGAGATGATCTCGC', 'AGTCTTACTTCGGA', 'ATCATCTGACACCA' ... ]]</span></span>
+<span><span class="co">#&gt;    [[ suppressing 80 column names 'AAGCAAGAGCTTAG', 'ACAGGTACTGGTGT', 'AGATATACCCGTAA' ... ]]</span></span>
 <span><span class="co">#&gt;                                                                               </span></span>
-<span><span class="co">#&gt; PPBP 1 34 36 1 43 6 1 66 54 30 41 55 58 . .  . . . .  . .  .  . .  . .  . .  .</span></span>
-<span><span class="co">#&gt; PF4  . 14 14 . 14 . .  9 62  6 11 18 23 1 .  . . . .  . .  .  . .  . .  . .  .</span></span>
-<span><span class="co">#&gt; GNLY .  .  . .  . . .  .  .  .  .  .  . 1 4 15 3 1 1 18 1 35 15 3 11 1 18 3 22</span></span>
+<span><span class="co">#&gt; GNLY 4 15 3 1 1 1 18 1 35 15 3 11 1 18 3 22 29 10 1  .  .  .  .  .  .  .  .  .</span></span>
+<span><span class="co">#&gt; PF4  .  . . . 1 .  . .  .  . .  . .  . .  .  .  . . 14 14 14  9 62  6 11 18 23</span></span>
+<span><span class="co">#&gt; PPBP .  . . . . .  . .  .  . .  . .  . .  .  .  . . 34 36 43 66 54 30 41 55 58</span></span>
 <span><span class="co">#&gt;                                                                               </span></span>
-<span><span class="co">#&gt; PPBP  .  . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .</span></span>
-<span><span class="co">#&gt; PF4   .  . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .</span></span>
-<span><span class="co">#&gt; GNLY 29 10 1 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .</span></span>
+<span><span class="co">#&gt; GNLY . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .</span></span>
+<span><span class="co">#&gt; PF4  . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .</span></span>
+<span><span class="co">#&gt; PPBP 1 1 6 1 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .</span></span>
 <span><span class="co">#&gt;                                   </span></span>
-<span><span class="co">#&gt; PPBP . . . . . . . . . . . . . . .</span></span>
+<span><span class="co">#&gt; GNLY . . . . . . . . . . . . . . .</span></span>
 <span><span class="co">#&gt; PF4  . . . . . . . . . . . . . . .</span></span>
-<span><span class="co">#&gt; GNLY . . . . . . . . . . . . . . .</span></span></code></pre></div>
+<span><span class="co">#&gt; PPBP . . . . . . . . . . . . . . .</span></span></code></pre></div>
 <p>and normalized/scaled data:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://mojaveazure.github.io/seurat-object/reference/AssayData.html" class="external-link">GetAssayData</a></span><span class="op">(</span><span class="va">pbmc_small_rna</span>, slot <span class="op">=</span> <span class="st">"data"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; 3 x 80 sparse Matrix of class "dgCMatrix"</span></span>
-<span><span class="co">#&gt;    [[ suppressing 80 column names 'AGAGATGATCTCGC', 'AGTCTTACTTCGGA', 'ATCATCTGACACCA' ... ]]</span></span>
+<span><span class="co">#&gt;    [[ suppressing 80 column names 'AAGCAAGAGCTTAG', 'ACAGGTACTGGTGT', 'AGATATACCCGTAA' ... ]]</span></span>
 <span><span class="co">#&gt;                                                                             </span></span>
-<span><span class="co">#&gt; PPBP 3.976987 7.680917 7.670362 3.117873 7.615447 5.554937 4.753095 8.092033</span></span>
-<span><span class="co">#&gt; PF4  .        6.794273 6.726633 .        6.494325 .        .        6.101539</span></span>
-<span><span class="co">#&gt; GNLY .        .        .        .        .        .        .        .       </span></span>
+<span><span class="co">#&gt; GNLY 5.763498 6.902117 5.084058 3.040721 3.582547 3.160117 6.346724 4.676402</span></span>
+<span><span class="co">#&gt; PF4  .        .        .        .        3.582547 .        .        .       </span></span>
+<span><span class="co">#&gt; PPBP .        .        .        .        .        .        .        .       </span></span>
+<span><span class="co">#&gt;                                                                          </span></span>
+<span><span class="co">#&gt; GNLY 7.26106 6.677903 6.596746 6.509859 2.657641 7.26513 4.99761 6.904224</span></span>
+<span><span class="co">#&gt; PF4  .       .        .        .        .        .       .       .       </span></span>
+<span><span class="co">#&gt; PPBP .       .        .        .        .        .       .       .       </span></span>
 <span><span class="co">#&gt;                                                                             </span></span>
-<span><span class="co">#&gt; PPBP 6.933099 7.601402 7.776837 7.870948 7.841831 .        .        .       </span></span>
-<span><span class="co">#&gt; PF4  7.071124 5.993961 6.462304 6.754771 6.917480 3.582547 .        .       </span></span>
-<span><span class="co">#&gt; GNLY .        .        .        .        .        3.582547 5.763498 6.902117</span></span>
-<span><span class="co">#&gt;                                                                            </span></span>
-<span><span class="co">#&gt; PPBP .        .        .        .        .        .       .        .       </span></span>
-<span><span class="co">#&gt; PF4  .        .        .        .        .        .       .        .       </span></span>
-<span><span class="co">#&gt; GNLY 5.084058 3.040721 3.160117 6.346724 4.676402 7.26106 6.677903 6.596746</span></span>
+<span><span class="co">#&gt; GNLY 7.528318 6.464628 4.378773 .        .        .        .        .       </span></span>
+<span><span class="co">#&gt; PF4  .        .        .        6.794273 6.726633 6.494325 6.101539 7.071124</span></span>
+<span><span class="co">#&gt; PPBP .        .        .        7.680917 7.670362 7.615447 8.092033 6.933099</span></span>
 <span><span class="co">#&gt;                                                                               </span></span>
-<span><span class="co">#&gt; PPBP .        .        .       .       .        .        .        .        . .</span></span>
-<span><span class="co">#&gt; PF4  .        .        .       .       .        .        .        .        . .</span></span>
-<span><span class="co">#&gt; GNLY 6.509859 2.657641 7.26513 4.99761 6.904224 7.528318 6.464628 4.378773 . .</span></span>
+<span><span class="co">#&gt; GNLY .        .        .        .        .        .        .        .        .</span></span>
+<span><span class="co">#&gt; PF4  5.993961 6.462304 6.754771 6.917480 .        .        .        .        .</span></span>
+<span><span class="co">#&gt; PPBP 7.601402 7.776837 7.870948 7.841831 3.976987 3.117873 5.554937 4.753095 .</span></span>
 <span><span class="co">#&gt;                                                                               </span></span>
-<span><span class="co">#&gt; PPBP . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .</span></span>
-<span><span class="co">#&gt; PF4  . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .</span></span>
 <span><span class="co">#&gt; GNLY . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .</span></span>
-<span><span class="co">#&gt;                       </span></span>
-<span><span class="co">#&gt; PPBP . . . . . . . . .</span></span>
-<span><span class="co">#&gt; PF4  . . . . . . . . .</span></span>
-<span><span class="co">#&gt; GNLY . . . . . . . . .</span></span></code></pre></div>
+<span><span class="co">#&gt; PF4  . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .</span></span>
+<span><span class="co">#&gt; PPBP . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .</span></span>
+<span><span class="co">#&gt;                         </span></span>
+<span><span class="co">#&gt; GNLY . . . . . . . . . .</span></span>
+<span><span class="co">#&gt; PF4  . . . . . . . . . .</span></span>
+<span><span class="co">#&gt; PPBP . . . . . . . . . .</span></span></code></pre></div>
 <p>Again, to retrieve all of the original data we need to reset the query:</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">soma</span><span class="op">$</span><span class="fu">reset_query</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
@@ -280,10 +280,10 @@
 <p>With <code>verbose=TRUE</code>, running the above command will print a message indicating how many identifiers were selected. Now, when we read the data back into memory the resulting <code>Assay</code> will only include the 12 selected features.</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">soma</span><span class="op">$</span><span class="fu">to_seurat_assay</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Reading AssayMatrix into memory from '/tmp/RtmpLqAI82/pbmc_small_rna/X/counts'</span></span>
-<span><span class="co">#&gt; Reading AssayMatrix into memory from '/tmp/RtmpLqAI82/pbmc_small_rna/X/data'</span></span>
-<span><span class="co">#&gt; Reading AssayMatrix into memory from '/tmp/RtmpLqAI82/pbmc_small_rna/X/scale.data'</span></span>
-<span><span class="co">#&gt; Reading AnnotationDataframe into memory from '/tmp/RtmpLqAI82/pbmc_small_rna/var'</span></span>
+<span><span class="co">#&gt; Reading AssayMatrix into memory from '/tmp/RtmpN0xZ3i/pbmc_small_rna/X/counts'</span></span>
+<span><span class="co">#&gt; Reading AssayMatrix into memory from '/tmp/RtmpN0xZ3i/pbmc_small_rna/X/data'</span></span>
+<span><span class="co">#&gt; Reading AssayMatrix into memory from '/tmp/RtmpN0xZ3i/pbmc_small_rna/X/scale.data'</span></span>
+<span><span class="co">#&gt; Reading AnnotationDataframe into memory from '/tmp/RtmpN0xZ3i/pbmc_small_rna/var'</span></span>
 <span><span class="co">#&gt; Assay data with 12 features for 80 cells</span></span>
 <span><span class="co">#&gt; Top 3 variable features:</span></span>
 <span><span class="co">#&gt;  HLA-DPB1, PPBP, S100A9</span></span></code></pre></div>
