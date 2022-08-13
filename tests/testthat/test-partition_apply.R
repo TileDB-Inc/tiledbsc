@@ -28,6 +28,11 @@ test_that("partition_apply's inputs are validated", {
   expect_true(is.list(all_parts))
   expect_equal(length(all_parts), 5)
 
+  # verify selected ranges are unchanged in the original soma
+  expect_true(
+    is_empty(tiledb::selected_ranges(soma$X$members$counts$object))
+  )
+
   # verify specific partition index
   parts <- lapply(1:5, function(i) {
     partition_apply(soma, identity, "obs", 5, partition_index = i)

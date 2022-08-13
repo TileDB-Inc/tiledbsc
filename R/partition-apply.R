@@ -66,7 +66,10 @@ partition_apply <- function(
   if (!layer %in% layers) {
     stop("'layer' must be one of: ", string_collapse(layers), call. = FALSE)
   }
-  assay_mat <- x$X$members[[layer]]
+
+  # clone the AssayMatrix to avoid side-effect of attaching the selected
+  # ranges to the parent soma
+  assay_mat <- x$X$members[[layer]]$clone(deep = FALSE)
   assay_mat$verbose <- FALSE
 
   # Retrieve dimension values for partitioning
