@@ -19,29 +19,6 @@ assay_matrix_apply <- function(uri, fun = identity, obs_ids = NULL, var_ids = NU
     message(dots)
   }
 
-  coo_to_matrix <- function (x, index_cols = c("i", "j")) {
-    stopifnot(
-      is.data.frame(x),
-      length(index_cols) == 2, all(index_cols %in% colnames(x))
-    )
-
-    value_col <- setdiff(colnames(x), index_cols)
-    stopifnot("'x' contains too many value columns" = length(value_col) == 1)
-
-    dim_labels <- as.list(x[index_cols])
-    dim_names <- lapply(dim_labels, unique)
-    dim_lengths <- vapply(dim_names, length, FUN.VALUE = integer(1L))
-
-    Matrix::sparseMatrix(
-      i = match(dim_labels[[1]], dim_names[[1]]),
-      j = match(dim_labels[[2]], dim_names[[2]]),
-      x = x[[value_col]],
-      dims = dim_lengths,
-      dimnames = unname(dim_names),
-      repr = "C"
-    )
-  }
-
   # assemble per-dimension selected ranges
   dims <- modifyList(list(), list(obs_id = obs_ids, var_id = var_ids))
   if (length(dims) == 0) stop("Cannot proceed with empty selected ranges")
@@ -56,7 +33,7 @@ assay_matrix_apply <- function(uri, fun = identity, obs_ids = NULL, var_ids = NU
   log_message(sprintf("Retrieved %i cells", nrow(df)))
 
   log_message("Converting COO data frame to a dgCMatrix")
-  mat <- coo_to_matrix(df, index_cols = c("obs_id", "var_id"))
+  mat <- dataframe_to_dgtmatrix(df, index_cols = c("obs_id", "var_id"))[[1]]
 
   log_message("Applying function")
   do.call(fun, args = list(mat))
