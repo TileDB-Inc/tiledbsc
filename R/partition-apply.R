@@ -14,6 +14,9 @@
 #' @param fun The callback function to apply to each partition of data.
 #' @param partition_dim Should the data be partitioned by `"obs"` or `"var"`?
 #' @param partition_count The number of partitions to create.
+#' @param partition_index Optional partition index. If provided only the indexed
+#' partition is processed—useful distributing computations across multiple
+#' nodes/workers.
 #' @param layer The name of the `X` layer to apply the function to (defaults to
 #' the first layer).
 #' @param combine How should the partitioned results be combined? Can be one of:
@@ -24,7 +27,16 @@
 #'
 #' @param verbose Whether to print progress messages.
 #' @export
-partition_apply <- function(x, fun, partition_dim, partition_count, layer = NULL, combine = NULL, verbose = TRUE) {
+partition_apply <- function(
+  x,
+  fun,
+  partition_dim,
+  partition_count,
+  partition_index = NULL,
+  layer = NULL,
+  combine = NULL,
+  verbose = TRUE
+) {
 
   stopifnot(
     "'x' must be a SOMA" = inherits(x, what = "SOMA"),
@@ -39,6 +51,15 @@ partition_apply <- function(x, fun, partition_dim, partition_count, layer = NULL
     "Invalid 'combine' value" =
       is.null(combine) || combine %in% c("c", "rbind", "cbind")
   )
+
+  if (!is.null(partition_index)) {
+    stopifnot(
+      "'partition_index' must be a scalar numeric" =
+        is_scalar_numeric(partition_index),
+      "'partition_index' must be between 1 and 'partition_count'" =
+        partition_index > 0 && partition_index <= partition_count
+    )
+  }
 
   layers <- names(x$X$members)
   if (is.null(layer)) layer <- layers[1]
@@ -73,8 +94,22 @@ partition_apply <- function(x, fun, partition_dim, partition_count, layer = NULL
     f = cut(seq_along(dim_values), breaks = partition_count, labels = FALSE)
   )
 
-  if (verbose) message(sprintf("Applying function to %d partitions", partition_count))
-  results <- vector(mode = "list", length = partition_count)
+  # isolate specified partition index
+  if (is.null(partition_index)) {
+    part_msg <- sprintf(
+      "Applying function to %d partitions",
+      partition_count
+    )
+  } else {
+    part_msg <- sprintf(
+      "Applying function to partition %d of %d",
+      partition_index,
+      partition_count
+    )
+    partitions <- partitions[partition_index]
+  }
+  if (verbose) message(part_msg)
+  results <- vector(mode = "list", length = length(partitions))
 
   for (i in seq_along(partitions)) {
     if (verbose) message(sprintf("...retrieving partition %d", i))

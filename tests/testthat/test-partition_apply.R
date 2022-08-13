@@ -18,4 +18,20 @@ test_that("partition_apply's inputs are validated", {
     "'partition_dim' must be either 'obs' or 'var'"
   )
 
+  # query all partitions
+  all_parts <- partition_apply(
+    x = soma,
+    fun = identity,
+    partition_dim = "obs",
+    partition_count = 5
+  )
+  expect_true(is.list(all_parts))
+  expect_equal(length(all_parts), 5)
+
+  # verify specific partition index
+  parts <- lapply(1:5, function(i) {
+    partition_apply(soma, identity, "obs", 5, partition_index = i)
+  })
+  expect_identical(all_parts[1], parts[[1]])
+  expect_identical(all_parts[5], parts[[5]])
 })
