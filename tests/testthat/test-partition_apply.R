@@ -40,8 +40,22 @@ test_that("partition_apply's inputs are validated", {
   expect_identical(all_parts[1], parts[[1]])
   expect_identical(all_parts[5], parts[[5]])
 
+  # concat vectors
+  counts_mat <- soma$X$get_member("counts")$to_matrix()
   expect_identical(
     partition_apply(soma, Matrix::rowMeans, "var", 2, combine = "c"),
-    Matrix::rowMeans(soma$X$get_member("counts")$to_matrix())
+    Matrix::rowMeans(counts_mat)
+  )
+
+  # cbind matrices
+  expect_equal(
+    dim(partition_apply(soma, log1p, "obs", 2, combine = "cbind")),
+    dim(counts_mat)
+  )
+
+  # rbind matrices
+  expect_equal(
+    dim(partition_apply(soma, log1p, "var", 2, combine = "rbind")),
+    dim(counts_mat)
   )
 })
