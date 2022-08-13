@@ -13,7 +13,7 @@ assay_matrix_apply <- function(uri, fun = identity, obs_ids = NULL, var_ids = NU
 
   log_message <- function(...) {
     dots <- c(
-      sprintf("[%s] ", as.character(Sys.time())),
+      sprintf("[%s] ", format(Sys.time(), "%X")),
       list(...)
     )
     message(dots)
