@@ -3,10 +3,11 @@
 #' Intended to be called as a UDF on TileDB Cloud. tiledbsc isn't
 #' available in the UDF environment so some functions must be reused.
 #' @param uri Must point to an AssayMatrix array
+#' @param fun The callback function to apply to the matrix
 #' @examples
 #'
 #' @noRd
-assay_matrix_apply <- function(uri, obs_ids = NULL, var_ids = NULL) {
+assay_matrix_apply <- function(uri, fun = identity, obs_ids = NULL, var_ids = NULL) {
   library(Matrix)
   library(tiledb)
 
@@ -52,7 +53,11 @@ assay_matrix_apply <- function(uri, obs_ids = NULL, var_ids = NULL) {
 
   log_message("Executing query")
   df <- tdb[]
-
   log_message(sprintf("Retrieved %i cells", nrow(df)))
-  coo_to_matrix(df, index_cols = c("obs_id", "var_id"))
+
+  log_message("Converting COO data frame to a dgCMatrix")
+  mat <- coo_to_matrix(df, index_cols = c("obs_id", "var_id"))
+
+  log_message("Applying function")
+  do.call(fun, args = list(mat))
 }
