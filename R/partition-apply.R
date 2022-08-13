@@ -35,7 +35,8 @@ partition_apply <- function(
   partition_index = NULL,
   layer = NULL,
   combine = NULL,
-  verbose = TRUE
+  verbose = TRUE,
+  tiledbcloud = FALSE
 ) {
 
   stopifnot(
@@ -111,20 +112,9 @@ partition_apply <- function(
     )
     partitions <- partitions[partition_index]
   }
-  if (verbose) message(part_msg)
-  results <- vector(mode = "list", length = length(partitions))
 
-  for (i in seq_along(partitions)) {
-    if (verbose) message(sprintf("...retrieving partition %d", i))
-    partition <- setNames(list(partitions[[i]]), nm = dimname)
-    assay_mat$set_query(dims = partition)
-    mat <- assay_mat$to_matrix()
-    if (verbose) {
-      message(sprintf("...retrieved matrix with dims (%d, %d)", nrow(mat), ncol(mat)))
-    }
-    if (verbose) message(sprintf("...applying fun to partition %d", i))
-    results[[i]] <- do.call(fun, args = list(mat))
-  }
+  if (verbose) message(part_msg)
+  results <- local_assaymat_apply(assay_mat, fun, dimname, partitions, verbose)
 
   if (!is.null(combine)) {
     if (verbose) message(sprintf("Combining results using '%s'", combine))
@@ -140,5 +130,34 @@ partition_apply <- function(
     results <- do.call(combine, args = results)
   }
 
+  results
+}
+
+
+#' Serially loop through each partition and apply the function
+#' @param x AssayMatrix
+#' @param dimname Name of the dimension to partition
+#' @param partitions list of character vectors where each element is a
+#' partition
+local_assaymat_apply <- function(x, fun, dimname, partitions, verbose) {
+  stopifnot(
+    "'x' must be an AssayMatrix" = inherits(x, what = "AssayMatrix"),
+    is_scalar_character(dimname),
+    is.list(partitions)
+  )
+
+  results <- vector(mode = "list", length = length(partitions))
+
+  for (i in seq_along(partitions)) {
+    if (verbose) message(sprintf("...retrieving partition %d", i))
+    partition <- setNames(list(partitions[[i]]), nm = dimname)
+    x$set_query(dims = partition)
+    mat <- x$to_matrix()
+    if (verbose) {
+      message(sprintf("...retrieved matrix with dims (%d, %d)", nrow(mat), ncol(mat)))
+    }
+    if (verbose) message(sprintf("...applying fun to partition %d", i))
+    results[[i]] <- do.call(fun, args = list(mat))
+  }
   results
 }
