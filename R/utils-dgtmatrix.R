@@ -64,11 +64,13 @@ pad_matrix <- function(x, rownames = NULL, colnames = NULL) {
 
   new_rownames <- setdiff(rownames, rownames(x))
   new_colnames <- setdiff(colnames, colnames(x))
+  dtype <- typeof(x@x)
 
   if (!is_empty(new_rownames)) {
     rpad <- Matrix::sparseMatrix(
       i = integer(0L),
       j = integer(0L),
+      x = vector(mode = dtype, length = 0L),
       dims = c(length(new_rownames), ncol(x)),
       dimnames = list(new_rownames, colnames(x)),
       repr = mat_rep
@@ -80,6 +82,7 @@ pad_matrix <- function(x, rownames = NULL, colnames = NULL) {
     cpad <- Matrix::sparseMatrix(
       i = integer(0L),
       j = integer(0L),
+      x = vector(mode = dtype, length = 0L),
       dims = c(nrow(x), length(new_colnames)),
       dimnames = list(rownames(x), new_colnames),
       repr = mat_rep
