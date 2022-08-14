@@ -54,6 +54,14 @@ pad_matrix <- function(x, rownames = NULL, colnames = NULL) {
     is.character(colnames) || is.character(rownames)
   )
 
+  # lookup table for Matrix representations
+  mat_rep <- switch(class(x),
+    dgTMatrix = "T",
+    dgCMatrix = "C",
+    dgRMatrix = "R",
+    stop("Untested Matrix object representation")
+  )
+
   new_rownames <- setdiff(rownames, rownames(x))
   new_colnames <- setdiff(colnames, colnames(x))
 
@@ -62,7 +70,8 @@ pad_matrix <- function(x, rownames = NULL, colnames = NULL) {
       i = integer(0L),
       j = integer(0L),
       dims = c(length(new_rownames), ncol(x)),
-      dimnames = list(new_rownames, colnames(x))
+      dimnames = list(new_rownames, colnames(x)),
+      repr = mat_rep
     )
     x <- rbind(x, rpad)
   }
@@ -72,7 +81,8 @@ pad_matrix <- function(x, rownames = NULL, colnames = NULL) {
       i = integer(0L),
       j = integer(0L),
       dims = c(nrow(x), length(new_colnames)),
-      dimnames = list(rownames(x), new_colnames)
+      dimnames = list(rownames(x), new_colnames),
+      repr = mat_rep
     )
     x <- cbind(x, cpad)
   }
