@@ -41,7 +41,7 @@ partition_apply <- function(
   layer = NULL,
   combine = NULL,
   verbose = TRUE,
-  tiledbcloud = FALSE
+  tiledbcloud_namespace = NULL
 ) {
 
   stopifnot(
@@ -129,9 +129,16 @@ partition_apply <- function(
   }
   if (verbose) message(part_msg)
 
-  if (tiledbcloud) {
+  if (!is.null(tiledbcloud_namespace)) {
     if (verbose) message("Initiating TileDB Cloud mode")
-    results <- tiledb_cloud_partition_apply(assay_mat$uri, fun, dimname, partitions, verbose)
+    results <- tiledb_cloud_partition_apply(
+      uri = assay_mat$uri,
+      fun = fun,
+      dimname = dimname,
+      partitions = partitions,
+      combine_fun = combine_fun,
+      namespace = tiledbcloud_namespace,
+      verbose = verbose)
   } else {
     results <- local_partition_apply(
       x = assay_mat,
@@ -177,4 +184,44 @@ local_partition_apply <- function(x, fun, dimname, partitions, combine_fun, verb
   if (verbose) message("Combining results")
   do.call(combine_fun, args = results)
 }
+
+#' Build and execute task graph to slice each partition from the array in
+#' parallel and apply the supplied function.
+#' @param uri URI for an AssayMat
+tiledb_cloud_partition_apply <- function(uri, fun, dimname, partitions, combine_fun, namespace, verbose) {
+  check_package("tiledbcloud")
+
+  if (verbose) message("Retrieving TileDB Cloud user profile")
+
+  # create delayed node for each partition
+  partition_nodes <- vector(mode = "list", length = length(partitions))
+  for (i in seq_along(partitions)) {
+    partition_nodes[[i]] <- tiledbcloud::delayed(
+      func = assay_matrix_apply,
+      args = list(
+        uri = uri,
+        fun = fun,
+        dims = setNames(list(partitions[[i]]), nm = dimname)
+      ),
+      # result_format = "native",
+      namespace = namespace,
+      name = sprintf("Matrix partition %i", i),
+      local = FALSE
+    )
+  }
+
+  combine_node <- tiledbcloud::delayed(
+    func = combine_fun,
+    args  = partition_nodes,
+    namespace = namespace,
+    name = "Combine results",
+    local = FALSE
+  )
+
+  tiledbcloud::compute(
+    node = combine_node,
+    namespace = namespace,
+    verbose = TRUE,
+    force_all_local = FALSE
+  )
 }

@@ -45,13 +45,16 @@ Imports:
     urltools,
     vctrs
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.0
+RoxygenNote: 7.2.1
 Suggests:
     rmarkdown,
     knitr,
     withr,
     testthat (>= 3.0.0),
     SummarizedExperiment,
-    SingleCellExperiment
+    SingleCellExperiment,
+    tiledbcloud
+Remotes:
+    tiledb-inc/tiledb-cloud-r
 VignetteBuilder: knitr
 Config/testthat/edition: 2
