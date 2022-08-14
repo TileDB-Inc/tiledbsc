@@ -10,6 +10,11 @@
 #' The function `fun` must accept a [`dgTMatrix`], which is how each partition
 #' is read into memory.
 #'
+#' *Note setting `combine` to `"rbind"` or `"cbind"` uses the internal
+#' helper functions `rbind_matrix()`/`cbind_matrix()`, respectively, which
+#' pad matrices to ensure non-binding dimensions have the same length and,
+#' importantly, the same order. See [`bind_matrix`] for more information.
+#'
 #' @param x A [`SOMA`] object.
 #' @param fun The callback function to apply to each partition of data.
 #' @param partition_dim Should the data be partitioned by `"obs"` or `"var"`?
@@ -88,6 +93,16 @@ partition_apply <- function(
     dim_values <- sliced_values[, 1]
   }
 
+  # create object-appropriate function for combining a list of results
+  # primarily for overriding cbind/rbind to pad matrices prior to combining
+  combine_fun <- switch(combine %||% "identity",
+    cbind = cbind_matrix,
+    rbind = rbind_matrix,
+    `c` = "c",
+    # return the results as is
+    function(...) list(...)
+  )
+
   stopifnot(
     "'partitition_count' exceeds the length of the dimension" =
       partition_count <= length(dim_values)
@@ -112,22 +127,19 @@ partition_apply <- function(
     )
     partitions <- partitions[partition_index]
   }
-
   if (verbose) message(part_msg)
-  results <- local_assaymat_apply(assay_mat, fun, dimname, partitions, verbose)
 
-  if (!is.null(combine)) {
-    if (verbose) message(sprintf("Combining results using '%s'", combine))
-    if (combine == "cbind") {
-      # make sure all matrices contain the same number of rows
-      all_rows <- unique(unlist(lapply(results, rownames), use.names = FALSE))
-      results <- lapply(results, pad_matrix, rownames = all_rows)
-    } else if (combine == "rbind") {
-      # make sure all matrices contain the same number of columns
-      all_cols <- unique(unlist(lapply(results, colnames), use.names = FALSE))
-      results <- lapply(results, pad_matrix, colnames = all_cols)
-    }
-    results <- do.call(combine, args = results)
+  if (tiledbcloud) {
+    if (verbose) message("Initiating TileDB Cloud mode")
+    results <- tiledb_cloud_partition_apply(assay_mat$uri, fun, dimname, partitions, verbose)
+  } else {
+    results <- local_partition_apply(
+      x = assay_mat,
+      fun = fun,
+      dimname = dimname,
+      partitions = partitions,
+      combine_fun = combine_fun,
+      verbose = verbose)
   }
 
   results
@@ -136,10 +148,13 @@ partition_apply <- function(
 
 #' Serially loop through each partition and apply the function
 #' @param x AssayMatrix
+#' @param fun Function applied to each slice of the array
 #' @param dimname Name of the dimension to partition
 #' @param partitions list of character vectors where each element is a
 #' partition
-local_assaymat_apply <- function(x, fun, dimname, partitions, verbose) {
+#' @param combine_fun Function to apply to the list of results
+#' @noRd
+local_partition_apply <- function(x, fun, dimname, partitions, combine_fun, verbose) {
   stopifnot(
     "'x' must be an AssayMatrix" = inherits(x, what = "AssayMatrix"),
     is_scalar_character(dimname),
@@ -159,5 +174,7 @@ local_assaymat_apply <- function(x, fun, dimname, partitions, verbose) {
     if (verbose) message(sprintf("...applying fun to partition %d", i))
     results[[i]] <- do.call(fun, args = list(mat))
   }
-  results
+  if (verbose) message("Combining results")
+  do.call(combine_fun, args = results)
+}
 }
