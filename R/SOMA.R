@@ -84,7 +84,7 @@ SOMA <- R6::R6Class(
       }
       # TODO: Store dimension_name in the group metadata when support for
       # string vectors are supported
-      self$X$dimension_name <- c("var_id", "obs_id")
+      self$X$dimension_name <- c("obs_id", "var_id")
 
       if ("obsm" %in% names(self$members)) {
         self$obsm <- self$get_member("obsm")
