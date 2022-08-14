@@ -215,7 +215,7 @@ tiledb_cloud_partition_apply <- function(uri, fun, dimname, partitions, combine_
     args  = partition_nodes,
     namespace = namespace,
     name = "Combine results",
-    local = FALSE
+    local = TRUE
   )
 
   tiledbcloud::compute(
