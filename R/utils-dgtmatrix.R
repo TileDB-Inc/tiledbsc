@@ -95,7 +95,8 @@ pad_matrix <- function(x, rownames = NULL, colnames = NULL) {
 
 #' Bind multiple matrix-like objects
 #'
-#' Drop-in replacement rbind/cbind-ing labeled matrices with unequal dimensions.
+#' Drop-in replacement for rbind/cbind-ing labeled matrices with unequal
+#' dimensions.
 #'
 #' Prior to row- or column-binding the matrices are padded to ensure the
 #' non-binding dimensions have the same length and, importantly, the same order.
@@ -195,8 +196,9 @@ pad_matrix <- function(x, rownames = NULL, colnames = NULL) {
 #' @param ... matrix-like objects to combine
 #' @param returns a matrix-like object, the specific type is determined by the
 #' Matrix package's coercion rules
-#' @noRd
+#' @name bind_matrix
 
+#' @rdname bind_matrix
 cbind_matrix <- function(...) {
   dots <- list(...)
 
@@ -219,6 +221,7 @@ cbind_matrix <- function(...) {
   do.call(cbind, args = dots)
 }
 
+#' @rdname bind_matrix
 rbind_matrix <- function(...) {
   dots <- list(...)
 
