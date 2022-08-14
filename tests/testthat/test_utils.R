@@ -1,21 +1,24 @@
 test_that("matrices with empty dimensions are detected", {
   expect_false(
-    has_dimnames(matrix(1))
+    is_labeled_matrix(matrix(1))
   )
   expect_false(
-    has_dimnames(matrix(1, dimnames = list("A", NULL)))
+    is_labeled_matrix(matrix(1, dimnames = list("A", NULL)))
+  )
+  expect_false(
+    is_labeled_matrix(matrix(1, dimnames = list(NULL, "B")))
   )
   expect_true(
-    has_dimnames(matrix(1, dimnames = list("A", "B")))
+    is_labeled_matrix(matrix(1, dimnames = list("A", "B")))
   )
   expect_false(
-    has_dimnames(Matrix::Matrix(1))
+    is_labeled_matrix(Matrix::Matrix(1))
   )
   expect_false(
-    has_dimnames(Matrix::Matrix(1, dimnames = list("A", NULL)))
+    is_labeled_matrix(Matrix::Matrix(1, dimnames = list("A", NULL)))
   )
   expect_true(
-    has_dimnames(Matrix::Matrix(1, dimnames = list("A", "B")))
+    is_labeled_matrix(Matrix::Matrix(1, dimnames = list("A", "B")))
   )
 })
 
