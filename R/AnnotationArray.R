@@ -52,8 +52,8 @@ AnnotationArray <- R6::R6Class(
 
     validate_matrix = function(x) {
       stopifnot(
-        "Annotation data must be a matrix" = is_matrix(x),
-        "Annotation matrix must have defined dim names" = has_dimnames(x)
+        "Annotation data must be a matrix with defined dim names" =
+          is_labeled_matrix(x)
       )
     },
 

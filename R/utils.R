@@ -34,11 +34,13 @@ has_character_rownames <- function(x) {
   typeof(attr(x, "row.names")) == "character"
 }
 
+# a matrix or one of the Matrix package matrices
 is_matrix <- function(x) {
   is.matrix(x) || inherits(x, "Matrix")
 }
 
-has_dimnames <- function(x) {
+# a matrix/Matrix with non-empty dimension names
+is_labeled_matrix <- function(x) {
   stopifnot(is_matrix(x))
   dims <- dimnames(x) %||% list(NULL)
   all(!vapply(dims, is.null, logical(1L)))
