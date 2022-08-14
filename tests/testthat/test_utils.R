@@ -75,7 +75,6 @@ test_that("failed vector subset assertions are informative", {
 test_that("padding a matrix works", {
   mat_full <- create_sparse_matrix_with_string_dims(10, 5)
   expect_error(pad_matrix(mat_full))
-  pad_matrix(mat_full, colnames = "HI")
 
   # padding columns
   mat_sub <- mat_full[, 1:3]
