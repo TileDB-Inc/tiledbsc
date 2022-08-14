@@ -42,7 +42,7 @@ assay_matrix_apply <- function(uri, fun = identity, dims = NULL) {
   log_message(sprintf("Retrieved %i cells", nrow(df)))
 
   log_message("Converting COO data frame to a dgCMatrix")
-  mat <- dataframe_to_dgtmatrix(df, index_cols = c("obs_id", "var_id"))[[1]]
+  mat <- dataframe_to_dgtmatrix(df, index_cols = c("var_id", "obs_id"))[[1]]
 
   log_message("Applying function")
   do.call(fun, args = list(mat))
