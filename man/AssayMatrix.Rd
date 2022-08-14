@@ -26,6 +26,7 @@ Used for the \code{X} field of \code{\link{SOMA}}.
 \item \href{#method-AssayMatrix-from_matrix}{\code{AssayMatrix$from_matrix()}}
 \item \href{#method-AssayMatrix-from_dataframe}{\code{AssayMatrix$from_dataframe()}}
 \item \href{#method-AssayMatrix-to_dataframe}{\code{AssayMatrix$to_dataframe()}}
+\item \href{#method-AssayMatrix-batch_apply}{\code{AssayMatrix$batch_apply()}}
 \item \href{#method-AssayMatrix-to_matrix}{\code{AssayMatrix$to_matrix()}}
 \item \href{#method-AssayMatrix-clone}{\code{AssayMatrix$clone()}}
 }
@@ -33,22 +34,22 @@ Used for the \code{X} field of \code{\link{SOMA}}.
 \if{html}{\out{
 <details><summary>Inherited methods</summary>
 <ul>
-<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBObject" data-id="class"><a href='../../tiledbsc/html/TileDBObject.html#method-TileDBObject-class'><code>tiledbsc::TileDBObject$class()</code></a></li>
-<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBObject" data-id="exists"><a href='../../tiledbsc/html/TileDBObject.html#method-TileDBObject-exists'><code>tiledbsc::TileDBObject$exists()</code></a></li>
-<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="add_metadata"><a href='../../tiledbsc/html/TileDBArray.html#method-TileDBArray-add_metadata'><code>tiledbsc::TileDBArray$add_metadata()</code></a></li>
-<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="array_exists"><a href='../../tiledbsc/html/TileDBArray.html#method-TileDBArray-array_exists'><code>tiledbsc::TileDBArray$array_exists()</code></a></li>
-<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="attributes"><a href='../../tiledbsc/html/TileDBArray.html#method-TileDBArray-attributes'><code>tiledbsc::TileDBArray$attributes()</code></a></li>
-<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="attrnames"><a href='../../tiledbsc/html/TileDBArray.html#method-TileDBArray-attrnames'><code>tiledbsc::TileDBArray$attrnames()</code></a></li>
-<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="dimensions"><a href='../../tiledbsc/html/TileDBArray.html#method-TileDBArray-dimensions'><code>tiledbsc::TileDBArray$dimensions()</code></a></li>
-<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="dimnames"><a href='../../tiledbsc/html/TileDBArray.html#method-TileDBArray-dimnames'><code>tiledbsc::TileDBArray$dimnames()</code></a></li>
-<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="fragment_count"><a href='../../tiledbsc/html/TileDBArray.html#method-TileDBArray-fragment_count'><code>tiledbsc::TileDBArray$fragment_count()</code></a></li>
-<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="get_metadata"><a href='../../tiledbsc/html/TileDBArray.html#method-TileDBArray-get_metadata'><code>tiledbsc::TileDBArray$get_metadata()</code></a></li>
-<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="initialize"><a href='../../tiledbsc/html/TileDBArray.html#method-TileDBArray-initialize'><code>tiledbsc::TileDBArray$initialize()</code></a></li>
-<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="print"><a href='../../tiledbsc/html/TileDBArray.html#method-TileDBArray-print'><code>tiledbsc::TileDBArray$print()</code></a></li>
-<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="reset_query"><a href='../../tiledbsc/html/TileDBArray.html#method-TileDBArray-reset_query'><code>tiledbsc::TileDBArray$reset_query()</code></a></li>
-<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="schema"><a href='../../tiledbsc/html/TileDBArray.html#method-TileDBArray-schema'><code>tiledbsc::TileDBArray$schema()</code></a></li>
-<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="set_query"><a href='../../tiledbsc/html/TileDBArray.html#method-TileDBArray-set_query'><code>tiledbsc::TileDBArray$set_query()</code></a></li>
-<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="tiledb_array"><a href='../../tiledbsc/html/TileDBArray.html#method-TileDBArray-tiledb_array'><code>tiledbsc::TileDBArray$tiledb_array()</code></a></li>
+<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBObject" data-id="class"><a href='../../tiledbsc/html/TileDBObject.html#method-TileDBObject-class'><code>tiledbsc::TileDBObject$class()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBObject" data-id="exists"><a href='../../tiledbsc/html/TileDBObject.html#method-TileDBObject-exists'><code>tiledbsc::TileDBObject$exists()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="add_metadata"><a href='../../tiledbsc/html/TileDBArray.html#method-TileDBArray-add_metadata'><code>tiledbsc::TileDBArray$add_metadata()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="array_exists"><a href='../../tiledbsc/html/TileDBArray.html#method-TileDBArray-array_exists'><code>tiledbsc::TileDBArray$array_exists()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="attributes"><a href='../../tiledbsc/html/TileDBArray.html#method-TileDBArray-attributes'><code>tiledbsc::TileDBArray$attributes()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="attrnames"><a href='../../tiledbsc/html/TileDBArray.html#method-TileDBArray-attrnames'><code>tiledbsc::TileDBArray$attrnames()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="dimensions"><a href='../../tiledbsc/html/TileDBArray.html#method-TileDBArray-dimensions'><code>tiledbsc::TileDBArray$dimensions()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="dimnames"><a href='../../tiledbsc/html/TileDBArray.html#method-TileDBArray-dimnames'><code>tiledbsc::TileDBArray$dimnames()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="fragment_count"><a href='../../tiledbsc/html/TileDBArray.html#method-TileDBArray-fragment_count'><code>tiledbsc::TileDBArray$fragment_count()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="get_metadata"><a href='../../tiledbsc/html/TileDBArray.html#method-TileDBArray-get_metadata'><code>tiledbsc::TileDBArray$get_metadata()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="initialize"><a href='../../tiledbsc/html/TileDBArray.html#method-TileDBArray-initialize'><code>tiledbsc::TileDBArray$initialize()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="print"><a href='../../tiledbsc/html/TileDBArray.html#method-TileDBArray-print'><code>tiledbsc::TileDBArray$print()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="reset_query"><a href='../../tiledbsc/html/TileDBArray.html#method-TileDBArray-reset_query'><code>tiledbsc::TileDBArray$reset_query()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="schema"><a href='../../tiledbsc/html/TileDBArray.html#method-TileDBArray-schema'><code>tiledbsc::TileDBArray$schema()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="set_query"><a href='../../tiledbsc/html/TileDBArray.html#method-TileDBArray-set_query'><code>tiledbsc::TileDBArray$set_query()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="tiledbsc" data-topic="TileDBArray" data-id="tiledb_array"><a href='../../tiledbsc/html/TileDBArray.html#method-TileDBArray-tiledb_array'><code>tiledbsc::TileDBArray$tiledb_array()</code></a></span></li>
 </ul>
 </details>
 }}
@@ -121,6 +122,16 @@ all results are retrieved.}
 \subsection{Returns}{
 A \code{\link[Matrix:dgTMatrix-class]{Matrix::dgTMatrix}}.
 }
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-AssayMatrix-batch_apply"></a>}}
+\if{latex}{\out{\hypertarget{method-AssayMatrix-batch_apply}{}}}
+\subsection{Method \code{batch_apply()}}{
+Apply a function to batches of the assay data.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{AssayMatrix$batch_apply(fun)}\if{html}{\out{</div>}}
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-AssayMatrix-to_matrix"></a>}}
