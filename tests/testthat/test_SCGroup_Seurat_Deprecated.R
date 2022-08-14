@@ -41,7 +41,7 @@ test_that("SCGroup object can be created from a Seurat assay", {
   expect_true(inherits(scgroup$uns, "TileDBGroup"))
 
   # AnnotationGroup dimensions
-  expect_equal(scgroup$X$dimension_name, c("var_id", "obs_id"))
+  expect_equal(scgroup$X$dimension_name, c("obs_id", "var_id"))
   expect_equal(scgroup$obsm$dimension_name, "obs_id")
   expect_equal(scgroup$varm$dimension_name, "var_id")
   expect_equal(scgroup$obsp$dimension_name, "obs_id")
@@ -66,7 +66,7 @@ test_that("Seurat Assay can be recreated from an existing SCGroup", {
   expect_true(inherits(scgroup$uns, "TileDBGroup"))
 
   # AnnotationGroup dimensions are restored
-  expect_equal(scgroup$X$dimension_name, c("var_id", "obs_id"))
+  expect_equal(scgroup$X$dimension_name, c("obs_id", "var_id"))
   expect_equal(scgroup$obsm$dimension_name, "obs_id")
   expect_equal(scgroup$varm$dimension_name, "var_id")
   expect_equal(scgroup$obsp$dimension_name, "obs_id")

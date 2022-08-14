@@ -31,7 +31,7 @@ test_that("SOMA object can be created from a Seurat assay", {
   expect_true(inherits(soma$uns, "TileDBGroup"))
 
   # AnnotationGroup dimensions
-  expect_equal(soma$X$dimension_name, c("var_id", "obs_id"))
+  expect_equal(soma$X$dimension_name, c("obs_id", "var_id"))
   expect_equal(soma$obsm$dimension_name, "obs_id")
   expect_equal(soma$varm$dimension_name, "var_id")
   expect_equal(soma$obsp$dimension_name, "obs_id")
@@ -52,7 +52,7 @@ test_that("Seurat Assay can be recreated from an existing SOMA", {
   expect_true(inherits(soma$uns, "TileDBGroup"))
 
   # AnnotationGroup dimensions are restored
-  expect_equal(soma$X$dimension_name, c("var_id", "obs_id"))
+  expect_equal(soma$X$dimension_name, c("obs_id", "var_id"))
   expect_equal(soma$obsm$dimension_name, "obs_id")
   expect_equal(soma$varm$dimension_name, "var_id")
   expect_equal(soma$obsp$dimension_name, "obs_id")
