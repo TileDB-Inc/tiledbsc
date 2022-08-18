@@ -1,0 +1,253 @@
+---
+title: "Quick Start"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{quickstart}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+## Overview
+
+This vignette provides a high-level introduction to the tiledbsc R package, intended to get users up and running quickly.
+
+In this tutorial we will cover:
+
+- ingesting a `Seurat` object
+- access the individual components
+- slicing and filtering
+- updating with new results
+
+## Setup
+
+```{r}
+library(tiledbsc)
+library(SeuratObject)
+```
+
+For this tutorial we'll use a dataset from 10X genomics containing 2,700 peripheral blood mononuclear cells (PBMC) that's commonly used in Seurat and Scanpy tutorials.
+
+Use the provided helper function to download the filtered gene / cell matrix from 10X and create a `Seurat` object.
+
+```{r}
+pbmc3k <- dataset_seurat_pbmc3k()
+pbmc3k
+```
+
+## Populate a SOMACollection
+
+Our first step is to create a new `SOMACollection` at a specific URI. The URI could be a local filepath, an S3 URI, or as discussed below, a TileDB Cloud URI which automatically registers the dataset on TileDB Cloud.
+
+```{r}
+soco_uri <- file.path(tempdir(), "soco-pbmc3k")
+
+soco <- SOMACollection$new(uri = soco_uri)
+soco
+```
+
+Now we use tiledbsc to automatically ingest the various components of the `pbmc3k` object into the new `SOMACollection`.
+
+```{r}
+soco$from_seurat(pbmc3k)
+```
+
+Printing the `soco` object shows it contains 2 members: `RNA`, which contains the RNA assay data, and `uns`, which is a special group for miscellaneous (i.e., unstructured) data.
+
+```{r}
+soco
+```
+
+## Access SOMA Components
+
+As this dataset is unimodal, we'll extract the SOMA containing the RNA data.
+
+```{r}
+soma <- soco$get_member("RNA")
+soma
+```
+
+Access the [`AnnotationDataframe`] representing the `obs` array containing cell-level metadata stored in `obs`.
+
+```{r}
+soma$obs
+```
+
+Read it into memory as a `data.frame`.
+
+```{r}
+obs <- soma$obs$to_dataframe()
+summary(obs)
+```
+
+Access the [`AssayMatrix`] representing the `X` array containing the RNA expression data stored in `X`.
+
+```{r}
+soma$X$members$counts
+```
+
+Read it into memory as a [`dgTMatrix`][`Matrix::TsparseMatrix-class`].
+
+```{r}
+mat <- soma$X$members$counts$to_matrix()
+summary(mat)
+```
+
+## Dimension Slicing and Attribute Filtering
+
+`SOMACollection` and `SOMA` objects can be sliced by a combination of obs and var identifiers.
+
+```{r}
+soma$set_query(obs_ids = head(colnames(pbmc3k), 10))
+```
+
+This query is automatically applied to the entire SOMA, so any component read into memory will now only return the filtered results.
+
+```{r}
+soma$obs$to_dataframe()
+```
+
+To remove the filter simply reset the query.
+
+```{r}
+soma$reset_query()
+nrow(soma$obs$to_dataframe())
+```
+
+In addition to dimension slicing we can also apply filters using the cell- and feature-level metadata stored in the `obs` and `var` arrays.
+
+```{r}
+soma$set_query(
+  obs_attr_filter = nCount_RNA > 3000
+)
+```
+
+```{r}
+pbmc3k[[]]
+```
+
+
+We can load the SOMA slice into memory as a Seurat `Assay`...
+
+```{r}
+soma$to_seurat_assay()
+```
+
+or as a Bioconductor [`SummarizedExperiment`].
+
+```{r}
+if (requireNamespace("SummarizedExperiment", quietly = TRUE)) {
+  soma$to_summarized_experiment()
+}
+```
+
+## Adding Analysis Results to a SOMA
+
+The original `pbmc3k` object contains only the raw counts data. Here we'll use `Seurat` to generate new results and add them to the `soma`.
+
+### Add Layer for Normalized Counts
+
+First we normalize the raw counts, which creates a new matrix stored in the `Assay` object.
+
+```{r eval=requireNamespace("Seurat", quietly = TRUE)}
+pbmc3k <- Seurat::NormalizeData(pbmc3k, normalization.method = "LogNormalize")
+```
+
+Currently the RNA SOMA's X group contains only a single layer, _counts_.
+
+```{r}
+soma$X
+```
+
+Add a new `X` layer containing log-normalized counts stored in the Seurat `Assay`'s `data` slot.
+
+```{r}
+soma$from_seurat_assay(
+    object = pbmc3k[["RNA"]],
+    layers = "data",
+    var = FALSE
+)
+```
+
+Now we can see the SOMA contains 2 X layers: `counts` and `data`.
+
+```{r}
+soma$X
+```
+
+### Add Layer for Scaled counts
+
+First, we identify highly variable subset of genes to scale.
+
+```{r eval=requireNamespace("Seurat", quietly = TRUE)}
+var_genes <- VariableFeatures(
+  Seurat::FindVariableFeatures(pbmc3k, nfeatures = 2000)
+)
+```
+
+Then generate the scaled data.
+
+```{r, eval=requireNamespace("Seurat", quietly = TRUE)}
+pbmc3k <- Seurat::ScaleData(pbmc3k, features = var_genes)
+```
+
+
+And ingest the scaled data into a new `X` layer called `"scale.data"`.
+
+```{r eval=requireNamespace("Seurat", quietly = TRUE)}
+soma$from_seurat_assay(
+    object = pbmc3k[["RNA"]],
+    layers = "scale.data",
+    var = FALSE
+)
+```
+
+Again, verify the new layer was added.
+
+```{r}
+soma$X
+```
+
+### Add Dimensional Reduction Results
+
+We can use a similar workflow for dimensional reduction results, which are stored in either the `obsm` or `varm` slots of a SOMA.
+
+```{r eval=requireNamespace("Seurat", quietly = TRUE)}
+dimreduc_pca <- Reductions(
+  Seurat::RunPCA(pbmc3k, features = var_genes),
+  slot = "pca"
+)
+```
+
+Add the Seurat `DimReduc` object to the SOMA.
+
+```{r eval=requireNamespace("Seurat", quietly = TRUE)}
+soma$add_seurat_dimreduction(
+    dimreduc_pca,
+    technique = "pca"
+)
+```
+
+The SOMA now contains 2 new arrays, one within the `obsm` group storing the cell embeddings
+
+```{r}
+soma$obsm
+```
+
+and a second within the `varm` group storing the feature loadings.
+
+```{r}
+soma$varm
+```
+
+Either of these can be accessed and queried directly, which is often useful for visualization applications.
+
+```{r eval=requireNamespace("Seurat", quietly = TRUE)}
+obsm_pca <- soma$obsm$get_member("dimreduction_pca")
+obsm_pca
+```
+
+
+```{r eval=requireNamespace("Seurat", quietly = TRUE)}
+cell_pcs <- obsm_pca$to_matrix()
+pairs(cell_pcs[, 1:5])
+```
