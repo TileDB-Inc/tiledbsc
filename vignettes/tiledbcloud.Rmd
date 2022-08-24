@@ -26,6 +26,10 @@ knitr::opts_chunk$set(
 
 ```{r setup}
 library(tiledbsc)
+
+data("pbmc_small", package = "SeuratObject")
+soco <- SOMACollection$new("tiledb://aaronwolen/s3://mybucket/pbmc3k-soco")
+soco$from_seurat(object = pbmc_small)
 ```
 
 
@@ -51,8 +55,6 @@ This uses a special URI composed of:
 
 - your TileDB namespace (e.g., `aaronwolen`)
 - an S3 path where the dataset will be created
-
-
 
 ```r
 soco <- SOMACollection$new("tiledb://aaronwolen/s3://mybucket/pbmc3k-soco")
@@ -105,6 +107,14 @@ soma$to_seurat_assay()
 
 ```{r}
 soma$to_summarized_experiment()
+```
+
+## Interoperability
+
+SOMA is designed to be language independent and we currently support interoperability across Python and R. Use [this notebook](https://cloud.tiledb.com/notebooks/details/aaronwolen/ae90d2e6-aeef-45f6-a223-f8839fc68535) access the same `SOMACollection` created here in Python—just remember to use the new SOMACollection's URI:
+
+```{r}
+soco_pbmc3k_uri
 ```
 
 <!-- links -->
