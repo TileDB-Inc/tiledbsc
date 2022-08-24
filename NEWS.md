@@ -29,6 +29,7 @@
 * The internal utility `dgtmatrix_to_dataframe()` was replaced with `matrix_to_coo()`, which converts Matrix-like objects to COO data frames much more efficiently (#75).
 * The internal utility `pad_matrix()` can now pad a matrix by adding empty rows (#79).
 * The internal assertion `has_dimnames()` was replaced with `is_labeled_matrix()` for clarity (#79).
+* `obs_id` is now the first dimension in TileDB arrays created by the `AssayMatrix` class (#78).
 
 ## Fixes
 
