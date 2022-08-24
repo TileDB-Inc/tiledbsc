@@ -16,6 +16,7 @@
 
 * Removed vestigial code for merging non-layerable COO data.frames, which was previously used to add ingest dense `scaled.data` from a Seurat `Assay` as an attribute of the `X` array, along with `counts`/`data`. This is no longer necessary as each layer is now ingested into a separate array within the `X` group (#73).
 * The internal utility `dgtmatrix_to_dataframe()` was replaced with `matrix_to_coo()`, which converts Matrix-like objects to COO data frames much more efficiently (#75).
+* `obs_id` is now the first dimension in TileDB arrays created by the `AssayMatrix` class (#78).
 
 ## Fixes
 
