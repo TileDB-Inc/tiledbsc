@@ -16,13 +16,15 @@
 
 * Removed vestigial code for merging non-layerable COO data.frames, which was previously used to add ingest dense `scaled.data` from a Seurat `Assay` as an attribute of the `X` array, along with `counts`/`data`. This is no longer necessary as each layer is now ingested into a separate array within the `X` group (#73).
 * The internal utility `dgtmatrix_to_dataframe()` was replaced with `matrix_to_coo()`, which converts Matrix-like objects to COO data frames much more efficiently (#75).
+* The internal utility `pad_matrix()` can now pad a matrix by adding empty rows (#79).
+* The internal assertion `has_dimnames()` was replaced with `is_labeled_matrix()` for clarity (#79).
 
 ## Fixes
 
 * Matrix conversion message from `AssayMatrix` now respects the `verbose` option
 * Upon initialization `SOMA` now  looks for a `raw` group and warns the user it will be ignored. Currently tiledbsc-py creates a `raw` group when converting anndata objects where `.raw` is populated. However, Seurat/BioC objects do not have an obvious place to store this data, so ignoring it improves compatibility.
 * Fixed a non-user-facing issue with the internal `dgtmatrix_to_dataframe()` function used to convert unordered `dgTMatrix` objects to COO data frames (#73).
-
+* Pretty printing of classes that inherit from `TileDBObject` has been improved so that the class name is displayed first (#79).
 
 ## Build and Test Systems
 
