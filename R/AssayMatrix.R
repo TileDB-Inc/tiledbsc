@@ -27,17 +27,20 @@ AssayMatrix <- R6::R6Class(
     #' will contain the matrix row/column names.
     #' @param value_col Name to use for the TileDB array's attribute that will
     #' contain the matrix values.
-    from_matrix = function(x, index_cols, value_col = "value") {
+    #' @param transpose If `TRUE`, the order of the TileDB array's dimensions
+    #' are reversed.
+    from_matrix = function(x, index_cols, value_col = "value", transpose = FALSE) {
       stopifnot(
         "Must provide 'index_cols' to name the index columns" = !missing(index_cols),
         "'value_col' must be scalar" = is_scalar_character(value_col)
       )
       private$validate_matrix(x)
+      df <- matrix_to_coo(x, index_cols = index_cols, value_cols = value_col)
 
-      self$from_dataframe(
-        matrix_to_coo(x, index_cols = index_cols, value_cols = value_col),
-        index_cols = index_cols
-      )
+      # reverse index columns if transposing array dimensions
+      if (transpose) index_cols <- rev(index_cols)
+
+      self$from_dataframe(df, index_cols = index_cols)
     },
 
     #' @description Ingest assay data from a COO-formatted data frame
