@@ -17,8 +17,17 @@ AssayMatrixGroup <- R6::R6Class(
     #' @param name Name for the new array, nested with the group's URI.
     #' @param value_col Name to use for the TileDB array's attribute that will
     #' contain the matrix values.
+    #' @param transpose If `TRUE`, the order of the new TileDB array's
+    #' dimensions are reversed relative to the names defined by
+    #' `AssayMatrixGroup`'s `dimension_name`.
     #' @param metadata Named list of metadata to add.
-    add_assay_matrix = function(data, name, value_col = "value", metadata = NULL) {
+    add_assay_matrix = function(
+      data,
+      name,
+      value_col = "value",
+      metadata = NULL,
+      transpose = FALSE
+    ) {
       if (missing(name)) {
         stop("Must specify a `name` for the new AssayMatrix")
       }
@@ -33,10 +42,20 @@ AssayMatrixGroup <- R6::R6Class(
         verbose = self$verbose
       )
 
+      # when transpose=TRUE we reverse the dimension names so that so dimname 1
+      # is applied to the matrix columns and dimname 2 is applied to the matrix
+      # rows
+      if (transpose) {
+        index_cols <- rev(self$dimension_name)
+      } else {
+        index_cols <- self$dimension_name
+      }
+
       array$from_matrix(
         data,
-        index_cols = self$dimension_name,
-        value_col = value_col
+        index_cols = index_cols,
+        value_col = value_col,
+        transpose = transpose
       )
       if (!is.null(metadata)) array$add_metadata(metadata)
       if (is.null(self$members[[name]])) self$add_member(array, name)

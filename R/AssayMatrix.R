@@ -27,9 +27,14 @@ AssayMatrix <- R6::R6Class(
     #' will contain the matrix row/column names.
     #' @param value_col Name to use for the TileDB array's attribute that will
     #' contain the matrix values.
-    #' @param transpose If `TRUE`, the order of the TileDB array's dimensions
-    #' are reversed.
-    from_matrix = function(x, index_cols, value_col = "value", transpose = FALSE) {
+    #' @param transpose If `TRUE`, the order of the new TileDB array's
+    #' dimensions are reversed relative to the names defined by `index_cols`.
+    from_matrix = function(
+      x,
+      index_cols,
+      value_col = "value",
+      transpose = FALSE
+    ) {
       stopifnot(
         "Must provide 'index_cols' to name the index columns" = !missing(index_cols),
         "'value_col' must be scalar" = is_scalar_character(value_col)
