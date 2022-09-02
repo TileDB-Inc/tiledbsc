@@ -88,8 +88,11 @@ AssayMatrix <- R6::R6Class(
     #' @description Retrieve assay data from TileDB as a 2D sparse matrix.
     #' @param attr The name of the attribute layer to retrieve. If `NULL`, the
     #' first layer is returned.
+    #' @param transpose If `TRUE`, the order of the matrix's dimensions are
+    #' reversed relative to the TileDB array's dimension name.
+    #' dimensions are reversed relative to the names defined by `index_cols`.
     #' @return A [`Matrix::dgTMatrix-class`].
-    to_matrix = function(attr = NULL, batch_mode = FALSE) {
+    to_matrix = function(attr = NULL, batch_mode = FALSE, transpose = FALSE) {
       if (is.null(attr)) {
         attr <- self$attrnames()[1]
       }
@@ -100,6 +103,9 @@ AssayMatrix <- R6::R6Class(
         batch_mode = batch_mode,
         return_as = "data.frame"
       )
+
+      # reverse index columns if transposing array dimensions
+      if (transpose) assay_data <- assay_data[c(rev(self$dimnames()), attr)]
 
       assay_dims <- vapply_int(assay_data[1:2], n_unique)
       row_labels <- unique(assay_data[[1]])
