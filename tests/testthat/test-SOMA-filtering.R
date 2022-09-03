@@ -1,5 +1,5 @@
 test_that("SOMA object can be sliced by dimension", {
-  uri <- withr::local_tempdir("soma-dim-slice")
+  uri <- withr::local_tempdir("soma-dim-slice1")
 
   pbmc_small_rna <- pbmc_small[["RNA"]]
   var_ids <- c("PPBP", "VDAC3")
@@ -15,7 +15,7 @@ test_that("SOMA object can be sliced by dimension", {
   expect_is(obs, "data.frame")
   expect_equal(nrow(obs), 1)
 
-  mat_counts <- soma$X$members$counts$to_matrix()
+  mat_counts <- soma$X$members$counts$to_matrix(transpose = TRUE)
   expect_true(is_matrix(mat_counts))
   expect_equal(ncol(mat_counts), 1)
 
@@ -27,7 +27,7 @@ test_that("SOMA object can be sliced by dimension", {
   var <- soma$var$to_dataframe()
   expect_equal(nrow(var), 2)
 
-  mat_counts <- soma$X$members$counts$to_matrix()
+  mat_counts <- soma$X$members$counts$to_matrix(transpose = TRUE)
   expect_equal(dim(mat_counts), c(2, 3))
 
   pbmc_small_rna2 <- soma$to_seurat_assay()
@@ -43,7 +43,7 @@ test_that("SOMA object can be sliced by dimension", {
   var <- soma$var$to_dataframe()
   expect_equal(nrow(var), 12)
 
-  mat_counts <- soma$X$members$counts$to_matrix()
+  mat_counts <- soma$X$members$counts$to_matrix(transpose = TRUE)
   expect_equal(dim(mat_counts), c(12, 80))
 
   # var attribute filter + obs/var dimension slicing
@@ -59,7 +59,7 @@ test_that("SOMA object can be sliced by dimension", {
   var <- soma$var$to_dataframe()
   expect_equal(nrow(var), 5)
 
-  mat_counts <- soma$X$members$counts$to_matrix()
+  mat_counts <- soma$X$members$counts$to_matrix(transpose = TRUE)
   expect_equal(dim(mat_counts), c(5, 3))
 
   pbmc_small_rna2 <- soma$to_seurat_assay()
