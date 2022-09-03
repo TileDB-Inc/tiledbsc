@@ -82,9 +82,13 @@ SOMA <- R6::R6Class(
         )
         self$add_member(self$X, name = "X")
       }
-      # TODO: Store dimension_name in the group metadata when support for
-      # string vectors are supported
-      self$X$dimension_name <- c("obs_id", "var_id")
+      # TODO: Persist dimension_name in the group metadata when core supports
+      # string vectors. For now we use the first assay's dimension names.
+      if (is_empty(self$X$members)) {
+        self$X$dimension_name <- c("obs_id", "var_id")
+      } else {
+        self$X$dimension_name <- self$X$members[[1]]$dimnames()
+      }
 
       if ("obsm" %in% names(self$members)) {
         self$obsm <- self$get_member("obsm")
@@ -382,9 +386,19 @@ SOMA <- R6::R6Class(
       assay_mats <- Filter(Negate(is_empty), assay_mats)
 
       for (assay in names(assay_mats)) {
+
+        # If we're updating an existing layer then we check its dimension order
+        # to determine whether the updated data needs to be transposed
+        transpose <- TRUE
+        member <- self$X$get_member(assay)
+        if (!is.null(member)) {
+          transpose <- identical(member$dimnames(), c("obs_id", "var_id"))
+        }
+
         self$X$add_assay_matrix(
           data = assay_mats[[assay]],
-          name = assay
+          name = assay,
+          transpose = transpose
         )
       }
 
@@ -825,9 +839,12 @@ SOMA <- R6::R6Class(
     # names).
     get_assay_matrices = function(layers, batch_mode) {
 
+      # Transpose back to var x obs matrix if necessary
+      transpose <- identical(self$X$dimension_name, c("obs_id", "var_id"))
+
       assay_mats <- lapply(
         self$X$members[layers],
-        function(x) x$to_matrix(batch_mode = batch_mode)
+        function(x) x$to_matrix(batch_mode = batch_mode, transpose = transpose)
       )
 
       # Ensure assay matrices all contain the same observations
