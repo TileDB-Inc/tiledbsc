@@ -5,7 +5,7 @@ test_that("New matrices can be added", {
   amats <- AssayMatrixGroup$new(uri = uri, dimension_name = c("i", "j"))
   expect_length(amats$members, 0)
 
-  amats$add_assay_matrix(data = mat1, name = "mat1")
+  amats$add_assay_matrix(data = imat1, name = "mat1")
 
   amat1 <- amats$get_member("mat1")
   expect_equal(amat1$dimnames(), amats$dimension_name)
@@ -33,7 +33,7 @@ test_that("Transposed matrices can be added and retrieved", {
 
   # by default, the transpose is not applied on read
   omat1 <- amat1$to_matrix()
-  expect_equal(dim(t(omat1)), dim(imat1))
+  expect_equal(dim(Matrix::t(omat1)), dim(imat1))
 
   # must set transpose=TRUE to restore the original matrix shape
   omat1 <- amat1$to_matrix(transpose = TRUE)
