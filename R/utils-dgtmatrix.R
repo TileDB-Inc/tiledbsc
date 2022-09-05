@@ -41,24 +41,53 @@ are_layerable <- function(x, y) {
 }
 
 
-#' Pad a sparse Matrix with additional columns
+#' Pad a sparse Matrix with additional rows or columns
 #' @param x A dgTMatrix
-#' @param colnames A vector of column names to add to the matrix.
-#' @param returns A padded matrix containing all columns in `colnames`.
+#' @param colnames,rownames A vector of column or row names to add to the
+#' matrix.
+#' @param returns A padded matrix containing all provided row/column names
 #' @importFrom Matrix sparseMatrix
 #' @noRd
-pad_matrix <- function(x, colnames) {
+pad_matrix <- function(x, rownames = NULL, colnames = NULL) {
   stopifnot(
     inherits(x, "Matrix"),
-    is.character(colnames) && !is_empty(colnames)
+    is.character(colnames) || is.character(rownames)
   )
+
+  # lookup table for Matrix representations
+  mat_rep <- switch(class(x),
+    dgTMatrix = "T",
+    dgCMatrix = "C",
+    dgRMatrix = "R",
+    stop("Untested Matrix object representation")
+  )
+
+  new_rownames <- setdiff(rownames, rownames(x))
   new_colnames <- setdiff(colnames, colnames(x))
-  if (is_empty(new_colnames)) return(x)
-  pad <- Matrix::sparseMatrix(
-    i = integer(0L),
-    j = integer(0L),
-    dims = c(nrow(x), length(new_colnames)),
-    dimnames = list(rownames(x), new_colnames)
-  )
-  cbind(x, pad)
+  dtype <- typeof(x@x)
+
+  if (!is_empty(new_rownames)) {
+    rpad <- Matrix::sparseMatrix(
+      i = integer(0L),
+      j = integer(0L),
+      x = vector(mode = dtype, length = 0L),
+      dims = c(length(new_rownames), ncol(x)),
+      dimnames = list(new_rownames, colnames(x)),
+      repr = mat_rep
+    )
+    x <- rbind(x, rpad)
+  }
+
+  if (!is_empty(new_colnames)) {
+    cpad <- Matrix::sparseMatrix(
+      i = integer(0L),
+      j = integer(0L),
+      x = vector(mode = dtype, length = 0L),
+      dims = c(nrow(x), length(new_colnames)),
+      dimnames = list(rownames(x), new_colnames),
+      repr = mat_rep
+    )
+    x <- cbind(x, cpad)
+  }
+  x
 }

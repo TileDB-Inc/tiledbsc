@@ -7,7 +7,7 @@ test_that("annotation matrix can be stored and retrieved", {
   expect_true(inherits(annotmat, "AnnotationMatrix"))
   expect_error(
     annotmat$from_matrix(mat, index_col = "obs_id"),
-    "must have defined dim names"
+    "Annotation data must be a matrix with defined dim names"
   )
 
   rlabs <- paste0("R", seq_len(nrow(mat)))

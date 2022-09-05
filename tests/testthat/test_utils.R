@@ -1,21 +1,24 @@
 test_that("matrices with empty dimensions are detected", {
   expect_false(
-    has_dimnames(matrix(1))
+    is_labeled_matrix(matrix(1))
   )
   expect_false(
-    has_dimnames(matrix(1, dimnames = list("A", NULL)))
+    is_labeled_matrix(matrix(1, dimnames = list("A", NULL)))
+  )
+  expect_false(
+    is_labeled_matrix(matrix(1, dimnames = list(NULL, "B")))
   )
   expect_true(
-    has_dimnames(matrix(1, dimnames = list("A", "B")))
+    is_labeled_matrix(matrix(1, dimnames = list("A", "B")))
   )
   expect_false(
-    has_dimnames(Matrix::Matrix(1))
+    is_labeled_matrix(Matrix::Matrix(1))
   )
   expect_false(
-    has_dimnames(Matrix::Matrix(1, dimnames = list("A", NULL)))
+    is_labeled_matrix(Matrix::Matrix(1, dimnames = list("A", NULL)))
   )
   expect_true(
-    has_dimnames(Matrix::Matrix(1, dimnames = list("A", "B")))
+    is_labeled_matrix(Matrix::Matrix(1, dimnames = list("A", "B")))
   )
 })
 
@@ -70,4 +73,29 @@ test_that("failed vector subset assertions are informative", {
     assert_subset(letters[1:3], letters[4:5], type = "letter"),
     "The following letters do not exist: a, b and c"
   )
+})
+
+test_that("padding a matrix works", {
+  mat_full <- create_sparse_matrix_with_string_dims(10, 5)
+  expect_error(pad_matrix(mat_full))
+
+  # padding columns
+  mat_sub <- mat_full[, 1:3]
+  mat_pad <- pad_matrix(mat_sub, colnames = colnames(mat_full))
+  expect_equal(colnames(mat_pad), colnames(mat_full))
+  expect_equal(sum(mat_pad[, "j4"]), 0)
+  expect_equal(sum(mat_pad[, "j5"]), 0)
+
+  # TODO: cbinding 2 dgTMatrices still produces a dgCMatrix
+  # expect_equal(class(mat_pad), class(mat_sub))
+
+  # padding rows
+  mat_sub <- mat_full[1:3, ]
+  mat_pad <- pad_matrix(mat_sub, rownames = rownames(mat_full))
+  expect_equal(rownames(mat_pad), rownames(mat_full))
+
+  # padding both
+  mat_sub <- mat_full[1:3, 1:5]
+  mat_pad <- pad_matrix(mat_sub, rownames(mat_full), colnames(mat_full))
+  expect_equal(dim(mat_pad), dim(mat_full))
 })
