@@ -29,6 +29,36 @@ AssayMatrix <- R6::R6Class(
     #' contain the matrix values.
     #' @param transpose If `TRUE`, the order of the new TileDB array's
     #' dimensions are reversed relative to the names defined by `index_cols`.
+    #'
+    #' ## Transposing Dimensions
+    #'
+    #' The `transpose` argument allows you to ingest a matrix into a TileDB
+    #' array with the dimension order reversed relative to the original matrix
+    #' shape. For example, consider matrix `mat` with dimensions `i` and `j`:
+    #'
+    #' ```{r}
+    #' mat <- matrix(1:6, nrow = 3, dimnames = list(LETTERS[1:3], letters[1:2]))
+    #' mat
+    #' ```
+    #'
+    #' By default `AssayMatrix` will create a TileDB array will have dimensions
+    #' `i`/`j` (i.e., the same order as the matrix):
+    #'
+    #' ```{r}
+    #' amat1 <- AssayMatrix$new(uri = "mem://assaymatrix1", verbose = FALSE)
+    #' amat1$from_matrix(mat, index_cols = c("i", "j"))
+    #' amat1$to_dataframe()
+    #' ```
+    #'
+    #' If you set `transpose = TRUE`, the TileDB array will have dimensions
+    #' `j`/`i` instead:
+    #'
+    #' ```{r}
+    #' amat2 <- AssayMatrix$new(uri = "mem://assaymatrix2", verbose = FALSE)
+    #' amat2$from_matrix(mat, index_cols = c("i", "j"), transpose = TRUE)
+    #' amat2$to_dataframe()
+    #' ```
+
     from_matrix = function(
       x,
       index_cols,
