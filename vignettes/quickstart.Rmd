@@ -9,14 +9,22 @@ vignette: >
 
 ## Overview
 
-This vignette provides a high-level introduction to the tiledbsc R package, intended to get users up and running quickly.
+This vignette provides an overview of the tiledbsc R package which uses the open source [SOMA data model](https://github.com/single-cell-data/SOMA) to store single-cell data in a collection of TileDB arrays.
 
-In this tutorial we will cover:
+With tiledbsc you can:
 
-- ingesting a `Seurat` object
-- access the individual components
-- slicing and filtering
-- updating with new results
+- convert datas from Seurat and other popular single-cell formats into SOMA
+- access SOMA data using any of TileDB's APIs
+- store your datasets on S3 (or other remote object stores) and slice directly without having to download anything first
+
+In this vignette you'll learn how to:
+
+- ingest *Seurat* data into TileDB-backed SOMA Collections
+- access various components of a dataset
+- slice by cell-/feature-identifiers
+- query using cell-/feature-level annotations
+- update a SOMA with analysis results
+- load data from SOMA into R as a *Seurat* or *Bioconductor* object
 
 ## Setup
 
@@ -27,7 +35,7 @@ library(SeuratObject)
 
 For this tutorial we'll use a dataset from 10X genomics containing 2,700 peripheral blood mononuclear cells (PBMC) that's commonly used in Seurat and Scanpy tutorials.
 
-Use the provided helper function to download the filtered gene / cell matrix from 10X and create a `Seurat` object.
+Use the provided helper function to download the filtered gene/cell matrix from 10X and create a `Seurat` object.
 
 ```{r}
 pbmc3k <- dataset_seurat_pbmc3k()
@@ -36,7 +44,7 @@ pbmc3k
 
 ## Populate a SOMACollection
 
-Our first step is to create a new `SOMACollection` at a specific URI. The URI could be a local filepath, an S3 URI, or as discussed below, a TileDB Cloud URI which automatically registers the dataset on TileDB Cloud.
+Our first step is to create a new `SOMACollection` at a specific URI. The URI could be a local filepath, an S3 URI, or as discussed below, a TileDB Cloud URI that automatically registers the dataset on TileDB Cloud.
 
 ```{r}
 soco_uri <- file.path(tempdir(), "soco-pbmc3k")
@@ -51,7 +59,7 @@ Now we use tiledbsc to automatically ingest the various components of the `pbmc3
 soco$from_seurat(pbmc3k)
 ```
 
-Printing the `soco` object shows it contains 2 members: `RNA`, which contains the RNA assay data, and `uns`, which is a special group for miscellaneous (i.e., unstructured) data.
+Printing the `soco` object shows it comprises 2 members: `RNA`, which contains the RNA assay data, and `uns`, which is a special group for miscellaneous (i.e., unstructured) data.
 
 ```{r}
 soco
@@ -79,7 +87,8 @@ obs <- soma$obs$to_dataframe()
 summary(obs)
 ```
 
-Access the [`AssayMatrix`] representing the `X` array containing the RNA expression data stored in `X`.
+Access the [`AssayMatrix`] representing the `X` array containing the raw RNA
+counts.
 
 ```{r}
 soma$X$members$counts
@@ -89,7 +98,7 @@ Read it into memory as a [`dgTMatrix`][`Matrix::TsparseMatrix-class`].
 
 ```{r}
 mat <- soma$X$members$counts$to_matrix()
-summary(mat)
+dim(mat)
 ```
 
 ## Dimension Slicing and Attribute Filtering
@@ -100,7 +109,7 @@ summary(mat)
 soma$set_query(obs_ids = head(colnames(pbmc3k), 10))
 ```
 
-This query is automatically applied to the entire SOMA, so any component read into memory will now only return the filtered results.
+This slice is automatically applied to the entire SOMA, so any component read into memory will now only contain the filtered results.
 
 ```{r}
 soma$obs$to_dataframe()
@@ -110,21 +119,16 @@ To remove the filter simply reset the query.
 
 ```{r}
 soma$reset_query()
-nrow(soma$obs$to_dataframe())
+soma$obs$to_dataframe()
 ```
 
 In addition to dimension slicing we can also apply filters using the cell- and feature-level metadata stored in the `obs` and `var` arrays.
 
 ```{r}
 soma$set_query(
-  obs_attr_filter = nCount_RNA > 3000
+    obs_attr_filter = seurat_annotations == "B" && nCount_RNA > 1000
 )
 ```
-
-```{r}
-pbmc3k[[]]
-```
-
 
 We can load the SOMA slice into memory as a Seurat `Assay`...
 
@@ -162,9 +166,9 @@ Add a new `X` layer containing log-normalized counts stored in the Seurat `Assay
 
 ```{r}
 soma$from_seurat_assay(
-    object = pbmc3k[["RNA"]],
-    layers = "data",
-    var = FALSE
+  object = pbmc3k[["RNA"]],
+  layers = "data",
+  var = FALSE
 )
 ```
 
