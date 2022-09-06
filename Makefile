@@ -1,5 +1,8 @@
 RSCRIPT := Rscript --no-save --no-restore
 
+PKGNAME = `sed -n "s/Package: *\([^ ]*\)/\1/p" DESCRIPTION`
+PKGVERS = `sed -n "s/Version: *\([^ ]*\)/\1/p" DESCRIPTION`
+
 # Pre-computed vignettes
 RMDS		:= $(patsubst %Rmd.orig, %Rmd, $(wildcard vignettes/*.orig))
 # Standard vignettes
@@ -11,9 +14,25 @@ HTMLS		:= $(patsubst vignettes%.Rmd, doc%.html, $(RMDS))
 MDS			:= $(RMDS:%.Rmd=%.md)
 IPYNBS	:= $(RMDS:%.Rmd=%.ipynb)
 
+all: vignettes docs check
+
+build:
+	@echo "Building package"
+	@R CMD build .
+
+check: build
+	@echo "Checking package"
+	@R CMD check --as-cran --no-tests $(PKGNAME)_$(PKGVERS).tar.gz
+
+docs:
+	@echo "Building documentation"
+	@Rscript -e "devtools::document()"
+
+test:
+	Rscript -e "devtools::test()"
+
 ipynbs: $(IPYNBS)
 vignettes: $(RMDS) $(HTMLS)
-all: $(ipynbs) $(vignettes)
 
 %.ipynb: %.md
 	@echo "Converting $< to $@"
@@ -36,3 +55,4 @@ vignettes/%.Rmd: vignettes/%.Rmd.orig
 clean:
 	@rm -f vignettes/*.{md,ipynb,html,R}
 	@rm -rf doc
+	@rm -rf $(PKGNAME)_$(PKGVERS).tar.gz $(PKGNAME).Rcheck

@@ -39,14 +39,21 @@ Run `make vignettes` to:
 * regenerate the precomputed vignettes (e.g., `quickstart.Rmd` from `quickstart.Rmd.orig`)
 * rebuild the vignettes
 
-Run `make ipynbs` to:
+Run `make docs` to:
 
-* regenerate the precomputed vignettes (e.g., `quickstart.Rmd` from `quickstart.Rmd.orig`
-* convert the rendered vignettes to IPython notebooks
+* rebuild package documentation
+
+Run `make check` to:
+
+* build and check the package as CRAN and without unit tests
 
 Run `make` to
-* perform all of the steps noted above
+* perform all of the documentation steps noted above
+* build the package
+* check the package as CRAN but without running tests (this is temporary until mock tests are implemented)
 
 **Helpers:**
 
-* `make clean` to remove the rendered vignettes
+* `make ipynbs` tp regenerate the precomputed vignettes and convert the rendered vignettes to IPython notebooks
+* `make test` to run unit tests
+* `make clean` to remove build/check files and rendered vignettes
