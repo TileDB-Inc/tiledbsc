@@ -12,7 +12,7 @@ MDS			:= $(RMDS:%.Rmd=%.md)
 IPYNBS	:= $(RMDS:%.Rmd=%.ipynb)
 
 ipynbs: $(IPYNBS)
-vignettes: $(HTMLS)
+vignettes: $(RMDS) $(HTMLS)
 all: $(ipynbs) $(vignettes)
 
 %.ipynb: %.md
