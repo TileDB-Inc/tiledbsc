@@ -91,7 +91,7 @@ soco
 ```
 
 ```
-##   uri: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpOQ8b0f/soco-pbmc3k 
+##   uri: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpOQ8b0f/soco-pbmc3k
 ## <SOMACollection>
 ##   groups: uns
 ```
@@ -115,7 +115,7 @@ soco
 ```
 
 ```
-##   uri: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpOQ8b0f/soco-pbmc3k 
+##   uri: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpOQ8b0f/soco-pbmc3k
 ## <SOMACollection>
 ##   groups: uns
 ```

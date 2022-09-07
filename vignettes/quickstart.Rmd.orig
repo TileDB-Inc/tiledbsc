@@ -258,3 +258,34 @@ Here we'll load the cell embeddings as a `matrix` and visualize the first 5 PCs.
 cell_pcs <- obsm_pca$to_matrix()
 pairs(cell_pcs[, 1:5])
 ```
+
+## Populate a SOMACollection in TileDB Cloud
+
+You can ingest a Seurat object into an S3 `SOMACollection` that's automatically registered with TileDB Cloud using a special URI composed of:
+
+-   your TileDB namespace
+-   an S3 bucket where the dataset will be created
+
+and running the same initialization/ingestion steps we performed earlier:
+
+```r
+soco <- SOMACollection$new("tiledb://<namespace>/s3://<bucket>/pbmc3k-soco")
+soco$from_seurat(pbmc3k)
+```
+
+Note this assumes you:
+
+-   have a TileDB Cloud account
+-   registered [cloud
+    credentials](https://cloud.tiledb.com/user-settings/credentials) for
+    AWS
+-   provided a [default S3 storage
+    path](https://cloud.tiledb.com/user-settings/storage-paths)
+-   are [logged into TileDB
+    Cloud](https://tiledb-inc.github.io/TileDB-Cloud-R/articles/Login.html)
+    in your environment
+
+You can then view the new SOMACollection directly on TileDB Cloud where you can
+inspect the various dataset components, share securely, view activity logs, and more. For example, here's the TileDB Cloud view of the `pbmc3k` dataset we just ingested: [`aaronwolen/pbmc3k-soco`](https://cloud.tiledb.com/groups/aaronwolen/68ffab71-b090-42c9-8d8b-977d00979257/overview).
+
+You can also securely access the dataset directly via R (or Python) using its TileDB Cloud URI, `tiledb://aaronwolen/pbmc3k-soco`.
