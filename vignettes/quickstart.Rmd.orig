@@ -33,7 +33,7 @@ library(tiledbsc)
 library(SeuratObject)
 ```
 
-For this tutorial we'll use a dataset from 10X genomics containing 2,700 peripheral blood mononuclear cells (PBMC) that's commonly used in Seurat and Scanpy tutorials.
+For this tutorial we'll use a dataset from 10X genomics containing 2,700 peripheral blood mononuclear cells (PBMC) from a healthy donor. The dataset is available on [10X Genomics' website](https://support.10xgenomics.com/single-cell-gene-expression/datasets/1.1.0/pbmc3k).
 
 Use the provided helper function to download the filtered gene/cell matrix from 10X and create a `Seurat` object.
 
@@ -144,6 +144,8 @@ if (requireNamespace("SummarizedExperiment", quietly = TRUE)) {
 }
 ```
 
+See `vignette("filtering", package = "tiledbsc")` for more details.
+
 ## Adding Analysis Results to a SOMA
 
 The original `pbmc3k` object contains only the raw counts data. Here we'll use `Seurat` to generate new results and add them to the `soma`.
@@ -172,7 +174,7 @@ soma$from_seurat_assay(
 )
 ```
 
-Now we can see the SOMA contains 2 X layers: `counts` and `data`.
+Now we can see the SOMA contains 2 `X` layers: `counts` and `data`.
 
 ```{r}
 soma$X
@@ -250,6 +252,7 @@ obsm_pca <- soma$obsm$get_member("dimreduction_pca")
 obsm_pca
 ```
 
+Here we'll load the cell embeddings as a `matrix` and visualize the first 5 PCs.
 
 ```{r eval=requireNamespace("Seurat", quietly = TRUE)}
 cell_pcs <- obsm_pca$to_matrix()
