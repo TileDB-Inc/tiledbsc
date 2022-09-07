@@ -38,7 +38,7 @@ library(SeuratObject)
 ## Attaching sp
 ```
 
-For this tutorial we'll use a dataset from 10X genomics containing 2,700 peripheral blood mononuclear cells (PBMC) that's commonly used in Seurat and Scanpy tutorials.
+For this tutorial we'll use a dataset from 10X genomics containing 2,700 peripheral blood mononuclear cells (PBMC) from a healthy donor. The dataset is available on [10X Genomics' website](https://support.10xgenomics.com/single-cell-gene-expression/datasets/1.1.0/pbmc3k).
 
 Use the provided helper function to download the filtered gene/cell matrix from 10X and create a `Seurat` object.
 
@@ -71,19 +71,19 @@ soco <- SOMACollection$new(uri = soco_uri)
 ```
 
 ```
-## No SOMACollection currently exists at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpOQ8b0f/soco-pbmc3k'
+## No SOMACollection currently exists at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpGPpkYq/soco-pbmc3k'
 ```
 
 ```
-## Creating new SOMACollection at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpOQ8b0f/soco-pbmc3k'
+## Creating new SOMACollection at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpGPpkYq/soco-pbmc3k'
 ```
 
 ```
-## No TileDBGroup currently exists at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpOQ8b0f/soco-pbmc3k/uns'
+## No TileDBGroup currently exists at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpGPpkYq/soco-pbmc3k/uns'
 ```
 
 ```
-## Creating new TileDBGroup at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpOQ8b0f/soco-pbmc3k/uns'
+## Creating new TileDBGroup at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpGPpkYq/soco-pbmc3k/uns'
 ```
 
 ```r
@@ -91,7 +91,7 @@ soco
 ```
 
 ```
-##   uri: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpOQ8b0f/soco-pbmc3k
+##   uri: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpGPpkYq/soco-pbmc3k 
 ## <SOMACollection>
 ##   groups: uns
 ```
@@ -115,7 +115,7 @@ soco
 ```
 
 ```
-##   uri: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpOQ8b0f/soco-pbmc3k
+##   uri: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpGPpkYq/soco-pbmc3k 
 ## <SOMACollection>
 ##   groups: uns
 ```
@@ -275,6 +275,8 @@ if (requireNamespace("SummarizedExperiment", quietly = TRUE)) {
 ## Error in eval(expr, envir, enclos): attempt to apply non-function
 ```
 
+See `vignette("filtering", package = "tiledbsc")` for more details.
+
 ## Adding Analysis Results to a SOMA
 
 The original `pbmc3k` object contains only the raw counts data. Here we'll use `Seurat` to generate new results and add them to the `soma`.
@@ -318,7 +320,7 @@ soma$from_seurat_assay(
 ## Error in eval(expr, envir, enclos): attempt to apply non-function
 ```
 
-Now we can see the SOMA contains 2 X layers: `counts` and `data`.
+Now we can see the SOMA contains 2 `X` layers: `counts` and `data`.
 
 
 ```r
@@ -453,6 +455,7 @@ obsm_pca
 ## Error in eval(expr, envir, enclos): object 'obsm_pca' not found
 ```
 
+Here we'll load the cell embeddings as a `matrix` and visualize the first 5 PCs.
 
 
 ```r
@@ -470,3 +473,34 @@ pairs(cell_pcs[, 1:5])
 ```
 ## Error in pairs(cell_pcs[, 1:5]): object 'cell_pcs' not found
 ```
+
+## Populate a SOMACollection in TileDB Cloud
+
+You can ingest a Seurat object into an S3 `SOMACollection` that's automatically registered with TileDB Cloud using a special URI composed of:
+
+-   your TileDB namespace
+-   an S3 bucket where the dataset will be created
+
+and running the same initialization/ingestion steps we performed earlier:
+
+```r
+soco <- SOMACollection$new("tiledb://<namespace>/s3://<bucket>/pbmc3k-soco")
+soco$from_seurat(pbmc3k)
+```
+
+Note this assumes you:
+
+-   have a TileDB Cloud account
+-   registered [cloud
+    credentials](https://cloud.tiledb.com/user-settings/credentials) for
+    AWS
+-   provided a [default S3 storage
+    path](https://cloud.tiledb.com/user-settings/storage-paths)
+-   are [logged into TileDB
+    Cloud](https://tiledb-inc.github.io/TileDB-Cloud-R/articles/Login.html)
+    in your environment
+
+You can then view the new SOMACollection directly on TileDB Cloud where you can
+inspect the various dataset components, share securely, view activity logs, and more. For example, here's the TileDB Cloud view of the `pbmc3k` dataset we just ingested: [`aaronwolen/pbmc3k-soco`](https://cloud.tiledb.com/groups/aaronwolen/68ffab71-b090-42c9-8d8b-977d00979257/overview).
+
+You can also securely access the dataset directly via R (or Python) using its TileDB Cloud URI, `tiledb://aaronwolen/pbmc3k-soco`.
