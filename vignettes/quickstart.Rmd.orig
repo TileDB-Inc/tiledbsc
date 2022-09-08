@@ -13,18 +13,19 @@ This vignette provides an overview of the tiledbsc R package which uses the open
 
 With tiledbsc you can:
 
-- convert datas from Seurat and other popular single-cell formats into SOMA
+- convert data from Seurat and other popular single-cell formats into SOMA
 - access SOMA data using any of TileDB's APIs
 - store your datasets on S3 (or other remote object stores) and slice directly without having to download anything first
 
 In this vignette you'll learn how to:
 
-- ingest *Seurat* data into TileDB-backed SOMA Collections
+- ingest Seurat data into TileDB-backed SOMA Collections
 - access various components of a dataset
 - slice by cell-/feature-identifiers
 - query using cell-/feature-level annotations
 - update a SOMA with analysis results
-- load data from SOMA into R as a *Seurat* or *Bioconductor* object
+- load data from SOMA into R as a Seurat or Bioconductor (i.e., `SummarizedExperiment`) object
+- store your data on S3 and register with TileDB Cloud
 
 ## Setup
 
