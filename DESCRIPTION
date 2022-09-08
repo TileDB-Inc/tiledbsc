@@ -41,6 +41,7 @@ Imports:
     jsonlite,
     glue,
     utils,
+    stats,
     fs,
     urltools,
     vctrs

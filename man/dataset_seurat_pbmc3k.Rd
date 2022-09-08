@@ -6,8 +6,8 @@
 \usage{
 dataset_seurat_pbmc3k()
 }
-\arguments{
-\item{return}{a \code{\link[SeuratObject:Seurat-class]{SeuratObject::Seurat}} object}
+\value{
+a \code{\link[SeuratObject:Seurat-class]{SeuratObject::Seurat}} object
 }
 \description{
 Create a \code{\link[SeuratObject:Seurat-class]{SeuratObject::Seurat}} object containing the widely used 3k PBMCs

@@ -74,7 +74,6 @@ CommandsArray <- R6::R6Class(
 
 # Coerce a Seurat Command to a data.frame, using JSON serialization of the
 # command's parameters
-#' @importFrom methods slot
 as.data.frame.SeuratCommand <- function(x, row.names = FALSE, optional = FALSE, ...) {
     data.frame(
         name = slot(x, "name"),

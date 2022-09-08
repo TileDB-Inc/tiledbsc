@@ -68,6 +68,7 @@ AssayMatrix <- R6::R6Class(
     #' @param attrs Specify one or more attributes to retrieve. If `NULL`,
     #' all attributes are retrieved.
     #' @return A [`Matrix::dgTMatrix-class`].
+    #' @importFrom vctrs vec_rbind
     to_dataframe = function(attrs = NULL, batch_mode = FALSE) {
       if (self$verbose) {
         message(

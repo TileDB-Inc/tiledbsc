@@ -190,10 +190,11 @@ TileDBGroup <- R6::R6Class(
     #' By default all member types are listed.
     #' @param prefix Filter for members whose name contains an optional prefix.
     #' @return A character vector of member URIs, named for the group member
+    #' @importFrom stats setNames
     list_member_uris = function(type = NULL, prefix = NULL) {
       members <- self$list_members(type = type)
       if (is_empty(members)) return(character(0L))
-      uris <- setNames(members$URI, members$NAME)
+      uris <- stats::setNames(members$URI, members$NAME)
       if (!is.null(prefix)) {
         stopifnot(is_scalar_character(prefix))
         uris <- uris[string_starts_with(names(uris), prefix)]
@@ -315,7 +316,10 @@ TileDBGroup <- R6::R6Class(
       members <- self$list_members()
       member_objects <- list()
       if (!is_empty(members)) {
-        member_uris <- split(setNames(members$URI, members$NAME), members$TYPE)
+        member_uris <- split(
+          stats::setNames(members$URI, members$NAME),
+          members$TYPE
+        )
         member_objects <- c(
           lapply(member_uris$ARRAY, TileDBArray$new, verbose = self$verbose),
           lapply(member_uris$GROUP, TileDBGroup$new, verbose = self$verbose)
