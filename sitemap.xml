@@ -4,6 +4,9 @@
     <loc>/404.html</loc>
   </url>
   <url>
+    <loc>/CONTRIBUTING.html</loc>
+  </url>
+  <url>
     <loc>/LICENSE-text.html</loc>
   </url>
   <url>
@@ -17,6 +20,9 @@
   </url>
   <url>
     <loc>/articles/introduction.html</loc>
+  </url>
+  <url>
+    <loc>/articles/quickstart.html</loc>
   </url>
   <url>
     <loc>/articles/updates.html</loc>
@@ -80,6 +86,9 @@
   </url>
   <url>
     <loc>/reference/TileDBObject.html</loc>
+  </url>
+  <url>
+    <loc>/reference/dataset_seurat_pbmc3k.html</loc>
   </url>
   <url>
     <loc>/reference/index.html</loc>

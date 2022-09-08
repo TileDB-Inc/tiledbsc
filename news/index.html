@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tiledbsc</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.3.9004</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.3.9005</span>
       </span>
     </div>
 
@@ -38,7 +38,10 @@
       <a href="../articles/introduction.html">Introduction</a>
     </li>
     <li>
-      <a href="../articles/updates.html">Selective Updates</a>
+      <a href="../articles/quickstart.html">Getting started with tiledbsc</a>
+    </li>
+    <li>
+      <a href="../articles/updates.html">Selective updates</a>
     </li>
   </ul></li>
 <li>
@@ -75,6 +78,11 @@
 <li><code>AssayMatrix$to_matrix()</code></li>
 </ul></li>
 <li>Members can now be removed from <code>TileDBGroup</code>s with <code>remove_member()</code>
+</li>
+<li>New <code><a href="../articles/quickstart.html">vignette("quickstart")</a></code> which provides new users with a high-level overview of the package</li>
+<li>New function <code><a href="../reference/dataset_seurat_pbmc3k.html">dataset_seurat_pbmc3k()</a></code> to download the pbmc 3k dataset from 10X and import as a <code>Seurat</code> object without requiring any extra dependencies. This dataset is used in the new vignette</li>
+<li>Updated bundled <code>Makefile</code> to add targets for generating pre-computed vignettes and performing common dev operations</li>
+<li>Added <code>CONTRIBUTING.md</code> to reference TileDB’s CoC and document the <code>Makefile</code>
 </li>
 </ul></div>
 <div class="section level3">
