@@ -167,7 +167,7 @@ First we normalize the raw counts, which creates a new matrix stored in the `Ass
 pbmc3k <- Seurat::NormalizeData(pbmc3k, normalization.method = "LogNormalize")
 ```
 
-Currently the RNA SOMA's X group contains only a single layer, _counts_.
+Currently the RNA SOMA's `X` group contains only a single layer, `counts`.
 
 ```{r}
 soma$X
@@ -224,7 +224,7 @@ soma$X
 
 ### Add Dimensional Reduction Results
 
-We can use a similar workflow for dimensional reduction results, which are stored in either the `obsm` or `varm` slots of a SOMA.
+We can use a similar workflow for dimensional-reduction results, which are stored in either the `obsm` or `varm` slots of a SOMA.
 
 ```{r eval=requireNamespace("Seurat", quietly = TRUE)}
 dimreduc_pca <- Reductions(
