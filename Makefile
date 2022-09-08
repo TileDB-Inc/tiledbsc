@@ -47,7 +47,9 @@ doc/%.html: vignettes/%.Rmd
 	@echo "Building vignette $< to $@"
 	@$(RSCRIPT) -e "devtools::build_vignettes()"
 
-# precomputed vignettes
+# vignettes that require external datasets or additional package to run are
+# pre-computed, following the approach outlined in
+# https://ropensci.org/blog/2019/12/08/precompute-vignettes/
 vignettes/%.Rmd: vignettes/%.Rmd.orig
 	@echo "Knitting pre-computed vignette $< to $@"
 	@$(RSCRIPT) -e "knitr::knit('$<', '$@', quiet = TRUE)"
