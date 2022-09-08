@@ -7,6 +7,14 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "quickstart-"
+)
+```
+
 ## Overview
 
 This vignette provides an overview of the tiledbsc R package which uses the open source [SOMA data model](https://github.com/single-cell-data/SOMA) to store single-cell data in a collection of TileDB arrays.
@@ -255,7 +263,7 @@ obsm_pca
 
 Here we'll load the cell embeddings as a `matrix` and visualize the first 5 PCs.
 
-```{r eval=requireNamespace("Seurat", quietly = TRUE)}
+```{r pc-pairs, eval=requireNamespace("Seurat", quietly = TRUE)}
 cell_pcs <- obsm_pca$to_matrix()
 pairs(cell_pcs[, 1:5])
 ```

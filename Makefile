@@ -52,7 +52,8 @@ doc/%.html: vignettes/%.Rmd
 # https://ropensci.org/blog/2019/12/08/precompute-vignettes/
 vignettes/%.Rmd: vignettes/%.Rmd.orig
 	@echo "Knitting pre-computed vignette $< to $@"
-	@$(RSCRIPT) -e "knitr::knit('$<', '$@', quiet = TRUE)"
+	# switch to vignettes directory so images are saved there
+	@cd vignettes; $(RSCRIPT) -e "knitr::knit('$(<F)', '$(@F)', quiet = TRUE)"
 
 clean:
 	@rm -f vignettes/*.{md,ipynb,html,R}
