@@ -7,6 +7,8 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+
+
 ## Overview
 
 This vignette provides an overview of the tiledbsc R package which uses the open source [SOMA data model](https://github.com/single-cell-data/SOMA) to store single-cell data in a collection of TileDB arrays.
@@ -33,10 +35,7 @@ In this vignette you'll learn how to:
 ```r
 library(tiledbsc)
 library(SeuratObject)
-```
-
-```
-## Attaching sp
+#> Attaching sp
 ```
 
 For this tutorial we'll use a dataset from 10X genomics containing 2,700 peripheral blood mononuclear cells (PBMC) from a healthy donor. The dataset is available on [10X Genomics' website](https://support.10xgenomics.com/single-cell-gene-expression/datasets/1.1.0/pbmc3k).
@@ -47,12 +46,9 @@ Use the provided helper function to download the filtered gene/cell matrix from 
 ```r
 pbmc3k <- dataset_seurat_pbmc3k()
 pbmc3k
-```
-
-```
-## An object of class Seurat 
-## 32738 features across 2700 samples within 1 assay 
-## Active assay: RNA (32738 features, 0 variable features)
+#> An object of class Seurat 
+#> 32738 features across 2700 samples within 1 assay 
+#> Active assay: RNA (32738 features, 0 variable features)
 ```
 
 ## Populate a SOMACollection
@@ -64,32 +60,14 @@ Our first step is to create a new `SOMACollection` at a specific URI. The URI co
 soco_uri <- file.path(tempdir(), "soco-pbmc3k")
 
 soco <- SOMACollection$new(uri = soco_uri)
-```
-
-```
-## No SOMACollection currently exists at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k'
-```
-
-```
-## Creating new SOMACollection at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k'
-```
-
-```
-## No TileDBGroup currently exists at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/uns'
-```
-
-```
-## Creating new TileDBGroup at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/uns'
-```
-
-```r
+#> No SOMACollection currently exists at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k'
+#> Creating new SOMACollection at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k'
+#> No TileDBGroup currently exists at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/uns'
+#> Creating new TileDBGroup at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/uns'
 soco
-```
-
-```
-## <SOMACollection>
-##   uri: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k 
-##   groups: uns
+#> <SOMACollection>
+#>   uri: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k 
+#>   groups: uns
 ```
 
 Now we use tiledbsc to automatically ingest the various components of the `pbmc3k` object into the new `SOMACollection`.
@@ -97,110 +75,32 @@ Now we use tiledbsc to automatically ingest the various components of the `pbmc3
 
 ```r
 soco$from_seurat(pbmc3k)
-```
-
-```
-## No SOMA currently exists at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA'
-```
-
-```
-## Creating new SOMA at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA'
-```
-
-```
-## No AnnotationDataframe found at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/obs'
-```
-
-```
-## No AnnotationDataframe found at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/var'
-```
-
-```
-## No AssayMatrixGroup currently exists at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/X'
-```
-
-```
-## Creating new AssayMatrixGroup at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/X'
-```
-
-```
-## No AnnotationMatrixGroup currently exists at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/obsm'
-```
-
-```
-## Creating new AnnotationMatrixGroup at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/obsm'
-```
-
-```
-## No AnnotationMatrixGroup currently exists at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/varm'
-```
-
-```
-## Creating new AnnotationMatrixGroup at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/varm'
-```
-
-```
-## No AnnotationPairwiseMatrixGroup currently exists at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/obsp'
-```
-
-```
-## Creating new AnnotationPairwiseMatrixGroup at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/obsp'
-```
-
-```
-## No AnnotationPairwiseMatrixGroup currently exists at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/varp'
-```
-
-```
-## Creating new AnnotationPairwiseMatrixGroup at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/varp'
-```
-
-```
-## No TileDBGroup currently exists at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/uns'
-```
-
-```
-## Creating new TileDBGroup at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/uns'
-```
-
-```
-## Creating new AnnotationDataframe array with index [obs_id] at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/obs'
-```
-
-```
-## Ingesting AnnotationDataframe data into: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/obs
-```
-
-```
-## Creating new AnnotationDataframe array with index [var_id] at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/var'
-```
-
-```
-## Ingesting AnnotationDataframe data into: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/var
-```
-
-```
-## Skipping ingestion of 'data' because it is identical to 'counts'
-```
-
-```
-## No AssayMatrix found at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/X/counts'
-```
-
-```
-## Creating new AssayMatrix array with index [var_id,obs_id] at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/X/counts'
-```
-
-```
-## Ingesting AssayMatrix data into: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/X/counts
-```
-
-```
-## Finished converting Seurat Assay with key [rna_] to SOMA
-```
-
-```
-## Finished converting Seurat object to SOMACollection
+#> No SOMA currently exists at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA'
+#> Creating new SOMA at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA'
+#> No AnnotationDataframe found at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/obs'
+#> No AnnotationDataframe found at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/var'
+#> No AssayMatrixGroup currently exists at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/X'
+#> Creating new AssayMatrixGroup at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/X'
+#> No AnnotationMatrixGroup currently exists at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/obsm'
+#> Creating new AnnotationMatrixGroup at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/obsm'
+#> No AnnotationMatrixGroup currently exists at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/varm'
+#> Creating new AnnotationMatrixGroup at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/varm'
+#> No AnnotationPairwiseMatrixGroup currently exists at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/obsp'
+#> Creating new AnnotationPairwiseMatrixGroup at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/obsp'
+#> No AnnotationPairwiseMatrixGroup currently exists at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/varp'
+#> Creating new AnnotationPairwiseMatrixGroup at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/varp'
+#> No TileDBGroup currently exists at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/uns'
+#> Creating new TileDBGroup at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/uns'
+#> Creating new AnnotationDataframe array with index [obs_id] at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/obs'
+#> Ingesting AnnotationDataframe data into: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/obs
+#> Creating new AnnotationDataframe array with index [var_id] at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/var'
+#> Ingesting AnnotationDataframe data into: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/var
+#> Skipping ingestion of 'data' because it is identical to 'counts'
+#> No AssayMatrix found at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/X/counts'
+#> Creating new AssayMatrix array with index [var_id,obs_id] at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/X/counts'
+#> Ingesting AssayMatrix data into: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/X/counts
+#> Finished converting Seurat Assay with key [rna_] to SOMA
+#> Finished converting Seurat object to SOMACollection
 ```
 
 Printing the `soco` object shows it comprises 2 members: `RNA`, which contains the RNA assay data, and `uns`, which is a special group for miscellaneous (i.e., unstructured) data.
@@ -208,12 +108,9 @@ Printing the `soco` object shows it comprises 2 members: `RNA`, which contains t
 
 ```r
 soco
-```
-
-```
-## <SOMACollection>
-##   uri: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k 
-##   groups: RNA, uns
+#> <SOMACollection>
+#>   uri: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k 
+#>   groups: RNA, uns
 ```
 
 ## Access SOMA Components
@@ -224,13 +121,10 @@ As this dataset is unimodal, we'll extract the SOMA containing the RNA data.
 ```r
 soma <- soco$get_member("RNA")
 soma
-```
-
-```
-## <SOMA>
-##   uri: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA 
-##   arrays: obs, var 
-##   groups: obsm, obsp, uns, varm, varp, X
+#> <SOMA>
+#>   uri: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA 
+#>   arrays: obs, var 
+#>   groups: obsm, obsp, uns, varm, varp, X
 ```
 
 Access the [`AnnotationDataframe`] representing the `obs` array containing cell-level metadata stored in `obs`.
@@ -238,13 +132,10 @@ Access the [`AnnotationDataframe`] representing the `obs` array containing cell-
 
 ```r
 soma$obs
-```
-
-```
-## <AnnotationDataframe>
-##   uri: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/obs 
-##   dimensions: obs_id 
-##   attributes: orig.ident, nCount_RNA, nFeature_RNA
+#> <AnnotationDataframe>
+#>   uri: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/obs 
+#>   dimensions: obs_id 
+#>   attributes: orig.ident, nCount_RNA, nFeature_RNA
 ```
 
 Read it into memory as a `data.frame`.
@@ -252,24 +143,15 @@ Read it into memory as a `data.frame`.
 
 ```r
 obs <- soma$obs$to_dataframe()
-```
-
-```
-## Reading AnnotationDataframe into memory from '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/obs'
-```
-
-```r
+#> Reading AnnotationDataframe into memory from '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/obs'
 summary(obs)
-```
-
-```
-##   orig.ident          nCount_RNA     nFeature_RNA   
-##  Length:2700        Min.   :  548   Min.   : 212.0  
-##  Class :character   1st Qu.: 1758   1st Qu.: 690.0  
-##  Mode  :character   Median : 2197   Median : 817.0  
-##                     Mean   : 2367   Mean   : 847.0  
-##                     3rd Qu.: 2763   3rd Qu.: 953.2  
-##                     Max.   :15844   Max.   :3422.0
+#>   orig.ident          nCount_RNA     nFeature_RNA   
+#>  Length:2700        Min.   :  548   Min.   : 212.0  
+#>  Class :character   1st Qu.: 1758   1st Qu.: 690.0  
+#>  Mode  :character   Median : 2197   Median : 817.0  
+#>                     Mean   : 2367   Mean   : 847.0  
+#>                     3rd Qu.: 2763   3rd Qu.: 953.2  
+#>                     Max.   :15844   Max.   :3422.0
 ```
 
 Access the [`AssayMatrix`] representing the `X` array containing the raw RNA
@@ -278,13 +160,10 @@ counts.
 
 ```r
 soma$X$members$counts
-```
-
-```
-## <AssayMatrix>
-##   uri: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/X/counts 
-##   dimensions: var_id, obs_id 
-##   attributes: value
+#> <AssayMatrix>
+#>   uri: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/X/counts 
+#>   dimensions: var_id, obs_id 
+#>   attributes: value
 ```
 
 Read it into memory as a [`dgTMatrix`][`Matrix::TsparseMatrix-class`].
@@ -292,18 +171,9 @@ Read it into memory as a [`dgTMatrix`][`Matrix::TsparseMatrix-class`].
 
 ```r
 mat <- soma$X$members$counts$to_matrix()
-```
-
-```
-## Reading AssayMatrix into memory from '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/X/counts'
-```
-
-```r
+#> Reading AssayMatrix into memory from '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/X/counts'
 dim(mat)
-```
-
-```
-## [1] 16634  2700
+#> [1] 16634  2700
 ```
 
 ## Dimension Slicing and Attribute Filtering
@@ -320,24 +190,18 @@ This slice is automatically applied to the entire SOMA, so any component read in
 
 ```r
 soma$obs$to_dataframe()
-```
-
-```
-## Reading AnnotationDataframe into memory from '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/obs'
-```
-
-```
-##                     orig.ident nCount_RNA nFeature_RNA
-## AAACATACAACCAC-1 SeuratProject       2421          781
-## AAACATTGAGCTAC-1 SeuratProject       4903         1352
-## AAACATTGATCAGC-1 SeuratProject       3149         1131
-## AAACCGTGCTTCCG-1 SeuratProject       2639          960
-## AAACCGTGTATGCG-1 SeuratProject        981          522
-## AAACGCACTGGTAC-1 SeuratProject       2164          782
-## AAACGCTGACCAGT-1 SeuratProject       2176          783
-## AAACGCTGGTTCTT-1 SeuratProject       2260          790
-## AAACGCTGTAGCCA-1 SeuratProject       1276          533
-## AAACGCTGTTTCTG-1 SeuratProject       1103          550
+#> Reading AnnotationDataframe into memory from '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/obs'
+#>                     orig.ident nCount_RNA nFeature_RNA
+#> AAACATACAACCAC-1 SeuratProject       2421          781
+#> AAACATTGAGCTAC-1 SeuratProject       4903         1352
+#> AAACATTGATCAGC-1 SeuratProject       3149         1131
+#> AAACCGTGCTTCCG-1 SeuratProject       2639          960
+#> AAACCGTGTATGCG-1 SeuratProject        981          522
+#> AAACGCACTGGTAC-1 SeuratProject       2164          782
+#> AAACGCTGACCAGT-1 SeuratProject       2176          783
+#> AAACGCTGGTTCTT-1 SeuratProject       2260          790
+#> AAACGCTGTAGCCA-1 SeuratProject       1276          533
+#> AAACGCTGTTTCTG-1 SeuratProject       1103          550
 ```
 
 To remove the filter simply reset the query.
@@ -345,2715 +209,15 @@ To remove the filter simply reset the query.
 
 ```r
 soma$reset_query()
-soma$obs$to_dataframe()
-```
-
-```
-## Reading AnnotationDataframe into memory from '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/obs'
-```
-
-```
-##                     orig.ident nCount_RNA nFeature_RNA
-## AAACATACAACCAC-1 SeuratProject       2421          781
-## AAACATTGAGCTAC-1 SeuratProject       4903         1352
-## AAACATTGATCAGC-1 SeuratProject       3149         1131
-## AAACCGTGCTTCCG-1 SeuratProject       2639          960
-## AAACCGTGTATGCG-1 SeuratProject        981          522
-## AAACGCACTGGTAC-1 SeuratProject       2164          782
-## AAACGCTGACCAGT-1 SeuratProject       2176          783
-## AAACGCTGGTTCTT-1 SeuratProject       2260          790
-## AAACGCTGTAGCCA-1 SeuratProject       1276          533
-## AAACGCTGTTTCTG-1 SeuratProject       1103          550
-## AAACTTGAAAAACG-1 SeuratProject       3918         1116
-## AAACTTGATCCAGA-1 SeuratProject       2392          751
-## AAAGAGACGAGATA-1 SeuratProject       2412          866
-## AAAGAGACGCGAGA-1 SeuratProject       3034         1059
-## AAAGAGACGGACTT-1 SeuratProject       1152          458
-## AAAGAGACGGCATT-1 SeuratProject        792          335
-## AAAGATCTGGGCAA-1 SeuratProject       1348          552
-## AAAGCAGAAGCCAT-1 SeuratProject       1158          567
-## AAAGCAGATATCGG-1 SeuratProject       4586         1424
-## AAAGCCTGTATGCG-1 SeuratProject       2929         1014
-## AAAGGCCTGTCTAG-1 SeuratProject       4974         1446
-## AAAGTTTGATCACG-1 SeuratProject       1270          446
-## AAAGTTTGGGGTGA-1 SeuratProject       3286         1020
-## AAAGTTTGTAGAGA-1 SeuratProject       1102          417
-## AAAGTTTGTAGCGT-1 SeuratProject       2684          878
-## AAATCAACAATGCC-1 SeuratProject       2321          789
-## AAATCAACACCAGT-1 SeuratProject       1414          510
-## AAATCAACCAGGAG-1 SeuratProject       2801          824
-## AAATCAACCCTATT-1 SeuratProject       5680         1545
-## AAATCAACGGAAGC-1 SeuratProject       3473          996
-## AAATCAACTCGCAA-1 SeuratProject       2812          937
-## AAATCATGACCACA-1 SeuratProject       4128         1368
-## AAATCCCTCCACAA-1 SeuratProject        956          428
-## AAATCCCTGCTATG-1 SeuratProject        822          406
-## AAATGTTGAACGAA-1 SeuratProject       3211         1020
-## AAATGTTGCCACAA-1 SeuratProject       1761          786
-## AAATGTTGTGGCAT-1 SeuratProject       2763         1019
-## AAATTCGAAGGTTC-1 SeuratProject       2741          750
-## AAATTCGAATCACG-1 SeuratProject       2567          822
-## AAATTCGAGCTGAT-1 SeuratProject       2971          982
-## AAATTCGAGGAGTG-1 SeuratProject       2981          876
-## AAATTCGATTCTCA-1 SeuratProject       2643          930
-## AAATTGACACGACT-1 SeuratProject       2359          838
-## AAATTGACTCGCTC-1 SeuratProject       3412         1014
-## AACAAACTCATTTC-1 SeuratProject       2179          732
-## AACAAACTTTCGTT-1 SeuratProject       2688          877
-## AACAATACGACGAG-1 SeuratProject       2104          782
-## AACACGTGCAGAGG-1 SeuratProject       1801          787
-## AACACGTGGAAAGT-1 SeuratProject       2632          791
-## AACACGTGGAACCT-1 SeuratProject       2280          880
-## AACACGTGGCTACA-1 SeuratProject       2653          801
-## AACACGTGTACGAC-1 SeuratProject       3571         1215
-## AACAGCACAAGAGT-1 SeuratProject        689          343
-## AACATTGATGGGAG-1 SeuratProject       4713         1460
-## AACCAGTGATACCG-1 SeuratProject       3841         1250
-## AACCCAGATCGCTC-1 SeuratProject       2343          756
-## AACCGATGCTCCCA-1 SeuratProject       2295          836
-## AACCGATGGTCATG-1 SeuratProject       2633          824
-## AACCGATGTTCTAC-1 SeuratProject       2296          827
-## AACCGCCTAGCGTT-1 SeuratProject       3391         1238
-## AACCGCCTCTACGA-1 SeuratProject       3998         1243
-## AACCTACTGTGAGG-1 SeuratProject       5687         1652
-## AACCTACTGTGTTG-1 SeuratProject       2675          843
-## AACCTTACGAGACG-1 SeuratProject       2771          825
-## AACCTTACGCGAGA-1 SeuratProject       1248          656
-## AACCTTACTAACGC-1 SeuratProject       1947          776
-## AACCTTTGGACGGA-1 SeuratProject       2078          766
-## AACCTTTGTACGCA-1 SeuratProject       4621         1465
-## AACGCAACAAGTAG-1 SeuratProject       2049          790
-## AACGCATGACCCAA-1 SeuratProject       2778          871
-## AACGCATGCCTTCG-1 SeuratProject       2866          803
-## AACGCATGTACTTC-1 SeuratProject       2915          965
-## AACGCCCTCGGGAA-1 SeuratProject       2503          800
-## AACGCCCTCGTACA-1 SeuratProject       1915          876
-## AACGCCCTGCTTAG-1 SeuratProject       1074          420
-## AACGCCCTGGCATT-1 SeuratProject       1442          690
-## AACGTCGAGTATCG-1 SeuratProject       2149          988
-## AACGTGTGAAAGCA-1 SeuratProject       2820          906
-## AACGTGTGGCGGAA-1 SeuratProject       2071          741
-## AACGTGTGTCCAAG-1 SeuratProject       1665          620
-## AACGTGTGTGCTTT-1 SeuratProject       1933          867
-## AACTACCTTAGAGA-1 SeuratProject       2876          916
-## AACTCACTCAAGCT-1 SeuratProject       2607          969
-## AACTCACTTGGAGG-1 SeuratProject       2124          803
-## AACTCGGAAAGTGA-1 SeuratProject       1840          732
-## AACTCGGAAGGTCT-1 SeuratProject       1290          555
-## AACTCTTGCAGGAG-1 SeuratProject       2103          790
-## AACTGTCTCCCTTG-1 SeuratProject       2331          862
-## AACTTGCTACGCTA-1 SeuratProject       2336          900
-## AACTTGCTGGGACA-1 SeuratProject       1864          674
-## AAGAACGAGTGTTG-1 SeuratProject        780          397
-## AAGAAGACGTAGGG-1 SeuratProject       1440          663
-## AAGACAGAAGTCTG-1 SeuratProject       1125          563
-## AAGACAGAGGATCT-1 SeuratProject       2315          786
-## AAGACAGATTACCT-1 SeuratProject       2309          859
-## AAGAGATGGGTAGG-1 SeuratProject       1346          568
-## AAGATGGAAAACAG-1 SeuratProject        878          412
-## AAGATGGAGAACTC-1 SeuratProject       3117         1043
-## AAGATGGAGATAAG-1 SeuratProject       4023         1206
-## AAGATTACAACCTG-1 SeuratProject       2119          702
-## AAGATTACAGATCC-1 SeuratProject       4065         1263
-## AAGATTACCCGTTC-1 SeuratProject       2763          929
-## AAGATTACCGCCTT-1 SeuratProject       3063         1079
-## AAGATTACCTCAAG-1 SeuratProject       2280          938
-## AAGATTACTCCTCG-1 SeuratProject        642          316
-## AAGCAAGAGCGAGA-1 SeuratProject       2480          900
-## AAGCAAGAGCTTAG-1 SeuratProject       2171          919
-## AAGCAAGAGGTGTT-1 SeuratProject       1698          862
-## AAGCACTGAGCAAA-1 SeuratProject       3239          903
-## AAGCACTGCATACG-1 SeuratProject        803          390
-## AAGCACTGGTTCTT-1 SeuratProject       6157         1717
-## AAGCCAACGTGTTG-1 SeuratProject       2764          819
-## AAGCCATGAACTGC-1 SeuratProject       7070         1877
-## AAGCCATGACACGT-1 SeuratProject       1538          660
-## AAGCCATGCGTGAT-1 SeuratProject       2111          791
-## AAGCCATGTCTCGC-1 SeuratProject        909          478
-## AAGCCTGACATGCA-1 SeuratProject       1790          769
-## AAGCCTGACCGAAT-1 SeuratProject       1048          481
-## AAGCGACTCCTCAC-1 SeuratProject       2103          819
-## AAGCGACTGTGTCA-1 SeuratProject       3131          866
-## AAGCGACTTACAGC-1 SeuratProject       1494          600
-## AAGCGACTTTGACG-1 SeuratProject       3668         1185
-## AAGCGTACGTCTTT-1 SeuratProject       2048          650
-## AAGGCTTGCGAACT-1 SeuratProject       2076          775
-## AAGGTCACGGTTAC-1 SeuratProject       1870          699
-## AAGGTCACTGTTTC-1 SeuratProject       1775          642
-## AAGGTCACTTCCCG-1 SeuratProject       2387          857
-## AAGGTCTGACAGTC-1 SeuratProject       2589          832
-## AAGGTCTGCAGATC-1 SeuratProject        968          388
-## AAGGTCTGGTATGC-1 SeuratProject        715          351
-## AAGTAACTCTGAAC-1 SeuratProject       1874          710
-## AAGTAACTGAGATA-1 SeuratProject        659          341
-## AAGTAGGATACAGC-1 SeuratProject       1725          894
-## AAGTATACCGAACT-1 SeuratProject       3253          935
-## AAGTCCGACTTGTT-1 SeuratProject       1523          604
-## AAGTCCGATAGAAG-1 SeuratProject       3369         1008
-## AAGTCTCTAGTCGT-1 SeuratProject       3287          985
-## AAGTCTCTCGGAGA-1 SeuratProject       1838          679
-## AAGTGGCTTGGAGG-1 SeuratProject       1572          603
-## AAGTTCCTCATTCT-1 SeuratProject       2336          864
-## AAGTTCCTTCTTAC-1 SeuratProject       3265         1031
-## AATAAGCTCGAATC-1 SeuratProject       2760          887
-## AATAAGCTCGTTGA-1 SeuratProject       1606          603
-## AATACCCTGGACGA-1 SeuratProject       1501          610
-## AATACCCTGGCATT-1 SeuratProject       3310         1119
-## AATACTGAAAGGGC-1 SeuratProject       1747          669
-## AATACTGAATTGGC-1 SeuratProject       1816          794
-## AATAGGGAACCCTC-1 SeuratProject       2877          963
-## AATAGGGAGAATGA-1 SeuratProject       1864          756
-## AATCAAACTATCGG-1 SeuratProject       1457          637
-## AATCCGGAATGCTG-1 SeuratProject       2805         1032
-## AATCCTACCGGTAT-1 SeuratProject       2440          776
-## AATCCTTGACGGGA-1 SeuratProject       2533          860
-## AATCCTTGGTGAGG-1 SeuratProject       1754          825
-## AATCGGTGGAACTC-1 SeuratProject       1955          852
-## AATCGGTGTGCTTT-1 SeuratProject       1896          745
-## AATCTAGAAAAGTG-1 SeuratProject       2582          858
-## AATCTAGAATCGGT-1 SeuratProject       3168          925
-## AATCTCACAGCCTA-1 SeuratProject       3553         1228
-## AATCTCACTCTAGG-1 SeuratProject       2149          806
-## AATCTCTGAACAGA-1 SeuratProject       2183          715
-## AATCTCTGCTTTAC-1 SeuratProject       1710          668
-## AATGATACACCAAC-1 SeuratProject       1918          779
-## AATGATACGGTCAT-1 SeuratProject       3095         1197
-## AATGCGTGACACCA-1 SeuratProject       2866          888
-## AATGCGTGGACGGA-1 SeuratProject       4439         1273
-## AATGCGTGGCTATG-1 SeuratProject       2225          873
-## AATGGAGAATCGTG-1 SeuratProject       2381          847
-## AATGGAGATCCTTA-1 SeuratProject       1959          781
-## AATGGCTGACACCA-1 SeuratProject       3038          959
-## AATGGCTGCGTGAT-1 SeuratProject       2211          805
-## AATGGCTGTAAAGG-1 SeuratProject       1286          554
-## AATGGCTGTACTCT-1 SeuratProject       1208          604
-## AATGGCTGTGAAGA-1 SeuratProject       2145          785
-## AATGTAACGGTGGA-1 SeuratProject       3047          978
-## AATGTAACGTTTGG-1 SeuratProject       1130          537
-## AATGTCCTCTTCTA-1 SeuratProject       3322          910
-## AATGTTGACAGTCA-1 SeuratProject       2739          936
-## AATGTTGAGTTGAC-1 SeuratProject       2996          997
-## AATGTTGATCTACT-1 SeuratProject       2673          961
-## AATTACGAATTCCT-1 SeuratProject       4511         1314
-## AATTACGACTTCTA-1 SeuratProject       2569          799
-## AATTACGAGTAGCT-1 SeuratProject       2712          997
-## AATTACGAGTGAGG-1 SeuratProject       3467         1112
-## AATTACGATTGGCA-1 SeuratProject       1731          677
-## AATTCCTGCTCAGA-1 SeuratProject       1800          775
-## AATTGATGTCGCAA-1 SeuratProject       3973         1298
-## AATTGTGACTTGGA-1 SeuratProject       1973          657
-## ACAAAGGAGGGTGA-1 SeuratProject       2019          626
-## ACAAATTGATTCTC-1 SeuratProject       4094         1313
-## ACAAATTGCTCAGA-1 SeuratProject        955          467
-## ACAAATTGTTGCGA-1 SeuratProject       2326          936
-## ACAACCGAGGGATG-1 SeuratProject       2384          977
-## ACAACCGAGTTACG-1 SeuratProject       2106          780
-## ACAAGAGAAGTCGT-1 SeuratProject       4145         1311
-## ACAAGAGACTTATC-1 SeuratProject        948          432
-## ACAAGAGAGTTGAC-1 SeuratProject       1624          579
-## ACAATCCTAACCGT-1 SeuratProject       2317          850
-## ACAATCCTTAGCGT-1 SeuratProject       1847          736
-## ACAATTGACTGACA-1 SeuratProject       2165          800
-## ACAATTGATGACTG-1 SeuratProject       1871          892
-## ACACAGACACCTGA-1 SeuratProject        551          299
-## ACACAGACCATACG-1 SeuratProject       2024          860
-## ACACCAGAGGGCAA-1 SeuratProject       1769          720
-## ACACCCTGGTGTTG-1 SeuratProject       1808          822
-## ACACGAACAGTTCG-1 SeuratProject       1524          681
-## ACACGATGACGCAT-1 SeuratProject       2060          954
-## ACACGATGATGTGC-1 SeuratProject       2314          889
-## ACACGATGTCGTAG-1 SeuratProject       3652         1265
-## ACACGATGTGGTCA-1 SeuratProject       2311          919
-## ACAGACACGGCATT-1 SeuratProject       2139          799
-## ACAGACACGTTGTG-1 SeuratProject       1984          833
-## ACAGCAACACCTAG-1 SeuratProject       1046          496
-## ACAGCAACCTCAAG-1 SeuratProject       4435         1476
-## ACAGGTACCCCACT-1 SeuratProject       2729          848
-## ACAGGTACGCTGTA-1 SeuratProject       2220          869
-## ACAGGTACTGGTGT-1 SeuratProject       1886         1059
-## ACAGTCGACCCAAA-1 SeuratProject       1010          490
-## ACAGTCGACCGATA-1 SeuratProject       2070          897
-## ACAGTGACTCACCC-1 SeuratProject       2162          832
-## ACAGTGACTCTATC-1 SeuratProject       2131          864
-## ACAGTGTGGTCACA-1 SeuratProject        964          419
-## ACAGTGTGTTGCGA-1 SeuratProject       2274          856
-## ACATCACTCTACTT-1 SeuratProject       2503          907
-## ACATGGTGAAGCCT-1 SeuratProject       2165          791
-## ACATGGTGCAACCA-1 SeuratProject       2147          756
-## ACATGGTGCGAGTT-1 SeuratProject       2048          771
-## ACATGGTGCGTTGA-1 SeuratProject       1562          690
-## ACATTCTGGCATAC-1 SeuratProject       2850          957
-## ACATTCTGGGAACG-1 SeuratProject       3716         1190
-## ACCAACGACATGCA-1 SeuratProject       2115          680
-## ACCACAGAAAGTAG-1 SeuratProject       1457          524
-## ACCACAGAGTTGGT-1 SeuratProject       2860          908
-## ACCACCTGTGTGCA-1 SeuratProject       1177          506
-## ACCACGCTACAGCT-1 SeuratProject       2532          851
-## ACCACGCTACCCAA-1 SeuratProject       1936          775
-## ACCACGCTGCGAGA-1 SeuratProject       1979          793
-## ACCACGCTGCTGTA-1 SeuratProject       2009          748
-## ACCAGCCTGACAGG-1 SeuratProject       2569          951
-## ACCAGTGAACGGTT-1 SeuratProject       1730          643
-## ACCAGTGAATACCG-1 SeuratProject       3871         1277
-## ACCAGTGAGGGATG-1 SeuratProject       2445          828
-## ACCAGTGATGACTG-1 SeuratProject       1223          480
-## ACCATTACCTTCTA-1 SeuratProject       3415          969
-## ACCATTACGAGATA-1 SeuratProject       2712         1112
-## ACCATTTGTCATTC-1 SeuratProject       1647          648
-## ACCCAAGAACTGTG-1 SeuratProject       1704          805
-## ACCCAAGAATTCCT-1 SeuratProject       3563         1223
-## ACCCAAGAGGACAG-1 SeuratProject       2976         1023
-## ACCCAAGATTCACT-1 SeuratProject       1976          669
-## ACCCACTGCGCCTT-1 SeuratProject        986          489
-## ACCCACTGGACAGG-1 SeuratProject        863          390
-## ACCCACTGGTTCAG-1 SeuratProject        568          350
-## ACCCACTGTCGTAG-1 SeuratProject       2874         1113
-## ACCCAGCTCAGAAA-1 SeuratProject       2389          837
-## ACCCAGCTGTTAGC-1 SeuratProject       5535         1547
-## ACCCAGCTTGCTTT-1 SeuratProject       2495          840
-## ACCCGTTGATGACC-1 SeuratProject       1508          581
-## ACCCGTTGCTGCAA-1 SeuratProject       2158          748
-## ACCCGTTGCTTCTA-1 SeuratProject       6092         1861
-## ACCCTCGACCTATT-1 SeuratProject       1727          735
-## ACCCTCGACGGTAT-1 SeuratProject       1245          488
-## ACCCTCGATAAGGA-1 SeuratProject       2847         1016
-## ACCCTCGATCAAGC-1 SeuratProject       1444          585
-## ACCGTGCTACCAGT-1 SeuratProject       1938          797
-## ACCGTGCTGGAACG-1 SeuratProject       1909          769
-## ACCTATTGCTGAGT-1 SeuratProject       1190          490
-## ACCTATTGTGCCCT-1 SeuratProject       4060         1307
-## ACCTCCGAGTCCTC-1 SeuratProject       2426          895
-## ACCTCCGATATGCG-1 SeuratProject       1789          686
-## ACCTCCGATGCTGA-1 SeuratProject       1789          602
-## ACCTCGTGAACCAC-1 SeuratProject       1969          772
-## ACCTGAGATATCGG-1 SeuratProject       1524          704
-## ACCTGGCTAAGTAG-1 SeuratProject       1870          892
-## ACCTGGCTGTCTTT-1 SeuratProject        836          446
-## ACCTTTGACTCCCA-1 SeuratProject       3056         1169
-## ACCTTTGAGGAACG-1 SeuratProject       4145         1375
-## ACCTTTGAGGAAGC-1 SeuratProject       3696         1189
-## ACGAACACCTTGTT-1 SeuratProject       1736          892
-## ACGAACTGGCTATG-1 SeuratProject       8931         2455
-## ACGAAGCTCTCCAC-1 SeuratProject        796          355
-## ACGAAGCTCTGAGT-1 SeuratProject       7067         1856
-## ACGACCCTATCTCT-1 SeuratProject       4077         1317
-## ACGACCCTGATGAA-1 SeuratProject       2014          703
-## ACGACCCTTGACAC-1 SeuratProject       2795          825
-## ACGACCCTTGACCA-1 SeuratProject       2314          736
-## ACGAGGGACAGGAG-1 SeuratProject       7935         1997
-## ACGAGGGACGAACT-1 SeuratProject       2762          892
-## ACGAGGGATGTAGC-1 SeuratProject       3053         1034
-## ACGAGTACCCTAAG-1 SeuratProject       1261          545
-## ACGAGTACGAATCC-1 SeuratProject       3621         1188
-## ACGATCGAGGACTT-1 SeuratProject       1607          659
-## ACGATCGAGTCACA-1 SeuratProject       3066         1056
-## ACGATGACAATGCC-1 SeuratProject       2246          819
-## ACGATGACTGGTCA-1 SeuratProject       2634          979
-## ACGATTCTACGGGA-1 SeuratProject       1606          632
-## ACGCAATGGTTCAG-1 SeuratProject       1227          598
-## ACGCACCTGTTAGC-1 SeuratProject       1687          690
-## ACGCCACTGAACTC-1 SeuratProject        602          310
-## ACGCCGGAAACCAC-1 SeuratProject       2243          803
-## ACGCCGGAAAGCCT-1 SeuratProject       2145          743
-## ACGCCGGAAATGCC-1 SeuratProject       1102          560
-## ACGCCTTGCTCCCA-1 SeuratProject       2774         1073
-## ACGCGGTGGCGAGA-1 SeuratProject       2432          844
-## ACGCGGTGTGTGGT-1 SeuratProject       2604          882
-## ACGCGGTGTTTGCT-1 SeuratProject       2145          841
-## ACGCTCACAGTACC-1 SeuratProject       2367          815
-## ACGCTCACCCTTGC-1 SeuratProject       2165          771
-## ACGCTGCTGTTCTT-1 SeuratProject       1956          976
-## ACGGAACTCAGATC-1 SeuratProject       2155          986
-## ACGGAACTGTCGTA-1 SeuratProject       2153          820
-## ACGGAGGACTCTTA-1 SeuratProject       2614          957
-## ACGGATTGGGAGGT-1 SeuratProject       1655          640
-## ACGGATTGGTTAGC-1 SeuratProject       3068         1012
-## ACGGCTCTGAGCAG-1 SeuratProject       2389          927
-## ACGGCTCTTGCACA-1 SeuratProject       2535          794
-## ACGGTAACCGCTAA-1 SeuratProject       1867          753
-## ACGGTAACCTTCGC-1 SeuratProject       1944          791
-## ACGGTAACGGTGGA-1 SeuratProject        811          366
-## ACGGTAACTCGCAA-1 SeuratProject       1213          539
-## ACGGTATGAGTCGT-1 SeuratProject       1764          752
-## ACGGTATGGGTATC-1 SeuratProject       2149          769
-## ACGGTATGGTTGTG-1 SeuratProject       1947          650
-## ACGGTCCTAACGGG-1 SeuratProject       2197          947
-## ACGGTCCTCGGGAA-1 SeuratProject       2254          771
-## ACGTAGACAACCAC-1 SeuratProject       2028          824
-## ACGTAGACTACAGC-1 SeuratProject       1829          744
-## ACGTCAGAAACGAA-1 SeuratProject       2167          837
-## ACGTCAGAGAGCTT-1 SeuratProject       1911          723
-## ACGTCAGAGGGATG-1 SeuratProject       1541          640
-## ACGTCCTGATAAGG-1 SeuratProject       2627          923
-## ACGTCCTGTGAACC-1 SeuratProject       3303         1174
-## ACGTCGCTCCTGAA-1 SeuratProject       3932         1597
-## ACGTCGCTCTATTC-1 SeuratProject       1585          699
-## ACGTCGCTTCTCAT-1 SeuratProject       1602          618
-## ACGTGATGCCATGA-1 SeuratProject       5441         1418
-## ACGTGATGGGTCTA-1 SeuratProject       2638          820
-## ACGTGATGTAACCG-1 SeuratProject       2976         1047
-## ACGTGATGTGACAC-1 SeuratProject       2135          981
-## ACGTGCCTCCGTAA-1 SeuratProject       2177          866
-## ACGTGCCTTCTATC-1 SeuratProject       1081          527
-## ACGTTACTTTCCAT-1 SeuratProject       1968          762
-## ACGTTGGAAAAGCA-1 SeuratProject       2187          717
-## ACGTTGGAAACCTG-1 SeuratProject       2217          860
-## ACGTTGGACCGTAA-1 SeuratProject       1383          603
-## ACGTTGGAGCCAAT-1 SeuratProject       1780          828
-## ACGTTGGATATGGC-1 SeuratProject       1052          476
-## ACGTTGGATCAGGT-1 SeuratProject       2801         1071
-## ACGTTTACATCAGC-1 SeuratProject       2368          775
-## ACTAAAACCCACAA-1 SeuratProject       1268          614
-## ACTAAAACTCGACA-1 SeuratProject       2584          913
-## ACTACGGAATTTCC-1 SeuratProject       2188          836
-## ACTACGGACCTATT-1 SeuratProject       1804          669
-## ACTACGGATCGCTC-1 SeuratProject       2471          942
-## ACTACTACTAAGGA-1 SeuratProject       2339          792
-## ACTAGGTGGAACCT-1 SeuratProject       1980          871
-## ACTAGGTGGAACTC-1 SeuratProject       3531         1046
-## ACTATCACCTTGGA-1 SeuratProject       2050          859
-## ACTATCACTGCCAA-1 SeuratProject       2222          793
-## ACTCAGGACTGAAC-1 SeuratProject       2160          822
-## ACTCAGGATCTATC-1 SeuratProject       1870          751
-## ACTCAGGATTCGTT-1 SeuratProject       1009          435
-## ACTCCTCTCAACTG-1 SeuratProject       3267         1142
-## ACTCGCACGAAAGT-1 SeuratProject       1824          781
-## ACTCGCACTACGAC-1 SeuratProject       1872          718
-## ACTCTCCTGACACT-1 SeuratProject       1237          471
-## ACTCTCCTGCATAC-1 SeuratProject       5861         1750
-## ACTCTCCTGTTTGG-1 SeuratProject       2755          892
-## ACTGAGACAACCAC-1 SeuratProject       1944          841
-## ACTGAGACCCATAG-1 SeuratProject       3635         1156
-## ACTGAGACGTTGGT-1 SeuratProject       3991         1031
-## ACTGCCACACACGT-1 SeuratProject       2120          912
-## ACTGCCACTCCGTC-1 SeuratProject       1739          873
-## ACTGGCCTTCAGTG-1 SeuratProject       1656          824
-## ACTGTGGACGTGTA-1 SeuratProject       3185         1233
-## ACTGTGGATCTAGG-1 SeuratProject       4412         1312
-## ACTGTTACCCACAA-1 SeuratProject       1262          575
-## ACTGTTACTGCAGT-1 SeuratProject       1658          605
-## ACTTAAGAACCACA-1 SeuratProject       2297          717
-## ACTTAAGACCACAA-1 SeuratProject       1629          665
-## ACTTAAGATTACTC-1 SeuratProject       2822         1019
-## ACTTAGCTGCGTAT-1 SeuratProject       3267         1215
-## ACTTAGCTGGGAGT-1 SeuratProject       2502          928
-## ACTTCAACAAGCAA-1 SeuratProject       5419         1780
-## ACTTCAACGTAGGG-1 SeuratProject       1259          657
-## ACTTCCCTTTCCGC-1 SeuratProject       2072          718
-## ACTTCTGACATGCA-1 SeuratProject       1655          646
-## ACTTGACTCCACAA-1 SeuratProject       1999          808
-## ACTTGGGAGAAAGT-1 SeuratProject       3624         1120
-## ACTTGGGAGGTTTG-1 SeuratProject       1645          750
-## ACTTGGGATGTGAC-1 SeuratProject        792          390
-## ACTTGGGATTGACG-1 SeuratProject       3111         1100
-## ACTTGTACCCGAAT-1 SeuratProject       2501          911
-## ACTTGTACCTGTCC-1 SeuratProject       1149          456
-## ACTTTGTGCGATAC-1 SeuratProject        600          267
-## ACTTTGTGGAAAGT-1 SeuratProject       2368          755
-## ACTTTGTGGATAGA-1 SeuratProject       3145         1118
-## AGAAACGAAAGTAG-1 SeuratProject       1430          571
-## AGAAAGTGCGCAAT-1 SeuratProject       3021          867
-## AGAAAGTGGGGATG-1 SeuratProject       1968          728
-## AGAACAGAAATGCC-1 SeuratProject       1879          916
-## AGAACAGACGACTA-1 SeuratProject        981          491
-## AGAACAGAGACAAA-1 SeuratProject       3002          960
-## AGAACGCTTTGCTT-1 SeuratProject       1763          625
-## AGAAGATGTGACTG-1 SeuratProject       3604         1090
-## AGAATGGAAGAAGT-1 SeuratProject       2052          772
-## AGAATTTGTAACCG-1 SeuratProject       3259          968
-## AGAATTTGTAGAGA-1 SeuratProject       1428          480
-## AGACACACTGTAGC-1 SeuratProject       2229          810
-## AGACACTGTCAAGC-1 SeuratProject       1944          725
-## AGACCTGAAGTAGA-1 SeuratProject       2595         1016
-## AGACCTGACCAACA-1 SeuratProject       2999         1011
-## AGACCTGAGGAAGC-1 SeuratProject       2875         1075
-## AGACGTACAGAGGC-1 SeuratProject       2193          808
-## AGACGTACCCCTAC-1 SeuratProject       1517          672
-## AGACGTACCTCTTA-1 SeuratProject       2886          950
-## AGACGTACTCGTGA-1 SeuratProject       2242          862
-## AGACTGACCATCAG-1 SeuratProject       1895          766
-## AGACTGACCCTTTA-1 SeuratProject       2911          963
-## AGACTTCTCATGCA-1 SeuratProject       1302          507
-## AGAGATGACAGTCA-1 SeuratProject       1340          570
-## AGAGATGACTGAAC-1 SeuratProject       1974          678
-## AGAGATGAGGTTTG-1 SeuratProject       2060          768
-## AGAGATGATCTCGC-1 SeuratProject       3371         1037
-## AGAGATGATTGTGG-1 SeuratProject       2339          885
-## AGAGCGGAGGCAAG-1 SeuratProject       5230         1426
-## AGAGGTCTACAGCT-1 SeuratProject      10783         2815
-## AGAGTCTGGTCGTA-1 SeuratProject       4469         1496
-## AGAGTGCTCAGCTA-1 SeuratProject       1566          587
-## AGAGTGCTCGAATC-1 SeuratProject       2532          879
-## AGAGTGCTGTCATG-1 SeuratProject       3580          924
-## AGAGTGCTGTCCTC-1 SeuratProject       1944          783
-## AGAGTGCTGTGTTG-1 SeuratProject       1635          696
-## AGATATACCCGTAA-1 SeuratProject       2260         1057
-## AGATATACGATGAA-1 SeuratProject       2386          783
-## AGATATACTGTTCT-1 SeuratProject       2358          867
-## AGATATTGCCTACC-1 SeuratProject       2395          919
-## AGATATTGGCCAAT-1 SeuratProject       4076         1251
-## AGATCGTGTCTGGA-1 SeuratProject       2988         1023
-## AGATCGTGTTTGTC-1 SeuratProject       1844          727
-## AGATCTCTATCACG-1 SeuratProject       1501          645
-## AGATTAACGTTCTT-1 SeuratProject       3876         1217
-## AGATTCCTATCGTG-1 SeuratProject       2499          929
-## AGATTCCTCACTTT-1 SeuratProject       2200          792
-## AGATTCCTGACGAG-1 SeuratProject       2736          994
-## AGATTCCTGTTCAG-1 SeuratProject       2318         1025
-## AGCAAAGATATGCG-1 SeuratProject       2434          946
-## AGCACAACAGTCTG-1 SeuratProject       1625          600
-## AGCACTGAGGGAGT-1 SeuratProject       2621          881
-## AGCACTGATATGCG-1 SeuratProject       2297          975
-## AGCACTGATGCTTT-1 SeuratProject       5153         1609
-## AGCACTGATTGCGA-1 SeuratProject       2158          758
-## AGCATCGAAGATCC-1 SeuratProject       1726          772
-## AGCATCGAAGGGTG-1 SeuratProject       2172          682
-## AGCATCGAGCTTCC-1 SeuratProject       2587          998
-## AGCATCGAGTGAGG-1 SeuratProject       2979          979
-## AGCATCGATAACCG-1 SeuratProject       2780         1045
-## AGCATGACGATGAA-1 SeuratProject       1870          706
-## AGCCAATGGGGAGT-1 SeuratProject       1876          808
-## AGCCAATGTATCTC-1 SeuratProject       2617          855
-## AGCCACCTGGATCT-1 SeuratProject       1983          819
-## AGCCGGTGCCAATG-1 SeuratProject       3729         1147
-## AGCCGGTGTGTTTC-1 SeuratProject       2196          742
-## AGCCGTCTCAATCG-1 SeuratProject       2919          914
-## AGCCGTCTGAGAGC-1 SeuratProject       3005          969
-## AGCCTCACGTTCGA-1 SeuratProject       2157          704
-## AGCCTCACTGTCAG-1 SeuratProject       4816         1398
-## AGCCTCTGCAGTTG-1 SeuratProject       1473          581
-## AGCCTCTGCCAATG-1 SeuratProject       1679          809
-## AGCGAACTGGATCT-1 SeuratProject       3139          921
-## AGCGAACTTACTGG-1 SeuratProject       2117          805
-## AGCGATACGGAGCA-1 SeuratProject       1590          542
-## AGCGATTGAGATCC-1 SeuratProject       1919          888
-## AGCGCCGAATCTCT-1 SeuratProject       1279          519
-## AGCGCCGACAGAGG-1 SeuratProject       2678         1092
-## AGCGCTCTACCTTT-1 SeuratProject       1767          762
-## AGCGGCACCGGGAA-1 SeuratProject       2103          698
-## AGCGGCTGATGTGC-1 SeuratProject       2269          752
-## AGCGGGCTTGCCAA-1 SeuratProject       2244          771
-## AGCGTAACATGCTG-1 SeuratProject       2424          899
-## AGCGTAACTGAGAA-1 SeuratProject       3081         1101
-## AGCTCGCTACTGGT-1 SeuratProject       2531          760
-## AGCTCGCTCTGCTC-1 SeuratProject       2673          881
-## AGCTGAACCATACG-1 SeuratProject       3218         1124
-## AGCTGAACCTCTCG-1 SeuratProject       2320          809
-## AGCTGCCTTGGGAG-1 SeuratProject       1037          445
-## AGCTGCCTTTCATC-1 SeuratProject       5212         1703
-## AGCTGCCTTTCTGT-1 SeuratProject       2282          789
-## AGCTGTGATCCAAG-1 SeuratProject       1551          641
-## AGCTTTACAAGTAG-1 SeuratProject       2261          819
-## AGCTTTACACCAAC-1 SeuratProject       2114          890
-## AGCTTTACTCTCAT-1 SeuratProject       2570          767
-## AGGAAATGAGGAGC-1 SeuratProject       1880          806
-## AGGAACCTCTTAGG-1 SeuratProject       3844         1323
-## AGGAACCTTGCCTC-1 SeuratProject       2188          942
-## AGGAATGATAACGC-1 SeuratProject       1975          807
-## AGGAATGATTTGTC-1 SeuratProject       2648          981
-## AGGAGTCTGGTTTG-1 SeuratProject       2508          888
-## AGGAGTCTTGTCAG-1 SeuratProject       1978          726
-## AGGATAGACATTTC-1 SeuratProject       4146         1190
-## AGGATAGAGGATTC-1 SeuratProject       1963          826
-## AGGATGCTACTAGC-1 SeuratProject       1805          661
-## AGGATGCTTTAGGC-1 SeuratProject       1401          713
-## AGGCAACTGAAGGC-1 SeuratProject       2698          816
-## AGGCAGGAGTACCA-1 SeuratProject       2152          822
-## AGGCCTCTAGTCGT-1 SeuratProject       2264          806
-## AGGCCTCTCGGAGA-1 SeuratProject       2388          864
-## AGGCCTCTCGTAAC-1 SeuratProject       1205          464
-## AGGGACGACGTTGA-1 SeuratProject       1857          664
-## AGGGACGAGTCAAC-1 SeuratProject       1957          931
-## AGGGACGAGTTGTG-1 SeuratProject       2746          860
-## AGGGACGATAGAGA-1 SeuratProject       1722          674
-## AGGGACGATGCATG-1 SeuratProject       1783          803
-## AGGGAGTGAGCCTA-1 SeuratProject        997          464
-## AGGGCCACCATACG-1 SeuratProject       2047          788
-## AGGGCGCTAACCAC-1 SeuratProject       3558         1068
-## AGGGCGCTATGGTC-1 SeuratProject       1609          781
-## AGGGTGGACAGTCA-1 SeuratProject       2229          843
-## AGGGTGGACTCAAG-1 SeuratProject       2072          779
-## AGGGTGGAGTTGCA-1 SeuratProject       2253          873
-## AGGGTTTGTTCATC-1 SeuratProject       1795          707
-## AGGTCATGAGTGTC-1 SeuratProject        925          492
-## AGGTCATGCTTATC-1 SeuratProject       1588          669
-## AGGTCTGATTCTCA-1 SeuratProject       2731          982
-## AGGTGGGAAGAATG-1 SeuratProject       2033          749
-## AGGTGGGAAGTTCG-1 SeuratProject       2474          789
-## AGGTGTTGGTTACG-1 SeuratProject       2090          780
-## AGGTTCGAACCTCC-1 SeuratProject       1346          561
-## AGGTTCGAACGTAC-1 SeuratProject       1592          655
-## AGGTTCGAGGGTGA-1 SeuratProject       1155          432
-## AGTAAGGAGTTTGG-1 SeuratProject       1928          801
-## AGTAAGGATTCTTG-1 SeuratProject       2894          945
-## AGTAATACATCACG-1 SeuratProject       1832          770
-## AGTAATACCGAACT-1 SeuratProject       1236          503
-## AGTAATTGTCCCAC-1 SeuratProject       1892          766
-## AGTACGTGAGGGTG-1 SeuratProject       2386          776
-## AGTACGTGCTGCAA-1 SeuratProject       3001          970
-## AGTACGTGCTTGGA-1 SeuratProject       3506          989
-## AGTACTCTACGTGT-1 SeuratProject       1604          654
-## AGTACTCTCAACCA-1 SeuratProject       1766          762
-## AGTACTCTCGGTAT-1 SeuratProject       2063          882
-## AGTAGGCTTGCCTC-1 SeuratProject       3561         1236
-## AGTATAACTTGTCT-1 SeuratProject       4455         1499
-## AGTATCCTAGAACA-1 SeuratProject       1826          626
-## AGTCACGATGAGCT-1 SeuratProject       3719         1380
-## AGTCAGACGAATAG-1 SeuratProject       3305         1170
-## AGTCAGACGCTTAG-1 SeuratProject       1011          491
-## AGTCAGACTAGAGA-1 SeuratProject       1994          833
-## AGTCAGACTGCACA-1 SeuratProject       2820          924
-## AGTCCAGATATCTC-1 SeuratProject       1746          581
-## AGTCCAGATTTCAC-1 SeuratProject       2095          842
-## AGTCGAACCAACCA-1 SeuratProject       1547          596
-## AGTCGCCTCCGTAA-1 SeuratProject       2231          811
-## AGTCTACTAGGGTG-1 SeuratProject       1192          542
-## AGTCTACTTGCATG-1 SeuratProject       5204         1572
-## AGTCTTACACCACA-1 SeuratProject       2425          758
-## AGTCTTACTTCGCC-1 SeuratProject       2129          854
-## AGTCTTACTTCGGA-1 SeuratProject        664          274
-## AGTGACTGCAACTG-1 SeuratProject       4697         1413
-## AGTGTTCTAACCTG-1 SeuratProject       2858          872
-## AGTGTTCTATAAGG-1 SeuratProject       1309          559
-## AGTGTTCTCACTTT-1 SeuratProject       2772          907
-## AGTTAAACCACTTT-1 SeuratProject       3024          951
-## AGTTATGAACAGTC-1 SeuratProject       3624         1175
-## AGTTATGACTGAGT-1 SeuratProject       2087          946
-## AGTTATGAGTTCAG-1 SeuratProject       2863          905
-## AGTTCTACCAGCTA-1 SeuratProject       1632          737
-## AGTTCTTGAAGCCT-1 SeuratProject       1279          604
-## AGTTGTCTACTACG-1 SeuratProject       2879          843
-## AGTTTAGATGGTCA-1 SeuratProject       1395          606
-## AGTTTCACGGTCTA-1 SeuratProject       2520         1079
-## AGTTTGCTACAGTC-1 SeuratProject       2092          668
-## AGTTTGCTACTGGT-1 SeuratProject       1942          785
-## AGTTTGCTCCAAGT-1 SeuratProject       2050          726
-## ATAAACACAGTGCT-1 SeuratProject       2500          978
-## ATAAACACCACCAA-1 SeuratProject       2918          941
-## ATAACAACATGCTG-1 SeuratProject       2231          994
-## ATAACAACGTCTAG-1 SeuratProject       1672          655
-## ATAACAACTTTGTC-1 SeuratProject       3132         1013
-## ATAACATGTACTCT-1 SeuratProject       2776          987
-## ATAACCCTGTTGGT-1 SeuratProject       1638          591
-## ATAACCCTTGGTAC-1 SeuratProject       2949         1041
-## ATAAGTACGAATGA-1 SeuratProject       1562          625
-## ATAAGTTGGTACGT-1 SeuratProject       1355          582
-## ATAAGTTGTCTAGG-1 SeuratProject       2338          814
-## ATAATCGAGCTGAT-1 SeuratProject       1386          570
-## ATAATCGATGGTTG-1 SeuratProject       2348          775
-## ATAATGACCTACTT-1 SeuratProject       2215          822
-## ATAATGACTCGTGA-1 SeuratProject       1843          715
-## ATACAATGTTAGGC-1 SeuratProject       2148          738
-## ATACCACTCGTACA-1 SeuratProject       2896          956
-## ATACCACTCTAAGC-1 SeuratProject       4138         1178
-## ATACCACTGCCAAT-1 SeuratProject       1580          743
-## ATACCGGAATGCTG-1 SeuratProject       6582         1861
-## ATACCGGACATTTC-1 SeuratProject       2213          841
-## ATACCGGACTTCGC-1 SeuratProject       2694          944
-## ATACCGGAGGTGTT-1 SeuratProject       2129          783
-## ATACCGGATCTCGC-1 SeuratProject       1786          643
-## ATACCTACGCATCA-1 SeuratProject       2761          924
-## ATACCTTGGGGCAA-1 SeuratProject       3678          936
-## ATACGGACAGACTC-1 SeuratProject        877          431
-## ATACGGACCTACTT-1 SeuratProject       1042          490
-## ATACGGACGAGGTG-1 SeuratProject       1218          532
-## ATACGGACTATGCG-1 SeuratProject       1474          524
-## ATACGGACTCTGGA-1 SeuratProject       1470          620
-## ATACGTCTTAACGC-1 SeuratProject       2011          749
-## ATACTCTGCTTCGC-1 SeuratProject       4474         1334
-## ATACTCTGGTATGC-1 SeuratProject       1619          834
-## ATAGATACCATGGT-1 SeuratProject       2183          790
-## ATAGATACGACGAG-1 SeuratProject       2123          702
-## ATAGATTGGTGTAC-1 SeuratProject       2749          892
-## ATAGCCGAACGGAG-1 SeuratProject       2095          693
-## ATAGCGTGCAGATC-1 SeuratProject       2448          784
-## ATAGCGTGCCCTTG-1 SeuratProject       3004          944
-## ATAGCGTGGTATCG-1 SeuratProject       1069          471
-## ATAGCGTGTCTCTA-1 SeuratProject       2273          839
-## ATAGCTCTCTGATG-1 SeuratProject       1163          529
-## ATAGCTCTGAGGTG-1 SeuratProject       1975          729
-## ATAGGAGAAACAGA-1 SeuratProject       3554         1084
-## ATAGGCTGTCAGAC-1 SeuratProject       2173          802
-## ATAGTCCTAGTGTC-1 SeuratProject       2205          886
-## ATAGTCCTTGCATG-1 SeuratProject       2055          815
-## ATAGTCCTTGTCGA-1 SeuratProject       2662          856
-## ATAGTTGACAACTG-1 SeuratProject       2184          746
-## ATAGTTGACCCTCA-1 SeuratProject       4273         1318
-## ATAGTTGAGACGTT-1 SeuratProject       2030          545
-## ATAGTTGATAAGCC-1 SeuratProject       1870          696
-## ATATACGAAGCCAT-1 SeuratProject       2505          872
-## ATATACGAATTGGC-1 SeuratProject       3935         1154
-## ATATAGTGGAATGA-1 SeuratProject       1062          467
-## ATATGCCTAGATCC-1 SeuratProject       1910          725
-## ATATGCCTGGACAG-1 SeuratProject       3509         1027
-## ATATGCCTTCTCTA-1 SeuratProject       1090          479
-## ATATGCCTTGGTAC-1 SeuratProject       2021          728
-## ATCAAATGAGCCTA-1 SeuratProject       2562          926
-## ATCAAATGGGTAAA-1 SeuratProject       4211         1282
-## ATCAACCTAAACGA-1 SeuratProject       2638          907
-## ATCAACCTGAGGAC-1 SeuratProject       2312          833
-## ATCAACCTTCTCTA-1 SeuratProject       2505         1024
-## ATCAACCTTTGTCT-1 SeuratProject       2572          838
-## ATCACACTTTGTCT-1 SeuratProject       2560          900
-## ATCACGGATTGCTT-1 SeuratProject        975          457
-## ATCACGGATTTCGT-1 SeuratProject       1792          737
-## ATCATCTGACACCA-1 SeuratProject        737          367
-## ATCATGCTAGAGTA-1 SeuratProject        850          459
-## ATCATGCTGAACCT-1 SeuratProject       3165         1030
-## ATCCAGGACGCTAA-1 SeuratProject       3756         1279
-## ATCCAGGATGGAAA-1 SeuratProject       2128          756
-## ATCCATACTCCTTA-1 SeuratProject       1624          662
-## ATCCATACTTCATC-1 SeuratProject       3916         1323
-## ATCCCGTGCAGTCA-1 SeuratProject       1996         1003
-## ATCCCGTGCATGCA-1 SeuratProject        776          359
-## ATCCCGTGGCTGAT-1 SeuratProject       2155          770
-## ATCCGCACGCATCA-1 SeuratProject       2341          813
-## ATCCTAACGACGGA-1 SeuratProject       1776          634
-## ATCCTAACGCTACA-1 SeuratProject       2064          924
-## ATCGACGAAACTGC-1 SeuratProject       3308         1184
-## ATCGACGAATGACC-1 SeuratProject       2867          901
-## ATCGAGTGGACGTT-1 SeuratProject       1973          816
-## ATCGCAGAATCTCT-1 SeuratProject       4340         1421
-## ATCGCAGAGTGTCA-1 SeuratProject       2109          771
-## ATCGCCACTGAGGG-1 SeuratProject       1687          706
-## ATCGCCTGGGTCAT-1 SeuratProject       2875          953
-## ATCGCCTGTGGCAT-1 SeuratProject        756          348
-## ATCGCGCTCAGAGG-1 SeuratProject       1842          716
-## ATCGCGCTGGGATG-1 SeuratProject       2732          870
-## ATCGCGCTTTTCGT-1 SeuratProject       1779          715
-## ATCGGAACCAGTCA-1 SeuratProject       1199          550
-## ATCGGTGAGTCAAC-1 SeuratProject       1885          689
-## ATCGGTGATTGCAG-1 SeuratProject       2901          947
-## ATCGTTTGCCTACC-1 SeuratProject       3404         1157
-## ATCGTTTGGGTACT-1 SeuratProject       1765          690
-## ATCGTTTGTGCCAA-1 SeuratProject        737          383
-## ATCTACACCCGCTT-1 SeuratProject        754          374
-## ATCTACACCGGGAA-1 SeuratProject       2454          882
-## ATCTCAACAGGAGC-1 SeuratProject       1915          697
-## ATCTCAACCTCGAA-1 SeuratProject        609          246
-## ATCTCAACCTTGTT-1 SeuratProject       2138          833
-## ATCTGGGAAACCAC-1 SeuratProject       2420         1006
-## ATCTGGGAAGTGTC-1 SeuratProject       3477         1181
-## ATCTGGGATTCCGC-1 SeuratProject       2771          974
-## ATCTGTTGAACGGG-1 SeuratProject       2310          856
-## ATCTGTTGACCTCC-1 SeuratProject       2713          978
-## ATCTGTTGCCTTCG-1 SeuratProject       5198         1551
-## ATCTGTTGGTTGCA-1 SeuratProject       2911          965
-## ATCTTGACACCAAC-1 SeuratProject       2702          907
-## ATCTTGACCTCCCA-1 SeuratProject       1399          565
-## ATCTTTCTGCATCA-1 SeuratProject        877          417
-## ATCTTTCTGTTTCT-1 SeuratProject       2366          907
-## ATCTTTCTTGTCCC-1 SeuratProject       1915          927
-## ATGAAACTCTGTGA-1 SeuratProject       3205          966
-## ATGAAACTGAGGCA-1 SeuratProject       1973          658
-## ATGAAGGAACAGCT-1 SeuratProject       1477          727
-## ATGAAGGACCTGTC-1 SeuratProject       2047          743
-## ATGAAGGACCTTAT-1 SeuratProject        859          381
-## ATGAAGGACTAGTG-1 SeuratProject        713          385
-## ATGAAGGACTTGCC-1 SeuratProject       1800          905
-## ATGACGTGACGACT-1 SeuratProject       1881          645
-## ATGACGTGATCGGT-1 SeuratProject       3623         1167
-## ATGAGAGAAAGTGA-1 SeuratProject       2880          936
-## ATGAGAGAACGCAT-1 SeuratProject       2350          724
-## ATGAGAGAAGTAGA-1 SeuratProject       1575          618
-## ATGAGCACACAGCT-1 SeuratProject       3387         1038
-## ATGAGCACATCTTC-1 SeuratProject       2599          853
-## ATGATAACTTCACT-1 SeuratProject       1523          808
-## ATGATATGAAACAG-1 SeuratProject       4925         1403
-## ATGATATGACTGGT-1 SeuratProject       2343          762
-## ATGATATGAGCACT-1 SeuratProject       2189          741
-## ATGATATGGTCATG-1 SeuratProject       1768          687
-## ATGATATGGTGCTA-1 SeuratProject       1978          932
-## ATGATATGTTGTCT-1 SeuratProject       2992         1096
-## ATGCACGAATGTCG-1 SeuratProject       1381          601
-## ATGCACGACTGTAG-1 SeuratProject       1479          652
-## ATGCACGAGAACCT-1 SeuratProject       2624          895
-## ATGCACGAGTTCGA-1 SeuratProject       1920          682
-## ATGCACGATTGGTG-1 SeuratProject       4856         1553
-## ATGCAGTGTTACCT-1 SeuratProject       1396          604
-## ATGCAGTGTTCTAC-1 SeuratProject       2333          823
-## ATGCCAGAACGACT-1 SeuratProject       2167          803
-## ATGCCAGACAGTCA-1 SeuratProject       1323          646
-## ATGCCGCTTGAACC-1 SeuratProject       2463          917
-## ATGCGATGCTATGG-1 SeuratProject       2998          942
-## ATGCGATGCTGAGT-1 SeuratProject       2543          850
-## ATGCGATGGTTACG-1 SeuratProject       2230          795
-## ATGCGCCTTCATTC-1 SeuratProject       2544          771
-## ATGCTTTGCGAATC-1 SeuratProject       2482          949
-## ATGCTTTGGGCGAA-1 SeuratProject       1083          516
-## ATGCTTTGTAGTCG-1 SeuratProject       1682          664
-## ATGGACACATCGGT-1 SeuratProject       3094         1001
-## ATGGACACGCATCA-1 SeuratProject       1025          637
-## ATGGGTACAACCTG-1 SeuratProject       1348          619
-## ATGGGTACATCGGT-1 SeuratProject       1873          907
-## ATGGGTACTATTCC-1 SeuratProject       2244          961
-## ATGGGTACTGGGAG-1 SeuratProject       2458          812
-## ATGTAAACACCTCC-1 SeuratProject       2157          793
-## ATGTAAACCCGCTT-1 SeuratProject       2959         1043
-## ATGTAAACGGGATG-1 SeuratProject       3961         1343
-## ATGTAAACTCTCCG-1 SeuratProject       4770         1326
-## ATGTAAACTTCACT-1 SeuratProject       2707          981
-## ATGTACCTCAGTCA-1 SeuratProject       2078          675
-## ATGTACCTTAGTCG-1 SeuratProject       2214          937
-## ATGTACCTTTATCC-1 SeuratProject       1536          631
-## ATGTACCTTTCACT-1 SeuratProject       2523         1026
-## ATGTCACTAATGCC-1 SeuratProject       3558         1135
-## ATGTCACTCTGCTC-1 SeuratProject       1016          499
-## ATGTCGGAGGTGAG-1 SeuratProject       2364          948
-## ATGTTCACAGTCTG-1 SeuratProject       1918          801
-## ATGTTCACCGTAGT-1 SeuratProject       2457          848
-## ATGTTGCTTTCAGG-1 SeuratProject       2016          741
-## ATTAACGATGAGAA-1 SeuratProject       1291          604
-## ATTAACGATGCAAC-1 SeuratProject       2026          864
-## ATTAAGACTGCAGT-1 SeuratProject       3366         1076
-## ATTACCTGCCTTAT-1 SeuratProject       3536         1106
-## ATTACCTGGAGGAC-1 SeuratProject       3449         1111
-## ATTACCTGGGCATT-1 SeuratProject        898          456
-## ATTAGATGTTTCAC-1 SeuratProject       2061          624
-## ATTATGGAATCTCT-1 SeuratProject       2734         1008
-## ATTCAAGAACGGGA-1 SeuratProject       3045          908
-## ATTCAAGACCTTTA-1 SeuratProject       1974          815
-## ATTCAGCTCATTGG-1 SeuratProject        917          346
-## ATTCCAACCATTGG-1 SeuratProject       2895         1062
-## ATTCCAACTTAGGC-1 SeuratProject       1898          803
-## ATTCGACTCACTAG-1 SeuratProject       1771          749
-## ATTCGACTGAATAG-1 SeuratProject       2064          779
-## ATTCGACTTTTGTC-1 SeuratProject       2617         1027
-## ATTCGGGAAAGGCG-1 SeuratProject       2999         1032
-## ATTCGGGATTAGGC-1 SeuratProject       3252         1040
-## ATTCTTCTGATACC-1 SeuratProject       1722          654
-## ATTGAATGGACGGA-1 SeuratProject       1530          631
-## ATTGATGAAGGTTC-1 SeuratProject       2344          755
-## ATTGATGACTGAGT-1 SeuratProject       2793          854
-## ATTGATGAGCGAAG-1 SeuratProject       2290          850
-## ATTGATGATCTATC-1 SeuratProject       2248          798
-## ATTGCACTGACGGA-1 SeuratProject       3065          864
-## ATTGCACTGAGAGC-1 SeuratProject       2965         1078
-## ATTGCACTGGAGCA-1 SeuratProject       1621          690
-## ATTGCACTTAGCCA-1 SeuratProject       2393          864
-## ATTGCACTTGCTTT-1 SeuratProject       4892         1523
-## ATTGCTTGTTACTC-1 SeuratProject       2439          838
-## ATTGGTCTGACTAC-1 SeuratProject       2507          966
-## ATTGGTCTTGTCTT-1 SeuratProject        752          389
-## ATTGTAGATTCCCG-1 SeuratProject       5503         1654
-## ATTGTAGATTGCAG-1 SeuratProject       2589          808
-## ATTGTCTGCGTACA-1 SeuratProject       2317          885
-## ATTTAGGAACCATG-1 SeuratProject       5680         1665
-## ATTTAGGACAGAGG-1 SeuratProject       2435          920
-## ATTTCCGAGATGAA-1 SeuratProject       2449          855
-## ATTTCCGAGTGCTA-1 SeuratProject       1908          807
-## ATTTCGTGTATGGC-1 SeuratProject       2244          859
-## ATTTCTCTACTTTC-1 SeuratProject       4151         1276
-## ATTTCTCTAGCAAA-1 SeuratProject       2441          987
-## ATTTCTCTCACTTT-1 SeuratProject       3223         1079
-## ATTTCTCTTCCCAC-1 SeuratProject       1974          678
-## ATTTGCACAAGATG-1 SeuratProject       1525          626
-## CAAAGCACAGCTCA-1 SeuratProject       2393          831
-## CAAAGCACCGTAAC-1 SeuratProject       2347          829
-## CAAAGCACGGTAAA-1 SeuratProject       2138         1009
-## CAAAGCTGAAAGTG-1 SeuratProject       1234          547
-## CAAAGCTGTTGCTT-1 SeuratProject       2486          893
-## CAAATATGTGACAC-1 SeuratProject       2407          722
-## CAAATTGAGGGCAA-1 SeuratProject       1988          656
-## CAAATTGATGGAGG-1 SeuratProject        846          415
-## CAACCAGAAAAGTG-1 SeuratProject       2237          773
-## CAACCAGAAGTGCT-1 SeuratProject       4328         1262
-## CAACCAGAGTTCAG-1 SeuratProject       3776         1218
-## CAACCAGATAGAAG-1 SeuratProject        739          365
-## CAACCGCTGTTCAG-1 SeuratProject       1991          661
-## CAACCGCTTTGAGC-1 SeuratProject       2299          805
-## CAACGATGCGCAAT-1 SeuratProject       4519         1409
-## CAACGTGACTCCAC-1 SeuratProject       2999         1094
-## CAACGTGAGCCATA-1 SeuratProject       1667          779
-## CAACGTGATCAAGC-1 SeuratProject       2365          898
-## CAAGAAGACCACAA-1 SeuratProject       2021          830
-## CAAGAAGACGTCTC-1 SeuratProject       3488         1242
-## CAAGAAGATTCTAC-1 SeuratProject       2810          864
-## CAAGACTGACCTGA-1 SeuratProject       1669          576
-## CAAGACTGAGTAGA-1 SeuratProject       2612          901
-## CAAGCTGACCATAG-1 SeuratProject       3773         1274
-## CAAGCTGATCTATC-1 SeuratProject       1960          852
-## CAAGGACTGTTCAG-1 SeuratProject       3133         1006
-## CAAGGACTTCTTTG-1 SeuratProject       1688          719
-## CAAGGTTGCTCCAC-1 SeuratProject       1896          763
-## CAAGGTTGTCATTC-1 SeuratProject       1868          683
-## CAAGGTTGTCTGGA-1 SeuratProject       2040          957
-## CAAGTCGAAACAGA-1 SeuratProject       2294          831
-## CAAGTCGATAGCGT-1 SeuratProject       1724          724
-## CAATAAACGCCATA-1 SeuratProject        829          354
-## CAATAATGAACTGC-1 SeuratProject       2255          763
-## CAATATGACATGGT-1 SeuratProject       2766          910
-## CAATATGACCTTCG-1 SeuratProject       1878          749
-## CAATATGACGTTAG-1 SeuratProject       1691          626
-## CAATATGAGGAGCA-1 SeuratProject       3037          870
-## CAATCGGAGAAACA-1 SeuratProject       2630          795
-## CAATCTACTGACTG-1 SeuratProject       2744         1078
-## CAATTCACCCAACA-1 SeuratProject       1845          736
-## CAATTCACGATAGA-1 SeuratProject       2479          835
-## CAATTCACTTGTGG-1 SeuratProject       1032          402
-## CAATTCTGCTTGTT-1 SeuratProject       3343         1203
-## CAATTCTGGCGTAT-1 SeuratProject       1684          699
-## CACAACGATACGAC-1 SeuratProject       2405          755
-## CACAATCTTGTTCT-1 SeuratProject       1547          697
-## CACAATCTTTCCAT-1 SeuratProject       3853         1229
-## CACACCTGCTTGAG-1 SeuratProject       1594          637
-## CACACCTGTATGGC-1 SeuratProject       1875          666
-## CACAGAACCCTTGC-1 SeuratProject       2019          846
-## CACAGAACCTGATG-1 SeuratProject       2838         1036
-## CACAGATGGGATTC-1 SeuratProject       3230         1027
-## CACAGATGGTTTCT-1 SeuratProject       2090          831
-## CACAGCCTGATACC-1 SeuratProject       2831          999
-## CACAGCCTTGCCAA-1 SeuratProject       2294          942
-## CACAGCCTTGTAGC-1 SeuratProject       2555          891
-## CACAGTGATGAAGA-1 SeuratProject       3016         1007
-## CACATACTACAGCT-1 SeuratProject       1854          712
-## CACATGGAACACGT-1 SeuratProject       2962          990
-## CACATGGAAGTCGT-1 SeuratProject       2453          725
-## CACCACTGCCAACA-1 SeuratProject       2259          745
-## CACCACTGGCGAAG-1 SeuratProject       2221          921
-## CACCCATGTTCTGT-1 SeuratProject        561          333
-## CACCGGGAATCGAC-1 SeuratProject       2879         1042
-## CACCGGGACGAGAG-1 SeuratProject       2588          895
-## CACCGGGACGTGTA-1 SeuratProject       3096          873
-## CACCGGGACTTCTA-1 SeuratProject       4297         1612
-## CACCGGGACTTGCC-1 SeuratProject       1792          724
-## CACCGGGATTCGGA-1 SeuratProject       2329          929
-## CACCGTACTAAGGA-1 SeuratProject       1657          601
-## CACCGTACTAGCGT-1 SeuratProject       2715          862
-## CACCTGACACCCAA-1 SeuratProject       2229          908
-## CACCTGACCAGAAA-1 SeuratProject       1695          658
-## CACCTGACCTCAAG-1 SeuratProject       1929          775
-## CACCTGACGAAAGT-1 SeuratProject       1807          724
-## CACCTGACTCGTAG-1 SeuratProject       2118          753
-## CACGAAACTTCCGC-1 SeuratProject       2111          741
-## CACGACCTCGATAC-1 SeuratProject       1766          690
-## CACGCTACAGAAGT-1 SeuratProject        684          379
-## CACGCTACTGTTCT-1 SeuratProject       1448          608
-## CACGCTACTTGACG-1 SeuratProject       1129          476
-## CACGGGACAGAGTA-1 SeuratProject       2969          927
-## CACGGGACATAAGG-1 SeuratProject       2340          777
-## CACGGGACGTAGGG-1 SeuratProject       2653          969
-## CACGGGTGCTTCGC-1 SeuratProject       1790          827
-## CACGGGTGGAGGAC-1 SeuratProject       1595          709
-## CACGGGTGTGTTTC-1 SeuratProject        897          385
-## CACTAACTCCTAAG-1 SeuratProject       1605          690
-## CACTAACTGAAAGT-1 SeuratProject       2280          769
-## CACTAGGATGATGC-1 SeuratProject       1219          554
-## CACTATACCCCGTT-1 SeuratProject       2570          892
-## CACTATACGTTTGG-1 SeuratProject       1840          761
-## CACTGAGACAGTCA-1 SeuratProject        727          367
-## CACTGCACTTCATC-1 SeuratProject       1917          731
-## CACTGCTGAGACTC-1 SeuratProject       3139         1103
-## CACTGCTGGAAAGT-1 SeuratProject       3108          944
-## CACTTAACCGAATC-1 SeuratProject       2253          832
-## CACTTAACCGTACA-1 SeuratProject       1522          675
-## CACTTTGACTCTAT-1 SeuratProject       1552          652
-## CACTTTGAGCTGTA-1 SeuratProject        802          418
-## CAGAAGCTCTCAAG-1 SeuratProject       2256          727
-## CAGACATGAACGGG-1 SeuratProject       2327          745
-## CAGACATGTCGACA-1 SeuratProject       2519          872
-## CAGACCCTAAGGTA-1 SeuratProject       4166         1336
-## CAGACCCTAATGCC-1 SeuratProject       2292          863
-## CAGACCCTAGGAGC-1 SeuratProject       2716          934
-## CAGACTGAGTATGC-1 SeuratProject       2712          844
-## CAGATCGAATGTCG-1 SeuratProject       2192          721
-## CAGATCGACCTGAA-1 SeuratProject        921          432
-## CAGATCGATATGGC-1 SeuratProject       2546          782
-## CAGATGACATTCTC-1 SeuratProject       2047         1006
-## CAGCAATGCCTTCG-1 SeuratProject       2564          834
-## CAGCAATGGAGGGT-1 SeuratProject       1698          840
-## CAGCAATGGTGCTA-1 SeuratProject       2290          840
-## CAGCAATGTCTACT-1 SeuratProject       2374          819
-## CAGCAATGTGACCA-1 SeuratProject       1911          699
-## CAGCAATGTGAGGG-1 SeuratProject       1078          489
-## CAGCACCTAAGCCT-1 SeuratProject       1808          665
-## CAGCACCTAGGCGA-1 SeuratProject       1447          576
-## CAGCACCTGTAGGG-1 SeuratProject       3872         1291
-## CAGCATGACAACCA-1 SeuratProject       3218         1102
-## CAGCATGAGACGTT-1 SeuratProject       2157          826
-## CAGCCTACCCAACA-1 SeuratProject       2802          880
-## CAGCCTTGCTACCC-1 SeuratProject       1842          738
-## CAGCCTTGGGGACA-1 SeuratProject       2662          904
-## CAGCGGACACCCTC-1 SeuratProject       1885          686
-## CAGCGGACCTTTAC-1 SeuratProject       2174          874
-## CAGCGTCTAAAGCA-1 SeuratProject       2929          887
-## CAGCGTCTTATCGG-1 SeuratProject       2532          873
-## CAGCTAGATGTGAC-1 SeuratProject       1263          560
-## CAGCTCTGAGGCGA-1 SeuratProject       1959          766
-## CAGCTCTGCAAGCT-1 SeuratProject       1570          710
-## CAGCTCTGTCGTAG-1 SeuratProject       3302         1135
-## CAGCTCTGTGTGGT-1 SeuratProject       2170         1054
-## CAGGAACTAACTGC-1 SeuratProject       2077          805
-## CAGGAACTCTCAGA-1 SeuratProject       1752          724
-## CAGGCCGAACACCA-1 SeuratProject       2694          973
-## CAGGCCGAACACGT-1 SeuratProject       3917         1201
-## CAGGCCGAACGACT-1 SeuratProject       1194          575
-## CAGGCCGAATCTCT-1 SeuratProject       2444          838
-## CAGGCCGACTAGCA-1 SeuratProject       2346          865
-## CAGGGCACCATACG-1 SeuratProject       1318          546
-## CAGGGCACCCAACA-1 SeuratProject       2241          811
-## CAGGGCACTCCCGT-1 SeuratProject       2293          884
-## CAGGTAACAGACTC-1 SeuratProject       2472          886
-## CAGGTATGAGTCGT-1 SeuratProject       2135          791
-## CAGGTATGTGCTTT-1 SeuratProject       2710         1026
-## CAGGTTGAGGATCT-1 SeuratProject       8015         2000
-## CAGTGATGGACGGA-1 SeuratProject       1530          644
-## CAGTGATGGCTAAC-1 SeuratProject       1549          763
-## CAGTGATGGGACAG-1 SeuratProject       3339          969
-## CAGTGATGTAAGGA-1 SeuratProject       2269          800
-## CAGTGATGTACGCA-1 SeuratProject       1015          359
-## CAGTGTGAACACGT-1 SeuratProject        548          307
-## CAGTGTGATGTCAG-1 SeuratProject       2050          624
-## CAGTTACTAAGGTA-1 SeuratProject       2856          993
-## CAGTTACTGATAGA-1 SeuratProject       2192          800
-## CAGTTGGAAAGAGT-1 SeuratProject       3688         1167
-## CAGTTGGACATACG-1 SeuratProject       2445          833
-## CAGTTTACACACGT-1 SeuratProject       5346         1871
-## CAGTTTACCCCAAA-1 SeuratProject       1940          616
-## CATAAAACGGAGCA-1 SeuratProject       2351          822
-## CATAAATGAACTGC-1 SeuratProject       2063          647
-## CATAACCTTCTCCG-1 SeuratProject       3062         1000
-## CATACTACCTCGAA-1 SeuratProject       1778          618
-## CATACTACCTGAAC-1 SeuratProject       2431          734
-## CATACTACGTACCA-1 SeuratProject       1618          618
-## CATACTTGGGTTAC-1 SeuratProject       7171         1938
-## CATAGTCTAATCGC-1 SeuratProject       2913          861
-## CATAGTCTCACTTT-1 SeuratProject       2713          945
-## CATATAGACTAAGC-1 SeuratProject       2929         1032
-## CATATAGATCAGGT-1 SeuratProject       1871          723
-## CATCAACTAGAAGT-1 SeuratProject       3378          984
-## CATCAACTCCCTCA-1 SeuratProject       3673          994
-## CATCAGGACTTCCG-1 SeuratProject       1528          771
-## CATCAGGATAGCCA-1 SeuratProject       1501          738
-## CATCAGGATCCTAT-1 SeuratProject       5282         1583
-## CATCAGGATGCACA-1 SeuratProject       3139         1113
-## CATCAGGATTTCGT-1 SeuratProject       1400          614
-## CATCATACCGCATA-1 SeuratProject       3302         1146
-## CATCATACGGAGCA-1 SeuratProject       1486          615
-## CATCATACTCAAGC-1 SeuratProject       2456          848
-## CATCGCTGGGATCT-1 SeuratProject       2801          983
-## CATCGCTGTGGCAT-1 SeuratProject       1963          677
-## CATCGGCTATGCTG-1 SeuratProject       3317          972
-## CATCGGCTTTGGCA-1 SeuratProject       2501          791
-## CATCTCCTATGTGC-1 SeuratProject       2009          827
-## CATCTCCTCGAACT-1 SeuratProject       1858          804
-## CATGAGACACGGGA-1 SeuratProject        748          395
-## CATGAGACGTTGAC-1 SeuratProject       1760          843
-## CATGAGACTCGCCT-1 SeuratProject       1155          493
-## CATGCCACGGGTGA-1 SeuratProject       2421          741
-## CATGCCACTGCCAA-1 SeuratProject       2396          941
-## CATGCGCTAGTCAC-1 SeuratProject       5344         1659
-## CATGCGCTCAGATC-1 SeuratProject       2056          742
-## CATGCGCTTTGCAG-1 SeuratProject       4792         1517
-## CATGGCCTAGGGTG-1 SeuratProject       1347          559
-## CATGGCCTGTGCAT-1 SeuratProject       2839          937
-## CATGTACTATCGTG-1 SeuratProject       1619          740
-## CATGTTACAGTCGT-1 SeuratProject       2188          781
-## CATGTTACCTGAGT-1 SeuratProject       2259          819
-## CATGTTTGGGGATG-1 SeuratProject       2193          813
-## CATTACACACGGAG-1 SeuratProject       1480          578
-## CATTACACCAACTG-1 SeuratProject       2360         1022
-## CATTACACGGAGTG-1 SeuratProject       3904         1191
-## CATTACACTACTCT-1 SeuratProject       2440          824
-## CATTAGCTCCACAA-1 SeuratProject       3497         1146
-## CATTGACTAGCGGA-1 SeuratProject       1915          757
-## CATTGGGACTCGAA-1 SeuratProject       1397          638
-## CATTGTACAGCGTT-1 SeuratProject       2233          830
-## CATTGTACTCGATG-1 SeuratProject       1857          713
-## CATTGTACTTATCC-1 SeuratProject       1617          609
-## CATTGTACTTTGCT-1 SeuratProject       4202         1271
-## CATTGTTGCTAGTG-1 SeuratProject       2170          680
-## CATTTCGACTCTAT-1 SeuratProject       1792          769
-## CATTTCGAGATACC-1 SeuratProject       2657         1119
-## CATTTGACCACACA-1 SeuratProject       1688          731
-## CATTTGACCCTGAA-1 SeuratProject       1729          804
-## CATTTGTGACGACT-1 SeuratProject       2456          781
-## CATTTGTGCATTGG-1 SeuratProject       2636          916
-## CATTTGTGCGGAGA-1 SeuratProject       2444          735
-## CATTTGTGGGATCT-1 SeuratProject       2461          835
-## CCAAAGTGCTACGA-1 SeuratProject       3442         1257
-## CCAAAGTGTGAGAA-1 SeuratProject       1051          472
-## CCAACCTGAAGTAG-1 SeuratProject       2140          879
-## CCAACCTGACGTAC-1 SeuratProject       2608          851
-## CCAACCTGTTCGCC-1 SeuratProject       3214         1023
-## CCAAGAACCCAATG-1 SeuratProject       1742          661
-## CCAAGAACGTAGCT-1 SeuratProject       3230         1008
-## CCAAGAACGTGTCA-1 SeuratProject       2333          748
-## CCAAGAACTACTGG-1 SeuratProject       1767          845
-## CCAAGAACTCCTAT-1 SeuratProject        840          393
-## CCAAGATGTCATTC-1 SeuratProject       1718          675
-## CCAAGATGTTTCAC-1 SeuratProject       2099          843
-## CCAAGTGAGGAACG-1 SeuratProject       3006          876
-## CCAAGTGATCAAGC-1 SeuratProject       2712          939
-## CCAATGGAACAGCT-1 SeuratProject       1422          653
-## CCAATTTGAACGTC-1 SeuratProject       2671          932
-## CCACCATGAACGTC-1 SeuratProject       2186          760
-## CCACCATGATCGGT-1 SeuratProject       2497          735
-## CCACCATGGACGAG-1 SeuratProject       4782         1561
-## CCACCATGGGGAGT-1 SeuratProject       2050          752
-## CCACCATGTCCTGC-1 SeuratProject       2158          940
-## CCACTGACCCGCTT-1 SeuratProject       1953          705
-## CCACTGTGGGAAGC-1 SeuratProject        866          405
-## CCACTGTGTGTAGC-1 SeuratProject       2306          690
-## CCACTTCTCGGGAA-1 SeuratProject       3466         1071
-## CCAGAAACCCTGTC-1 SeuratProject       1200          544
-## CCAGAAACGAACTC-1 SeuratProject       2588          927
-## CCAGAAACGGTCTA-1 SeuratProject       2791          817
-## CCAGACCTCTGAGT-1 SeuratProject        795          388
-## CCAGACCTTGTGGT-1 SeuratProject       1460          560
-## CCAGCACTGCGATT-1 SeuratProject       4090         1322
-## CCAGCGGAAAGGCG-1 SeuratProject       1572          640
-## CCAGCGGACGACTA-1 SeuratProject       2454          886
-## CCAGCGGATGGGAG-1 SeuratProject       3218         1075
-## CCAGCTACACAGTC-1 SeuratProject       1758          689
-## CCAGCTACCAGCTA-1 SeuratProject       1099          524
-## CCAGGTCTACACCA-1 SeuratProject       1369          606
-## CCAGGTCTAGCATC-1 SeuratProject       1805          802
-## CCAGGTCTATGGTC-1 SeuratProject       2849          868
-## CCAGTCACACTGGT-1 SeuratProject       3251          939
-## CCAGTCACACTGTG-1 SeuratProject       1762          753
-## CCAGTCACGTTGTG-1 SeuratProject       2152          770
-## CCAGTCTGCGGAGA-1 SeuratProject      15844         3422
-## CCAGTGCTAACCAC-1 SeuratProject       3400         1105
-## CCAGTGCTCGTAGT-1 SeuratProject       2562          841
-## CCATCCGAAAGCAA-1 SeuratProject       2457          786
-## CCATCCGAACGACT-1 SeuratProject        930          445
-## CCATCCGAAGGTTC-1 SeuratProject       1806          703
-## CCATCCGATTCGCC-1 SeuratProject       1314          593
-## CCATCGTGAACGGG-1 SeuratProject       2207          875
-## CCATCGTGCTAGAC-1 SeuratProject       2559          901
-## CCCAACACCTCGCT-1 SeuratProject       2866          927
-## CCCAACACGCATCA-1 SeuratProject       2201          798
-## CCCAACACTTTGTC-1 SeuratProject       3442         1221
-## CCCAACTGCAATCG-1 SeuratProject        853          415
-## CCCAGACTGCCTTC-1 SeuratProject       4757         1381
-## CCCAGACTGGTTTG-1 SeuratProject       2559          949
-## CCCAGACTTTCGCC-1 SeuratProject       4412         1322
-## CCCAGTTGCAGTTG-1 SeuratProject       3416         1169
-## CCCAGTTGGGTACT-1 SeuratProject       1757          745
-## CCCAGTTGTCTATC-1 SeuratProject       1925          727
-## CCCGATTGTGTTTC-1 SeuratProject       2273          799
-## CCCGGAGAAGGGTG-1 SeuratProject       1019          490
-## CCCTACGAATTGGC-1 SeuratProject       1865          767
-## CCCTAGTGCAAAGA-1 SeuratProject       2448          943
-## CCCTCAGACACTTT-1 SeuratProject       2070          808
-## CCCTCAGACGAGAG-1 SeuratProject       2926          926
-## CCCTCAGAGGTCAT-1 SeuratProject       2024          664
-## CCCTGAACTAAAGG-1 SeuratProject       1533          569
-## CCCTGATGCAACCA-1 SeuratProject       2914          843
-## CCCTGATGCAAGCT-1 SeuratProject       1846          727
-## CCCTTACTAACCAC-1 SeuratProject       3561         1222
-## CCCTTACTGCAGTT-1 SeuratProject        973          457
-## CCGAAAACCTTGTT-1 SeuratProject       5147         1515
-## CCGACACTGGTTTG-1 SeuratProject       3326         1138
-## CCGACTACCCAGTA-1 SeuratProject       3186         1174
-## CCGACTACCGTGTA-1 SeuratProject       1456          525
-## CCGACTACTGAGGG-1 SeuratProject       2372          878
-## CCGATAGACCTAAG-1 SeuratProject       1638          525
-## CCGATAGAGTTGGT-1 SeuratProject       2958          999
-## CCGCGAGACACACA-1 SeuratProject       2109          778
-## CCGCGAGAGGTTCA-1 SeuratProject       1965          772
-## CCGCTATGGGACGA-1 SeuratProject       2000          819
-## CCGCTATGTGCAAC-1 SeuratProject       2523         1015
-## CCGCTATGTGCACA-1 SeuratProject       2854          939
-## CCGGTACTGTCCTC-1 SeuratProject       2496          856
-## CCGTACACAAGCAA-1 SeuratProject       1745          715
-## CCGTACACAGCGTT-1 SeuratProject       2007          793
-## CCGTACACGTCATG-1 SeuratProject       2076          837
-## CCGTACACGTTGGT-1 SeuratProject       3297         1193
-## CCGTACACTAACGC-1 SeuratProject       2042          764
-## CCTAAACTTTCGTT-1 SeuratProject       2353          834
-## CCTAAGGACCCAAA-1 SeuratProject       2056          677
-## CCTAAGGACTAGCA-1 SeuratProject       1516          625
-## CCTAAGGAGGGCAA-1 SeuratProject        796          420
-## CCTAAGGATGATGC-1 SeuratProject       2520          837
-## CCTAAGGATGTCAG-1 SeuratProject       2882          874
-## CCTACCGACTCTTA-1 SeuratProject       1893          679
-## CCTACCGAGGGATG-1 SeuratProject       2344          811
-## CCTAGAGAGGTGAG-1 SeuratProject       1388          546
-## CCTATAACCAAAGA-1 SeuratProject       2562          787
-## CCTATAACGAGACG-1 SeuratProject       1506          587
-## CCTATAACTCAGAC-1 SeuratProject       2663          821
-## CCTATAACTGCATG-1 SeuratProject       1721          669
-## CCTCGAACACTTTC-1 SeuratProject       1644          813
-## CCTCGAACCCGTAA-1 SeuratProject       2060          780
-## CCTCGAACGTATCG-1 SeuratProject       1619          649
-## CCTCGAACTTACTC-1 SeuratProject       3184          924
-## CCTCTACTCTTCGC-1 SeuratProject       4464         1322
-## CCTCTACTGGCATT-1 SeuratProject       2176          701
-## CCTGACTGAAGTAG-1 SeuratProject       2128          792
-## CCTGACTGGGGAGT-1 SeuratProject       2543          817
-## CCTGACTGTGTCTT-1 SeuratProject       1619          667
-## CCTGCAACACGTTG-1 SeuratProject       2096          804
-## CCTGGACTCGTGAT-1 SeuratProject       1354          593
-## CCTTAATGCCCAAA-1 SeuratProject       1853          740
-## CCTTAATGTTCTAC-1 SeuratProject       3834         1243
-## CCTTCACTACGACT-1 SeuratProject       2168          859
-## CCTTCACTCAGTCA-1 SeuratProject       1420          685
-## CCTTCACTGGAGTG-1 SeuratProject       1657          596
-## CCTTTAGATTCATC-1 SeuratProject       3507         1193
-## CGAACATGCCCTAC-1 SeuratProject       2322          859
-## CGAACATGTCAGAC-1 SeuratProject       2211          775
-## CGAAGACTGGAACG-1 SeuratProject       2444          947
-## CGAAGACTGTTACG-1 SeuratProject       1737          689
-## CGAAGGGAAACCTG-1 SeuratProject       2158          907
-## CGAAGGGATCCGAA-1 SeuratProject       1837          734
-## CGAAGTACCAACTG-1 SeuratProject       1565          621
-## CGAATCGAGGAGCA-1 SeuratProject        581          336
-## CGAATCGAGGAGGT-1 SeuratProject       2512          922
-## CGACAAACCCATAG-1 SeuratProject       2871          802
-## CGACAAACCGACAT-1 SeuratProject       2098          812
-## CGACCACTAAAGTG-1 SeuratProject       1934          941
-## CGACCACTGCCAAT-1 SeuratProject       1850          943
-## CGACCGGAAGGTCT-1 SeuratProject       2728          868
-## CGACCGGATGGAAA-1 SeuratProject       2698          947
-## CGACCTTGCTAGTG-1 SeuratProject       1977          767
-## CGACCTTGGCAAGG-1 SeuratProject        865          341
-## CGACGTCTATCGTG-1 SeuratProject       2043          701
-## CGACGTCTCGTGTA-1 SeuratProject       1954          692
-## CGACGTCTGAGGCA-1 SeuratProject       1057          423
-## CGACTCACGTCGTA-1 SeuratProject       2160          775
-## CGACTCACGTTGCA-1 SeuratProject       1093          500
-## CGACTCTGTGTGAC-1 SeuratProject       3131         1100
-## CGACTGCTTCCTCG-1 SeuratProject       2015          812
-## CGAGAACTAAGGCG-1 SeuratProject       1913          728
-## CGAGAACTACGTTG-1 SeuratProject       1842          616
-## CGAGAACTTGTTCT-1 SeuratProject       2551          928
-## CGAGATTGGACACT-1 SeuratProject       1943          835
-## CGAGATTGGCCATA-1 SeuratProject       1042          454
-## CGAGCCGAACACCA-1 SeuratProject       2385          812
-## CGAGCCGACGACAT-1 SeuratProject       1354          566
-## CGAGCCGAGGCGAA-1 SeuratProject       2447          769
-## CGAGCGTGCTCCAC-1 SeuratProject       3303         1058
-## CGAGCGTGGATACC-1 SeuratProject       3360          914
-## CGAGCGTGTATGCG-1 SeuratProject       1530          628
-## CGAGGAGACCTCCA-1 SeuratProject       1531          649
-## CGAGGAGATGTCGA-1 SeuratProject       1069          452
-## CGAGGCACCTATGG-1 SeuratProject       1975          754
-## CGAGGCACTATGCG-1 SeuratProject       4177         1327
-## CGAGGCACTCTTCA-1 SeuratProject       1827          776
-## CGAGGCTGACGCTA-1 SeuratProject       1373          670
-## CGAGGCTGGCAGTT-1 SeuratProject       2940         1017
-## CGAGGGCTACGACT-1 SeuratProject       1663          599
-## CGAGGGCTCGAATC-1 SeuratProject        905          431
-## CGAGTATGTCACCC-1 SeuratProject       2745          967
-## CGATACGAACAGTC-1 SeuratProject       3047         1077
-## CGATACGACAGGAG-1 SeuratProject       6733         2033
-## CGATACGATTCACT-1 SeuratProject       2023          731
-## CGATAGACCCGTAA-1 SeuratProject       1222          533
-## CGATAGACCGTACA-1 SeuratProject       2090          926
-## CGATAGACGTAGGG-1 SeuratProject       1830          725
-## CGATAGACTGTTCT-1 SeuratProject       1299          559
-## CGATCAGAAGAACA-1 SeuratProject       2199          870
-## CGATCAGAGAGGGT-1 SeuratProject       2723          964
-## CGATCAGAGGTACT-1 SeuratProject       5142         1341
-## CGATCAGATGTGAC-1 SeuratProject       6916         1981
-## CGATCCACCGGGAA-1 SeuratProject       3231         1103
-## CGATCCACTTCCAT-1 SeuratProject        591          326
-## CGCAAATGCTCGAA-1 SeuratProject       1012          428
-## CGCAACCTCCTTGC-1 SeuratProject       2312          808
-## CGCAACCTGGACGA-1 SeuratProject       2322          821
-## CGCACGGAGGACGA-1 SeuratProject       1171          554
-## CGCACGGATCTTTG-1 SeuratProject       1932          596
-## CGCACTACAGAATG-1 SeuratProject       1864          680
-## CGCACTACAGCCAT-1 SeuratProject       3379         1034
-## CGCACTACATTGGC-1 SeuratProject       2816          849
-## CGCACTACTCGCCT-1 SeuratProject       1284          566
-## CGCACTACTCGTGA-1 SeuratProject       2071          879
-## CGCACTTGTCACGA-1 SeuratProject       3086         1091
-## CGCAGGACAGATCC-1 SeuratProject       2213          823
-## CGCAGGACCTACTT-1 SeuratProject       1067          447
-## CGCAGGACTTGTCT-1 SeuratProject       5163         1688
-## CGCAGGTGCACTGA-1 SeuratProject       2754          868
-## CGCAGGTGCCATAG-1 SeuratProject       4316         1254
-## CGCAGGTGGGAACG-1 SeuratProject       2280          942
-## CGCATAGATCACGA-1 SeuratProject        955          462
-## CGCCATACTGCAAC-1 SeuratProject       3448         1055
-## CGCCATTGAGAGGC-1 SeuratProject       2763          852
-## CGCCATTGCTATGG-1 SeuratProject       1794          738
-## CGCCATTGGAGACG-1 SeuratProject       2288          804
-## CGCCATTGGAGCAG-1 SeuratProject       2024          775
-## CGCCATTGTACTGG-1 SeuratProject       1687          726
-## CGCCGAGAGCTTAG-1 SeuratProject       2047          993
-## CGCCTAACGAATGA-1 SeuratProject       4604         1462
-## CGCCTAACTGCTCC-1 SeuratProject       3490         1007
-## CGCGAGACACAGCT-1 SeuratProject       2246          798
-## CGCGAGACAGGTCT-1 SeuratProject       3174         1036
-## CGCGAGACGCTACA-1 SeuratProject       1969          786
-## CGCGATCTCAGTCA-1 SeuratProject       2556          948
-## CGCGATCTGTTGAC-1 SeuratProject       2110          743
-## CGCGATCTTTCTTG-1 SeuratProject       2394          761
-## CGCGGATGGCCAAT-1 SeuratProject       2266          838
-## CGCTAAGAATGTCG-1 SeuratProject       2703         1040
-## CGCTAAGACAACTG-1 SeuratProject       2772          859
-## CGCTAAGACCCTTG-1 SeuratProject       2620          867
-## CGCTACTGAACAGA-1 SeuratProject       3808         1188
-## CGCTACTGAGAACA-1 SeuratProject       2461          846
-## CGCTACTGTGAGCT-1 SeuratProject       1926          687
-## CGCTACTGTTCCCG-1 SeuratProject       1368          672
-## CGCTCATGCATTTC-1 SeuratProject       1469          629
-## CGGAATTGCACTAG-1 SeuratProject        902          426
-## CGGAATTGGTTTGG-1 SeuratProject       1897          725
-## CGGAATTGTGGAGG-1 SeuratProject       1544          660
-## CGGACCGATGCGTA-1 SeuratProject       1835          809
-## CGGACCGATGGGAG-1 SeuratProject        985          469
-## CGGACTCTAAACAG-1 SeuratProject       1659          600
-## CGGACTCTCCAATG-1 SeuratProject       2003          812
-## CGGACTCTCCTCGT-1 SeuratProject       1875          856
-## CGGAGGCTATTCCT-1 SeuratProject        848          397
-## CGGAGGCTTGGATC-1 SeuratProject       2836          786
-## CGGATAACAACGAA-1 SeuratProject       2578          895
-## CGGATAACAGCTCA-1 SeuratProject       2432          882
-## CGGATAACTCAGTG-1 SeuratProject        959          449
-## CGGCACGAACTCAG-1 SeuratProject       2271          890
-## CGGCACGAAGGGTG-1 SeuratProject       2437          823
-## CGGCACGACTACGA-1 SeuratProject       2839         1051
-## CGGCATCTTAGAAG-1 SeuratProject       1982          823
-## CGGCATCTTCGTAG-1 SeuratProject       3312         1055
-## CGGCCAGAAAGGTA-1 SeuratProject       2077          741
-## CGGCCAGAGAGGCA-1 SeuratProject       2410          999
-## CGGCGAACCAGTCA-1 SeuratProject       3765         1241
-## CGGCGAACGACAAA-1 SeuratProject       1589          790
-## CGGCGAACGGTCTA-1 SeuratProject       2498          878
-## CGGCGAACTACTTC-1 SeuratProject       1729          778
-## CGGGACTGCGTGTA-1 SeuratProject       4278         1066
-## CGGGACTGGAATAG-1 SeuratProject       2013          815
-## CGGGCATGACCCAA-1 SeuratProject       1032          465
-## CGGGCATGTCTCTA-1 SeuratProject       2865         1079
-## CGGGCATGTTGTGG-1 SeuratProject       2197          743
-## CGGTAAACTCGCAA-1 SeuratProject       3145         1098
-## CGGTCACTGTTTGG-1 SeuratProject       2140          807
-## CGGTCACTTACTTC-1 SeuratProject       3248         1120
-## CGTAACGAATCAGC-1 SeuratProject       1220          462
-## CGTAACGATCGCCT-1 SeuratProject       3416         1025
-## CGTACCACACACAC-1 SeuratProject       2085          805
-## CGTACCACACGTTG-1 SeuratProject       2159          676
-## CGTACCACCTCATT-1 SeuratProject       2382          828
-## CGTACCACGCTACA-1 SeuratProject        893          418
-## CGTACCACGGAGCA-1 SeuratProject       2132          763
-## CGTACCTGGACGAG-1 SeuratProject        833          407
-## CGTACCTGGCATCA-1 SeuratProject       2473          997
-## CGTAGCCTCTCTCG-1 SeuratProject       2311          852
-## CGTAGCCTGCGAAG-1 SeuratProject       2242          866
-## CGTAGCCTGTATGC-1 SeuratProject       3499         1118
-## CGTCAAGAAAGGTA-1 SeuratProject       1114          508
-## CGTCAAGAACGTGT-1 SeuratProject       2816          928
-## CGTCAAGACAGAGG-1 SeuratProject       2750          958
-## CGTCAAGACAGGAG-1 SeuratProject       2163          932
-## CGTCCATGCTCTTA-1 SeuratProject       2746          892
-## CGTCGACTTTCCGC-1 SeuratProject       2190          905
-## CGTGATGACGCTAA-1 SeuratProject        909          494
-## CGTGATGAGGTTCA-1 SeuratProject       1749          710
-## CGTGCACTTATGGC-1 SeuratProject       3071         1068
-## CGTGTAGAAAAACG-1 SeuratProject       2028          795
-## CGTGTAGACGATAC-1 SeuratProject       1654          787
-## CGTGTAGAGTTACG-1 SeuratProject       2075          951
-## CGTGTAGAGTTCAG-1 SeuratProject       1890          720
-## CGTGTAGATTCGGA-1 SeuratProject       1674          842
-## CGTTAGGAAACCAC-1 SeuratProject       2243          890
-## CGTTAGGATCATTC-1 SeuratProject       4084         1355
-## CGTTATACCCTGAA-1 SeuratProject       2389         1005
-## CGTTTAACTGGTCA-1 SeuratProject       2767          872
-## CTAAACCTCTGACA-1 SeuratProject       2533         1185
-## CTAAACCTGTGCAT-1 SeuratProject       2520          912
-## CTAACACTAACGTC-1 SeuratProject       2764          869
-## CTAACACTAGTGCT-1 SeuratProject       2355          894
-## CTAACGGAACCGAT-1 SeuratProject       1999          997
-## CTAACGGATTTCTG-1 SeuratProject       2257          770
-## CTAACTACGGCAAG-1 SeuratProject       1287          554
-## CTAAGGACACCATG-1 SeuratProject       2135          806
-## CTAAGGACCGTTAG-1 SeuratProject       5485         1426
-## CTAAGGACGCCATA-1 SeuratProject       2879         1012
-## CTAAGGTGCCTAAG-1 SeuratProject       1111          452
-## CTAAGGTGTTGCAG-1 SeuratProject       2959          896
-## CTAAGGTGTTTCTG-1 SeuratProject       1009          426
-## CTAATAGAGCTATG-1 SeuratProject        600          239
-## CTAATGCTTGTGGT-1 SeuratProject       2067          829
-## CTACAACTCCCGTT-1 SeuratProject       2194          895
-## CTACCTCTCAACCA-1 SeuratProject       2334          787
-## CTACGCACACCTAG-1 SeuratProject       3713         1139
-## CTACGCACTCTCCG-1 SeuratProject       2639          925
-## CTACGCACTGGTCA-1 SeuratProject       2471         1015
-## CTACGGCTTTCTTG-1 SeuratProject       3914         1360
-## CTACTATGAACCAC-1 SeuratProject       3188         1097
-## CTACTATGATGTGC-1 SeuratProject       1663          650
-## CTACTATGCTAAGC-1 SeuratProject       2706          853
-## CTACTATGTAAAGG-1 SeuratProject       1265          549
-## CTACTCCTATGTCG-1 SeuratProject       2181         1052
-## CTACTCCTGCCATA-1 SeuratProject        586          307
-## CTAGAGACACTTTC-1 SeuratProject       3201         1152
-## CTAGAGACAGCATC-1 SeuratProject       2206          907
-## CTAGAGACTTTGGG-1 SeuratProject       5522         1628
-## CTAGATCTCTCTAT-1 SeuratProject       1822          731
-## CTAGATCTTCGACA-1 SeuratProject       2392          897
-## CTAGGATGAGCCTA-1 SeuratProject       5878         1749
-## CTAGGATGATCGTG-1 SeuratProject       2159          762
-## CTAGGCCTCTCAGA-1 SeuratProject       1998          712
-## CTAGGTGATGGTTG-1 SeuratProject       3254         1195
-## CTAGTTACCAGAGG-1 SeuratProject       2741          851
-## CTAGTTACCGCATA-1 SeuratProject       2360          864
-## CTAGTTACGAAACA-1 SeuratProject       2247          968
-## CTAGTTTGAGTACC-1 SeuratProject       1601          742
-## CTATAAGATCGTTT-1 SeuratProject       2736          845
-## CTATACTGAGGTTC-1 SeuratProject        732          331
-## CTATACTGCCAGTA-1 SeuratProject       2692          840
-## CTATACTGCGCTAA-1 SeuratProject       1857          734
-## CTATACTGCTACGA-1 SeuratProject       2130          948
-## CTATACTGTCTCAT-1 SeuratProject       1774          842
-## CTATACTGTTCGTT-1 SeuratProject       4789         1543
-## CTATAGCTGTCACA-1 SeuratProject       2124          661
-## CTATAGCTTCGCTC-1 SeuratProject       2543          981
-## CTATAGCTTGCCTC-1 SeuratProject       2498          912
-## CTATCAACGAACTC-1 SeuratProject       2522          912
-## CTATCAACGCAGAG-1 SeuratProject       3163         1063
-## CTATCAACTTTGGG-1 SeuratProject       2057          683
-## CTATCCCTCCACCT-1 SeuratProject       2173          823
-## CTATGTACGAGAGC-1 SeuratProject       3145          996
-## CTATGTACGCTTAG-1 SeuratProject       2074          695
-## CTATGTACTGTTTC-1 SeuratProject       4826         1483
-## CTATGTTGAAAGCA-1 SeuratProject       3168          927
-## CTATGTTGTCCTCG-1 SeuratProject       1635          574
-## CTATGTTGTCTCGC-1 SeuratProject       3494         1052
-## CTATTGACAAACGA-1 SeuratProject       1289          571
-## CTATTGACACTGGT-1 SeuratProject       2940         1028
-## CTATTGACGGTGAG-1 SeuratProject       3968         1263
-## CTATTGTGGCAAGG-1 SeuratProject       1939          671
-## CTCAATTGGTTCAG-1 SeuratProject       3237          958
-## CTCAATTGGTTGCA-1 SeuratProject       1908          747
-## CTCAGAGATAGAAG-1 SeuratProject       2568          866
-## CTCAGCACTCTAGG-1 SeuratProject       2344          896
-## CTCAGCACTGAACC-1 SeuratProject       1153          489
-## CTCAGCACTTGCAG-1 SeuratProject       1860          643
-## CTCAGCTGAACCTG-1 SeuratProject       2928          923
-## CTCAGCTGCAGTTG-1 SeuratProject       2342          820
-## CTCAGCTGTTTCTG-1 SeuratProject       1857          646
-## CTCAGGCTCGTTGA-1 SeuratProject       4505         1466
-## CTCAGGCTGCTAAC-1 SeuratProject       1198          550
-## CTCATTGACCTTAT-1 SeuratProject       3103         1112
-## CTCATTGATGCTTT-1 SeuratProject       3007         1006
-## CTCATTGATTGCTT-1 SeuratProject        595          303
-## CTCCACGAGAGATA-1 SeuratProject       4639         1448
-## CTCCATCTCTTAGG-1 SeuratProject       2109          727
-## CTCCATCTGACGAG-1 SeuratProject       2887          899
-## CTCCGAACAAGTGA-1 SeuratProject       2446          998
-## CTCCTACTGCCTTC-1 SeuratProject       1292          563
-## CTCGAAGATGTGGT-1 SeuratProject       2952          870
-## CTCGAAGATTAGGC-1 SeuratProject       2373          903
-## CTCGACTGCTCTAT-1 SeuratProject       1144          516
-## CTCGACTGGGTGAG-1 SeuratProject       2023          754
-## CTCGACTGGTTGAC-1 SeuratProject       1814          879
-## CTCGAGCTCTGGAT-1 SeuratProject       1157          588
-## CTCGCATGACTTTC-1 SeuratProject       1839          740
-## CTCGCATGCTTAGG-1 SeuratProject       2190          798
-## CTCTAAACCTCGAA-1 SeuratProject       2272          798
-## CTCTAAACGGCGAA-1 SeuratProject       2003          653
-## CTCTAATGTCCAAG-1 SeuratProject       2339          902
-## CTGAACGACAGTCA-1 SeuratProject       2732          990
-## CTGAACGATGAGGG-1 SeuratProject       1538          724
-## CTGAAGACCCAACA-1 SeuratProject       2753          953
-## CTGAAGACGTGCAT-1 SeuratProject       2300          891
-## CTGAAGTGAAGCCT-1 SeuratProject       4073         1437
-## CTGAAGTGCAGCTA-1 SeuratProject       1717          653
-## CTGAAGTGGCTATG-1 SeuratProject       1891          714
-## CTGAAGTGTCCAGA-1 SeuratProject       3300          956
-## CTGAATCTGAATAG-1 SeuratProject       2023          877
-## CTGACAGAATCGTG-1 SeuratProject       2700         1012
-## CTGACCACAGCAAA-1 SeuratProject       2478          824
-## CTGAGAACCGGGAA-1 SeuratProject       3916         1077
-## CTGAGAACGTAAAG-1 SeuratProject       1420          740
-## CTGATACTAGTAGA-1 SeuratProject       2229          692
-## CTGATTTGGTGTTG-1 SeuratProject       2994         1063
-## CTGCAGCTAACCGT-1 SeuratProject       2674          771
-## CTGCAGCTGACACT-1 SeuratProject       3102          808
-## CTGCAGCTGGATTC-1 SeuratProject       4046         1389
-## CTGCAGCTTGGCAT-1 SeuratProject       3900         1264
-## CTGCCAACAGGAGC-1 SeuratProject       2857          952
-## CTGCCAACCAGCTA-1 SeuratProject       2211          816
-## CTGCCAACTAACCG-1 SeuratProject       2264          795
-## CTGCCAACTGCTCC-1 SeuratProject       1870          795
-## CTGCCAACTTGCAG-1 SeuratProject       2344          760
-## CTGCCAACTTGCTT-1 SeuratProject       2332          886
-## CTGCGACTCCACCT-1 SeuratProject        688          349
-## CTGGAAACAAACGA-1 SeuratProject       2367          868
-## CTGGAAACATCGAC-1 SeuratProject       2151          842
-## CTGGATGACTGGAT-1 SeuratProject       2037          819
-## CTGGATGACTTGTT-1 SeuratProject       1457          626
-## CTGGATGATGTGAC-1 SeuratProject        869          418
-## CTGGCACTCAAGCT-1 SeuratProject       2565          903
-## CTGGCACTGGACAG-1 SeuratProject       1555          626
-## CTGTAACTAACCAC-1 SeuratProject       2167          838
-## CTGTAACTAGCGTT-1 SeuratProject       1983          723
-## CTGTATACGTAAAG-1 SeuratProject        979          436
-## CTGTATACGTACGT-1 SeuratProject       3504         1112
-## CTGTATACGTTGGT-1 SeuratProject       1828          724
-## CTGTGAGACAACCA-1 SeuratProject       4059         1299
-## CTGTGAGACCTTGC-1 SeuratProject       1662          719
-## CTGTGAGACGAACT-1 SeuratProject       2277          843
-## CTGTGAGACTGTAG-1 SeuratProject       3256         1090
-## CTTAAAGAACCTGA-1 SeuratProject       2297          696
-## CTTAACACCTGTAG-1 SeuratProject       2068          885
-## CTTAACACGAGCTT-1 SeuratProject       3211         1144
-## CTTAACACTATCGG-1 SeuratProject       1748          627
-## CTTAAGCTACCTAG-1 SeuratProject       2362          809
-## CTTAAGCTAGTACC-1 SeuratProject        920          423
-## CTTAAGCTCATCAG-1 SeuratProject       1860          729
-## CTTAAGCTCCGCTT-1 SeuratProject       2374          853
-## CTTAAGCTTCCTCG-1 SeuratProject       1724          713
-## CTTACAACTAACGC-1 SeuratProject       2369          855
-## CTTACAACTCCCGT-1 SeuratProject       1505          608
-## CTTACTGACGTACA-1 SeuratProject       1857          627
-## CTTAGACTAAACGA-1 SeuratProject       2396          823
-## CTTAGGGACTTGCC-1 SeuratProject       2991         1063
-## CTTAGGGAGAATCC-1 SeuratProject       1638          575
-## CTTATCGACTCATT-1 SeuratProject       1966          743
-## CTTCACCTACCTGA-1 SeuratProject       4888         1528
-## CTTCATGAAGCATC-1 SeuratProject       1927          681
-## CTTCATGAAGTACC-1 SeuratProject       1324          544
-## CTTCATGACCGAAT-1 SeuratProject        937          422
-## CTTGAACTACGCAT-1 SeuratProject       2077          731
-## CTTGATTGAGGTTC-1 SeuratProject       2005          920
-## CTTGATTGATCTTC-1 SeuratProject       2094          761
-## CTTGATTGCATTCT-1 SeuratProject       2276          884
-## CTTGATTGTTTCGT-1 SeuratProject       3235          982
-## CTTGTATGACACCA-1 SeuratProject       2020          784
-## CTTGTATGCGCAAT-1 SeuratProject       1035          496
-## CTTTACGAGCGAAG-1 SeuratProject       1483          573
-## CTTTAGACCGTGAT-1 SeuratProject       1507          521
-## CTTTAGACGAGACG-1 SeuratProject       2251          663
-## CTTTAGACGATACC-1 SeuratProject       2500          794
-## CTTTAGACGTTGGT-1 SeuratProject       2937          975
-## CTTTAGACTCATTC-1 SeuratProject       2511          856
-## CTTTAGTGACGGGA-1 SeuratProject       2214          978
-## CTTTAGTGGGTGGA-1 SeuratProject       1648          590
-## CTTTCAGAGAAACA-1 SeuratProject       2496          905
-## CTTTGATGAGCACT-1 SeuratProject       2020          695
-## CTTTGATGTCTAGG-1 SeuratProject       1935          816
-## CTTTGATGTGTCCC-1 SeuratProject       3462          976
-## CTTTGATGTGTGGT-1 SeuratProject       2490          816
-## GAAACAGAACTACG-1 SeuratProject       1960          753
-## GAAACAGAATCACG-1 SeuratProject       2180          791
-## GAAACAGACATTCT-1 SeuratProject       2572          858
-## GAAACCTGATCGTG-1 SeuratProject       2487          813
-## GAAACCTGATGCCA-1 SeuratProject       2390          841
-## GAAACCTGCTTATC-1 SeuratProject       3639         1085
-## GAAACCTGGACTAC-1 SeuratProject       5328         1692
-## GAAACCTGTGCTAG-1 SeuratProject       1723          716
-## GAAAGATGATTTCC-1 SeuratProject       2501          955
-## GAAAGATGCTGATG-1 SeuratProject       4691         1467
-## GAAAGATGCTTCGC-1 SeuratProject       2316          741
-## GAAAGATGTAAGGA-1 SeuratProject        651          296
-## GAAAGATGTTTGCT-1 SeuratProject       1291          540
-## GAAAGCCTACGTTG-1 SeuratProject       2282          738
-## GAAAGTGAAAGTGA-1 SeuratProject       6177         1573
-## GAAAGTGACCACAA-1 SeuratProject       3255         1119
-## GAAAGTGACTCAAG-1 SeuratProject       3359          918
-## GAAATACTACCAAC-1 SeuratProject        561          283
-## GAAATACTCTTAGG-1 SeuratProject       2039          703
-## GAAATACTTCCTCG-1 SeuratProject       2036          842
-## GAACACACGTGCAT-1 SeuratProject       3828         1253
-## GAACACACTGCCTC-1 SeuratProject       2168          676
-## GAACAGCTAACTGC-1 SeuratProject       5494         1636
-## GAACAGCTCTCAGA-1 SeuratProject       4199         1273
-## GAACCAACCACAAC-1 SeuratProject        863          380
-## GAACCAACTTCCGC-1 SeuratProject       1610          799
-## GAACCTGAACGTGT-1 SeuratProject       4756         1491
-## GAACCTGAGAGACG-1 SeuratProject       2490          878
-## GAACCTGATGAACC-1 SeuratProject       2871          939
-## GAACGGGATACTTC-1 SeuratProject       2033          725
-## GAACGTTGACGGAG-1 SeuratProject       1209          563
-## GAACTGTGACCTGA-1 SeuratProject       4027         1365
-## GAACTGTGCCAGTA-1 SeuratProject       2040          818
-## GAAGAATGCAATCG-1 SeuratProject       2090          719
-## GAAGCGGACCTATT-1 SeuratProject       4008         1343
-## GAAGCTACGAATGA-1 SeuratProject       2610          905
-## GAAGCTACGGTTTG-1 SeuratProject       1763          837
-## GAAGGGTGAAAGTG-1 SeuratProject       2473          803
-## GAAGGGTGCTTAGG-1 SeuratProject       2939          990
-## GAAGGTCTGAAAGT-1 SeuratProject       2280         1084
-## GAAGGTCTGTTGCA-1 SeuratProject       3213          976
-## GAAGGTCTTAAAGG-1 SeuratProject       5640         1630
-## GAAGTAGACTCCCA-1 SeuratProject       1871          795
-## GAAGTAGATCCAAG-1 SeuratProject       4035         1408
-## GAAGTCACCCTCGT-1 SeuratProject       1853          771
-## GAAGTCACCCTGTC-1 SeuratProject       1978          650
-## GAAGTCTGTCGCAA-1 SeuratProject       1998          779
-## GAAGTCTGTTCTGT-1 SeuratProject       2244          648
-## GAAGTGCTAAACGA-1 SeuratProject       1806          817
-## GAAGTGCTCCGCTT-1 SeuratProject       3251         1127
-## GAAGTGCTTAACCG-1 SeuratProject       2587          882
-## GAATGCACCCTAAG-1 SeuratProject       3039          954
-## GAATGCACCTTCGC-1 SeuratProject       1980          830
-## GAATGCTGCGGTAT-1 SeuratProject       2569          732
-## GAATGGCTAAGATG-1 SeuratProject        741          378
-## GAATTAACGATAAG-1 SeuratProject       2136          783
-## GAATTAACGGTCAT-1 SeuratProject       1914          756
-## GAATTAACGTCGTA-1 SeuratProject       1323          708
-## GAATTAACTGAAGA-1 SeuratProject       2481          976
-## GACAACACAGGCGA-1 SeuratProject       2578          718
-## GACAACACATCGTG-1 SeuratProject       2592          887
-## GACAACACTCGCCT-1 SeuratProject       2229          809
-## GACAACTGAGGTTC-1 SeuratProject       2501          795
-## GACAGGGAAGAGTA-1 SeuratProject       1574          662
-## GACAGGGAATGCCA-1 SeuratProject       2543          912
-## GACAGTACGAGCTT-1 SeuratProject       4933         1550
-## GACAGTACTTCGGA-1 SeuratProject       5193         1509
-## GACAGTTGAGTAGA-1 SeuratProject       3107         1021
-## GACATTCTCCACCT-1 SeuratProject       6193         1751
-## GACCAAACGACTAC-1 SeuratProject       2043          776
-## GACCAAACGTATCG-1 SeuratProject       2228          910
-## GACCATGACTCTCG-1 SeuratProject       1018          446
-## GACCCTACTAAAGG-1 SeuratProject       1493          714
-## GACCTAGACCTCAC-1 SeuratProject       1178          530
-## GACCTAGACGAGAG-1 SeuratProject       2591          846
-## GACCTCACAAGGTA-1 SeuratProject       1825          631
-## GACCTCACGTACGT-1 SeuratProject       3514         1152
-## GACCTCTGCATCAG-1 SeuratProject       4014         1118
-## GACGAACTCCCACT-1 SeuratProject       2191          755
-## GACGATTGCCAATG-1 SeuratProject       1186          573
-## GACGCCGACCTTCG-1 SeuratProject       2708         1176
-## GACGCTCTCTCTCG-1 SeuratProject        683          267
-## GACGGCACACGGGA-1 SeuratProject       1803          918
-## GACGGCACGAGATA-1 SeuratProject       3154         1132
-## GACGTAACCTATGG-1 SeuratProject       2218          849
-## GACGTAACCTGTGA-1 SeuratProject       2521          938
-## GACGTAACTATGGC-1 SeuratProject       3219         1140
-## GACGTATGTTGACG-1 SeuratProject       2554          909
-## GACGTATGTTTGCT-1 SeuratProject       2410          840
-## GACGTCCTACGGAG-1 SeuratProject       2226          806
-## GACGTCCTCTCAAG-1 SeuratProject       2413          904
-## GACGTCCTGATAAG-1 SeuratProject       2256          788
-## GACTACGATGGTCA-1 SeuratProject       1874          778
-## GACTCCTGCTCGCT-1 SeuratProject       1862          715
-## GACTCCTGGGTTAC-1 SeuratProject       2649          869
-## GACTCCTGTTATCC-1 SeuratProject       1462          714
-## GACTCCTGTTGGTG-1 SeuratProject       2720          883
-## GACTGAACAACCGT-1 SeuratProject        663          332
-## GACTGAACCAATCG-1 SeuratProject       2301          767
-## GACTGATGTGATGC-1 SeuratProject       2650          858
-## GACTTTACATGCCA-1 SeuratProject       2480          788
-## GACTTTACGACAGG-1 SeuratProject       1350          553
-## GAGAAATGTTCTCA-1 SeuratProject       2056          634
-## GAGATAGAAAAAGC-1 SeuratProject       3327         1230
-## GAGATCACGACAAA-1 SeuratProject       3174         1131
-## GAGATGCTCTGGAT-1 SeuratProject       2075          849
-## GAGATGCTGAATGA-1 SeuratProject       1804          811
-## GAGCAGGATTCCCG-1 SeuratProject       1900          827
-## GAGCATACTTTGCT-1 SeuratProject       6694         1753
-## GAGCGCACGCGTAT-1 SeuratProject       1777          713
-## GAGCGCACGGTGAG-1 SeuratProject       1056          484
-## GAGCGCTGAAGATG-1 SeuratProject       1631          783
-## GAGCGCTGTCTTAC-1 SeuratProject       1979          722
-## GAGCGGCTGGGAGT-1 SeuratProject       1520          596
-## GAGGACGACTCAGA-1 SeuratProject       1171          514
-## GAGGATCTGAAAGT-1 SeuratProject        717          372
-## GAGGCAGACTTGCC-1 SeuratProject       2239          925
-## GAGGGAACACCAGT-1 SeuratProject       1677          747
-## GAGGGAACGAGGGT-1 SeuratProject       1827          840
-## GAGGGATGGGAAAT-1 SeuratProject       1497          673
-## GAGGGCCTTCACCC-1 SeuratProject       2480          955
-## GAGGGTGAAGAGTA-1 SeuratProject       2599          796
-## GAGGTACTACGGTT-1 SeuratProject       2041          719
-## GAGGTACTACTCAG-1 SeuratProject       1980          718
-## GAGGTACTGACACT-1 SeuratProject       1922          857
-## GAGGTACTGGGAGT-1 SeuratProject       1321          578
-## GAGGTACTTAGCGT-1 SeuratProject       3386         1063
-## GAGGTGGAGTACGT-1 SeuratProject       1515          594
-## GAGGTGGATCCTCG-1 SeuratProject       1988          997
-## GAGGTTACTCGTTT-1 SeuratProject       3757         1268
-## GAGGTTTGTAAGCC-1 SeuratProject        684          341
-## GAGTCAACCATTCT-1 SeuratProject        897          388
-## GAGTCAACGGGAGT-1 SeuratProject       2627          753
-## GAGTCTGATCGTGA-1 SeuratProject       2354          834
-## GAGTCTGATTTGGG-1 SeuratProject       1493          593
-## GAGTGACTCAGCTA-1 SeuratProject       2887         1189
-## GAGTGACTCGGTAT-1 SeuratProject       2183          911
-## GAGTGACTCTTGCC-1 SeuratProject       1833          738
-## GAGTGACTGACTAC-1 SeuratProject       1256          476
-## GAGTGACTGTCTAG-1 SeuratProject       2146          816
-## GAGTGGGAGTCTTT-1 SeuratProject       1581          641
-## GAGTGGGATGCCCT-1 SeuratProject       2475          746
-## GAGTGGGATGCTGA-1 SeuratProject       1498          635
-## GAGTGTTGCTGTAG-1 SeuratProject       2790          953
-## GAGTGTTGTGGTCA-1 SeuratProject       2044          801
-## GAGTTGTGCATGGT-1 SeuratProject        693          326
-## GAGTTGTGCTGAGT-1 SeuratProject       2000          849
-## GAGTTGTGGCGAGA-1 SeuratProject       1225          499
-## GAGTTGTGGTAGCT-1 SeuratProject       2422          865
-## GAGTTGTGTATGCG-1 SeuratProject       4179         1420
-## GATAAGGAGAAACA-1 SeuratProject       1139          487
-## GATAAGGATTCACT-1 SeuratProject       2518          876
-## GATACTCTATCGGT-1 SeuratProject       2343          797
-## GATACTCTTACTTC-1 SeuratProject       2881          981
-## GATACTCTTGACTG-1 SeuratProject       2146          756
-## GATAGAGAAGGGTG-1 SeuratProject       2063          850
-## GATAGAGACTGTGA-1 SeuratProject       3964         1097
-## GATAGAGATCACGA-1 SeuratProject       2811          998
-## GATAGCACCCATAG-1 SeuratProject       2638          829
-## GATAGCACGAAGGC-1 SeuratProject       3630         1159
-## GATAGCACTTGTCT-1 SeuratProject       2942          955
-## GATATAACAAGGTA-1 SeuratProject       3234         1061
-## GATATAACACGCAT-1 SeuratProject       2247          696
-## GATATATGCTGGAT-1 SeuratProject       2668          786
-## GATATATGTCCGTC-1 SeuratProject       1819          743
-## GATATATGTGGAGG-1 SeuratProject       3775         1211
-## GATATCCTAGAAGT-1 SeuratProject       2302          893
-## GATATCCTCCCGTT-1 SeuratProject       1071          491
-## GATATTGACAGGAG-1 SeuratProject       1736          744
-## GATATTGACGAGTT-1 SeuratProject       4410         1447
-## GATATTGAGCCAAT-1 SeuratProject       2424          767
-## GATCCCTGACCTTT-1 SeuratProject       2213         1050
-## GATCCCTGTGTAGC-1 SeuratProject       2324          853
-## GATCCGCTGGTCAT-1 SeuratProject       3070         1118
-## GATCGAACCGAGAG-1 SeuratProject       4590         1428
-## GATCGATGACTAGC-1 SeuratProject       1137          555
-## GATCGATGGTAAAG-1 SeuratProject       1771          612
-## GATCGATGTAAGGA-1 SeuratProject       2504          854
-## GATCGTGACACTAG-1 SeuratProject       2252          789
-## GATCGTGATTCACT-1 SeuratProject       2068          889
-## GATCTACTGGTGAG-1 SeuratProject       1969          784
-## GATCTACTTTGCAG-1 SeuratProject       1624          712
-## GATCTTACACCCAA-1 SeuratProject       3608         1323
-## GATCTTACCCTACC-1 SeuratProject       2803          921
-## GATCTTACGAATAG-1 SeuratProject       1542          682
-## GATCTTACGAGATA-1 SeuratProject       2202          794
-## GATGCAACTCCAGA-1 SeuratProject       2487          846
-## GATGCCCTACGTAC-1 SeuratProject       2810         1012
-## GATGCCCTCTCATT-1 SeuratProject       2403          839
-## GATGCCCTGGCAAG-1 SeuratProject       2300          807
-## GATGCCCTTTTGCT-1 SeuratProject       1525          587
-## GATTACCTTGTTCT-1 SeuratProject       2471          881
-## GATTCGGAACGACT-1 SeuratProject       2625          781
-## GATTCGGACAGGAG-1 SeuratProject       2873         1010
-## GATTCGGAGAAGGC-1 SeuratProject       3634         1182
-## GATTCTTGATTCGG-1 SeuratProject       3001         1149
-## GATTCTTGCCGATA-1 SeuratProject       2262          812
-## GATTCTTGCGAGTT-1 SeuratProject       1550          607
-## GATTGGACCCGTTC-1 SeuratProject       3465         1155
-## GATTGGACGGTGTT-1 SeuratProject       1759          714
-## GATTGGACTTTCGT-1 SeuratProject       1634          642
-## GATTGGTGTGTCAG-1 SeuratProject       3236         1088
-## GATTTAGACACTCC-1 SeuratProject       4120         1291
-## GATTTAGACTAAGC-1 SeuratProject       2967         1196
-## GATTTAGATTCGTT-1 SeuratProject        664          325
-## GATTTGCTAACGAA-1 SeuratProject       2322          804
-## GATTTGCTAACGGG-1 SeuratProject        691          370
-## GCAACCCTCCTCGT-1 SeuratProject        744          359
-## GCAACTGATTGCGA-1 SeuratProject       2805          855
-## GCAAGACTACTGGT-1 SeuratProject       2894         1165
-## GCAAGACTAGGTCT-1 SeuratProject       2191          836
-## GCAAGACTCCCTTG-1 SeuratProject       2701          923
-## GCAATCGACTGCAA-1 SeuratProject       2346          863
-## GCAATCGAGACGTT-1 SeuratProject       3899         1284
-## GCAATCGATCCTTA-1 SeuratProject       3054         1011
-## GCAATTCTCGTGTA-1 SeuratProject       2592          889
-## GCAATTCTTCTCCG-1 SeuratProject       3262          984
-## GCACAAACAATGCC-1 SeuratProject       1240          512
-## GCACAAACGGTACT-1 SeuratProject       2829          939
-## GCACAATGGTGCAT-1 SeuratProject       2612          883
-## GCACACCTGTGCTA-1 SeuratProject       1376          697
-## GCACCACTCATGAC-1 SeuratProject       3644         1211
-## GCACCACTGTTTGG-1 SeuratProject        776          362
-## GCACCACTTCCTTA-1 SeuratProject       1945          969
-## GCACCACTTTCGGA-1 SeuratProject       3246         1135
-## GCACCTACGCGATT-1 SeuratProject       4274         1239
-## GCACCTTGGCTGTA-1 SeuratProject       1753          580
-## GCACCTTGGGGAGT-1 SeuratProject       3740         1103
-## GCACGGACCAGCTA-1 SeuratProject       3172          975
-## GCACGGTGACCTCC-1 SeuratProject       2262          825
-## GCACGGTGCTATGG-1 SeuratProject       3105         1170
-## GCACTAGAACGGGA-1 SeuratProject       2493          921
-## GCACTAGAAGATGA-1 SeuratProject       1548          640
-## GCACTAGACCTTTA-1 SeuratProject       3630         1180
-## GCACTAGACGTAAC-1 SeuratProject        745          378
-## GCACTAGAGTCGTA-1 SeuratProject       2424          982
-## GCACTAGATGCAAC-1 SeuratProject       2667          916
-## GCACTGCTGAGGCA-1 SeuratProject       3473         1122
-## GCAGATACAGCGTT-1 SeuratProject       2093          792
-## GCAGATACGACGGA-1 SeuratProject       1670          619
-## GCAGATACGCAGAG-1 SeuratProject       2140          750
-## GCAGCCGACAGTCA-1 SeuratProject       3037          913
-## GCAGCGTGCACTCC-1 SeuratProject       2298          775
-## GCAGCTCTCAATCG-1 SeuratProject       1860          661
-## GCAGCTCTGTTTCT-1 SeuratProject       1688          766
-## GCAGGGCTAAGAAC-1 SeuratProject       2969          768
-## GCAGGGCTAAGGGC-1 SeuratProject       1466          675
-## GCAGGGCTATCGAC-1 SeuratProject       1981          944
-## GCAGGGCTTGGGAG-1 SeuratProject       2195          940
-## GCAGTCCTAACTGC-1 SeuratProject       2107          761
-## GCAGTCCTCTCTTA-1 SeuratProject       1832          727
-## GCATCAGATGCGTA-1 SeuratProject       2047          767
-## GCATGTGACAAGCT-1 SeuratProject       2951          873
-## GCATTGGAGAAGGC-1 SeuratProject       3069         1043
-## GCCAAAACGAGGCA-1 SeuratProject       2087          850
-## GCCAAATGATCGAC-1 SeuratProject       2887          995
-## GCCAACCTACGGTT-1 SeuratProject       2141          680
-## GCCAACCTCGCCTT-1 SeuratProject       1770          595
-## GCCACGGAGGCGAA-1 SeuratProject       2000          700
-## GCCACGGATACTGG-1 SeuratProject       2411          753
-## GCCACTACCTACTT-1 SeuratProject       1737          682
-## GCCACTACGTCTTT-1 SeuratProject       2097          736
-## GCCCAACTACCGAT-1 SeuratProject       2579          891
-## GCCCAACTATGGTC-1 SeuratProject       1833          685
-## GCCCATACAGCGTT-1 SeuratProject       1959          780
-## GCCGACGAACTCTT-1 SeuratProject       2982          986
-## GCCGAGTGCGTTGA-1 SeuratProject       3191          989
-## GCCGGAACGAACTC-1 SeuratProject       2325          830
-## GCCGGAACGTTCTT-1 SeuratProject       1582          810
-## GCCGGAACTGCACA-1 SeuratProject       1591          685
-## GCCGGAACTTACTC-1 SeuratProject       2021          784
-## GCCGTACTACCTGA-1 SeuratProject       2258          642
-## GCCGTACTGGCAAG-1 SeuratProject       1698          742
-## GCCTACACAGTTCG-1 SeuratProject       2058          961
-## GCCTACACCACTGA-1 SeuratProject       2617          906
-## GCCTACACCTTGAG-1 SeuratProject       2817          829
-## GCCTAGCTACGGAG-1 SeuratProject       1730          621
-## GCCTAGCTCTATTC-1 SeuratProject       2419          822
-## GCCTAGCTTCTCAT-1 SeuratProject       2155          717
-## GCCTAGCTTCTCTA-1 SeuratProject       3411         1210
-## GCCTCAACCATGGT-1 SeuratProject       2602          800
-## GCCTCAACTCTTTG-1 SeuratProject       5990         1963
-## GCCTCATGTCTTAC-1 SeuratProject       2173          749
-## GCCTGACTCTCAAG-1 SeuratProject       2004          757
-## GCGAAGGAACTCTT-1 SeuratProject       1247          570
-## GCGAAGGAGAGCTT-1 SeuratProject      10282         2710
-## GCGAAGGATGCCAA-1 SeuratProject       2468          831
-## GCGAGAGAGGGACA-1 SeuratProject       1883          721
-## GCGAGCACTGTCGA-1 SeuratProject        613          336
-## GCGAGCACTTGACG-1 SeuratProject       2283          802
-## GCGAGCACTTGCTT-1 SeuratProject       3144         1001
-## GCGATATGGTACGT-1 SeuratProject       2071          886
-## GCGATATGGTGTTG-1 SeuratProject       1762          631
-## GCGCACGAAGTCGT-1 SeuratProject       2266          759
-## GCGCACGACTTTAC-1 SeuratProject       1689          631
-## GCGCATCTAGGTCT-1 SeuratProject       1395          550
-## GCGCATCTGGTTAC-1 SeuratProject       2518          984
-## GCGCATCTTCGATG-1 SeuratProject       2297          767
-## GCGCATCTTGCTCC-1 SeuratProject       1995          835
-## GCGCATCTTTCTAC-1 SeuratProject       2508          777
-## GCGCGAACGTTCTT-1 SeuratProject       1661          639
-## GCGCGATGAACGGG-1 SeuratProject       2635          860
-## GCGCGATGGTGCAT-1 SeuratProject       3228         1413
-## GCGGAGCTCCTGAA-1 SeuratProject       1952          747
-## GCGGCAACCCGATA-1 SeuratProject       2372          779
-## GCGGCAACGGAGGT-1 SeuratProject       1320          540
-## GCGGCAACTGTCGA-1 SeuratProject        701          367
-## GCGTAAACACGGTT-1 SeuratProject       5928         1629
-## GCGTAATGCACCAA-1 SeuratProject       3970         1380
-## GCGTATGAACACCA-1 SeuratProject       2132          689
-## GCGTATGATGAGAA-1 SeuratProject       2732         1001
-## GCTACAGAAAGGTA-1 SeuratProject       2454          809
-## GCTACAGAATCTTC-1 SeuratProject        648          337
-## GCTACAGATCTTAC-1 SeuratProject       2112          734
-## GCTACCTGAGAAGT-1 SeuratProject       3296         1103
-## GCTACCTGATCACG-1 SeuratProject       2168          796
-## GCTACGCTAGAATG-1 SeuratProject       2980          966
-## GCTACGCTAGCTAC-1 SeuratProject       2110          782
-## GCTACGCTCCCTAC-1 SeuratProject       2759         1018
-## GCTAGAACAGAGGC-1 SeuratProject       1513          642
-## GCTAGAACGGATCT-1 SeuratProject       2700          967
-## GCTAGAACTCCCGT-1 SeuratProject       1104          436
-## GCTAGATGAGCTCA-1 SeuratProject       2305          826
-## GCTAGATGGCGATT-1 SeuratProject       2016          779
-## GCTATACTAAGGCG-1 SeuratProject       3088         1000
-## GCTATACTAGCGTT-1 SeuratProject       1509          601
-## GCTATACTCTCTTA-1 SeuratProject       2780          796
-## GCTATACTGGACGA-1 SeuratProject       2824          945
-## GCTCAAGAACCATG-1 SeuratProject       5557         1679
-## GCTCAAGAAGTCAC-1 SeuratProject       3219         1123
-## GCTCAGCTGTCTAG-1 SeuratProject       1683          596
-## GCTCCATGAGAAGT-1 SeuratProject       2130          995
-## GCTCCATGCCGAAT-1 SeuratProject       1954          720
-## GCTCGACTCTAGTG-1 SeuratProject       1418          588
-## GCTGATGAGGTATC-1 SeuratProject       1908          759
-## GCTTAACTACAGTC-1 SeuratProject        916          452
-## GCTTAACTACTGGT-1 SeuratProject       1799          780
-## GCTTAACTGCTGAT-1 SeuratProject       2605          836
-## GCTTAACTTAGACC-1 SeuratProject       1124          515
-## GCTTAACTTCAGTG-1 SeuratProject       2711          846
-## GGAACACTCACTTT-1 SeuratProject        778          392
-## GGAACACTTCAGAC-1 SeuratProject        628          283
-## GGAACTACTACTTC-1 SeuratProject       1806          710
-## GGAACTTGAAGGTA-1 SeuratProject       3452         1158
-## GGAACTTGAGAATG-1 SeuratProject       2303          796
-## GGAACTTGCTCCAC-1 SeuratProject       2406          895
-## GGAACTTGGGTAGG-1 SeuratProject       1740          585
-## GGAAGGACATCGGT-1 SeuratProject       1387          559
-## GGAAGGACCACTAG-1 SeuratProject       2054          859
-## GGAAGGACGAGGGT-1 SeuratProject       2881          879
-## GGAAGGACGCGAAG-1 SeuratProject       2169          858
-## GGAAGGTGGCGAGA-1 SeuratProject       1633          842
-## GGAATCTGAAGGGC-1 SeuratProject       1734          643
-## GGAATCTGAGGAGC-1 SeuratProject       3501         1308
-## GGAATCTGCTTAGG-1 SeuratProject       1513          595
-## GGAATCTGCTTGTT-1 SeuratProject       3350         1181
-## GGAATCTGGGAGGT-1 SeuratProject       2668          909
-## GGAATGCTTTCTAC-1 SeuratProject       2254          710
-## GGACAGGAAAGGGC-1 SeuratProject       2177          821
-## GGACAGGAGTGCTA-1 SeuratProject       2028          817
-## GGACAGGATCTCGC-1 SeuratProject       2191          841
-## GGACCCGAAGCTAC-1 SeuratProject       3323         1197
-## GGACCGTGCTTACT-1 SeuratProject       1555          640
-## GGACCGTGGGAACG-1 SeuratProject       4455         1425
-## GGACCGTGTAACGC-1 SeuratProject       2914          947
-## GGACCTCTGTAAGA-1 SeuratProject       2399          900
-## GGACCTCTTTTCTG-1 SeuratProject       2024          852
-## GGACGAGAGTGTCA-1 SeuratProject        930          460
-## GGACGCTGACGCAT-1 SeuratProject       3051         1100
-## GGACGCTGCTAGCA-1 SeuratProject       3129          824
-## GGACGCTGTCCTCG-1 SeuratProject       1529          780
-## GGAGAGACGTGAGG-1 SeuratProject       2677          932
-## GGAGCAGATTCAGG-1 SeuratProject       1324          542
-## GGAGCCACCTTCTA-1 SeuratProject       3351         1137
-## GGAGCGCTACGCAT-1 SeuratProject       3766         1225
-## GGAGCGCTCCGAAT-1 SeuratProject       3246          997
-## GGAGGATGCCACCT-1 SeuratProject       1585          572
-## GGAGGATGGTTGAC-1 SeuratProject       1792          780
-## GGAGGATGTCAGTG-1 SeuratProject       2009          765
-## GGAGGCCTCGTTGA-1 SeuratProject       1941          906
-## GGAGGCCTTTCTTG-1 SeuratProject       2408          793
-## GGAGGTGATACGCA-1 SeuratProject       2326          753
-## GGAGGTGATCGCTC-1 SeuratProject       1813          772
-## GGATACTGCAGCTA-1 SeuratProject       2652          854
-## GGATACTGTCTAGG-1 SeuratProject       2715          936
-## GGATAGCTCGTCTC-1 SeuratProject       3054         1048
-## GGATAGCTCTGAAC-1 SeuratProject       2053          819
-## GGATGTACCAAAGA-1 SeuratProject       1887          645
-## GGATGTACGCGAAG-1 SeuratProject       1595          619
-## GGATGTACGTCTTT-1 SeuratProject        562          314
-## GGATGTACGTGTCA-1 SeuratProject       1638          726
-## GGATTTCTAGGTTC-1 SeuratProject       1902          737
-## GGATTTCTTTGTCT-1 SeuratProject       3345         1162
-## GGCAAGGAAAAAGC-1 SeuratProject       2377         1081
-## GGCAAGGAAGAAGT-1 SeuratProject       2711          868
-## GGCAAGGACTTGGA-1 SeuratProject       3094         1032
-## GGCAAGGAGGACTT-1 SeuratProject       2909          913
-## GGCAATACGCTAAC-1 SeuratProject       1078          476
-## GGCAATACGGCATT-1 SeuratProject       1109          490
-## GGCAATACGTTTCT-1 SeuratProject       2079          799
-## GGCACGTGGCTTAG-1 SeuratProject       3600         1201
-## GGCACGTGTGAGAA-1 SeuratProject      10359         2694
-## GGCACTCTTTTGTC-1 SeuratProject       2545          997
-## GGCATATGCTTATC-1 SeuratProject       1940          898
-## GGCATATGGGGAGT-1 SeuratProject        575          212
-## GGCATATGTGTGAC-1 SeuratProject       5305         1586
-## GGCCACGACAGAGG-1 SeuratProject        891          427
-## GGCCAGACTGGTTG-1 SeuratProject       2564          947
-## GGCCCAGAAAGTAG-1 SeuratProject       2686          937
-## GGCCGAACAACGAA-1 SeuratProject       2354          724
-## GGCCGAACGCAGAG-1 SeuratProject        837          380
-## GGCCGAACGTAGGG-1 SeuratProject       1809          715
-## GGCCGAACTCTAGG-1 SeuratProject       1494          739
-## GGCCGATGCAGGAG-1 SeuratProject       2878          931
-## GGCCGATGCCGAAT-1 SeuratProject       2616          973
-## GGCCGATGTACTCT-1 SeuratProject       2608          773
-## GGCGACACTGCCCT-1 SeuratProject       4441         1497
-## GGCGACTGCGTAAC-1 SeuratProject       2524          906
-## GGCGCATGCCTAAG-1 SeuratProject       2096          798
-## GGCGCATGCTCCAC-1 SeuratProject       2535          953
-## GGCGCATGTGGAAA-1 SeuratProject       1201          471
-## GGCGGACTAGAGGC-1 SeuratProject       1760          821
-## GGCGGACTAGGAGC-1 SeuratProject       1975          806
-## GGCGGACTCTGACA-1 SeuratProject       2076          714
-## GGCGGACTCTTGGA-1 SeuratProject       1934          828
-## GGCGGACTTACTGG-1 SeuratProject       2404          727
-## GGCGGACTTGAACC-1 SeuratProject       2112          773
-## GGCTAAACACCTGA-1 SeuratProject       2434          976
-## GGCTAAACTCTTAC-1 SeuratProject       2667          856
-## GGCTAATGAGCACT-1 SeuratProject       1650          727
-## GGCTAATGGTCTAG-1 SeuratProject       2255          761
-## GGCTCACTACTCAG-1 SeuratProject       3516         1084
-## GGGAACGAAGCTCA-1 SeuratProject       4322         1557
-## GGGAACGACACAAC-1 SeuratProject       1713          693
-## GGGAACGAGTGTCA-1 SeuratProject       1149          559
-## GGGAAGTGTTGAGC-1 SeuratProject       1555          627
-## GGGACCACACGTTG-1 SeuratProject       1863          795
-## GGGACCACAGAACA-1 SeuratProject       2091          750
-## GGGACCACGAATAG-1 SeuratProject       2385          838
-## GGGACCACGTCATG-1 SeuratProject       2564          803
-## GGGACCACTCAAGC-1 SeuratProject       1064          453
-## GGGACCACTCGTGA-1 SeuratProject       2291          734
-## GGGACCACTGCATG-1 SeuratProject       1933          607
-## GGGACCTGACCCTC-1 SeuratProject       3080         1029
-## GGGACCTGCTTGCC-1 SeuratProject       2340          805
-## GGGACCTGTGGAGG-1 SeuratProject       1762          669
-## GGGATGGACGACAT-1 SeuratProject       1309          505
-## GGGATGGATACTTC-1 SeuratProject       2272          858
-## GGGATGGATGGTTG-1 SeuratProject       2068          832
-## GGGATTACGTCTAG-1 SeuratProject       3001         1019
-## GGGCAAGATGCATG-1 SeuratProject       1424          585
-## GGGCACACGGTGAG-1 SeuratProject       4258         1225
-## GGGCACACGTTGCA-1 SeuratProject       4082         1287
-## GGGCAGCTTGGGAG-1 SeuratProject       2246          903
-## GGGCAGCTTTTCTG-1 SeuratProject       2333          752
-## GGGCCAACCTTGGA-1 SeuratProject       8424         2020
-## GGGCCAACGCGTTA-1 SeuratProject       2178          774
-## GGGCCAACTACGCA-1 SeuratProject       1435          666
-## GGGCCAACTCCAAG-1 SeuratProject       2440          843
-## GGGCCATGATGGTC-1 SeuratProject       2486          857
-## GGGCCATGTTGACG-1 SeuratProject       2262          887
-## GGGTAACTCAGCTA-1 SeuratProject       3430         1082
-## GGGTAACTCTAGTG-1 SeuratProject       1773          656
-## GGGTAACTCTGGAT-1 SeuratProject       1948          674
-## GGGTTAACGTGCAT-1 SeuratProject       1815          911
-## GGTAAAGAGCTAAC-1 SeuratProject       1614          734
-## GGTACAACTGCAAC-1 SeuratProject       2655          910
-## GGTACATGAAAGCA-1 SeuratProject       1699          672
-## GGTACATGAGCTCA-1 SeuratProject       1753          802
-## GGTACATGCGGTAT-1 SeuratProject       1373          539
-## GGTACATGGTTACG-1 SeuratProject       1930          699
-## GGTACATGTGGGAG-1 SeuratProject       2747          941
-## GGTACTGAACTCTT-1 SeuratProject       2050          828
-## GGTAGTACACCACA-1 SeuratProject       2290          800
-## GGTAGTACACTAGC-1 SeuratProject       1655          642
-## GGTAGTACCCTGTC-1 SeuratProject       2091          733
-## GGTAGTACGCCATA-1 SeuratProject       1347          607
-## GGTAGTACTGTCTT-1 SeuratProject       2748          992
-## GGTATCGAGACAAA-1 SeuratProject        809          379
-## GGTATCGATGAACC-1 SeuratProject       1508          562
-## GGTCAAACCAAAGA-1 SeuratProject       2392          847
-## GGTCTAGAGAAACA-1 SeuratProject       2333          787
-## GGTCTAGATAGCGT-1 SeuratProject       4661         1461
-## GGTGATACCGACTA-1 SeuratProject       1698          732
-## GGTGATACGACTAC-1 SeuratProject       2717          941
-## GGTGATACTGTTTC-1 SeuratProject       2084          785
-## GGTGGAGAAACGGG-1 SeuratProject       1397          696
-## GGTGGAGAAGTAGA-1 SeuratProject       1898          795
-## GGTGGAGACAGATC-1 SeuratProject       1440          809
-## GGTGGAGATCGATG-1 SeuratProject       2297          828
-## GGTGGAGATCTCTA-1 SeuratProject       1836          651
-## GGTGGAGATTACTC-1 SeuratProject       2454          882
-## GGTTTACTACGCAT-1 SeuratProject       2346          972
-## GTAACGTGACCTCC-1 SeuratProject       4523         1323
-## GTAACGTGATCGGT-1 SeuratProject       1887          679
-## GTAACGTGCAGCTA-1 SeuratProject       2109          774
-## GTAACGTGGTTGAC-1 SeuratProject       2307          784
-## GTAAGCACAACGGG-1 SeuratProject       2030          766
-## GTAAGCACTCATTC-1 SeuratProject       1138          520
-## GTAAGCTGGTACCA-1 SeuratProject       1450          671
-## GTAATAACCTTCTA-1 SeuratProject       2208          796
-## GTAATAACGTTGTG-1 SeuratProject       2118          644
-## GTACCCTGACAGTC-1 SeuratProject       5050         1549
-## GTACCCTGGAGCTT-1 SeuratProject       2350          756
-## GTACCCTGTCCTTA-1 SeuratProject       1631          723
-## GTACCCTGTGAACC-1 SeuratProject       2511          788
-## GTACGTGAACGTTG-1 SeuratProject       1742          643
-## GTACTTTGTCGACA-1 SeuratProject       2420          856
-## GTAGACTGAGATGA-1 SeuratProject       2139          825
-## GTAGACTGTATTCC-1 SeuratProject       2008          730
-## GTAGCAACAGTCGT-1 SeuratProject       2232          831
-## GTAGCAACCATTTC-1 SeuratProject       1657          653
-## GTAGCAACGGTAGG-1 SeuratProject        955          429
-## GTAGCATGCACTCC-1 SeuratProject       1680          641
-## GTAGCATGTAAGCC-1 SeuratProject       1544          637
-## GTAGCCCTGACGTT-1 SeuratProject       2453          812
-## GTAGCTGAAGCTAC-1 SeuratProject       5103         1527
-## GTAGCTGAATTCGG-1 SeuratProject       2430          859
-## GTAGGTACACGGGA-1 SeuratProject       2858          972
-## GTAGTGACCTCATT-1 SeuratProject       2328          744
-## GTAGTGTGAGCGGA-1 SeuratProject       2056          869
-## GTAGTGTGAGGCGA-1 SeuratProject       1148          508
-## GTAGTGTGTGGTTG-1 SeuratProject       1969          624
-## GTATCACTGGTAGG-1 SeuratProject       2503          923
-## GTATCTACAGAAGT-1 SeuratProject       2285          976
-## GTATCTACGACGAG-1 SeuratProject       1939          801
-## GTATCTACGTTACG-1 SeuratProject       2808         1014
-## GTATTAGAAACAGA-1 SeuratProject       3490         1429
-## GTATTAGAGGTCTA-1 SeuratProject       1410          586
-## GTATTCACACAGCT-1 SeuratProject       1806          692
-## GTATTCACGGGTGA-1 SeuratProject       1741          704
-## GTCAACGACACTGA-1 SeuratProject       3629         1176
-## GTCAACGAGTGTAC-1 SeuratProject       2148          806
-## GTCAACGATCAGGT-1 SeuratProject        555          324
-## GTCAATCTACACCA-1 SeuratProject       2273          883
-## GTCAATCTGTAGCT-1 SeuratProject       3336         1249
-## GTCAATCTTGTGGT-1 SeuratProject       2261          765
-## GTCACCTGCCTCCA-1 SeuratProject       2127          743
-## GTCACCTGTCCCGT-1 SeuratProject       2796          907
-## GTCATACTAATCGC-1 SeuratProject       1610          666
-## GTCATACTGCGATT-1 SeuratProject       1457          669
-## GTCATACTTCGCCT-1 SeuratProject        984          364
-## GTCATACTTTACCT-1 SeuratProject       1861          794
-## GTCATACTTTGACG-1 SeuratProject       2738          959
-## GTCCAAGAAAAACG-1 SeuratProject       2261          766
-## GTCCACTGACCTCC-1 SeuratProject       3332          937
-## GTCCACTGGGTACT-1 SeuratProject       4417         1398
-## GTCCAGCTACGGGA-1 SeuratProject       2634          942
-## GTCCCATGTGGTGT-1 SeuratProject       4746         1469
-## GTCGAATGAAGGCG-1 SeuratProject       2120          905
-## GTCGACCTGAATGA-1 SeuratProject       1550          812
-## GTCGACCTGTTCAG-1 SeuratProject       1836          572
-## GTCGCACTTGAGAA-1 SeuratProject       4067         1378
-## GTCTAACTGGTCTA-1 SeuratProject       3369         1058
-## GTCTAGGAGCTTCC-1 SeuratProject       3654         1215
-## GTGAACACACTCTT-1 SeuratProject       2218          697
-## GTGAACACAGATCC-1 SeuratProject        871          424
-## GTGAACACTCAGGT-1 SeuratProject       1244          531
-## GTGACCCTTAAGCC-1 SeuratProject       1896          676
-## GTGATGACAAGTGA-1 SeuratProject       6333         1819
-## GTGATGACCTGAGT-1 SeuratProject       1096          503
-## GTGATGACGGTTTG-1 SeuratProject       2084          801
-## GTGATTCTCATTTC-1 SeuratProject       2569          943
-## GTGATTCTCTCTCG-1 SeuratProject       2597          874
-## GTGATTCTGGTTCA-1 SeuratProject       1657          813
-## GTGATTCTGTCGAT-1 SeuratProject       1991          694
-## GTGATTCTTAGCGT-1 SeuratProject       1344          494
-## GTGCCACTCAGGAG-1 SeuratProject       1897          660
-## GTGGATTGCACTAG-1 SeuratProject       4561         1467
-## GTGGATTGCGGAGA-1 SeuratProject       2774          976
-## GTGGATTGTAACGC-1 SeuratProject       2765          833
-## GTGTACGATCAGTG-1 SeuratProject       1979          689
-## GTGTAGTGGGTACT-1 SeuratProject       2627          921
-## GTGTATCTAGCCTA-1 SeuratProject       1434          625
-## GTGTATCTAGTAGA-1 SeuratProject       4444         1428
-## GTGTATCTGTTACG-1 SeuratProject       2122          817
-## GTGTCAGAAGCGTT-1 SeuratProject       2056          909
-## GTGTCAGAATGCTG-1 SeuratProject        750          326
-## GTTAAAACCGAGAG-1 SeuratProject       2019          956
-## GTTAAAACTTCGCC-1 SeuratProject       2059          676
-## GTTAAATGCTCGAA-1 SeuratProject       2651          765
-## GTTAAATGTCGACA-1 SeuratProject       3783         1207
-## GTTAACCTAGCTAC-1 SeuratProject       2450          829
-## GTTAACCTTGCTTT-1 SeuratProject       6102         1648
-## GTTAGGTGCACTCC-1 SeuratProject       1391          554
-## GTTAGGTGCCAGTA-1 SeuratProject       4975         1500
-## GTTAGGTGCCCAAA-1 SeuratProject       2189          953
-## GTTAGGTGGAACTC-1 SeuratProject       1653          647
-## GTTAGTCTAAGAAC-1 SeuratProject       1154          537
-## GTTATAGAGGACAG-1 SeuratProject       2053          786
-## GTTATGCTTTCATC-1 SeuratProject       2431          814
-## GTTCAACTGGGACA-1 SeuratProject       1503          761
-## GTTCAACTTATGCG-1 SeuratProject       2657          862
-## GTTGACGAGCCCTT-1 SeuratProject       1899          838
-## GTTGACGATATCGG-1 SeuratProject       2264         1102
-## GTTGAGTGGTCTTT-1 SeuratProject       4397         1392
-## GTTGAGTGTGCTTT-1 SeuratProject       3840         1042
-## GTTGATCTGGGACA-1 SeuratProject        944          372
-## GTTGATCTTTTCAC-1 SeuratProject       2461          971
-## GTTGGATGTTTACC-1 SeuratProject       4438         1364
-## GTTGTACTATTCCT-1 SeuratProject       3103         1137
-## GTTGTACTTTTGGG-1 SeuratProject       2404          847
-## GTTTAAGACCATGA-1 SeuratProject       2598          935
-## GTTTAAGACTGTCC-1 SeuratProject       1584          710
-## TAAACAACCAACCA-1 SeuratProject       3425         1070
-## TAAACAACGAATCC-1 SeuratProject       2818          914
-## TAAAGACTCAGGAG-1 SeuratProject       2375          855
-## TAAATCGATGAGGG-1 SeuratProject       2036          759
-## TAACAATGTGCCCT-1 SeuratProject       1343          654
-## TAACACCTTCGCTC-1 SeuratProject       2755          981
-## TAACACCTTCGTAG-1 SeuratProject       3283         1193
-## TAACACCTTGTTTC-1 SeuratProject       1004          397
-## TAACATGACACTAG-1 SeuratProject       3390         1123
-## TAACCGGACTTACT-1 SeuratProject       2009          616
-## TAACGTCTCAACCA-1 SeuratProject       1931          747
-## TAACGTCTCATTGG-1 SeuratProject       2567          876
-## TAACTAGAATTTCC-1 SeuratProject       2538          949
-## TAACTAGACTTAGG-1 SeuratProject       2921          965
-## TAACTAGATCTGGA-1 SeuratProject       2348          789
-## TAACTCACGAGGAC-1 SeuratProject       1922          752
-## TAACTCACGTACAC-1 SeuratProject       2011          717
-## TAACTCACGTATCG-1 SeuratProject       3807         1198
-## TAACTCACTCTACT-1 SeuratProject       2227          952
-## TAAGAACTGTGTCA-1 SeuratProject       1730          625
-## TAAGAGGACTAAGC-1 SeuratProject       2019          784
-## TAAGAGGACTTGTT-1 SeuratProject       2061          914
-## TAAGATACCCACAA-1 SeuratProject       1199          534
-## TAAGATACGGTTCA-1 SeuratProject       1465          659
-## TAAGATTGCGTAGT-1 SeuratProject       2789          913
-## TAAGATTGTTGCTT-1 SeuratProject       2289          863
-## TAAGCGTGAGGTTC-1 SeuratProject       2838          959
-## TAAGCGTGGACAAA-1 SeuratProject       5192         1637
-## TAAGCGTGGGAAAT-1 SeuratProject       2330          796
-## TAAGCGTGTGCTCC-1 SeuratProject       4978         1508
-## TAAGGCTGCCATGA-1 SeuratProject       2361          906
-## TAAGGCTGCTGCTC-1 SeuratProject       2147          714
-## TAAGGCTGTCTCGC-1 SeuratProject       3420         1195
-## TAAGGGCTGCTGTA-1 SeuratProject       1852          867
-## TAAGGGCTTTACTC-1 SeuratProject       2208          819
-## TAAGTAACCGAGAG-1 SeuratProject        702          375
-## TAAGTAACCTCCAC-1 SeuratProject       1740          656
-## TAAGTAACCTGTAG-1 SeuratProject       3397         1047
-## TAAGTAACTTGTCT-1 SeuratProject       2113          745
-## TAATGATGAGCGGA-1 SeuratProject       2768          866
-## TAATGCCTCATGAC-1 SeuratProject       4189         1186
-## TAATGCCTCGTCTC-1 SeuratProject       4213         1669
-## TAATGTGAAGATGA-1 SeuratProject       1314          539
-## TAATGTGACTGCAA-1 SeuratProject       2532          942
-## TAATGTGATTACTC-1 SeuratProject       2326          839
-## TACAAATGGGTACT-1 SeuratProject       2547          927
-## TACAATGAAAACAG-1 SeuratProject       1995          796
-## TACAATGACTTAGG-1 SeuratProject       1948          734
-## TACAATGATGCTAG-1 SeuratProject       2466          831
-## TACACACTCACACA-1 SeuratProject       3128          967
-## TACACACTCTTACT-1 SeuratProject       1246          620
-## TACATAGAACGCAT-1 SeuratProject       2223          814
-## TACATCACACGGGA-1 SeuratProject       1622          605
-## TACATCACCTGTTT-1 SeuratProject       4202         1391
-## TACATCACGCTAAC-1 SeuratProject       1795          655
-## TACATCACTGAACC-1 SeuratProject       4605         1512
-## TACCATTGAGGTTC-1 SeuratProject       1535          625
-## TACCATTGCGGGAA-1 SeuratProject       2071          719
-## TACCATTGGGGATG-1 SeuratProject       1425          547
-## TACCATTGTGAGGG-1 SeuratProject       2349          864
-## TACCGGCTGTTGGT-1 SeuratProject       2809          902
-## TACGAGTGATCTCT-1 SeuratProject       2692          853
-## TACGAGTGATGCTG-1 SeuratProject       3689         1143
-## TACGAGTGCGGAGA-1 SeuratProject       2265          990
-## TACGAGTGGTTGGT-1 SeuratProject       2222          858
-## TACGATCTAGTGTC-1 SeuratProject       1422          604
-## TACGATCTCACTGA-1 SeuratProject       4206         1291
-## TACGATCTTACGAC-1 SeuratProject       1686          701
-## TACGCAGACGTCTC-1 SeuratProject        720          340
-## TACGCAGAGAATCC-1 SeuratProject       2121          859
-## TACGCCACATTCCT-1 SeuratProject       1967          768
-## TACGCCACTCCCAC-1 SeuratProject       5289         1621
-## TACGCCACTCCGAA-1 SeuratProject       1857          715
-## TACGCGCTCTTCTA-1 SeuratProject       1474          642
-## TACGGAACGCGTTA-1 SeuratProject       1380          594
-## TACGGCCTGGGACA-1 SeuratProject       1557          783
-## TACGGCCTGTCCTC-1 SeuratProject       1025          419
-## TACGTACTACGGAG-1 SeuratProject       5282         1608
-## TACGTACTCAGTTG-1 SeuratProject       2993          927
-## TACGTACTCCCGTT-1 SeuratProject       1937          740
-## TACGTTACAGAAGT-1 SeuratProject       2256          805
-## TACGTTACCAAGCT-1 SeuratProject       1701          705
-## TACTAAGAAAGGTA-1 SeuratProject        988          491
-## TACTAAGAATCACG-1 SeuratProject       1219          514
-## TACTAAGATGATGC-1 SeuratProject       1864          768
-## TACTAAGATTGCGA-1 SeuratProject       2551          880
-## TACTACACGAGAGC-1 SeuratProject       3236          993
-## TACTACACTTACCT-1 SeuratProject        750          356
-## TACTACTGAACCTG-1 SeuratProject       1831          748
-## TACTACTGATGTCG-1 SeuratProject       2304          993
-## TACTACTGATTCTC-1 SeuratProject       2383          801
-## TACTACTGTATGGC-1 SeuratProject       2843          843
-## TACTCAACGGTCTA-1 SeuratProject       3741         1194
-## TACTCAACTGCTAG-1 SeuratProject       2242          794
-## TACTCCCTCAGTTG-1 SeuratProject       1556          606
-## TACTCTGAATCGAC-1 SeuratProject       1986          810
-## TACTCTGACGAGTT-1 SeuratProject       2524          882
-## TACTCTGATTGACG-1 SeuratProject       1492          682
-## TACTGGGATCGATG-1 SeuratProject       3823         1126
-## TACTGTTGAAAGCA-1 SeuratProject       1991          792
-## TACTGTTGAGGCGA-1 SeuratProject       1701          829
-## TACTGTTGCTGAAC-1 SeuratProject       5201         1657
-## TACTTGACTCCTCG-1 SeuratProject       1705          786
-## TACTTGACTGGTGT-1 SeuratProject       1599          610
-## TACTTTCTTTTGGG-1 SeuratProject       1591          664
-## TAGAAACTAATCGC-1 SeuratProject       2208          790
-## TAGAAACTGCTTCC-1 SeuratProject       2211          852
-## TAGAAACTGGGATG-1 SeuratProject       1371          678
-## TAGAATTGCGACAT-1 SeuratProject       1742          589
-## TAGAATTGTATCGG-1 SeuratProject       3222          930
-## TAGACGTGCTTGAG-1 SeuratProject       1986          690
-## TAGACGTGTCGCTC-1 SeuratProject       2593          840
-## TAGAGCACCTTACT-1 SeuratProject       1444          647
-## TAGATTGACTTGTT-1 SeuratProject       1594          622
-## TAGATTGAGGCATT-1 SeuratProject        813          427
-## TAGCATCTCAGCTA-1 SeuratProject       1700          856
-## TAGCATCTCCCTCA-1 SeuratProject       1138          522
-## TAGCATCTGCTGTA-1 SeuratProject       3628         1262
-## TAGCATCTGGGACA-1 SeuratProject       2069          722
-## TAGCATCTTGTCGA-1 SeuratProject       1753          641
-## TAGCCCACAAAAGC-1 SeuratProject       3164          997
-## TAGCCCACAGCCAT-1 SeuratProject       2261          983
-## TAGCCCACAGCTAC-1 SeuratProject       2171         1099
-## TAGCCCACCCACAA-1 SeuratProject       1986          607
-## TAGCCCTGCGGAGA-1 SeuratProject       2044          704
-## TAGCCGCTTACGAC-1 SeuratProject       2796          947
-## TAGCCGCTTACTTC-1 SeuratProject       2301          886
-## TAGCCGCTTTCCAT-1 SeuratProject       3331         1062
-## TAGCTACTGAATAG-1 SeuratProject       1645          659
-## TAGCTACTGTAGCT-1 SeuratProject       2915          995
-## TAGCTACTTTTGCT-1 SeuratProject       1079          492
-## TAGGACTGTGCTGA-1 SeuratProject       1709          754
-## TAGGAGCTAAGGCG-1 SeuratProject       2038          676
-## TAGGAGCTGAGGGT-1 SeuratProject       2596          837
-## TAGGAGCTTGCATG-1 SeuratProject       1163          532
-## TAGGCAACCGTCTC-1 SeuratProject       1691          598
-## TAGGCATGCTCTCG-1 SeuratProject       3106         1274
-## TAGGCATGGCGAGA-1 SeuratProject       2403          921
-## TAGGCTGATGCCTC-1 SeuratProject       1640          700
-## TAGGGACTGAACTC-1 SeuratProject       1919          828
-## TAGGTCGACACTGA-1 SeuratProject       2469          828
-## TAGGTCGAGGATCT-1 SeuratProject       1221          543
-## TAGGTGACACACTG-1 SeuratProject       1991          815
-## TAGGTGACACGTTG-1 SeuratProject       1889          709
-## TAGGTGTGTTCTGT-1 SeuratProject       1726          842
-## TAGGTTCTGAAGGC-1 SeuratProject       3539         1200
-## TAGGTTCTTCTTAC-1 SeuratProject       3246         1126
-## TAGGTTCTTGCTGA-1 SeuratProject       3808         1327
-## TAGTAAACCTCGCT-1 SeuratProject       2781          849
-## TAGTAAACGTCACA-1 SeuratProject       4046         1160
-## TAGTAATGAGATCC-1 SeuratProject       1814          707
-## TAGTACCTAAGAAC-1 SeuratProject       1663          675
-## TAGTATGATCTTAC-1 SeuratProject       1833          709
-## TAGTATGATTCTCA-1 SeuratProject       3358          990
-## TAGTCTTGGCTGTA-1 SeuratProject        652          270
-## TAGTCTTGGGACTT-1 SeuratProject        945          445
-## TAGTCTTGTGGAAA-1 SeuratProject       2207          892
-## TAGTGGTGAAGTGA-1 SeuratProject       2006         1040
-## TAGTTAGAACCACA-1 SeuratProject       1737          832
-## TAGTTAGATGAACC-1 SeuratProject       2217          815
-## TATAAGACAACAGA-1 SeuratProject        982          437
-## TATAAGACAGCTCA-1 SeuratProject       4150         1401
-## TATAAGTGACACCA-1 SeuratProject       3900         1341
-## TATAAGTGTATCGG-1 SeuratProject        973          480
-## TATAAGTGTGGTGT-1 SeuratProject       4913         1517
-## TATACAGAACCCTC-1 SeuratProject       1976          704
-## TATACAGAAGAACA-1 SeuratProject       1662          622
-## TATACAGATCCAGA-1 SeuratProject       2249          823
-## TATACCACCTGATG-1 SeuratProject       1972          731
-## TATACGCTACCAAC-1 SeuratProject       2144          781
-## TATAGATGGACGGA-1 SeuratProject       2088          849
-## TATAGATGTTCCGC-1 SeuratProject       3650         1209
-## TATCACTGACTGTG-1 SeuratProject       1289          511
-## TATCCAACCAGCTA-1 SeuratProject       1074          472
-## TATCCAACTCTCTA-1 SeuratProject       1973          838
-## TATCGACTACTAGC-1 SeuratProject       1478          643
-## TATCGACTCGATAC-1 SeuratProject       3151         1101
-## TATCGTACAGATGA-1 SeuratProject       2185          879
-## TATCGTACATTCCT-1 SeuratProject       2324          895
-## TATCTCGAGAGATA-1 SeuratProject       1174          408
-## TATCTGACAGGTTC-1 SeuratProject       1888          832
-## TATCTGACTGTTTC-1 SeuratProject       2662          845
-## TATCTTCTAAACAG-1 SeuratProject       3051          928
-## TATGAATGGAGGAC-1 SeuratProject       2033          920
-## TATGAATGTTTGCT-1 SeuratProject       3725         1269
-## TATGCGGATAACCG-1 SeuratProject       1373          652
-## TATGGGTGCATCAG-1 SeuratProject       3551         1463
-## TATGGGTGCTAGCA-1 SeuratProject       2023          840
-## TATGGTCTCTACCC-1 SeuratProject       1898          706
-## TATGTCACGGAACG-1 SeuratProject       3336          956
-## TATGTCACTAACCG-1 SeuratProject       3467         1219
-## TATGTCACTTCTCA-1 SeuratProject       1388          612
-## TATGTGCTCCGATA-1 SeuratProject       2912          970
-## TATGTGCTGGATTC-1 SeuratProject       2276          789
-## TATTGCTGAAGAAC-1 SeuratProject        805          382
-## TATTGCTGCCGTTC-1 SeuratProject       1289          533
-## TATTGCTGTCTGGA-1 SeuratProject       2093          627
-## TATTGCTGTGCACA-1 SeuratProject        780          388
-## TATTTCCTATTGGC-1 SeuratProject       1638          655
-## TATTTCCTGGAGGT-1 SeuratProject       2265         1103
-## TATTTCCTGGTGTT-1 SeuratProject       2209          782
-## TCAACACTGTTTGG-1 SeuratProject       2765         1231
-## TCAAGGACAGCGTT-1 SeuratProject       1738          617
-## TCAAGGACATTCTC-1 SeuratProject       1218          589
-## TCAAGGACGGTGTT-1 SeuratProject       2074          758
-## TCAATCACACTCTT-1 SeuratProject       2134          882
-## TCAATCACAGTCGT-1 SeuratProject       2583          909
-## TCACAACTATGTGC-1 SeuratProject       1839          661
-## TCACAACTTTGCTT-1 SeuratProject       1300          558
-## TCACATACACTTTC-1 SeuratProject       2580          947
-## TCACATACAGGGTG-1 SeuratProject       1203          491
-## TCACCCGAGACGGA-1 SeuratProject       4220         1386
-## TCACCGTGCTCGCT-1 SeuratProject       4576         1481
-## TCACCTCTACGACT-1 SeuratProject       2131          823
-## TCACCTCTTCCAAG-1 SeuratProject       2765         1064
-## TCACGAGAGGAGGT-1 SeuratProject       1644          681
-## TCACTATGGGGCAA-1 SeuratProject       1431          652
-## TCACTATGGTTGTG-1 SeuratProject        808          363
-## TCAGACGACGCTAA-1 SeuratProject       2309          824
-## TCAGACGACGTTAG-1 SeuratProject       2038          933
-## TCAGAGACTCCAGA-1 SeuratProject       2093          611
-## TCAGCAGACTCCAC-1 SeuratProject       2640          886
-## TCAGCGCTCTAGTG-1 SeuratProject       1781          806
-## TCAGCGCTGGATCT-1 SeuratProject       1276          531
-## TCAGCGCTGGTATC-1 SeuratProject       2363          864
-## TCAGGATGAAGTAG-1 SeuratProject       1623          648
-## TCAGGATGCCTTTA-1 SeuratProject       3122         1142
-## TCAGTGGAAGATCC-1 SeuratProject       1688          736
-## TCAGTTACCTACGA-1 SeuratProject       2574          955
-## TCAGTTACTAGAAG-1 SeuratProject       2239          826
-## TCATCAACCCGATA-1 SeuratProject       2340          725
-## TCATCAACTGTTCT-1 SeuratProject       4052         1174
-## TCATCATGCAGTTG-1 SeuratProject       2220          841
-## TCATCCCTTACTGG-1 SeuratProject       2834         1006
-## TCATTCGATACAGC-1 SeuratProject       4631         1418
-## TCCACGTGGAAACA-1 SeuratProject       3201          955
-## TCCACTCTACACTG-1 SeuratProject       2049          829
-## TCCACTCTGAGCTT-1 SeuratProject       3186         1038
-## TCCACTCTTACTTC-1 SeuratProject       1502          632
-## TCCATAACAAAGTG-1 SeuratProject       2226          750
-## TCCATAACCGTAGT-1 SeuratProject       2093          846
-## TCCATAACGATGAA-1 SeuratProject       2555         1033
-## TCCATAACTACGCA-1 SeuratProject       2497          859
-## TCCATCCTCCCTAC-1 SeuratProject       2010          890
-## TCCCACGATCATTC-1 SeuratProject       2636          893
-## TCCCATCTCAAAGA-1 SeuratProject       3217         1030
-## TCCCGAACACAGTC-1 SeuratProject       1722          913
-## TCCCGAACTTCGCC-1 SeuratProject       4180         1385
-## TCCCGATGAGATCC-1 SeuratProject       1773          750
-## TCCCGATGCCTGAA-1 SeuratProject        810          416
-## TCCCGATGCTGTGA-1 SeuratProject       1888          740
-## TCCCTACTCAACTG-1 SeuratProject       1717          703
-## TCCGAAGACAATCG-1 SeuratProject       1103          522
-## TCCGAAGACGTTAG-1 SeuratProject       2866          856
-## TCCGGACTGAGGTG-1 SeuratProject       2387          914
-## TCCGGACTGTACGT-1 SeuratProject       1942          742
-## TCCTAAACATCGAC-1 SeuratProject        893          381
-## TCCTAAACCGAGAG-1 SeuratProject       3321         1079
-## TCCTAAACCGCATA-1 SeuratProject       1386          671
-## TCCTAATGGTTTGG-1 SeuratProject       2660         1101
-## TCCTACCTGTCGTA-1 SeuratProject       2508          858
-## TCCTATGAAAAGCA-1 SeuratProject       1545          663
-## TCGAATCTCTGGTA-1 SeuratProject       1305          581
-## TCGACCTGCCGATA-1 SeuratProject       2173          845
-## TCGACGCTTCTATC-1 SeuratProject       2541          881
-## TCGACGCTTTGACG-1 SeuratProject       2196          823
-## TCGAGAACGACAGG-1 SeuratProject       2496          835
-## TCGAGAACGTTAGC-1 SeuratProject       3384         1290
-## TCGAGCCTATCAGC-1 SeuratProject       1489          598
-## TCGAGCCTGCGAGA-1 SeuratProject       3237         1130
-## TCGAGCCTTGTGAC-1 SeuratProject       2608          793
-## TCGATACTATTCCT-1 SeuratProject       2486          838
-## TCGATACTTGCACA-1 SeuratProject       1825          765
-## TCGATTTGATGCCA-1 SeuratProject       2116          768
-## TCGATTTGCACTCC-1 SeuratProject       2506          815
-## TCGATTTGCAGCTA-1 SeuratProject       1686          810
-## TCGATTTGCCTACC-1 SeuratProject       2281          912
-## TCGATTTGTCGTGA-1 SeuratProject       2737          818
-## TCGCACACCATCAG-1 SeuratProject        891          468
-## TCGCAGCTAGATCC-1 SeuratProject       2098          790
-## TCGCCATGAGACTC-1 SeuratProject       1864          665
-## TCGCCATGTGGTCA-1 SeuratProject       1582          703
-## TCGGACCTAACAGA-1 SeuratProject       2910          875
-## TCGGACCTATAAGG-1 SeuratProject       1368          657
-## TCGGACCTGTACAC-1 SeuratProject       5600         1567
-## TCGGTAGAGTAGGG-1 SeuratProject       2104          688
-## TCGGTAGATCCCAC-1 SeuratProject       2177          749
-## TCGTAGGATCGACA-1 SeuratProject       2905         1076
-## TCGTGAGAACTGTG-1 SeuratProject        649          326
-## TCGTTATGGACAAA-1 SeuratProject       2162          782
-## TCTAACACCAGTTG-1 SeuratProject       1090          543
-## TCTAACACGAGCAG-1 SeuratProject       3182         1100
-## TCTAACTGAACCAC-1 SeuratProject       2303          841
-## TCTAAGCTAATGCC-1 SeuratProject       2515          809
-## TCTAAGCTTAGTCG-1 SeuratProject       1791          789
-## TCTAAGCTTCTAGG-1 SeuratProject       3782         1263
-## TCTAAGCTTGTTCT-1 SeuratProject       2052          758
-## TCTAAGCTTTCGCC-1 SeuratProject        686          368
-## TCTACAACGACTAC-1 SeuratProject       2564         1022
-## TCTAGACTTAGAAG-1 SeuratProject       1834          730
-## TCTAGTTGCACCAA-1 SeuratProject       3303         1101
-## TCTATGTGAAGAGT-1 SeuratProject       1131          478
-## TCTATGTGAGTCTG-1 SeuratProject        951          488
-## TCTCAAACCTAAGC-1 SeuratProject       1479          618
-## TCTCTAGAATTTCC-1 SeuratProject       2723          940
-## TCTGATACACGTGT-1 SeuratProject       2225          771
-## TCTGATACTCGCCT-1 SeuratProject       2451          784
-## TCTTACGAACCTGA-1 SeuratProject       2156          847
-## TCTTCAGAGCTACA-1 SeuratProject       3625         1303
-## TCTTGATGCGGAGA-1 SeuratProject       2273          821
-## TGAAATTGGTGAGG-1 SeuratProject       3348         1111
-## TGAACCGAAAACGA-1 SeuratProject       2185          752
-## TGAACCGACTACTT-1 SeuratProject       2913         1128
-## TGAACCGATTCGGA-1 SeuratProject       2871          958
-## TGAAGCACTCACGA-1 SeuratProject       1917          742
-## TGAAGCTGAACGAA-1 SeuratProject       2514          782
-## TGAAGCTGAGACTC-1 SeuratProject        609          279
-## TGAAGCTGCATGGT-1 SeuratProject       2029          824
-## TGAAGCTGCGTAAC-1 SeuratProject       2178          751
-## TGAATAACCACTTT-1 SeuratProject       2591          872
-## TGAATAACTCCCAC-1 SeuratProject       2142          939
-## TGACACGACCTTAT-1 SeuratProject       1510          606
-## TGACCAGACAACCA-1 SeuratProject       1800          698
-## TGACCAGAGGATTC-1 SeuratProject       1923          705
-## TGACCGCTAAAAGC-1 SeuratProject       3021          963
-## TGACCGCTCTGCAA-1 SeuratProject       1926          607
-## TGACGATGCAAAGA-1 SeuratProject       1634          621
-## TGACGCCTGTACCA-1 SeuratProject       5159         1650
-## TGACGCCTTTACTC-1 SeuratProject       2613         1093
-## TGACTGGAAGAGAT-1 SeuratProject       1442          545
-## TGACTGGACCGTAA-1 SeuratProject       1494          670
-## TGACTGGACGCAAT-1 SeuratProject       1756          617
-## TGACTGGAGGACAG-1 SeuratProject       1852          723
-## TGACTGGATTCTCA-1 SeuratProject       4076         1194
-## TGACTTACACACCA-1 SeuratProject       3324         1019
-## TGACTTACAGTCTG-1 SeuratProject       4136         1291
-## TGACTTTGCGCATA-1 SeuratProject       2348          758
-## TGACTTTGTTTGTC-1 SeuratProject       2289          855
-## TGAGACACAAGGTA-1 SeuratProject       5138         1549
-## TGAGACACTCAAGC-1 SeuratProject       1816          743
-## TGAGACACTGTGCA-1 SeuratProject        769          411
-## TGAGCTGAATGCTG-1 SeuratProject       4165         1372
-## TGAGCTGACTGGAT-1 SeuratProject       2132          802
-## TGAGCTGAGCGAGA-1 SeuratProject        664          280
-## TGAGCTGATGCTAG-1 SeuratProject        661          337
-## TGAGGACTCTCATT-1 SeuratProject       3669         1121
-## TGAGGACTTCATTC-1 SeuratProject       3089         1028
-## TGAGGTACGAACCT-1 SeuratProject       4755         1524
-## TGAGTCGAGTTACG-1 SeuratProject       1377          645
-## TGAGTGACTGAGCT-1 SeuratProject       2457          847
-## TGATAAACGAATCC-1 SeuratProject       2519          866
-## TGATAAACTCCGTC-1 SeuratProject       2068          941
-## TGATAAACTTTCAC-1 SeuratProject       1922          751
-## TGATACCTCACTAG-1 SeuratProject       1506          583
-## TGATACCTGTTGGT-1 SeuratProject       2216          796
-## TGATACCTTATGCG-1 SeuratProject       2264          793
-## TGATACCTTGAAGA-1 SeuratProject       3063          975
-## TGATATGAACCTTT-1 SeuratProject       2958          936
-## TGATCACTAGCATC-1 SeuratProject       1110          524
-## TGATCACTCTCGCT-1 SeuratProject       1843          659
-## TGATCACTTCTACT-1 SeuratProject       1756          607
-## TGATCGGACTGACA-1 SeuratProject       4211         1433
-## TGATCGGAGGAGCA-1 SeuratProject       1352          562
-## TGATCGGATATGCG-1 SeuratProject       1526          696
-## TGATTAGACATTGG-1 SeuratProject       2278          927
-## TGATTAGATGACTG-1 SeuratProject       1175          517
-## TGATTAGATGCTAG-1 SeuratProject       2242          719
-## TGATTCACTATGCG-1 SeuratProject       1901          599
-## TGATTCACTGTCAG-1 SeuratProject       1733          639
-## TGATTCTGCCGAAT-1 SeuratProject       3102          977
-## TGATTCTGCTCTTA-1 SeuratProject       2820         1019
-## TGCAAGTGAGAACA-1 SeuratProject       2063          816
-## TGCAAGTGGGTAGG-1 SeuratProject       1705          672
-## TGCAATCTTCAGGT-1 SeuratProject       6317         1903
-## TGCACAGACGACAT-1 SeuratProject       2463         1162
-## TGCCAAGAGCAGTT-1 SeuratProject       2914          964
-## TGCCAAGATCTCTA-1 SeuratProject       3094          936
-## TGCCACTGAACGTC-1 SeuratProject       2656          947
-## TGCCACTGCGATAC-1 SeuratProject       1949          989
-## TGCCAGCTTGGCAT-1 SeuratProject       2184          790
-## TGCCCAACAGCAAA-1 SeuratProject       2794          902
-## TGCCCAACCGCATA-1 SeuratProject       2799          982
-## TGCCGACTCTCCCA-1 SeuratProject       1904          673
-## TGCGAAACAGTCAC-1 SeuratProject       2339          856
-## TGCGAAACGTTGCA-1 SeuratProject       1420          629
-## TGCGATGAACGGTT-1 SeuratProject       1829          692
-## TGCGATGACCTCGT-1 SeuratProject       2220          843
-## TGCGATGACTAGTG-1 SeuratProject       2846          940
-## TGCGATGACTGCTC-1 SeuratProject       2314          795
-## TGCGATGACTTGCC-1 SeuratProject       1951          780
-## TGCGATGAGTGCTA-1 SeuratProject       1915          821
-## TGCGCACTCTTGAG-1 SeuratProject       1059          471
-## TGCGTAGAATAAGG-1 SeuratProject       1588          702
-## TGCGTAGACGGGAA-1 SeuratProject       1553          631
-## TGCGTAGATGGTCA-1 SeuratProject       5486         1557
-## TGCTAGGAAACCGT-1 SeuratProject       2223          868
-## TGCTAGGATAGTCG-1 SeuratProject       3056          901
-## TGCTATACGGTTCA-1 SeuratProject       2123          798
-## TGCTATACTGCTGA-1 SeuratProject       2583         1020
-## TGCTGAGAGAGCAG-1 SeuratProject       1992          885
-## TGCTGAGATTATCC-1 SeuratProject       2754          881
-## TGGAAAGACTCTCG-1 SeuratProject       1918          719
-## TGGAAAGAGCGATT-1 SeuratProject       2879         1043
-## TGGAAAGAGGTCAT-1 SeuratProject       3494         1238
-## TGGAAAGATATGGC-1 SeuratProject       1647          565
-## TGGAACACAAACAG-1 SeuratProject       1467          776
-## TGGAACACGCTAAC-1 SeuratProject       1655          696
-## TGGAAGCTCAGATC-1 SeuratProject       1931          725
-## TGGACCCTACACTG-1 SeuratProject        696          365
-## TGGACCCTCATGGT-1 SeuratProject       1912          811
-## TGGACCCTGGTACT-1 SeuratProject       3734         1212
-## TGGACTGAGTATGC-1 SeuratProject       3267         1178
-## TGGAGACTATCAGC-1 SeuratProject       3293         1132
-## TGGAGACTGAAACA-1 SeuratProject        625          273
-## TGGAGACTTCAAGC-1 SeuratProject       2015          661
-## TGGAGACTTGACCA-1 SeuratProject       2131          831
-## TGGAGGGACGGAGA-1 SeuratProject       2106          786
-## TGGAGGGAGCTATG-1 SeuratProject       1147          471
-## TGGATCGATAAAGG-1 SeuratProject       2568          835
-## TGGATGTGACCTAG-1 SeuratProject       1634          564
-## TGGATGTGATGTCG-1 SeuratProject       2588          913
-## TGGATGTGTGAAGA-1 SeuratProject       2635          929
-## TGGATTCTCATACG-1 SeuratProject       2451          958
-## TGGCAATGCTTGTT-1 SeuratProject       1726          706
-## TGGCAATGGAGGGT-1 SeuratProject       2063          737
-## TGGCACCTTCACGA-1 SeuratProject        768          388
-## TGGCACCTTCAGTG-1 SeuratProject       1808          842
-## TGGGTATGAAGAGT-1 SeuratProject       3115          965
-## TGGGTATGCACAAC-1 SeuratProject       3100         1088
-## TGGGTATGGTACGT-1 SeuratProject       1137          511
-## TGGGTATGTTTGGG-1 SeuratProject       2341          794
-## TGGTAGACATGCCA-1 SeuratProject       2963          900
-## TGGTAGACCCTCAC-1 SeuratProject       1802          865
-## TGGTAGACCTGATG-1 SeuratProject       1696          789
-## TGGTAGTGCACTGA-1 SeuratProject       1111          504
-## TGGTATCTAAACAG-1 SeuratProject       2095          701
-## TGGTATCTCTTCCG-1 SeuratProject       2483          817
-## TGGTCAGACCCAAA-1 SeuratProject       1948          796
-## TGGTCAGACCGTTC-1 SeuratProject        996          542
-## TGGTTACTGACGTT-1 SeuratProject       2738          972
-## TGGTTACTGTTCTT-1 SeuratProject       2611          906
-## TGTAACCTAGAGGC-1 SeuratProject       2765          871
-## TGTAACCTTGCCTC-1 SeuratProject       2337          922
-## TGTAATGACACAAC-1 SeuratProject       1462          724
-## TGTAATGAGGTAAA-1 SeuratProject       1205          628
-## TGTACTTGCTCTAT-1 SeuratProject       4907         1479
-## TGTAGGTGCGAGAG-1 SeuratProject       1144          533
-## TGTAGGTGCTATGG-1 SeuratProject       4234         1101
-## TGTAGGTGCTCTAT-1 SeuratProject       6287         1913
-## TGTAGGTGTGCTGA-1 SeuratProject       2544          855
-## TGTAGTCTTCCAGA-1 SeuratProject       4154         1266
-## TGTAGTCTTGCACA-1 SeuratProject       2177          884
-## TGTATCTGTTAGGC-1 SeuratProject       1996          817
-## TGTATGCTCATGGT-1 SeuratProject       1479          619
-## TGTATGCTGTAGGG-1 SeuratProject       1455          591
-## TGTATGCTTTCATC-1 SeuratProject       1968          685
-## TGTCAGGAATACCG-1 SeuratProject       2767          887
-## TGTCAGGAGATGAA-1 SeuratProject       4083         1336
-## TGTCTAACCCCTTG-1 SeuratProject       1978          656
-## TGTGACGATTCTCA-1 SeuratProject       3098         1227
-## TGTGAGACTGTCAG-1 SeuratProject       2666          980
-## TGTGAGACTTGAGC-1 SeuratProject       2447          817
-## TGTGAGTGACCACA-1 SeuratProject       1583          582
-## TGTGAGTGAGTGCT-1 SeuratProject       4110         1370
-## TGTGAGTGGAGATA-1 SeuratProject        969          460
-## TGTGATCTCTCTAT-1 SeuratProject       1690          638
-## TGTGATCTGACACT-1 SeuratProject       1108          471
-## TGTGGATGGCCAAT-1 SeuratProject       1945          650
-## TGTTAAGACAAAGA-1 SeuratProject        848          414
-## TGTTAAGATAAGGA-1 SeuratProject       2173          907
-## TGTTAAGATTGGCA-1 SeuratProject        598          308
-## TGTTACACCGCATA-1 SeuratProject       3410         1147
-## TGTTACACGACTAC-1 SeuratProject       1953          732
-## TGTTACTGGCTACA-1 SeuratProject       2483          992
-## TGTTACTGTAGTCG-1 SeuratProject       1772          801
-## TTAACCACCGTAAC-1 SeuratProject       2192          822
-## TTAACCACTAAGGA-1 SeuratProject       1198          529
-## TTAACCACTCAGAC-1 SeuratProject       1828          737
-## TTACACACGTGTTG-1 SeuratProject       2613          806
-## TTACACACTCCTAT-1 SeuratProject       2508          816
-## TTACCATGAATCGC-1 SeuratProject       2421          889
-## TTACCATGGTTGAC-1 SeuratProject       4142         1305
-## TTACCATGTGTCTT-1 SeuratProject       1123          588
-## TTACCATGTTGTGG-1 SeuratProject       1548          657
-## TTACGACTGAGAGC-1 SeuratProject       3288         1154
-## TTACGACTTGACAC-1 SeuratProject       1902          713
-## TTACGTACGTTCAG-1 SeuratProject        947          326
-## TTACTCGAACGTTG-1 SeuratProject      15301         3315
-## TTACTCGAAGAATG-1 SeuratProject       3863         1129
-## TTACTCGACGCAAT-1 SeuratProject       5031         1603
-## TTACTCGAGGGTGA-1 SeuratProject       2549          879
-## TTACTCGATCTACT-1 SeuratProject       2551         1156
-## TTAGAATGTGGTGT-1 SeuratProject       1740          642
-## TTAGAATGTGTAGC-1 SeuratProject        627          285
-## TTAGACCTCCTACC-1 SeuratProject       2485          825
-## TTAGACCTCCTTTA-1 SeuratProject       2311          823
-## TTAGCTACAACCGT-1 SeuratProject       2101          719
-## TTAGCTACTGTCCC-1 SeuratProject       3703         1253
-## TTAGCTACTTTCGT-1 SeuratProject       2921          971
-## TTAGGGACGCGAAG-1 SeuratProject       2200          853
-## TTAGGGTGCTGGAT-1 SeuratProject       2846          916
-## TTAGGGTGTCCTGC-1 SeuratProject       2734         1053
-## TTAGGTCTACTTTC-1 SeuratProject       1106          515
-## TTAGTCACCAGTTG-1 SeuratProject       2674         1017
-## TTAGTCTGAAAGCA-1 SeuratProject       2747          953
-## TTAGTCTGCCAACA-1 SeuratProject       1735          832
-## TTAGTCTGTGCACA-1 SeuratProject       1692          645
-## TTATCCGACTAGTG-1 SeuratProject       1903          667
-## TTATCCGAGAAAGT-1 SeuratProject       4231         1326
-## TTATGAGAGATAAG-1 SeuratProject       1293          547
-## TTATGCACGTCACA-1 SeuratProject       1590          636
-## TTATGGCTTATGGC-1 SeuratProject       6165         1783
-## TTATTCCTATGCTG-1 SeuratProject       3963         1211
-## TTATTCCTGGACAG-1 SeuratProject       2514          788
-## TTATTCCTGGTACT-1 SeuratProject       2496          807
-## TTATTCCTTCGTGA-1 SeuratProject       3207         1104
-## TTCAAAGATAAAGG-1 SeuratProject       2385          884
-## TTCAACACAACAGA-1 SeuratProject       2430          848
-## TTCAACACCCCAAA-1 SeuratProject       2094          788
-## TTCAACACGGACGA-1 SeuratProject       2584         1013
-## TTCAAGCTAAGAAC-1 SeuratProject       2641         1003
-## TTCAAGCTAGATGA-1 SeuratProject       2974          916
-## TTCAAGCTGTTGAC-1 SeuratProject       2375          818
-## TTCAAGCTTCCAAG-1 SeuratProject        740          406
-## TTCAAGCTTGATGC-1 SeuratProject       2404          828
-## TTCAAGCTTTCGCC-1 SeuratProject       2878          882
-## TTCACAACCCGTTC-1 SeuratProject       2526          959
-## TTCACAACGTCTGA-1 SeuratProject        678          395
-## TTCAGACTACCCAA-1 SeuratProject        789          368
-## TTCAGACTCTCGAA-1 SeuratProject       2264          787
-## TTCAGTACCGACTA-1 SeuratProject       2769          929
-## TTCAGTACTCAAGC-1 SeuratProject       5220         1379
-## TTCAGTACTCCTAT-1 SeuratProject       1850          711
-## TTCAGTTGCCAAGT-1 SeuratProject       2003          733
-## TTCAGTTGTCCTTA-1 SeuratProject       1975          752
-## TTCAGTTGTCTAGG-1 SeuratProject       1031          464
-## TTCAGTTGTCTCGC-1 SeuratProject       1865          626
-## TTCATCGAGGTGGA-1 SeuratProject       1914          735
-## TTCATGTGTGGTGT-1 SeuratProject       3025          946
-## TTCATTCTATGTCG-1 SeuratProject       2625          876
-## TTCATTCTTCTCTA-1 SeuratProject       1986          647
-## TTCCAAACCTATGG-1 SeuratProject       1057          536
-## TTCCAAACCTCCCA-1 SeuratProject       2726          954
-## TTCCAAACTCCCAC-1 SeuratProject        793          486
-## TTCCAAACTTGACG-1 SeuratProject       1647          712
-## TTCCATGACGAGAG-1 SeuratProject       1840          786
-## TTCCATGACTGTCC-1 SeuratProject       1050          438
-## TTCCCACTTGAGGG-1 SeuratProject       1520          807
-## TTCCCACTTGTCTT-1 SeuratProject       3163         1016
-## TTCCTAGAAAGTGA-1 SeuratProject       1552          551
-## TTCCTAGACTAGTG-1 SeuratProject       1943          841
-## TTCGAGGACTCTAT-1 SeuratProject       2746          929
-## TTCGAGGAGGGCAA-1 SeuratProject       1816          757
-## TTCGAGGATAGAAG-1 SeuratProject       2749          971
-## TTCGATTGAGCATC-1 SeuratProject       1910          708
-## TTCGGAGAATGCCA-1 SeuratProject       1191          567
-## TTCGGAGATGTGCA-1 SeuratProject       2412          881
-## TTCGTATGAAAAGC-1 SeuratProject       1991          801
-## TTCGTATGGATAGA-1 SeuratProject       1983          873
-## TTCGTATGGTCTGA-1 SeuratProject       2258          805
-## TTCGTATGTCCTTA-1 SeuratProject       4348         1359
-## TTCTACGAACGTAC-1 SeuratProject       2494          866
-## TTCTACGAGTTGGT-1 SeuratProject       2589          945
-## TTCTAGTGACACGT-1 SeuratProject       3018         1068
-## TTCTAGTGCATGAC-1 SeuratProject       2073          819
-## TTCTAGTGGAGAGC-1 SeuratProject       1586          815
-## TTCTAGTGGTCACA-1 SeuratProject       2832         1058
-## TTCTCAGAAGAGAT-1 SeuratProject       2189          845
-## TTCTCAGAAGCATC-1 SeuratProject       2497          881
-## TTCTCAGATGGAGG-1 SeuratProject       2643         1051
-## TTCTGATGGAGACG-1 SeuratProject       2434         1179
-## TTCTTACTCTGGAT-1 SeuratProject       1741          718
-## TTGAACCTCCTTGC-1 SeuratProject       1746          657
-## TTGAATGAACTACG-1 SeuratProject       2289          882
-## TTGAATGACTTACT-1 SeuratProject       2102          709
-## TTGAATGATCTCAT-1 SeuratProject       2015          754
-## TTGACACTCTGTAG-1 SeuratProject       1943          735
-## TTGACACTGATAAG-1 SeuratProject       1315          603
-## TTGAGGACAGAACA-1 SeuratProject       2956          944
-## TTGAGGACTACGCA-1 SeuratProject       6344         1794
-## TTGAGGTGGACGGA-1 SeuratProject       2011          712
-## TTGCATTGAGCTAC-1 SeuratProject       1991          721
-## TTGCATTGCTAAGC-1 SeuratProject       3248         1097
-## TTGCATTGTGACTG-1 SeuratProject       2441          813
-## TTGCTAACACCAAC-1 SeuratProject       1921          788
-## TTGCTAACACGCTA-1 SeuratProject       2576          917
-## TTGCTAACCACTCC-1 SeuratProject       1943          656
-## TTGCTATGGTACGT-1 SeuratProject       3109         1104
-## TTGCTATGGTAGGG-1 SeuratProject       3406         1268
-## TTGGAGACCAATCG-1 SeuratProject       4166         1239
-## TTGGAGACGCTATG-1 SeuratProject       2662          862
-## TTGGAGACTATGGC-1 SeuratProject       1779          739
-## TTGGGAACTGAACC-1 SeuratProject       2652          858
-## TTGGTACTACTGGT-1 SeuratProject       3268         1066
-## TTGGTACTCTTAGG-1 SeuratProject       2928          752
-## TTGGTACTGAATCC-1 SeuratProject       1855          615
-## TTGGTACTGGATTC-1 SeuratProject       1883          721
-## TTGTACACGTTGTG-1 SeuratProject       1537          571
-## TTGTACACTTGCAG-1 SeuratProject       2260          861
-## TTGTAGCTAGCTCA-1 SeuratProject       2519          933
-## TTGTAGCTCTCTTA-1 SeuratProject       2136          807
-## TTGTCATGGACGGA-1 SeuratProject       2178         1082
-## TTTAGAGATCCTCG-1 SeuratProject       2362          820
-## TTTAGCTGATACCG-1 SeuratProject       2756          887
-## TTTAGCTGGATACC-1 SeuratProject       2454          850
-## TTTAGCTGTACTCT-1 SeuratProject       5678         1567
-## TTTAGGCTCCTTTA-1 SeuratProject       1984          803
-## TTTATCCTGTTGTG-1 SeuratProject       3680         1156
-## TTTCACGAGGTTCA-1 SeuratProject       2037          721
-## TTTCAGTGGAAGGC-1 SeuratProject       1781          692
-## TTTCAGTGTCACGA-1 SeuratProject       1634          700
-## TTTCAGTGTCTATC-1 SeuratProject        937          458
-## TTTCAGTGTGCAGT-1 SeuratProject       1322          637
-## TTTCCAGAGGTGAG-1 SeuratProject       2187          873
-## TTTCGAACACCTGA-1 SeuratProject       4460         1544
-## TTTCGAACTCTCAT-1 SeuratProject       3461         1155
-## TTTCTACTGAGGCA-1 SeuratProject       3447         1227
-## TTTCTACTTCCTCG-1 SeuratProject       1684          622
-## TTTGCATGAGAGGC-1 SeuratProject       1024          454
-## TTTGCATGCCTCAC-1 SeuratProject       1985          724
+summary(soma$obs$to_dataframe())
+#> Reading AnnotationDataframe into memory from '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/obs'
+#>   orig.ident          nCount_RNA     nFeature_RNA   
+#>  Length:2700        Min.   :  548   Min.   : 212.0  
+#>  Class :character   1st Qu.: 1758   1st Qu.: 690.0  
+#>  Mode  :character   Median : 2197   Median : 817.0  
+#>                     Mean   : 2367   Mean   : 847.0  
+#>                     3rd Qu.: 2763   3rd Qu.: 953.2  
+#>                     Max.   :15844   Max.   :3422.0
 ```
 
 In addition to dimension slicing we can also apply filters using the cell- and feature-level metadata stored in the `obs` and `var` arrays.
@@ -3063,14 +227,8 @@ In addition to dimension slicing we can also apply filters using the cell- and f
 soma$set_query(
     obs_attr_filter = seurat_annotations == "B" && nCount_RNA > 1000
 )
-```
-
-```
-## Querying obs with attribute filter
-```
-
-```
-## Error: No attibute 'seurat_annotations' present.
+#> Querying obs with attribute filter
+#> Error: No attibute 'seurat_annotations' present.
 ```
 
 We can load the SOMA slice into memory as a Seurat `Assay`...
@@ -3078,22 +236,13 @@ We can load the SOMA slice into memory as a Seurat `Assay`...
 
 ```r
 soma$to_seurat_assay()
-```
-
-```
-## Reading AssayMatrix into memory from '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/X/counts'
-```
-
-```
-## Reading AnnotationDataframe into memory from '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/var'
-```
-
-```
-## Assay data with 16634 features for 2700 cells
-## First 10 features:
-##  ENSG00000000003, ENSG00000000419, ENSG00000000457, ENSG00000000460,
-## ENSG00000000938, ENSG00000000971, ENSG00000001036, ENSG00000001084,
-## ENSG00000001167, ENSG00000001460
+#> Reading AssayMatrix into memory from '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/X/counts'
+#> Reading AnnotationDataframe into memory from '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/var'
+#> Assay data with 16634 features for 2700 cells
+#> First 10 features:
+#>  ENSG00000000003, ENSG00000000419, ENSG00000000457, ENSG00000000460,
+#> ENSG00000000938, ENSG00000000971, ENSG00000001036, ENSG00000001084,
+#> ENSG00000001167, ENSG00000001460
 ```
 
 or as a Bioconductor [`SummarizedExperiment`].
@@ -3103,31 +252,19 @@ or as a Bioconductor [`SummarizedExperiment`].
 if (requireNamespace("SummarizedExperiment", quietly = TRUE)) {
   soma$to_summarized_experiment()
 }
-```
-
-```
-## Reading AssayMatrix into memory from '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/X/counts'
-```
-
-```
-## Reading AnnotationDataframe into memory from '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/obs'
-```
-
-```
-## Reading AnnotationDataframe into memory from '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/var'
-```
-
-```
-## class: SummarizedExperiment 
-## dim: 16634 2700 
-## metadata(0):
-## assays(1): counts
-## rownames(16634): ENSG00000000003 ENSG00000000419 ... ENSG00000273486
-##   ENSG00000273489
-## rowData names(1): gene_name
-## colnames(2700): ATAGATACCATGGT-1 AAACATTGATCAGC-1 ... ACTTGTACCTGTCC-1
-##   GCAACCCTCCTCGT-1
-## colData names(3): orig.ident nCount_RNA nFeature_RNA
+#> Reading AssayMatrix into memory from '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/X/counts'
+#> Reading AnnotationDataframe into memory from '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/obs'
+#> Reading AnnotationDataframe into memory from '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/var'
+#> class: SummarizedExperiment 
+#> dim: 16634 2700 
+#> metadata(0):
+#> assays(1): counts
+#> rownames(16634): ENSG00000000003 ENSG00000000419 ... ENSG00000273486
+#>   ENSG00000273489
+#> rowData names(1): gene_name
+#> colnames(2700): ATAGATACCATGGT-1 AAACATTGATCAGC-1 ... ACTTGTACCTGTCC-1
+#>   GCAACCCTCCTCGT-1
+#> colData names(3): orig.ident nCount_RNA nFeature_RNA
 ```
 
 See `vignette("filtering", package = "tiledbsc")` for more details.
@@ -3150,12 +287,9 @@ Currently the RNA SOMA's X group contains only a single layer, _counts_.
 
 ```r
 soma$X
-```
-
-```
-## <AssayMatrixGroup>
-##   uri: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/X 
-##   arrays: counts
+#> <AssayMatrixGroup>
+#>   uri: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/X 
+#>   arrays: counts
 ```
 
 Add a new `X` layer containing log-normalized counts stored in the Seurat `Assay`'s `data` slot.
@@ -3167,22 +301,10 @@ soma$from_seurat_assay(
   layers = "data",
   var = FALSE
 )
-```
-
-```
-## No AssayMatrix found at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/X/data'
-```
-
-```
-## Creating new AssayMatrix array with index [var_id,obs_id] at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/X/data'
-```
-
-```
-## Ingesting AssayMatrix data into: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/X/data
-```
-
-```
-## Finished converting Seurat Assay with key [rna_] to SOMA
+#> No AssayMatrix found at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/X/data'
+#> Creating new AssayMatrix array with index [var_id,obs_id] at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/X/data'
+#> Ingesting AssayMatrix data into: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/X/data
+#> Finished converting Seurat Assay with key [rna_] to SOMA
 ```
 
 Now we can see the SOMA contains 2 `X` layers: `counts` and `data`.
@@ -3190,12 +312,9 @@ Now we can see the SOMA contains 2 `X` layers: `counts` and `data`.
 
 ```r
 soma$X
-```
-
-```
-## <AssayMatrixGroup>
-##   uri: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/X 
-##   arrays: counts, data
+#> <AssayMatrixGroup>
+#>   uri: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/X 
+#>   arrays: counts, data
 ```
 
 ### Add Layer for Scaled counts
@@ -3214,10 +333,7 @@ Then generate the scaled data.
 
 ```r
 pbmc3k <- Seurat::ScaleData(pbmc3k, features = var_genes)
-```
-
-```
-## Centering and scaling data matrix
+#> Centering and scaling data matrix
 ```
 
 
@@ -3230,26 +346,11 @@ soma$from_seurat_assay(
     layers = "scale.data",
     var = FALSE
 )
-```
-
-```
-## Skipping ingestion of 'data' because it is identical to 'counts'
-```
-
-```
-## No AssayMatrix found at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/X/scale.data'
-```
-
-```
-## Creating new AssayMatrix array with index [var_id,obs_id] at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/X/scale.data'
-```
-
-```
-## Ingesting AssayMatrix data into: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/X/scale.data
-```
-
-```
-## Finished converting Seurat Assay with key [rna_] to SOMA
+#> Skipping ingestion of 'data' because it is identical to 'counts'
+#> No AssayMatrix found at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/X/scale.data'
+#> Creating new AssayMatrix array with index [var_id,obs_id] at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/X/scale.data'
+#> Ingesting AssayMatrix data into: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/X/scale.data
+#> Finished converting Seurat Assay with key [rna_] to SOMA
 ```
 
 Again, verify the new layer was added.
@@ -3257,12 +358,9 @@ Again, verify the new layer was added.
 
 ```r
 soma$X
-```
-
-```
-## <AssayMatrixGroup>
-##   uri: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/X 
-##   arrays: counts, data, scale.data
+#> <AssayMatrixGroup>
+#>   uri: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/X 
+#>   arrays: counts, data, scale.data
 ```
 
 ### Add Dimensional Reduction Results
@@ -3275,44 +373,41 @@ dimreduc_pca <- Reductions(
   Seurat::RunPCA(pbmc3k, features = var_genes),
   slot = "pca"
 )
-```
-
-```
-## PC_ 1 
-## Positive:  ENSG00000101439, ENSG00000011600, ENSG00000204482, ENSG00000204472, ENSG00000087086, ENSG00000085265, ENSG00000090382, ENSG00000167996, ENSG00000163220, ENSG00000158869 
-## 	   ENSG00000025708, ENSG00000197766, ENSG00000100097, ENSG00000143546, ENSG00000163131, ENSG00000100079, ENSG00000197249, ENSG00000066336, ENSG00000142089, ENSG00000197746 
-## 	   ENSG00000126759, ENSG00000130066, ENSG00000216490, ENSG00000103187, ENSG00000163191, ENSG00000119655, ENSG00000131981, ENSG00000084207, ENSG00000103490, ENSG00000116701 
-## Negative:  ENSG00000251562, ENSG00000227507, ENSG00000008517, ENSG00000116824, ENSG00000072818, ENSG00000164543, ENSG00000172543, ENSG00000198821, ENSG00000161570, ENSG00000196329 
-## 	   ENSG00000165272, ENSG00000145649, ENSG00000077984, ENSG00000009790, ENSG00000172005, ENSG00000171476, ENSG00000078596, ENSG00000113088, ENSG00000136997, ENSG00000179144 
-## 	   ENSG00000133134, ENSG00000134954, ENSG00000157978, ENSG00000115085, ENSG00000145220, ENSG00000166405, ENSG00000145779, ENSG00000105374, ENSG00000139187, ENSG00000164483 
-## PC_ 2 
-## Positive:  ENSG00000105374, ENSG00000180644, ENSG00000077984, ENSG00000145649, ENSG00000100453, ENSG00000137441, ENSG00000172543, ENSG00000115523, ENSG00000100450, ENSG00000159674 
-## 	   ENSG00000129277, ENSG00000203747, ENSG00000161570, ENSG00000198821, ENSG00000143185, ENSG00000169583, ENSG00000196139, ENSG00000122862, ENSG00000171476, ENSG00000109861 
-## 	   ENSG00000075234, ENSG00000196154, ENSG00000135046, ENSG00000008517, ENSG00000163453, ENSG00000115738, ENSG00000075624, ENSG00000143184, ENSG00000239713, ENSG00000164483 
-## Negative:  ENSG00000105369, ENSG00000156738, ENSG00000100721, ENSG00000196735, ENSG00000204287, ENSG00000179344, ENSG00000247982, ENSG00000007312, ENSG00000196126, ENSG00000019582 
-## 	   ENSG00000223865, ENSG00000204257, ENSG00000237541, ENSG00000198502, ENSG00000231389, ENSG00000242574, ENSG00000132185, ENSG00000122986, ENSG00000227507, ENSG00000095585 
-## 	   ENSG00000226777, ENSG00000083454, ENSG00000140968, ENSG00000254709, ENSG00000133789, ENSG00000138639, ENSG00000163683, ENSG00000167641, ENSG00000132704, ENSG00000154102 
-## PC_ 3 
-## Positive:  ENSG00000196735, ENSG00000105369, ENSG00000007312, ENSG00000179344, ENSG00000223865, ENSG00000019582, ENSG00000231389, ENSG00000156738, ENSG00000196126, ENSG00000198502 
-## 	   ENSG00000204287, ENSG00000237541, ENSG00000100721, ENSG00000247982, ENSG00000242574, ENSG00000204257, ENSG00000122986, ENSG00000132185, ENSG00000140968, ENSG00000095585 
-## 	   ENSG00000226777, ENSG00000163683, ENSG00000166428, ENSG00000083454, ENSG00000254709, ENSG00000133789, ENSG00000086730, ENSG00000034510, ENSG00000132465, ENSG00000170476 
-## Negative:  ENSG00000163736, ENSG00000163737, ENSG00000168497, ENSG00000113140, ENSG00000127920, ENSG00000154146, ENSG00000169704, ENSG00000150681, ENSG00000101162, ENSG00000120885 
-## 	   ENSG00000180573, ENSG00000236304, ENSG00000005961, ENSG00000010278, ENSG00000088726, ENSG00000104267, ENSG00000171611, ENSG00000111644, ENSG00000108960, ENSG00000166681 
-## 	   ENSG00000161911, ENSG00000124491, ENSG00000176783, ENSG00000184702, ENSG00000130830, ENSG00000102804, ENSG00000166091, ENSG00000272053, ENSG00000101335, ENSG00000185245 
-## PC_ 4 
-## Positive:  ENSG00000196735, ENSG00000180573, ENSG00000163737, ENSG00000105369, ENSG00000168497, ENSG00000007312, ENSG00000163736, ENSG00000127920, ENSG00000179344, ENSG00000113140 
-## 	   ENSG00000156738, ENSG00000019582, ENSG00000169704, ENSG00000223865, ENSG00000150681, ENSG00000154146, ENSG00000171611, ENSG00000010278, ENSG00000237541, ENSG00000236304 
-## 	   ENSG00000120885, ENSG00000101162, ENSG00000104267, ENSG00000196126, ENSG00000231389, ENSG00000005961, ENSG00000204287, ENSG00000100721, ENSG00000088726, ENSG00000111644 
-## Negative:  ENSG00000026025, ENSG00000143546, ENSG00000197956, ENSG00000196154, ENSG00000034510, ENSG00000163220, ENSG00000008517, ENSG00000179144, ENSG00000197747, ENSG00000100079 
-## 	   ENSG00000162444, ENSG00000172005, ENSG00000085265, ENSG00000090382, ENSG00000116824, ENSG00000163221, ENSG00000110077, ENSG00000082074, ENSG00000163191, ENSG00000165272 
-## 	   ENSG00000133574, ENSG00000110203, ENSG00000135046, ENSG00000251562, ENSG00000204472, ENSG00000196329, ENSG00000169429, ENSG00000126709, ENSG00000186854, ENSG00000141505 
-## PC_ 5 
-## Positive:  ENSG00000227507, ENSG00000026025, ENSG00000165272, ENSG00000180817, ENSG00000172005, ENSG00000166803, ENSG00000116824, ENSG00000172725, ENSG00000115165, ENSG00000082074 
-## 	   ENSG00000008517, ENSG00000102871, ENSG00000164111, ENSG00000123416, ENSG00000189159, ENSG00000110958, ENSG00000176890, ENSG00000078596, ENSG00000103187, ENSG00000169508 
-## 	   ENSG00000184009, ENSG00000145779, ENSG00000165629, ENSG00000009790, ENSG00000133574, ENSG00000117450, ENSG00000122952, ENSG00000146386, ENSG00000166681, ENSG00000157978 
-## Negative:  ENSG00000100453, ENSG00000137441, ENSG00000105374, ENSG00000115523, ENSG00000180644, ENSG00000129277, ENSG00000077984, ENSG00000159674, ENSG00000145649, ENSG00000100450 
-## 	   ENSG00000169583, ENSG00000143185, ENSG00000172543, ENSG00000075234, ENSG00000196139, ENSG00000161570, ENSG00000163453, ENSG00000143184, ENSG00000143546, ENSG00000006075 
-## 	   ENSG00000011600, ENSG00000171476, ENSG00000117281, ENSG00000135077, ENSG00000163220, ENSG00000158869, ENSG00000168229, ENSG00000100079, ENSG00000162444, ENSG00000163221
+#> PC_ 1 
+#> Positive:  ENSG00000101439, ENSG00000011600, ENSG00000204482, ENSG00000204472, ENSG00000087086, ENSG00000085265, ENSG00000090382, ENSG00000167996, ENSG00000163220, ENSG00000158869 
+#> 	   ENSG00000025708, ENSG00000197766, ENSG00000100097, ENSG00000143546, ENSG00000163131, ENSG00000100079, ENSG00000197249, ENSG00000066336, ENSG00000142089, ENSG00000197746 
+#> 	   ENSG00000126759, ENSG00000130066, ENSG00000216490, ENSG00000103187, ENSG00000163191, ENSG00000119655, ENSG00000131981, ENSG00000084207, ENSG00000103490, ENSG00000116701 
+#> Negative:  ENSG00000251562, ENSG00000227507, ENSG00000008517, ENSG00000116824, ENSG00000072818, ENSG00000164543, ENSG00000172543, ENSG00000198821, ENSG00000161570, ENSG00000196329 
+#> 	   ENSG00000165272, ENSG00000145649, ENSG00000077984, ENSG00000009790, ENSG00000172005, ENSG00000171476, ENSG00000078596, ENSG00000113088, ENSG00000136997, ENSG00000179144 
+#> 	   ENSG00000133134, ENSG00000134954, ENSG00000157978, ENSG00000115085, ENSG00000145220, ENSG00000166405, ENSG00000145779, ENSG00000105374, ENSG00000139187, ENSG00000164483 
+#> PC_ 2 
+#> Positive:  ENSG00000105374, ENSG00000180644, ENSG00000077984, ENSG00000145649, ENSG00000100453, ENSG00000137441, ENSG00000172543, ENSG00000115523, ENSG00000100450, ENSG00000159674 
+#> 	   ENSG00000129277, ENSG00000203747, ENSG00000161570, ENSG00000198821, ENSG00000143185, ENSG00000169583, ENSG00000196139, ENSG00000122862, ENSG00000171476, ENSG00000109861 
+#> 	   ENSG00000075234, ENSG00000196154, ENSG00000135046, ENSG00000008517, ENSG00000163453, ENSG00000115738, ENSG00000075624, ENSG00000143184, ENSG00000239713, ENSG00000164483 
+#> Negative:  ENSG00000105369, ENSG00000156738, ENSG00000100721, ENSG00000196735, ENSG00000204287, ENSG00000179344, ENSG00000247982, ENSG00000007312, ENSG00000196126, ENSG00000019582 
+#> 	   ENSG00000223865, ENSG00000204257, ENSG00000237541, ENSG00000198502, ENSG00000231389, ENSG00000242574, ENSG00000132185, ENSG00000122986, ENSG00000227507, ENSG00000095585 
+#> 	   ENSG00000226777, ENSG00000083454, ENSG00000140968, ENSG00000254709, ENSG00000133789, ENSG00000138639, ENSG00000163683, ENSG00000167641, ENSG00000132704, ENSG00000154102 
+#> PC_ 3 
+#> Positive:  ENSG00000196735, ENSG00000105369, ENSG00000007312, ENSG00000179344, ENSG00000223865, ENSG00000019582, ENSG00000231389, ENSG00000156738, ENSG00000196126, ENSG00000198502 
+#> 	   ENSG00000204287, ENSG00000237541, ENSG00000100721, ENSG00000247982, ENSG00000242574, ENSG00000204257, ENSG00000122986, ENSG00000132185, ENSG00000140968, ENSG00000095585 
+#> 	   ENSG00000226777, ENSG00000163683, ENSG00000166428, ENSG00000083454, ENSG00000254709, ENSG00000133789, ENSG00000086730, ENSG00000034510, ENSG00000132465, ENSG00000170476 
+#> Negative:  ENSG00000163736, ENSG00000163737, ENSG00000168497, ENSG00000113140, ENSG00000127920, ENSG00000154146, ENSG00000169704, ENSG00000150681, ENSG00000101162, ENSG00000120885 
+#> 	   ENSG00000180573, ENSG00000236304, ENSG00000005961, ENSG00000010278, ENSG00000088726, ENSG00000104267, ENSG00000171611, ENSG00000111644, ENSG00000108960, ENSG00000166681 
+#> 	   ENSG00000161911, ENSG00000124491, ENSG00000176783, ENSG00000184702, ENSG00000130830, ENSG00000102804, ENSG00000166091, ENSG00000272053, ENSG00000101335, ENSG00000185245 
+#> PC_ 4 
+#> Positive:  ENSG00000196735, ENSG00000180573, ENSG00000163737, ENSG00000105369, ENSG00000168497, ENSG00000007312, ENSG00000163736, ENSG00000127920, ENSG00000179344, ENSG00000113140 
+#> 	   ENSG00000156738, ENSG00000019582, ENSG00000169704, ENSG00000223865, ENSG00000150681, ENSG00000154146, ENSG00000171611, ENSG00000010278, ENSG00000237541, ENSG00000236304 
+#> 	   ENSG00000120885, ENSG00000101162, ENSG00000104267, ENSG00000196126, ENSG00000231389, ENSG00000005961, ENSG00000204287, ENSG00000100721, ENSG00000088726, ENSG00000111644 
+#> Negative:  ENSG00000026025, ENSG00000143546, ENSG00000197956, ENSG00000196154, ENSG00000034510, ENSG00000163220, ENSG00000008517, ENSG00000179144, ENSG00000197747, ENSG00000100079 
+#> 	   ENSG00000162444, ENSG00000172005, ENSG00000085265, ENSG00000090382, ENSG00000116824, ENSG00000163221, ENSG00000110077, ENSG00000082074, ENSG00000163191, ENSG00000165272 
+#> 	   ENSG00000133574, ENSG00000110203, ENSG00000135046, ENSG00000251562, ENSG00000204472, ENSG00000196329, ENSG00000169429, ENSG00000126709, ENSG00000186854, ENSG00000141505 
+#> PC_ 5 
+#> Positive:  ENSG00000227507, ENSG00000026025, ENSG00000165272, ENSG00000180817, ENSG00000172005, ENSG00000166803, ENSG00000116824, ENSG00000172725, ENSG00000115165, ENSG00000082074 
+#> 	   ENSG00000008517, ENSG00000102871, ENSG00000164111, ENSG00000123416, ENSG00000189159, ENSG00000110958, ENSG00000176890, ENSG00000078596, ENSG00000103187, ENSG00000169508 
+#> 	   ENSG00000184009, ENSG00000145779, ENSG00000165629, ENSG00000009790, ENSG00000133574, ENSG00000117450, ENSG00000122952, ENSG00000146386, ENSG00000166681, ENSG00000157978 
+#> Negative:  ENSG00000100453, ENSG00000137441, ENSG00000105374, ENSG00000115523, ENSG00000180644, ENSG00000129277, ENSG00000077984, ENSG00000159674, ENSG00000145649, ENSG00000100450 
+#> 	   ENSG00000169583, ENSG00000143185, ENSG00000172543, ENSG00000075234, ENSG00000196139, ENSG00000161570, ENSG00000163453, ENSG00000143184, ENSG00000143546, ENSG00000006075 
+#> 	   ENSG00000011600, ENSG00000171476, ENSG00000117281, ENSG00000135077, ENSG00000163220, ENSG00000158869, ENSG00000168229, ENSG00000100079, ENSG00000162444, ENSG00000163221
 ```
 
 Add the Seurat `DimReduc` object to the SOMA.
@@ -3323,37 +418,16 @@ soma$add_seurat_dimreduction(
     dimreduc_pca,
     technique = "pca"
 )
-```
-
-```
-## No AnnotationMatrix found at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/varm/dimreduction_pca'
-```
-
-```
-## Creating new AnnotationMatrix array with index [var_id] at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/varm/dimreduction_pca'
-```
-
-```
-## Ingesting AnnotationMatrix data into: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/varm/dimreduction_pca
-```
-
-```
-## No AnnotationMatrix found at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/obsm/dimreduction_pca'
-```
-
-```
-## Creating new AnnotationMatrix array with index [obs_id] at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/obsm/dimreduction_pca'
-```
-
-```
-## Ingesting AnnotationMatrix data into: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/obsm/dimreduction_pca
-```
-
-```
-## <SOMA>
-##   uri: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA 
-##   arrays: obs, var 
-##   groups: obsm, obsp, uns, varm, varp, X
+#> No AnnotationMatrix found at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/varm/dimreduction_pca'
+#> Creating new AnnotationMatrix array with index [var_id] at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/varm/dimreduction_pca'
+#> Ingesting AnnotationMatrix data into: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/varm/dimreduction_pca
+#> No AnnotationMatrix found at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/obsm/dimreduction_pca'
+#> Creating new AnnotationMatrix array with index [obs_id] at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/obsm/dimreduction_pca'
+#> Ingesting AnnotationMatrix data into: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/obsm/dimreduction_pca
+#> <SOMA>
+#>   uri: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA 
+#>   arrays: obs, var 
+#>   groups: obsm, obsp, uns, varm, varp, X
 ```
 
 The SOMA now contains 2 new arrays, one within the `obsm` group storing the cell embeddings
@@ -3361,12 +435,9 @@ The SOMA now contains 2 new arrays, one within the `obsm` group storing the cell
 
 ```r
 soma$obsm
-```
-
-```
-## <AnnotationMatrixGroup>
-##   uri: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/obsm 
-##   arrays: dimreduction_pca
+#> <AnnotationMatrixGroup>
+#>   uri: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/obsm 
+#>   arrays: dimreduction_pca
 ```
 
 and a second within the `varm` group storing the feature loadings.
@@ -3374,12 +445,9 @@ and a second within the `varm` group storing the feature loadings.
 
 ```r
 soma$varm
-```
-
-```
-## <AnnotationMatrixGroup>
-##   uri: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/varm 
-##   arrays: dimreduction_pca
+#> <AnnotationMatrixGroup>
+#>   uri: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/varm 
+#>   arrays: dimreduction_pca
 ```
 
 Either of these can be accessed and queried directly, which is often useful for visualization applications.
@@ -3388,13 +456,10 @@ Either of these can be accessed and queried directly, which is often useful for 
 ```r
 obsm_pca <- soma$obsm$get_member("dimreduction_pca")
 obsm_pca
-```
-
-```
-## <AnnotationMatrix>
-##   uri: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/obsm/dimreduction_pca 
-##   dimensions: obs_id 
-##   attributes: PC_1, PC_2, PC_3, PC_4, PC_5, PC_6, PC_7, PC_8, PC_9, PC_10, PC_11, PC_12, PC...
+#> <AnnotationMatrix>
+#>   uri: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/obsm/dimreduction_pca 
+#>   dimensions: obs_id 
+#>   attributes: PC_1, PC_2, PC_3, PC_4, PC_5, PC_6, PC_7, PC_8, PC_9, PC_10, PC_11, PC_12, PC...
 ```
 
 Here we'll load the cell embeddings as a `matrix` and visualize the first 5 PCs.
@@ -3402,17 +467,11 @@ Here we'll load the cell embeddings as a `matrix` and visualize the first 5 PCs.
 
 ```r
 cell_pcs <- obsm_pca$to_matrix()
-```
-
-```
-## Reading AnnotationMatrix into memory from '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/obsm/dimreduction_pca'
-```
-
-```r
+#> Reading AnnotationMatrix into memory from '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/obsm/dimreduction_pca'
 pairs(cell_pcs[, 1:5])
 ```
 
-![plot of chunk unnamed-chunk-30](figure/unnamed-chunk-30-1.png)
+![plot of chunk pc-pairs](quickstart-pc-pairs-1.png)
 
 ## Populate a SOMACollection in TileDB Cloud
 
