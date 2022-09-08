@@ -4,7 +4,7 @@ PKGNAME = `sed -n "s/Package: *\([^ ]*\)/\1/p" DESCRIPTION`
 PKGVERS = `sed -n "s/Version: *\([^ ]*\)/\1/p" DESCRIPTION`
 
 # Pre-computed vignettes
-RMDS		:= $(patsubst %Rmd.orig, %Rmd, $(wildcard vignettes/*.orig))
+RMDS		:= $(patsubst %Rmd.source, %Rmd, $(wildcard vignettes/*.source))
 # Standard vignettes
 RMDS		+= $(wildcard vignettes/*.Rmd)
 # Rendered vignettes
@@ -50,7 +50,7 @@ doc/%.html: vignettes/%.Rmd
 # vignettes that require external datasets or additional package to run are
 # pre-computed, following the approach outlined in
 # https://ropensci.org/blog/2019/12/08/precompute-vignettes/
-vignettes/%.Rmd: vignettes/%.Rmd.orig
+vignettes/%.Rmd: vignettes/%.Rmd.source
 	@echo "Knitting pre-computed vignette $< to $@"
 	# switch to vignettes directory so images are saved there
 	@cd vignettes; $(RSCRIPT) -e "knitr::knit('$(<F)', '$(@F)', quiet = TRUE)"

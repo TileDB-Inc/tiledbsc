@@ -30,7 +30,7 @@ GitHub username, and links to relevant issue(s)/PR(s).
 
 Run `make vignettes` to:
 
-* regenerate the precomputed vignettes (e.g., `quickstart.Rmd` from `quickstart.Rmd.orig`)
+* regenerate the precomputed vignettes (e.g., `quickstart.Rmd` from `quickstart.Rmd.source`)
 * rebuild the vignettes
 
 Run `make docs` to:
