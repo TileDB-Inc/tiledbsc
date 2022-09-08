@@ -19,7 +19,7 @@ remotes::install_github("tiledb-inc/tiledbsc")
 [tiledb]: https://tiledb.com
 [soma-spec]: https://github.com/single-cell-data/SOMA
 [seurat]: https://satijalab.org/seurat/
-[bioc]: https://www.bioconductor.org/packages/release/bioc/html/Seurat.html
+[bioc]: https://bioconductor.org
 [bioc-se]: https://www.bioconductor.org/packages/SummarizedExperiment/
 [bioc-sce]: https://www.bioconductor.org/packages/SingleCellExperiment/
 [anndata]: https://anndata.readthedocs.io
