@@ -128,7 +128,7 @@ To remove the filter simply reset the query.
 
 ```{r}
 soma$reset_query()
-soma$obs$to_dataframe()
+summary(soma$obs$to_dataframe())
 ```
 
 In addition to dimension slicing we can also apply filters using the cell- and feature-level metadata stored in the `obs` and `var` arrays.
