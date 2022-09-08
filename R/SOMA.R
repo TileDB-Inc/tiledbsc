@@ -756,7 +756,7 @@ SOMA <- R6::R6Class(
         members <- members[members$NAME != "raw", ]
       }
 
-      named_uris <- setNames(members$URI, members$NAME)
+      named_uris <- stats::setNames(members$URI, members$NAME)
 
       # TODO: Remove when SCDataset/SCGroup/misc is defunct
       # Rename misc to uns if it exists for backwards compatibility

@@ -41,8 +41,6 @@
 #' ## [1] "COMPLETE"
 #' ```
 #'
-#'
-#' @importFrom R6 R6Class
 #' @export
 AnnotationArray <- R6::R6Class(
   classname = "AnnotationArray",

@@ -46,7 +46,7 @@ matrix_to_coo <- function(x, index_cols = c("i", "j"), value_cols = NULL) {
 
     # convert to COO format w/ user specified index and value column names
     coo_i <- as.data.frame(
-      setNames(
+      stats::setNames(
         Matrix::mat2triplet(x[[i]]),
         nm = c(index_cols, value_col)
       )

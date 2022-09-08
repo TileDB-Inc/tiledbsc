@@ -217,7 +217,7 @@ SOMACollection <- R6::R6Class(
       # retain cell identities before restoring cell-level metadata
   idents <- obs_df$active_ident
       if (!is.null(idents)) {
-        idents <- setNames(idents, rownames(obs_df))
+        idents <- stats::setNames(idents, rownames(obs_df))
         obs_df$active_ident <- NULL
       }
 

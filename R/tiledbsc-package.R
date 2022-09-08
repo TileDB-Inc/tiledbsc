@@ -4,6 +4,8 @@
 #'
 #' @keywords internal
 #' @import tiledb
+#' @importFrom R6 R6Class
+#' @importFrom methods as slot
 "_PACKAGE"
 
 ## usethis namespace: start

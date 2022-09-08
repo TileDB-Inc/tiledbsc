@@ -1,0 +1,300 @@
+---
+title: "Getting started with tiledbsc"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Getting started with tiledbsc}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "quickstart-"
+)
+```
+
+## Overview
+
+This vignette provides an overview of the tiledbsc R package which uses the open source [SOMA data model](https://github.com/single-cell-data/SOMA) to store single-cell data in a collection of TileDB arrays.
+
+With tiledbsc you can:
+
+- convert data from Seurat and other popular single-cell formats into SOMA
+- access SOMA data using any of TileDB's APIs
+- store your datasets on S3 (or other remote object stores) and slice directly without having to download anything first
+
+In this vignette you'll learn how to:
+
+- ingest Seurat data into TileDB-backed SOMA Collections
+- access various components of a dataset
+- slice by cell-/feature-identifiers
+- query using cell-/feature-level annotations
+- update a SOMA with analysis results
+- load data from SOMA into R as a Seurat or Bioconductor (i.e., `SummarizedExperiment`) object
+- store your data on S3 and register with TileDB Cloud
+
+## Setup
+
+```{r}
+library(tiledbsc)
+library(SeuratObject)
+```
+
+For this tutorial we'll use a dataset from 10X genomics containing 2,700 peripheral blood mononuclear cells (PBMC) from a healthy donor. The dataset is available on [10X Genomics' website](https://support.10xgenomics.com/single-cell-gene-expression/datasets/1.1.0/pbmc3k).
+
+Use the provided helper function to download the filtered gene/cell matrix from 10X and create a `Seurat` object.
+
+```{r}
+pbmc3k <- dataset_seurat_pbmc3k()
+pbmc3k
+```
+
+## Populate a SOMACollection
+
+Our first step is to create a new `SOMACollection` at a specific URI. The URI could be a local filepath, an S3 URI, or as discussed below, a TileDB Cloud URI that automatically registers the dataset on TileDB Cloud.
+
+```{r}
+soco_uri <- file.path(tempdir(), "soco-pbmc3k")
+
+soco <- SOMACollection$new(uri = soco_uri)
+soco
+```
+
+Now we use tiledbsc to automatically ingest the various components of the `pbmc3k` object into the new `SOMACollection`.
+
+```{r}
+soco$from_seurat(pbmc3k)
+```
+
+Printing the `soco` object shows it comprises 2 members: `RNA`, which contains the RNA assay data, and `uns`, which is a special group for miscellaneous (i.e., unstructured) data.
+
+```{r}
+soco
+```
+
+## Access SOMA Components
+
+As this dataset is unimodal, we'll extract the SOMA containing the RNA data.
+
+```{r}
+soma <- soco$get_member("RNA")
+soma
+```
+
+Access the [`AnnotationDataframe`] representing the `obs` array containing cell-level metadata stored in `obs`.
+
+```{r}
+soma$obs
+```
+
+Read it into memory as a `data.frame`.
+
+```{r}
+obs <- soma$obs$to_dataframe()
+summary(obs)
+```
+
+Access the [`AssayMatrix`] representing the `X` array containing the raw RNA
+counts.
+
+```{r}
+soma$X$members$counts
+```
+
+Read it into memory as a [`dgTMatrix`][`Matrix::TsparseMatrix-class`].
+
+```{r}
+mat <- soma$X$members$counts$to_matrix()
+dim(mat)
+```
+
+## Dimension Slicing and Attribute Filtering
+
+`SOMACollection` and `SOMA` objects can be sliced by a combination of obs and var identifiers.
+
+```{r}
+soma$set_query(obs_ids = head(colnames(pbmc3k), 10))
+```
+
+This slice is automatically applied to the entire SOMA, so any component read into memory will now only contain the filtered results.
+
+```{r}
+soma$obs$to_dataframe()
+```
+
+To remove the filter simply reset the query.
+
+```{r}
+soma$reset_query()
+summary(soma$obs$to_dataframe())
+```
+
+In addition to dimension slicing we can also apply filters using the cell- and feature-level metadata stored in the `obs` and `var` arrays.
+
+```{r}
+soma$set_query(
+    obs_attr_filter = seurat_annotations == "B" && nCount_RNA > 1000
+)
+```
+
+We can load the SOMA slice into memory as a Seurat `Assay`...
+
+```{r}
+soma$to_seurat_assay()
+```
+
+or as a Bioconductor [`SummarizedExperiment`].
+
+```{r}
+if (requireNamespace("SummarizedExperiment", quietly = TRUE)) {
+  soma$to_summarized_experiment()
+}
+```
+
+See `vignette("filtering", package = "tiledbsc")` for more details.
+
+## Adding Analysis Results to a SOMA
+
+The original `pbmc3k` object contains only the raw counts data. Here we'll use `Seurat` to generate new results and add them to the `soma`.
+
+### Add Layer for Normalized Counts
+
+First we normalize the raw counts, which creates a new matrix stored in the `Assay` object.
+
+```{r eval=requireNamespace("Seurat", quietly = TRUE)}
+pbmc3k <- Seurat::NormalizeData(pbmc3k, normalization.method = "LogNormalize")
+```
+
+Currently the RNA SOMA's `X` group contains only a single layer, `counts`.
+
+```{r}
+soma$X
+```
+
+Add a new `X` layer containing log-normalized counts stored in the Seurat `Assay`'s `data` slot.
+
+```{r}
+soma$from_seurat_assay(
+  object = pbmc3k[["RNA"]],
+  layers = "data",
+  var = FALSE
+)
+```
+
+Now we can see the SOMA contains 2 `X` layers: `counts` and `data`.
+
+```{r}
+soma$X
+```
+
+### Add Layer for Scaled counts
+
+First, we identify highly variable subset of genes to scale.
+
+```{r eval=requireNamespace("Seurat", quietly = TRUE)}
+var_genes <- VariableFeatures(
+  Seurat::FindVariableFeatures(pbmc3k, nfeatures = 2000)
+)
+```
+
+Then generate the scaled data.
+
+```{r, eval=requireNamespace("Seurat", quietly = TRUE)}
+pbmc3k <- Seurat::ScaleData(pbmc3k, features = var_genes)
+```
+
+
+And ingest the scaled data into a new `X` layer called `"scale.data"`.
+
+```{r eval=requireNamespace("Seurat", quietly = TRUE)}
+soma$from_seurat_assay(
+    object = pbmc3k[["RNA"]],
+    layers = "scale.data",
+    var = FALSE
+)
+```
+
+Again, verify the new layer was added.
+
+```{r}
+soma$X
+```
+
+### Add Dimensional Reduction Results
+
+We can use a similar workflow for dimensional-reduction results, which are stored in either the `obsm` or `varm` slots of a SOMA.
+
+```{r eval=requireNamespace("Seurat", quietly = TRUE)}
+dimreduc_pca <- Reductions(
+  Seurat::RunPCA(pbmc3k, features = var_genes),
+  slot = "pca"
+)
+```
+
+Add the Seurat `DimReduc` object to the SOMA.
+
+```{r eval=requireNamespace("Seurat", quietly = TRUE)}
+soma$add_seurat_dimreduction(
+    dimreduc_pca,
+    technique = "pca"
+)
+```
+
+The SOMA now contains 2 new arrays, one within the `obsm` group storing the cell embeddings
+
+```{r}
+soma$obsm
+```
+
+and a second within the `varm` group storing the feature loadings.
+
+```{r}
+soma$varm
+```
+
+Either of these can be accessed and queried directly, which is often useful for visualization applications.
+
+```{r eval=requireNamespace("Seurat", quietly = TRUE)}
+obsm_pca <- soma$obsm$get_member("dimreduction_pca")
+obsm_pca
+```
+
+Here we'll load the cell embeddings as a `matrix` and visualize the first 5 PCs.
+
+```{r pc-pairs, eval=requireNamespace("Seurat", quietly = TRUE)}
+cell_pcs <- obsm_pca$to_matrix()
+pairs(cell_pcs[, 1:5])
+```
+
+## Populate a SOMACollection in TileDB Cloud
+
+You can ingest a Seurat object into an S3 `SOMACollection` that's automatically registered with TileDB Cloud using a special URI composed of:
+
+-   your TileDB namespace
+-   an S3 bucket where the dataset will be created
+
+and running the same initialization/ingestion steps we performed earlier:
+
+```r
+soco <- SOMACollection$new("tiledb://<namespace>/s3://<bucket>/pbmc3k-soco")
+soco$from_seurat(pbmc3k)
+```
+
+Note this assumes you:
+
+-   have a TileDB Cloud account
+-   registered [cloud
+    credentials](https://cloud.tiledb.com/user-settings/credentials) for
+    AWS
+-   provided a [default S3 storage
+    path](https://cloud.tiledb.com/user-settings/storage-paths)
+-   are [logged into TileDB
+    Cloud](https://tiledb-inc.github.io/TileDB-Cloud-R/articles/Login.html)
+    in your environment
+
+You can then view the new SOMACollection directly on TileDB Cloud where you can
+inspect the various dataset components, share securely, view activity logs, and more. For example, here's the TileDB Cloud view of the `pbmc3k` dataset we just ingested: [`aaronwolen/pbmc3k-soco`](https://cloud.tiledb.com/groups/aaronwolen/68ffab71-b090-42c9-8d8b-977d00979257/overview).
+
+You can also securely access the dataset directly via R (or Python) using its TileDB Cloud URI, `tiledb://aaronwolen/pbmc3k-soco`.
