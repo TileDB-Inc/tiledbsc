@@ -7,6 +7,7 @@
 #' @seealso https://support.10xgenomics.com/single-cell-gene-expression/datasets/1.1.0/pbmc3k
 #' @importFrom Matrix readMM
 #' @importFrom utils download.file read.table untar
+#' @export
 
 dataset_seurat_pbmc3k <- function() {
   url <- "https://cf.10xgenomics.com/samples/cell-exp/1.1.0/pbmc3k/pbmc3k_filtered_gene_bc_matrices.tar.gz"
