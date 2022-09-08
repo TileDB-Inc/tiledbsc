@@ -1,7 +1,7 @@
 ---
 title: "Selective updates"
 description: >
-  How to selectivley update components of an SCGroup.
+  How to selectivley update components of a SOMA.
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Selective updates}
@@ -25,7 +25,8 @@ library(SeuratObject)
 
 # Overview
 
-While *tiledbsc* is currently focused on facilitating the storage and retrieval of complete Seurat/Bioconductor datasets, it is possible to selectively update specific components of an existing `SCGroup`.
+
+While *tiledbsc* facilitates the storage and retrieval of complete Seurat/Bioconductor datasets, it's also possible to selectively update specific components of an existing `SOMA`.
 
 # Create the initial dataset
 
@@ -37,7 +38,7 @@ pbmc_small
 ```
 
 
-We'll start by creating a Seurat `Assay` object that contains only raw RNA counts
+We'll start by creating a Seurat `Assay` object that contains only raw RNA counts.
 
 ```{r}
 pbmc_small_rna <- CreateAssayObject(
@@ -86,7 +87,7 @@ pbmc_small_rna
 
 At this point, `counts` and `data` contain different transformations of the same matrix but only the `counts` data has been written to disk.
 
-We could simply rerun `soma$from_seurat_assay(pbmc_small_rna)` to update the `SCGroup` and ingest the normalized counts matrix into `X/data`, however, this
+We could simply rerun `soma$from_seurat_assay(pbmc_small_rna)` to update the `SOMA` and ingest the normalized counts matrix into `X/data`, however, this
 would perform another full conversion of the entire `Assay` object. As a result, data from the `counts` slot would be *re-ingested* into `X/counts` and feature-level metadata would be re-ingested into `var`.
 
 To avoid these redudndant ingestions, use the `layers` argument to specify which of the assay slots (`counts`, `data`, or `scale.data`) should be ingested. We also set `var = FALSE` to prevent re-ingestion of the feature-level metadata since it hasn't changed.
