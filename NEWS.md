@@ -11,6 +11,10 @@
   - `AssayMatrix$to_matrix()`
 
 * Members can now be removed from `TileDBGroup`s with `remove_member()`
+* New `vignette("quickstart")` which provides new users with a high-level overview of the package
+* New function `dataset_seurat_pbmc3k()` to download the pbmc 3k dataset from 10X and import as a `Seurat` object without requiring any extra dependencies. This dataset is used in the new vignette
+* Updated bundled `Makefile` to add targets for generating pre-computed vignettes and performing common dev operations
+* Added `CONTRIBUTING.md` to reference TileDB's CoC and document the `Makefile`
 
 ## Changes
 
