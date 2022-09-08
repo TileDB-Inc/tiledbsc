@@ -1,8 +1,8 @@
 ---
-title: "Quick Start"
+title: "Getting started with tiledbsc"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{quickstart}
+  %\VignetteIndexEntry{Getting started with tiledbsc}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -66,19 +66,19 @@ soco <- SOMACollection$new(uri = soco_uri)
 ```
 
 ```
-## No SOMACollection currently exists at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpEdCxNw/soco-pbmc3k'
+## No SOMACollection currently exists at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k'
 ```
 
 ```
-## Creating new SOMACollection at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpEdCxNw/soco-pbmc3k'
+## Creating new SOMACollection at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k'
 ```
 
 ```
-## No TileDBGroup currently exists at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpEdCxNw/soco-pbmc3k/uns'
+## No TileDBGroup currently exists at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/uns'
 ```
 
 ```
-## Creating new TileDBGroup at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpEdCxNw/soco-pbmc3k/uns'
+## Creating new TileDBGroup at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/uns'
 ```
 
 ```r
@@ -87,7 +87,7 @@ soco
 
 ```
 ## <SOMACollection>
-##   uri: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpEdCxNw/soco-pbmc3k 
+##   uri: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k 
 ##   groups: uns
 ```
 
@@ -99,83 +99,83 @@ soco$from_seurat(pbmc3k)
 ```
 
 ```
-## No SOMA currently exists at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpEdCxNw/soco-pbmc3k/soma_RNA'
+## No SOMA currently exists at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA'
 ```
 
 ```
-## Creating new SOMA at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpEdCxNw/soco-pbmc3k/soma_RNA'
+## Creating new SOMA at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA'
 ```
 
 ```
-## No AnnotationDataframe found at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpEdCxNw/soco-pbmc3k/soma_RNA/obs'
+## No AnnotationDataframe found at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/obs'
 ```
 
 ```
-## No AnnotationDataframe found at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpEdCxNw/soco-pbmc3k/soma_RNA/var'
+## No AnnotationDataframe found at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/var'
 ```
 
 ```
-## No AssayMatrixGroup currently exists at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpEdCxNw/soco-pbmc3k/soma_RNA/X'
+## No AssayMatrixGroup currently exists at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/X'
 ```
 
 ```
-## Creating new AssayMatrixGroup at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpEdCxNw/soco-pbmc3k/soma_RNA/X'
+## Creating new AssayMatrixGroup at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/X'
 ```
 
 ```
-## No AnnotationMatrixGroup currently exists at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpEdCxNw/soco-pbmc3k/soma_RNA/obsm'
+## No AnnotationMatrixGroup currently exists at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/obsm'
 ```
 
 ```
-## Creating new AnnotationMatrixGroup at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpEdCxNw/soco-pbmc3k/soma_RNA/obsm'
+## Creating new AnnotationMatrixGroup at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/obsm'
 ```
 
 ```
-## No AnnotationMatrixGroup currently exists at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpEdCxNw/soco-pbmc3k/soma_RNA/varm'
+## No AnnotationMatrixGroup currently exists at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/varm'
 ```
 
 ```
-## Creating new AnnotationMatrixGroup at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpEdCxNw/soco-pbmc3k/soma_RNA/varm'
+## Creating new AnnotationMatrixGroup at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/varm'
 ```
 
 ```
-## No AnnotationPairwiseMatrixGroup currently exists at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpEdCxNw/soco-pbmc3k/soma_RNA/obsp'
+## No AnnotationPairwiseMatrixGroup currently exists at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/obsp'
 ```
 
 ```
-## Creating new AnnotationPairwiseMatrixGroup at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpEdCxNw/soco-pbmc3k/soma_RNA/obsp'
+## Creating new AnnotationPairwiseMatrixGroup at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/obsp'
 ```
 
 ```
-## No AnnotationPairwiseMatrixGroup currently exists at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpEdCxNw/soco-pbmc3k/soma_RNA/varp'
+## No AnnotationPairwiseMatrixGroup currently exists at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/varp'
 ```
 
 ```
-## Creating new AnnotationPairwiseMatrixGroup at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpEdCxNw/soco-pbmc3k/soma_RNA/varp'
+## Creating new AnnotationPairwiseMatrixGroup at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/varp'
 ```
 
 ```
-## No TileDBGroup currently exists at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpEdCxNw/soco-pbmc3k/soma_RNA/uns'
+## No TileDBGroup currently exists at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/uns'
 ```
 
 ```
-## Creating new TileDBGroup at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpEdCxNw/soco-pbmc3k/soma_RNA/uns'
+## Creating new TileDBGroup at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/uns'
 ```
 
 ```
-## Creating new AnnotationDataframe array with index [obs_id] at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpEdCxNw/soco-pbmc3k/soma_RNA/obs'
+## Creating new AnnotationDataframe array with index [obs_id] at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/obs'
 ```
 
 ```
-## Ingesting AnnotationDataframe data into: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpEdCxNw/soco-pbmc3k/soma_RNA/obs
+## Ingesting AnnotationDataframe data into: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/obs
 ```
 
 ```
-## Creating new AnnotationDataframe array with index [var_id] at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpEdCxNw/soco-pbmc3k/soma_RNA/var'
+## Creating new AnnotationDataframe array with index [var_id] at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/var'
 ```
 
 ```
-## Ingesting AnnotationDataframe data into: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpEdCxNw/soco-pbmc3k/soma_RNA/var
+## Ingesting AnnotationDataframe data into: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/var
 ```
 
 ```
@@ -183,15 +183,15 @@ soco$from_seurat(pbmc3k)
 ```
 
 ```
-## No AssayMatrix found at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpEdCxNw/soco-pbmc3k/soma_RNA/X/counts'
+## No AssayMatrix found at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/X/counts'
 ```
 
 ```
-## Creating new AssayMatrix array with index [var_id,obs_id] at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpEdCxNw/soco-pbmc3k/soma_RNA/X/counts'
+## Creating new AssayMatrix array with index [var_id,obs_id] at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/X/counts'
 ```
 
 ```
-## Ingesting AssayMatrix data into: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpEdCxNw/soco-pbmc3k/soma_RNA/X/counts
+## Ingesting AssayMatrix data into: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/X/counts
 ```
 
 ```
@@ -211,7 +211,7 @@ soco
 
 ```
 ## <SOMACollection>
-##   uri: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpEdCxNw/soco-pbmc3k 
+##   uri: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k 
 ##   groups: RNA, uns
 ```
 
@@ -227,7 +227,7 @@ soma
 
 ```
 ## <SOMA>
-##   uri: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpEdCxNw/soco-pbmc3k/soma_RNA 
+##   uri: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA 
 ##   arrays: obs, var 
 ##   groups: obsm, obsp, uns, varm, varp, X
 ```
@@ -241,7 +241,7 @@ soma$obs
 
 ```
 ## <AnnotationDataframe>
-##   uri: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpEdCxNw/soco-pbmc3k/soma_RNA/obs 
+##   uri: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/obs 
 ##   dimensions: obs_id 
 ##   attributes: orig.ident, nCount_RNA, nFeature_RNA
 ```
@@ -254,7 +254,7 @@ obs <- soma$obs$to_dataframe()
 ```
 
 ```
-## Reading AnnotationDataframe into memory from '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpEdCxNw/soco-pbmc3k/soma_RNA/obs'
+## Reading AnnotationDataframe into memory from '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/obs'
 ```
 
 ```r
@@ -281,7 +281,7 @@ soma$X$members$counts
 
 ```
 ## <AssayMatrix>
-##   uri: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpEdCxNw/soco-pbmc3k/soma_RNA/X/counts 
+##   uri: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/X/counts 
 ##   dimensions: var_id, obs_id 
 ##   attributes: value
 ```
@@ -294,7 +294,7 @@ mat <- soma$X$members$counts$to_matrix()
 ```
 
 ```
-## Reading AssayMatrix into memory from '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpEdCxNw/soco-pbmc3k/soma_RNA/X/counts'
+## Reading AssayMatrix into memory from '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/X/counts'
 ```
 
 ```r
@@ -322,7 +322,7 @@ soma$obs$to_dataframe()
 ```
 
 ```
-## Reading AnnotationDataframe into memory from '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpEdCxNw/soco-pbmc3k/soma_RNA/obs'
+## Reading AnnotationDataframe into memory from '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/obs'
 ```
 
 ```
@@ -348,7 +348,7 @@ soma$obs$to_dataframe()
 ```
 
 ```
-## Reading AnnotationDataframe into memory from '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpEdCxNw/soco-pbmc3k/soma_RNA/obs'
+## Reading AnnotationDataframe into memory from '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/obs'
 ```
 
 ```
@@ -3080,11 +3080,11 @@ soma$to_seurat_assay()
 ```
 
 ```
-## Reading AssayMatrix into memory from '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpEdCxNw/soco-pbmc3k/soma_RNA/X/counts'
+## Reading AssayMatrix into memory from '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/X/counts'
 ```
 
 ```
-## Reading AnnotationDataframe into memory from '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpEdCxNw/soco-pbmc3k/soma_RNA/var'
+## Reading AnnotationDataframe into memory from '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/var'
 ```
 
 ```
@@ -3105,15 +3105,15 @@ if (requireNamespace("SummarizedExperiment", quietly = TRUE)) {
 ```
 
 ```
-## Reading AssayMatrix into memory from '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpEdCxNw/soco-pbmc3k/soma_RNA/X/counts'
+## Reading AssayMatrix into memory from '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/X/counts'
 ```
 
 ```
-## Reading AnnotationDataframe into memory from '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpEdCxNw/soco-pbmc3k/soma_RNA/obs'
+## Reading AnnotationDataframe into memory from '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/obs'
 ```
 
 ```
-## Reading AnnotationDataframe into memory from '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpEdCxNw/soco-pbmc3k/soma_RNA/var'
+## Reading AnnotationDataframe into memory from '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/var'
 ```
 
 ```
@@ -3153,7 +3153,7 @@ soma$X
 
 ```
 ## <AssayMatrixGroup>
-##   uri: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpEdCxNw/soco-pbmc3k/soma_RNA/X 
+##   uri: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/X 
 ##   arrays: counts
 ```
 
@@ -3169,15 +3169,15 @@ soma$from_seurat_assay(
 ```
 
 ```
-## No AssayMatrix found at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpEdCxNw/soco-pbmc3k/soma_RNA/X/data'
+## No AssayMatrix found at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/X/data'
 ```
 
 ```
-## Creating new AssayMatrix array with index [var_id,obs_id] at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpEdCxNw/soco-pbmc3k/soma_RNA/X/data'
+## Creating new AssayMatrix array with index [var_id,obs_id] at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/X/data'
 ```
 
 ```
-## Ingesting AssayMatrix data into: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpEdCxNw/soco-pbmc3k/soma_RNA/X/data
+## Ingesting AssayMatrix data into: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/X/data
 ```
 
 ```
@@ -3193,7 +3193,7 @@ soma$X
 
 ```
 ## <AssayMatrixGroup>
-##   uri: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpEdCxNw/soco-pbmc3k/soma_RNA/X 
+##   uri: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/X 
 ##   arrays: counts, data
 ```
 
@@ -3236,15 +3236,15 @@ soma$from_seurat_assay(
 ```
 
 ```
-## No AssayMatrix found at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpEdCxNw/soco-pbmc3k/soma_RNA/X/scale.data'
+## No AssayMatrix found at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/X/scale.data'
 ```
 
 ```
-## Creating new AssayMatrix array with index [var_id,obs_id] at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpEdCxNw/soco-pbmc3k/soma_RNA/X/scale.data'
+## Creating new AssayMatrix array with index [var_id,obs_id] at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/X/scale.data'
 ```
 
 ```
-## Ingesting AssayMatrix data into: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpEdCxNw/soco-pbmc3k/soma_RNA/X/scale.data
+## Ingesting AssayMatrix data into: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/X/scale.data
 ```
 
 ```
@@ -3260,7 +3260,7 @@ soma$X
 
 ```
 ## <AssayMatrixGroup>
-##   uri: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpEdCxNw/soco-pbmc3k/soma_RNA/X 
+##   uri: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/X 
 ##   arrays: counts, data, scale.data
 ```
 
@@ -3325,32 +3325,32 @@ soma$add_seurat_dimreduction(
 ```
 
 ```
-## No AnnotationMatrix found at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpEdCxNw/soco-pbmc3k/soma_RNA/varm/dimreduction_pca'
+## No AnnotationMatrix found at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/varm/dimreduction_pca'
 ```
 
 ```
-## Creating new AnnotationMatrix array with index [var_id] at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpEdCxNw/soco-pbmc3k/soma_RNA/varm/dimreduction_pca'
+## Creating new AnnotationMatrix array with index [var_id] at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/varm/dimreduction_pca'
 ```
 
 ```
-## Ingesting AnnotationMatrix data into: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpEdCxNw/soco-pbmc3k/soma_RNA/varm/dimreduction_pca
+## Ingesting AnnotationMatrix data into: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/varm/dimreduction_pca
 ```
 
 ```
-## No AnnotationMatrix found at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpEdCxNw/soco-pbmc3k/soma_RNA/obsm/dimreduction_pca'
+## No AnnotationMatrix found at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/obsm/dimreduction_pca'
 ```
 
 ```
-## Creating new AnnotationMatrix array with index [obs_id] at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpEdCxNw/soco-pbmc3k/soma_RNA/obsm/dimreduction_pca'
+## Creating new AnnotationMatrix array with index [obs_id] at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/obsm/dimreduction_pca'
 ```
 
 ```
-## Ingesting AnnotationMatrix data into: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpEdCxNw/soco-pbmc3k/soma_RNA/obsm/dimreduction_pca
+## Ingesting AnnotationMatrix data into: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/obsm/dimreduction_pca
 ```
 
 ```
 ## <SOMA>
-##   uri: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpEdCxNw/soco-pbmc3k/soma_RNA 
+##   uri: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA 
 ##   arrays: obs, var 
 ##   groups: obsm, obsp, uns, varm, varp, X
 ```
@@ -3364,7 +3364,7 @@ soma$obsm
 
 ```
 ## <AnnotationMatrixGroup>
-##   uri: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpEdCxNw/soco-pbmc3k/soma_RNA/obsm 
+##   uri: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/obsm 
 ##   arrays: dimreduction_pca
 ```
 
@@ -3377,7 +3377,7 @@ soma$varm
 
 ```
 ## <AnnotationMatrixGroup>
-##   uri: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpEdCxNw/soco-pbmc3k/soma_RNA/varm 
+##   uri: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/varm 
 ##   arrays: dimreduction_pca
 ```
 
@@ -3391,7 +3391,7 @@ obsm_pca
 
 ```
 ## <AnnotationMatrix>
-##   uri: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpEdCxNw/soco-pbmc3k/soma_RNA/obsm/dimreduction_pca 
+##   uri: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/obsm/dimreduction_pca 
 ##   dimensions: obs_id 
 ##   attributes: PC_1, PC_2, PC_3, PC_4, PC_5, PC_6, PC_7, PC_8, PC_9, PC_10, PC_11, PC_12, PC...
 ```
@@ -3404,7 +3404,7 @@ cell_pcs <- obsm_pca$to_matrix()
 ```
 
 ```
-## Reading AnnotationMatrix into memory from '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpEdCxNw/soco-pbmc3k/soma_RNA/obsm/dimreduction_pca'
+## Reading AnnotationMatrix into memory from '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpyHcOF6/soco-pbmc3k/soma_RNA/obsm/dimreduction_pca'
 ```
 
 ```r

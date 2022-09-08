@@ -1,8 +1,8 @@
 ---
-title: "Quick Start"
+title: "Getting started with tiledbsc"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{quickstart}
+  %\VignetteIndexEntry{Getting started with tiledbsc}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

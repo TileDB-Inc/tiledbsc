@@ -1,10 +1,10 @@
 ---
-title: "Selective Updates"
+title: "Selective updates"
 description: >
   How to selectivley update components of an SCGroup.
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Updates}
+  %\VignetteIndexEntry{Selective updates}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
