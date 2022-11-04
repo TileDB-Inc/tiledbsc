@@ -29,6 +29,7 @@
 * Upon initialization `SOMA` now  looks for a `raw` group and warns the user it will be ignored. Currently tiledbsc-py creates a `raw` group when converting anndata objects where `.raw` is populated. However, Seurat/BioC objects do not have an obvious place to store this data, so ignoring it improves compatibility.
 * Fixed a non-user-facing issue with the internal `dgtmatrix_to_dataframe()` function used to convert unordered `dgTMatrix` objects to COO data frames (#73).
 * Pretty printing of classes that inherit from `TileDBObject` has been improved so that the class name is displayed first (#79).
+* Don't use default assay name when recreating a `Seurat` object (#80, thanks @dan11mcguire)
 
 ## Build and Test Systems
 
