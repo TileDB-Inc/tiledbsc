@@ -627,10 +627,10 @@ SOMA <- R6::R6Class(
 
     #' @description Convert to a [SeuratObject::Seurat] object.
     #' @param project [`SeuratObject::Project`] name for the `Seurat` object
-    to_seurat_object = function(project = "SeuratProject") {
+    to_seurat_object = function(project = "SeuratProject",batch_mode = FALSE) {
       stopifnot(is_scalar_character(project))
 
-      assay_obj <- self$to_seurat_assay()
+      assay_obj <- self$to_seurat_assay(batch_mode = batch_mode)
       obs_df <- self$obs$to_dataframe()[colnames(assay_obj), , drop = FALSE]
 
       SeuratObject::CreateSeuratObject(
