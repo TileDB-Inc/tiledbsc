@@ -1,3 +1,9 @@
+# tiledbsc (development version)
+
+## Features
+
+- The `AnnotationMatrix`'s `to_matrix()` method now supports batched reads via the `batch_mode` argument. This functionality can also be leveraged from `SOMA`'s  `get_seurat_dimreductions_list()` and `get_seurat_dimreduction()` methods. (#86)
+
 # tiledbsc 0.1.4
 
 ## Features
