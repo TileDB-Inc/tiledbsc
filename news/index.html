@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tiledbsc</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.4.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.4.9001</span>
       </span>
     </div>
 
@@ -70,7 +70,9 @@
 <h2 class="page-header" data-toc-text="development version" id="tiledbsc-development-version">tiledbsc (development version)<a class="anchor" aria-label="anchor" href="#tiledbsc-development-version"></a></h2>
 <div class="section level3">
 <h3 id="features-development-version">Features<a class="anchor" aria-label="anchor" href="#features-development-version"></a></h3>
-<ul><li>The <code>AnnotationMatrix</code>’s <code>to_matrix()</code> method now supports batched reads via the <code>batch_mode</code> argument. This functionality can also be leveraged from <code>SOMA</code>’s <code>get_seurat_dimreductions_list()</code> and <code>get_seurat_dimreduction()</code> methods. (<a href="https://github.com/TileDB-Inc/tiledbsc/issues/86" class="external-link">#86</a>)</li></ul></div>
+<ul><li>The <code>AnnotationMatrix</code>’s <code>to_matrix()</code> method now supports batched reads via the <code>batch_mode</code> argument. This functionality can also be leveraged from <code>SOMA</code>’s <code>get_seurat_dimreductions_list()</code> and <code>get_seurat_dimreduction()</code> methods. (<a href="https://github.com/TileDB-Inc/tiledbsc/issues/86" class="external-link">#86</a>)</li>
+<li>The <code>SOMACollection</code>’s <code>to_seurat()</code> method gains a <code>somas</code> argument that makes it possible to select a subset of <code>SOMA</code>s and <code>X</code> layers to be retrieved. (<a href="https://github.com/TileDB-Inc/tiledbsc/issues/89" class="external-link">#89</a>)</li>
+</ul></div>
 </div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.1.4" id="tiledbsc-014">tiledbsc 0.1.4<a class="anchor" aria-label="anchor" href="#tiledbsc-014"></a></h2>
