@@ -5,6 +5,10 @@
 - The `AnnotationMatrix`'s `to_matrix()` method now supports batched reads via the `batch_mode` argument. This functionality can also be leveraged from `SOMA`'s  `get_seurat_dimreductions_list()` and `get_seurat_dimreduction()` methods. (#86)
 - The `SOMACollection`'s `to_seurat()` method gains a `somas` argument that makes it possible to select a subset of `SOMA`s and `X` layers to be retrieved. (#89)
 
+## Changes
+
+- Updated `setup-r` GitHub Action to v2 (#90)
+
 # tiledbsc 0.1.4
 
 ## Features
