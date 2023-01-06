@@ -46,7 +46,7 @@ Imports:
     urltools,
     vctrs
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.1
+RoxygenNote: 7.2.3
 Suggests:
     rmarkdown,
     knitr,

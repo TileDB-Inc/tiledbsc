@@ -35,6 +35,9 @@ populate the private \code{create_empty_array()} and \code{ingest_data()} method
 \item \href{#method-TileDBArray-attrnames}{\code{TileDBArray$attrnames()}}
 \item \href{#method-TileDBArray-set_query}{\code{TileDBArray$set_query()}}
 \item \href{#method-TileDBArray-reset_query}{\code{TileDBArray$reset_query()}}
+\item \href{#method-TileDBArray-read}{\code{TileDBArray$read()}}
+\item \href{#method-TileDBArray-read_complete}{\code{TileDBArray$read_complete()}}
+\item \href{#method-TileDBArray-read_next}{\code{TileDBArray$read_next()}}
 \item \href{#method-TileDBArray-clone}{\code{TileDBArray$clone()}}
 }
 }
@@ -276,6 +279,56 @@ attribute filters are cleared.
 \subsection{Returns}{
 NULL
 }
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-TileDBArray-read"></a>}}
+\if{latex}{\out{\hypertarget{method-TileDBArray-read}{}}}
+\subsection{Method \code{read()}}{
+Retrieve data from the TileDB array
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{TileDBArray$read(
+  attrs = NULL,
+  batch_mode = FALSE,
+  return_incomplete = FALSE,
+  return_as = NULL
+)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{attrs}}{Specify one or more attributes to retrieve. If \code{NULL},
+all attributes are retrieved.}
+
+\item{\code{batch_mode}}{logical, if \code{TRUE}, batch query mode is enabled, which
+provides the ability to detect partial query results and resubmit until
+all results are retrieved.}
+
+\item{\code{return_incomplete}}{If \code{TRUE} and \code{batch_mode} is enabled, the query will return each batch.}
+
+\item{\code{return_as}}{Data can be read in as a \code{list} (default), \code{array},
+\code{matrix}, \code{data.frame}, \code{data.table} or \code{tibble}.}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-TileDBArray-read_complete"></a>}}
+\if{latex}{\out{\hypertarget{method-TileDBArray-read_complete}{}}}
+\subsection{Method \code{read_complete()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{TileDBArray$read_complete()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-TileDBArray-read_next"></a>}}
+\if{latex}{\out{\hypertarget{method-TileDBArray-read_next}{}}}
+\subsection{Method \code{read_next()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{TileDBArray$read_next()}\if{html}{\out{</div>}}
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-TileDBArray-clone"></a>}}
