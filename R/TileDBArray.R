@@ -228,10 +228,74 @@ TileDBArray <- R6::R6Class(
           "tiledb_query_condition"
         )
       }
+    },
+
+    #' @description Retrieve data from the TileDB array
+    #' @param attrs Specify one or more attributes to retrieve. If `NULL`,
+    #' all attributes are retrieved.
+    #' @param batch_mode logical, if `TRUE`, batch query mode is enabled, which
+    #' provides the ability to detect partial query results and resubmit until
+    #' all results are retrieved.
+    #' @param return_incomplete If `TRUE` and `batch_mode` is enabled, the query will return each batch.
+    #' @param return_as Data can be read in as a `list` (default), `array`,
+    #' `matrix`, `data.frame`, `data.table` or `tibble`.
+    read = function(attrs = NULL, batch_mode = FALSE, return_incomplete = FALSE, return_as = NULL) {
+      if (self$verbose) {
+        message(
+          sprintf("Reading %s into memory from '%s'", self$class(), self$uri)
+        )
+      }
+      arr <- self$object
+      tiledb::attrs(arr) <- attrs %||% character()
+      tiledb::return_as(arr) <- return_as %||% "asis"
+
+      if (batch_mode) {
+        if (self$verbose) message("...reading in batches")
+        private$batched_query_object <- tiledb::createBatched(arr)
+
+        if (return_incomplete) {
+          results <- tiledb::fetchBatched(arr, private$batched_query_object)
+        } else {
+          results <- list()
+          i <- 1
+          while (isFALSE(self$read_complete())) {
+            if (self$verbose) message(sprintf("...retrieving batch %d", i))
+            results[[i]] <- tiledb::fetchBatched(arr, private$batched_query_object)
+            i <- i + 1
+          }
+
+          # TODO: currently tiledb-r's batched reader ignores return_as and a
+          # data.frame is always returned. When this is addressed we'll need to
+          # add class-specific concatenation logic here.
+          results <- vctrs::vec_rbind(!!!results)
+        }
+      } else {
+        results <- arr[]
+      }
+      results
+    },
+
+    read_complete = function() {
+      if (is.null(private$batched_query_object)) {
+        stop("No batched query object found.")
+      }
+      tiledb::completedBatched(private$batched_query_object)
+    },
+
+    read_next = function() {
+      if (self$read_complete()) {
+        stop("No more data to read.", call. = FALSE)
+      }
+      tiledb::fetchBatched(self$object, private$batched_query_object)
     }
   ),
 
   private = list(
+
+    # A batched query object, which contains an external pointer to a TileDB
+    # Query object along with other support variables used by
+    # tiledb::fetchBatched
+    batched_query_object = NULL,
 
     # Once the array has been created this initializes the TileDB array object
     # and stores the reference in private$tiledb_object.
