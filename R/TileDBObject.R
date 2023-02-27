@@ -29,11 +29,18 @@ TileDBObject <- R6::R6Class(
       if (!is.null(config) && !is.null(ctx)) stop("Cannot pass a config and context, please choose one")
 
       if (!is.null(self$config)) {
+        self$config["r.legacy_validity_mode"] <- "true"
         self$ctx <- tiledb::tiledb_ctx(self$config)
       }
 
       if (is.null(self$ctx)) {
-        self$ctx <- tiledb::tiledb_get_context()
+        cfg <- tiledb_config()
+        cfg["r.legacy_validity_mode"] <- "true"
+        self$ctx <- tiledb::tiledb_ctx(cfg)
+      } else {
+        cfg <- tiledb::config(ctx)
+        cfg["r.legacy_validity_mode"] <- "true"
+        self$ctx <- tiledb::tiledb_ctx(cfg)
       }
     },
 
