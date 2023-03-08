@@ -1,3 +1,11 @@
+# tiledbsc dev version
+
+## Changes
+
+- Set minimum version of Matrix to 1.5.3 to avoid `CsparseMatrix` validation issue present 1.5.2
+- In CI `r-lib/actions/setup-r-dependencies@v2` is now used to install dependencies
+- Sparse matrix conversions are now performed via virtual classes to comply with the changes noted in the Matrix 1.5.0 release notes
+
 # tiledbsc 0.1.5
 
 ## Features
