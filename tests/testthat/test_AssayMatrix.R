@@ -21,7 +21,7 @@ test_that("AssayMatrix object can be created from a dgCMatrix", {
   expect_setequal(colnames(mat2), colnames(mat))
 
   # coerce to dgTMatrix so we can compare directly
-  mat1 <- as(mat, "dgTMatrix")
+  mat1 <- as(mat, "TsparseMatrix")
   rlabs <- rownames(mat2)
   clabs <- colnames(mat2)
   expect_equal(mat1[rlabs, clabs], mat2[rlabs, clabs])
