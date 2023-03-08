@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tiledbsc</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.4.9001</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.5.9000</span>
       </span>
     </div>
 
@@ -69,16 +69,30 @@
     <div class="section level2">
 <h2 class="page-header" data-toc-text="development version" id="tiledbsc-development-version">tiledbsc (development version)<a class="anchor" aria-label="anchor" href="#tiledbsc-development-version"></a></h2>
 <div class="section level3">
-<h3 id="features-development-version">Features<a class="anchor" aria-label="anchor" href="#features-development-version"></a></h3>
+<h3 id="changes-development-version">Changes<a class="anchor" aria-label="anchor" href="#changes-development-version"></a></h3>
+<ul><li>Set minimum version of Matrix to 1.5.3 to avoid <code>CsparseMatrix</code> validation issue present 1.5.2</li>
+<li>In CI <code>r-lib/actions/setup-r-dependencies@v2</code> is now used to install dependencies</li>
+<li>Sparse matrix conversions are now performed via virtual classes to comply with the changes noted in the Matrix 1.5.0 release notes</li>
+</ul></div>
+</div>
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="0.1.5" id="tiledbsc-015">tiledbsc 0.1.5<a class="anchor" aria-label="anchor" href="#tiledbsc-015"></a></h2>
+<div class="section level3">
+<h3 id="features-0-1-5">Features<a class="anchor" aria-label="anchor" href="#features-0-1-5"></a></h3>
 <ul><li>The <code>AnnotationMatrix</code>’s <code>to_matrix()</code> method now supports batched reads via the <code>batch_mode</code> argument. This functionality can also be leveraged from <code>SOMA</code>’s <code>get_seurat_dimreductions_list()</code> and <code>get_seurat_dimreduction()</code> methods. (<a href="https://github.com/TileDB-Inc/tiledbsc/issues/86" class="external-link">#86</a>)</li>
 <li>The <code>SOMACollection</code>’s <code>to_seurat()</code> method gains a <code>somas</code> argument that makes it possible to select a subset of <code>SOMA</code>s and <code>X</code> layers to be retrieved. (<a href="https://github.com/TileDB-Inc/tiledbsc/issues/89" class="external-link">#89</a>)</li>
+</ul></div>
+<div class="section level3">
+<h3 id="changes-0-1-5">Changes<a class="anchor" aria-label="anchor" href="#changes-0-1-5"></a></h3>
+<ul><li>Updated <code>setup-r</code> GitHub Action to v2 (<a href="https://github.com/TileDB-Inc/tiledbsc/issues/90" class="external-link">#90</a>)</li>
 </ul></div>
 </div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.1.4" id="tiledbsc-014">tiledbsc 0.1.4<a class="anchor" aria-label="anchor" href="#tiledbsc-014"></a></h2>
 <div class="section level3">
 <h3 id="features-0-1-4">Features<a class="anchor" aria-label="anchor" href="#features-0-1-4"></a></h3>
-<ul><li>Added <code>batch_mode</code> option to methods that read <code>X</code> layers (i.e., <code>AssayMatrix</code> objects) into memory. When enabled, batch mode leverages the family of <code>Batched</code> classes added to tiledb-r in version <a href="https://github.com/TileDB-Inc/TileDB-R/releases/tag/0.14.0" class="external-link">0.14.0</a> to detect partial query results and resubmit until all results are retrieved. This feature is currently disabled by default and only applies to <code>X</code> layers (which are typically the largest arrays). You can enable batch mode from the following methods:<ul><li><code>SOMACollection$to_seurat()</code></li>
+<ul><li>Added <code>batch_mode</code> option to methods that read <code>X</code> layers (i.e., <code>AssayMatrix</code> objects) into memory. When enabled, batch mode leverages the family of <code>Batched</code> classes added to tiledb-r in version <a href="https://github.com/TileDB-Inc/TileDB-R/releases/tag/0.14.0" class="external-link">0.14.0</a> to detect partial query results and resubmit until all results are retrieved. This feature is currently disabled by default and only applies to <code>X</code> layers (which are typically the largest arrays). You can enable batch mode from the following methods:
+<ul><li><code>SOMACollection$to_seurat()</code></li>
 <li><code>SOMA$to_seurat_assay()</code></li>
 <li><code>SOMA$to_summarized_experiment()</code></li>
 <li><code>SOMA$to_single_cell_experiment()</code></li>
@@ -196,11 +210,13 @@
 </ul></div>
 <div class="section level4">
 <h4 id="scgroup-0-1-1">SCGroup<a class="anchor" aria-label="anchor" href="#scgroup-0-1-1"></a></h4>
-<ul><li>the <code>scgroup_uris</code> argument has been dropped from <code>SCDataset</code>’s initialize method (<code>add_member()</code> should now be used instead to add additional <code>SCGroup</code>s)</li></ul></div>
+<ul><li>the <code>scgroup_uris</code> argument has been dropped from <code>SCDataset</code>’s initialize method (<code>add_member()</code> should now be used instead to add additional <code>SCGroup</code>s)</li>
+</ul></div>
 <div class="section level4">
 <h4 id="scdataset-0-1-1">SCDataset<a class="anchor" aria-label="anchor" href="#scdataset-0-1-1"></a></h4>
 <ul><li>
-<code>SCDataset</code>’s <code>scgroups</code> field is now an active binding that filters <code>members</code> for <code>SCGroup</code> objects</li></ul></div>
+<code>SCDataset</code>’s <code>scgroups</code> field is now an active binding that filters <code>members</code> for <code>SCGroup</code> objects</li>
+</ul></div>
 </div>
 <div class="section level3">
 <h3 id="other-changes-0-1-1">Other changes<a class="anchor" aria-label="anchor" href="#other-changes-0-1-1"></a></h3>
@@ -233,7 +249,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

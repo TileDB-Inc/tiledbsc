@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tiledbsc</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.4.9001</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.5.9000</span>
       </span>
     </div>
 
@@ -84,7 +84,7 @@
 
       
 
-      </header><script src="filtering_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Filtering</h1>
@@ -108,44 +108,56 @@
 <div class="section level2">
 <h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
 </h2>
-<p>This vignette demonstrates how to leverage tiledbsc’s features for subsetting and filtering data stored as a SOMA.</p>
-<p>As described in <code><a href="../reference/SOMA.html">?SOMA</a></code>, there are two primary approaches for subsetting: dimension slicing and attribute filtering, both of which are described in this vignette and are performed using the <code>set_query()</code> method, provided by all tiledbsc objects.</p>
+<p>This vignette demonstrates how to leverage tiledbsc’s features for
+subsetting and filtering data stored as a SOMA.</p>
+<p>As described in <code><a href="../reference/SOMA.html">?SOMA</a></code>, there are two primary approaches
+for subsetting: dimension slicing and attribute filtering, both of which
+are described in this vignette and are performed using the
+<code>set_query()</code> method, provided by all tiledbsc objects.</p>
 <div class="section level3">
 <h3 id="dimension-slicing">Dimension slicing<a class="anchor" aria-label="anchor" href="#dimension-slicing"></a>
 </h3>
 <div class="section level4">
 <h4 id="low-level-classes">Low-level classes<a class="anchor" aria-label="anchor" href="#low-level-classes"></a>
 </h4>
-<p>tiledbsc objects within a SOMA are indexed by a set of common cell- or feature-identifiers, which are efficiently sliced by providing a list of dimension identifiers.</p>
-<p>As an example, let’s ingest cell-level metadata from the <code>pbmc_small</code> dataset into an <code>AnnotationDataframe</code> indexed by the cell identifiers.</p>
+<p>tiledbsc objects within a SOMA are indexed by a set of common cell-
+or feature-identifiers, which are efficiently sliced by providing a list
+of dimension identifiers.</p>
+<p>As an example, let’s ingest cell-level metadata from the
+<code>pbmc_small</code> dataset into an <code>AnnotationDataframe</code>
+indexed by the cell identifiers.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"pbmc_small"</span>, package <span class="op">=</span> <span class="st">"SeuratObject"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">adf</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/AnnotationDataframe.html">AnnotationDataframe</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>uri <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"pbmc_small_obs"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; No AnnotationDataframe found at '/tmp/Rtmp0IaOhq/pbmc_small_obs'</span></span>
+<span><span class="co">#&gt; No AnnotationDataframe found at '/tmp/RtmpabDGTt/pbmc_small_obs'</span></span>
 <span><span class="va">adf</span><span class="op">$</span><span class="fu">from_dataframe</span><span class="op">(</span><span class="va">pbmc_small</span><span class="op">[[</span><span class="op">]</span><span class="op">]</span>, index_col <span class="op">=</span> <span class="st">"obs_id"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Creating new AnnotationDataframe array with index [obs_id] at '/tmp/Rtmp0IaOhq/pbmc_small_obs'</span></span>
-<span><span class="co">#&gt; Ingesting AnnotationDataframe data into: /tmp/Rtmp0IaOhq/pbmc_small_obs</span></span>
+<span><span class="co">#&gt; Creating new AnnotationDataframe array with index [obs_id] at '/tmp/RtmpabDGTt/pbmc_small_obs'</span></span>
+<span><span class="co">#&gt; Ingesting AnnotationDataframe data into: /tmp/RtmpabDGTt/pbmc_small_obs</span></span>
 <span><span class="va">adf</span></span>
 <span><span class="co">#&gt; &lt;AnnotationDataframe&gt;</span></span>
-<span><span class="co">#&gt;   uri: /tmp/Rtmp0IaOhq/pbmc_small_obs </span></span>
+<span><span class="co">#&gt;   uri: /tmp/RtmpabDGTt/pbmc_small_obs </span></span>
 <span><span class="co">#&gt;   dimensions: obs_id </span></span>
 <span><span class="co">#&gt;   attributes: orig.ident, nCount_RNA, nFeature_RNA, RNA_snn_res.0.8, letter.idents, groups,...</span></span></code></pre></div>
-<p>As you’d expect, reading the data back into memory recreates the same data frame with all 80 cells.</p>
+<p>As you’d expect, reading the data back into memory recreates the same
+data frame with all 80 cells.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">adf</span><span class="op">$</span><span class="fu">to_dataframe</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Reading AnnotationDataframe into memory from '/tmp/Rtmp0IaOhq/pbmc_small_obs'</span></span>
+<span><span class="co">#&gt; Reading AnnotationDataframe into memory from '/tmp/RtmpabDGTt/pbmc_small_obs'</span></span>
 <span><span class="co">#&gt; [1] 80  7</span></span></code></pre></div>
-<p>We can use the <code>set_query()</code> method to read in a specific subset of cells by providing a named list of ranges for each dimension.</p>
+<p>We can use the <code>set_query()</code> method to read in a specific
+subset of cells by providing a named list of ranges for each
+dimension.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">adf</span><span class="op">$</span><span class="fu">set_query</span><span class="op">(</span></span>
 <span>  dims <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>obs_id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"AAATTCGAATCACG"</span>, <span class="st">"AAGCAAGAGCTTAG"</span>, <span class="st">"AAGCGACTTTGACG"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; NULL</span></span></code></pre></div>
-<p>Now, the next time we call <code>to_dataframe()</code> the resulting data frame will only contain the cells we specified.</p>
+<p>Now, the next time we call <code>to_dataframe()</code> the resulting
+data frame will only contain the cells we specified.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">adf</span><span class="op">$</span><span class="fu">to_dataframe</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Reading AnnotationDataframe into memory from '/tmp/Rtmp0IaOhq/pbmc_small_obs'</span></span>
+<span><span class="co">#&gt; Reading AnnotationDataframe into memory from '/tmp/RtmpabDGTt/pbmc_small_obs'</span></span>
 <span><span class="co">#&gt;                   orig.ident nCount_RNA nFeature_RNA RNA_snn_res.0.8</span></span>
 <span><span class="co">#&gt; AAATTCGAATCACG SeuratProject        327           62               1</span></span>
 <span><span class="co">#&gt; AAGCAAGAGCTTAG SeuratProject        126           48               0</span></span>
@@ -154,56 +166,71 @@
 <span><span class="co">#&gt; AAATTCGAATCACG             B     g2             1</span></span>
 <span><span class="co">#&gt; AAGCAAGAGCTTAG             A     g1             0</span></span>
 <span><span class="co">#&gt; AAGCGACTTTGACG             B     g1             1</span></span></code></pre></div>
-<p>To clear this query and again read in all cells, we can use the <code>reset_query()</code> method.</p>
+<p>To clear this query and again read in all cells, we can use the
+<code>reset_query()</code> method.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">adf</span><span class="op">$</span><span class="fu">reset_query</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p>This functionality is also available for <code>AnnotationGroup</code>-based classes, which ostensibly contain a group of arrays that all share the same dimensions. In this case, the <code>dims</code> argument is automatically applied to all child arrays.</p>
+<p>This functionality is also available for
+<code>AnnotationGroup</code>-based classes, which ostensibly contain a
+group of arrays that all share the same dimensions. In this case, the
+<code>dims</code> argument is automatically applied to all child
+arrays.</p>
 </div>
 <div class="section level4">
 <h4 id="high-level-classes">High-level classes<a class="anchor" aria-label="anchor" href="#high-level-classes"></a>
 </h4>
-<p>The <code>SOMA</code> class also provides a <code>set_query()</code> method for the same purpose. However, unlike the lower-level classes which are meant to be general-purpose, the <code>SOMA</code> class has well-defined requirements for the dimensions of its member arrays. As such, <code>SOMA$set_query()</code> provides arguments, <code>obs_ids</code> and <code>var_ids</code>, rather than the more general <code>dims</code> argument.</p>
-<p>To see this in action, let’s create a <code>SOMA</code> from <code>pbmc_small</code>’s <code>RNA</code> assay.</p>
+<p>The <code>SOMA</code> class also provides a <code>set_query()</code>
+method for the same purpose. However, unlike the lower-level classes
+which are meant to be general-purpose, the <code>SOMA</code> class has
+well-defined requirements for the dimensions of its member arrays. As
+such, <code>SOMA$set_query()</code> provides arguments,
+<code>obs_ids</code> and <code>var_ids</code>, rather than the more
+general <code>dims</code> argument.</p>
+<p>To see this in action, let’s create a <code>SOMA</code> from
+<code>pbmc_small</code>’s <code>RNA</code> assay.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">soma</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/SOMA.html">SOMA</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>uri <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"pbmc_small_rna"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; No SOMA currently exists at '/tmp/Rtmp0IaOhq/pbmc_small_rna'</span></span>
-<span><span class="co">#&gt; Creating new SOMA at '/tmp/Rtmp0IaOhq/pbmc_small_rna'</span></span>
-<span><span class="co">#&gt; No AnnotationDataframe found at '/tmp/Rtmp0IaOhq/pbmc_small_rna/obs'</span></span>
-<span><span class="co">#&gt; No AnnotationDataframe found at '/tmp/Rtmp0IaOhq/pbmc_small_rna/var'</span></span>
-<span><span class="co">#&gt; No AssayMatrixGroup currently exists at '/tmp/Rtmp0IaOhq/pbmc_small_rna/X'</span></span>
-<span><span class="co">#&gt; Creating new AssayMatrixGroup at '/tmp/Rtmp0IaOhq/pbmc_small_rna/X'</span></span>
-<span><span class="co">#&gt; No AnnotationMatrixGroup currently exists at '/tmp/Rtmp0IaOhq/pbmc_small_rna/obsm'</span></span>
-<span><span class="co">#&gt; Creating new AnnotationMatrixGroup at '/tmp/Rtmp0IaOhq/pbmc_small_rna/obsm'</span></span>
-<span><span class="co">#&gt; No AnnotationMatrixGroup currently exists at '/tmp/Rtmp0IaOhq/pbmc_small_rna/varm'</span></span>
-<span><span class="co">#&gt; Creating new AnnotationMatrixGroup at '/tmp/Rtmp0IaOhq/pbmc_small_rna/varm'</span></span>
-<span><span class="co">#&gt; No AnnotationPairwiseMatrixGroup currently exists at '/tmp/Rtmp0IaOhq/pbmc_small_rna/obsp'</span></span>
-<span><span class="co">#&gt; Creating new AnnotationPairwiseMatrixGroup at '/tmp/Rtmp0IaOhq/pbmc_small_rna/obsp'</span></span>
-<span><span class="co">#&gt; No AnnotationPairwiseMatrixGroup currently exists at '/tmp/Rtmp0IaOhq/pbmc_small_rna/varp'</span></span>
-<span><span class="co">#&gt; Creating new AnnotationPairwiseMatrixGroup at '/tmp/Rtmp0IaOhq/pbmc_small_rna/varp'</span></span>
-<span><span class="co">#&gt; No TileDBGroup currently exists at '/tmp/Rtmp0IaOhq/pbmc_small_rna/uns'</span></span>
-<span><span class="co">#&gt; Creating new TileDBGroup at '/tmp/Rtmp0IaOhq/pbmc_small_rna/uns'</span></span>
+<span><span class="co">#&gt; No SOMA currently exists at '/tmp/RtmpabDGTt/pbmc_small_rna'</span></span>
+<span><span class="co">#&gt; Creating new SOMA at '/tmp/RtmpabDGTt/pbmc_small_rna'</span></span>
+<span><span class="co">#&gt; No AnnotationDataframe found at '/tmp/RtmpabDGTt/pbmc_small_rna/obs'</span></span>
+<span><span class="co">#&gt; No AnnotationDataframe found at '/tmp/RtmpabDGTt/pbmc_small_rna/var'</span></span>
+<span><span class="co">#&gt; No AssayMatrixGroup currently exists at '/tmp/RtmpabDGTt/pbmc_small_rna/X'</span></span>
+<span><span class="co">#&gt; Creating new AssayMatrixGroup at '/tmp/RtmpabDGTt/pbmc_small_rna/X'</span></span>
+<span><span class="co">#&gt; No AnnotationMatrixGroup currently exists at '/tmp/RtmpabDGTt/pbmc_small_rna/obsm'</span></span>
+<span><span class="co">#&gt; Creating new AnnotationMatrixGroup at '/tmp/RtmpabDGTt/pbmc_small_rna/obsm'</span></span>
+<span><span class="co">#&gt; No AnnotationMatrixGroup currently exists at '/tmp/RtmpabDGTt/pbmc_small_rna/varm'</span></span>
+<span><span class="co">#&gt; Creating new AnnotationMatrixGroup at '/tmp/RtmpabDGTt/pbmc_small_rna/varm'</span></span>
+<span><span class="co">#&gt; No AnnotationPairwiseMatrixGroup currently exists at '/tmp/RtmpabDGTt/pbmc_small_rna/obsp'</span></span>
+<span><span class="co">#&gt; Creating new AnnotationPairwiseMatrixGroup at '/tmp/RtmpabDGTt/pbmc_small_rna/obsp'</span></span>
+<span><span class="co">#&gt; No AnnotationPairwiseMatrixGroup currently exists at '/tmp/RtmpabDGTt/pbmc_small_rna/varp'</span></span>
+<span><span class="co">#&gt; Creating new AnnotationPairwiseMatrixGroup at '/tmp/RtmpabDGTt/pbmc_small_rna/varp'</span></span>
+<span><span class="co">#&gt; No TileDBGroup currently exists at '/tmp/RtmpabDGTt/pbmc_small_rna/uns'</span></span>
+<span><span class="co">#&gt; Creating new TileDBGroup at '/tmp/RtmpabDGTt/pbmc_small_rna/uns'</span></span>
 <span><span class="va">soma</span><span class="op">$</span><span class="fu">from_seurat_assay</span><span class="op">(</span><span class="va">pbmc_small</span><span class="op">[[</span><span class="st">"RNA"</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Creating new AnnotationDataframe array with index [obs_id] at '/tmp/Rtmp0IaOhq/pbmc_small_rna/obs'</span></span>
-<span><span class="co">#&gt; Ingesting AnnotationDataframe data into: /tmp/Rtmp0IaOhq/pbmc_small_rna/obs</span></span>
-<span><span class="co">#&gt; Creating new AnnotationDataframe array with index [var_id] at '/tmp/Rtmp0IaOhq/pbmc_small_rna/var'</span></span>
-<span><span class="co">#&gt; Ingesting AnnotationDataframe data into: /tmp/Rtmp0IaOhq/pbmc_small_rna/var</span></span>
-<span><span class="co">#&gt; No AssayMatrix found at '/tmp/Rtmp0IaOhq/pbmc_small_rna/X/counts'</span></span>
-<span><span class="co">#&gt; Creating new AssayMatrix array with index [var_id,obs_id] at '/tmp/Rtmp0IaOhq/pbmc_small_rna/X/counts'</span></span>
-<span><span class="co">#&gt; Ingesting AssayMatrix data into: /tmp/Rtmp0IaOhq/pbmc_small_rna/X/counts</span></span>
-<span><span class="co">#&gt; No AssayMatrix found at '/tmp/Rtmp0IaOhq/pbmc_small_rna/X/data'</span></span>
-<span><span class="co">#&gt; Creating new AssayMatrix array with index [var_id,obs_id] at '/tmp/Rtmp0IaOhq/pbmc_small_rna/X/data'</span></span>
-<span><span class="co">#&gt; Ingesting AssayMatrix data into: /tmp/Rtmp0IaOhq/pbmc_small_rna/X/data</span></span>
-<span><span class="co">#&gt; No AssayMatrix found at '/tmp/Rtmp0IaOhq/pbmc_small_rna/X/scale.data'</span></span>
-<span><span class="co">#&gt; Creating new AssayMatrix array with index [var_id,obs_id] at '/tmp/Rtmp0IaOhq/pbmc_small_rna/X/scale.data'</span></span>
-<span><span class="co">#&gt; Ingesting AssayMatrix data into: /tmp/Rtmp0IaOhq/pbmc_small_rna/X/scale.data</span></span>
+<span><span class="co">#&gt; Creating new AnnotationDataframe array with index [obs_id] at '/tmp/RtmpabDGTt/pbmc_small_rna/obs'</span></span>
+<span><span class="co">#&gt; Ingesting AnnotationDataframe data into: /tmp/RtmpabDGTt/pbmc_small_rna/obs</span></span>
+<span><span class="co">#&gt; Creating new AnnotationDataframe array with index [var_id] at '/tmp/RtmpabDGTt/pbmc_small_rna/var'</span></span>
+<span><span class="co">#&gt; Ingesting AnnotationDataframe data into: /tmp/RtmpabDGTt/pbmc_small_rna/var</span></span>
+<span><span class="co">#&gt; No AssayMatrix found at '/tmp/RtmpabDGTt/pbmc_small_rna/X/counts'</span></span>
+<span><span class="co">#&gt; Creating new AssayMatrix array with index [var_id,obs_id] at '/tmp/RtmpabDGTt/pbmc_small_rna/X/counts'</span></span>
+<span><span class="co">#&gt; Ingesting AssayMatrix data into: /tmp/RtmpabDGTt/pbmc_small_rna/X/counts</span></span>
+<span><span class="co">#&gt; No AssayMatrix found at '/tmp/RtmpabDGTt/pbmc_small_rna/X/data'</span></span>
+<span><span class="co">#&gt; Creating new AssayMatrix array with index [var_id,obs_id] at '/tmp/RtmpabDGTt/pbmc_small_rna/X/data'</span></span>
+<span><span class="co">#&gt; Ingesting AssayMatrix data into: /tmp/RtmpabDGTt/pbmc_small_rna/X/data</span></span>
+<span><span class="co">#&gt; No AssayMatrix found at '/tmp/RtmpabDGTt/pbmc_small_rna/X/scale.data'</span></span>
+<span><span class="co">#&gt; Creating new AssayMatrix array with index [var_id,obs_id] at '/tmp/RtmpabDGTt/pbmc_small_rna/X/scale.data'</span></span>
+<span><span class="co">#&gt; Ingesting AssayMatrix data into: /tmp/RtmpabDGTt/pbmc_small_rna/X/scale.data</span></span>
 <span><span class="co">#&gt; Finished converting Seurat Assay with key [rna_] to SOMA</span></span></code></pre></div>
-<p>Now let’s use <code>set_query()</code> to slice three features of interest.</p>
+<p>Now let’s use <code>set_query()</code> to slice three features of
+interest.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">soma</span><span class="op">$</span><span class="fu">set_query</span><span class="op">(</span>var_ids <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"PPBP"</span>, <span class="st">"PF4"</span>, <span class="st">"GNLY"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p>Any of the individual SOMA components will respect the new query. So if we read in the feature-level metadata from <code>var</code>, the resulting data frame contains only the features we specified.</p>
+<p>Any of the individual SOMA components will respect the new query. So
+if we read in the feature-level metadata from <code>var</code>, the
+resulting data frame contains only the features we specified.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">soma</span><span class="op">$</span><span class="va">var</span><span class="op">$</span><span class="fu">to_dataframe</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Reading AnnotationDataframe into memory from '/tmp/Rtmp0IaOhq/pbmc_small_rna/var'</span></span>
+<span><span class="co">#&gt; Reading AnnotationDataframe into memory from '/tmp/RtmpabDGTt/pbmc_small_rna/var'</span></span>
 <span><span class="co">#&gt;      vst.mean vst.variance vst.variance.expected vst.variance.standardized</span></span>
 <span><span class="co">#&gt; GNLY    2.400     43.76203              24.07857                  1.817468</span></span>
 <span><span class="co">#&gt; PF4     2.150     65.24304              21.48275                  1.939028</span></span>
@@ -212,18 +239,20 @@
 <span><span class="co">#&gt; GNLY         TRUE            TRUE</span></span>
 <span><span class="co">#&gt; PF4          TRUE            TRUE</span></span>
 <span><span class="co">#&gt; PPBP         TRUE            TRUE</span></span></code></pre></div>
-<p>And when we recreate the entire Seurat <code>Assay</code> from the <code>SOMA</code>, the slice is carried through to all relevant components,</p>
+<p>And when we recreate the entire Seurat <code>Assay</code> from the
+<code>SOMA</code>, the slice is carried through to all relevant
+components,</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pbmc_small_rna</span> <span class="op">&lt;-</span> <span class="va">soma</span><span class="op">$</span><span class="fu">to_seurat_assay</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Reading AssayMatrix into memory from '/tmp/Rtmp0IaOhq/pbmc_small_rna/X/counts'</span></span>
-<span><span class="co">#&gt; Reading AssayMatrix into memory from '/tmp/Rtmp0IaOhq/pbmc_small_rna/X/data'</span></span>
-<span><span class="co">#&gt; Reading AssayMatrix into memory from '/tmp/Rtmp0IaOhq/pbmc_small_rna/X/scale.data'</span></span>
-<span><span class="co">#&gt; Reading AnnotationDataframe into memory from '/tmp/Rtmp0IaOhq/pbmc_small_rna/var'</span></span></code></pre></div>
+<span><span class="co">#&gt; Reading AssayMatrix into memory from '/tmp/RtmpabDGTt/pbmc_small_rna/X/counts'</span></span>
+<span><span class="co">#&gt; Reading AssayMatrix into memory from '/tmp/RtmpabDGTt/pbmc_small_rna/X/data'</span></span>
+<span><span class="co">#&gt; Reading AssayMatrix into memory from '/tmp/RtmpabDGTt/pbmc_small_rna/X/scale.data'</span></span>
+<span><span class="co">#&gt; Reading AnnotationDataframe into memory from '/tmp/RtmpabDGTt/pbmc_small_rna/var'</span></span></code></pre></div>
 <p>including the raw counts,</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://mojaveazure.github.io/seurat-object/reference/AssayData.html" class="external-link">GetAssayData</a></span><span class="op">(</span><span class="va">pbmc_small_rna</span>, slot <span class="op">=</span> <span class="st">"counts"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; 3 x 80 sparse Matrix of class "dgCMatrix"</span></span>
-<span><span class="co">#&gt;    [[ suppressing 80 column names 'AAGCAAGAGCTTAG', 'ACAGGTACTGGTGT', 'AGATATACCCGTAA' ... ]]</span></span>
+<span><span class="co">#&gt;   [[ suppressing 80 column names 'AAGCAAGAGCTTAG', 'ACAGGTACTGGTGT', 'AGATATACCCGTAA' ... ]]</span></span>
 <span><span class="co">#&gt;                                                                               </span></span>
 <span><span class="co">#&gt; GNLY 4 15 3 1 1 1 18 1 35 15 3 11 1 18 3 22 29 10 1  .  .  .  .  .  .  .  .  .</span></span>
 <span><span class="co">#&gt; PF4  .  . . . 1 .  . .  .  . .  . .  . .  .  .  . . 14 14 14  9 62  6 11 18 23</span></span>
@@ -240,7 +269,7 @@
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://mojaveazure.github.io/seurat-object/reference/AssayData.html" class="external-link">GetAssayData</a></span><span class="op">(</span><span class="va">pbmc_small_rna</span>, slot <span class="op">=</span> <span class="st">"data"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; 3 x 80 sparse Matrix of class "dgCMatrix"</span></span>
-<span><span class="co">#&gt;    [[ suppressing 80 column names 'AAGCAAGAGCTTAG', 'ACAGGTACTGGTGT', 'AGATATACCCGTAA' ... ]]</span></span>
+<span><span class="co">#&gt;   [[ suppressing 80 column names 'AAGCAAGAGCTTAG', 'ACAGGTACTGGTGT', 'AGATATACCCGTAA' ... ]]</span></span>
 <span><span class="co">#&gt;                                                                             </span></span>
 <span><span class="co">#&gt; GNLY 5.763498 6.902117 5.084058 3.040721 3.582547 3.160117 6.346724 4.676402</span></span>
 <span><span class="co">#&gt; PF4  .        .        .        .        3.582547 .        .        .       </span></span>
@@ -265,7 +294,8 @@
 <span><span class="co">#&gt; GNLY . . . . . . . . . .</span></span>
 <span><span class="co">#&gt; PF4  . . . . . . . . . .</span></span>
 <span><span class="co">#&gt; PPBP . . . . . . . . . .</span></span></code></pre></div>
-<p>Again, to retrieve all of the original data we need to reset the query:</p>
+<p>Again, to retrieve all of the original data we need to reset the
+query:</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">soma</span><span class="op">$</span><span class="fu">reset_query</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
@@ -273,32 +303,94 @@
 <div class="section level3">
 <h3 id="attribute-filtering">Attribute Filtering<a class="anchor" aria-label="anchor" href="#attribute-filtering"></a>
 </h3>
-<p>In addition to dimension slicing, <code>set_query()</code> allows you to filter query results using attribute filters. As a reminder, in TileDB parlance attributes are the non-dimensions (i.e., unindexed) components of a dataset.</p>
-<p>This is particularly useful for filtering SOMAs based on cell- and feature-level metadata stored in the <code>obs</code> and <code>var</code> arrays. For example, let’s filter out genes with a <code>vst.mean</code> &lt;= 5.</p>
-<p>Unlink dimension slicing, attribute filters are applied immediately to the <code>obs</code> or <code>var</code> arrays, and the identifiers that passed the filter are used to slice the data at read time.</p>
+<p>In addition to dimension slicing, <code>set_query()</code> allows you
+to filter query results using attribute filters. As a reminder, in
+TileDB parlance attributes are the non-dimensions (i.e., unindexed)
+components of a dataset.</p>
+<p>This is particularly useful for filtering SOMAs based on cell- and
+feature-level metadata stored in the <code>obs</code> and
+<code>var</code> arrays. For example, let’s filter out genes with a
+<code>vst.mean</code> &lt;= 5.</p>
+<p>Unlink dimension slicing, attribute filters are applied immediately
+to the <code>obs</code> or <code>var</code> arrays, and the identifiers
+that passed the filter are used to slice the data at read time.</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">soma</span><span class="op">$</span><span class="fu">set_query</span><span class="op">(</span>var_attr_filter <span class="op">=</span> <span class="va">vst.mean</span> <span class="op">&gt;</span> <span class="fl">5</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Querying var with attribute filter</span></span>
 <span><span class="co">#&gt; ...retrieved 12 var IDs</span></span></code></pre></div>
-<p>With <code>verbose=TRUE</code>, running the above command will print a message indicating how many identifiers were selected. Now, when we read the data back into memory the resulting <code>Assay</code> will only include the 12 selected features.</p>
+<p>With <code>verbose=TRUE</code>, running the above command will print
+a message indicating how many identifiers were selected. Now, when we
+read the data back into memory the resulting <code>Assay</code> will
+only include the 12 selected features.</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">soma</span><span class="op">$</span><span class="fu">to_seurat_assay</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Reading AssayMatrix into memory from '/tmp/Rtmp0IaOhq/pbmc_small_rna/X/counts'</span></span>
-<span><span class="co">#&gt; Reading AssayMatrix into memory from '/tmp/Rtmp0IaOhq/pbmc_small_rna/X/data'</span></span>
-<span><span class="co">#&gt; Reading AssayMatrix into memory from '/tmp/Rtmp0IaOhq/pbmc_small_rna/X/scale.data'</span></span>
-<span><span class="co">#&gt; as(&lt;dgTMatrix&gt;, "dgCMatrix") is deprecated since Matrix 1.5-0; do as(., "CsparseMatrix") instead</span></span>
-<span><span class="co">#&gt; Reading AnnotationDataframe into memory from '/tmp/Rtmp0IaOhq/pbmc_small_rna/var'</span></span>
+<span><span class="co">#&gt; Reading AssayMatrix into memory from '/tmp/RtmpabDGTt/pbmc_small_rna/X/counts'</span></span>
+<span><span class="co">#&gt; Reading AssayMatrix into memory from '/tmp/RtmpabDGTt/pbmc_small_rna/X/data'</span></span>
+<span><span class="co">#&gt; Reading AssayMatrix into memory from '/tmp/RtmpabDGTt/pbmc_small_rna/X/scale.data'</span></span>
+<span><span class="co">#&gt; Reading AnnotationDataframe into memory from '/tmp/RtmpabDGTt/pbmc_small_rna/var'</span></span>
 <span><span class="co">#&gt; Assay data with 12 features for 80 cells</span></span>
 <span><span class="co">#&gt; Top 3 variable features:</span></span>
 <span><span class="co">#&gt;  HLA-DPB1, PPBP, S100A9</span></span></code></pre></div>
-<p>These two filtering methods can also be combined. For example, let’s apply the same attribute filter as above but only on the subset of features previously identified as highly-variable.</p>
+<p>These two filtering methods can also be combined. For example, let’s
+apply the same attribute filter as above but only on the subset of
+features previously identified as highly-variable.</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">vfs</span> <span class="op">&lt;-</span> <span class="va">pbmc_small_rna</span><span class="op">@</span><span class="va">var.features</span></span>
 <span><span class="va">soma</span><span class="op">$</span><span class="fu">set_query</span><span class="op">(</span>var_ids <span class="op">=</span> <span class="va">vfs</span>, var_attr_filter <span class="op">=</span> <span class="va">vst.mean</span> <span class="op">&gt;</span> <span class="fl">5</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Querying var with attribute filter</span></span>
 <span><span class="co">#&gt; ...retrieved 1 var IDs</span></span></code></pre></div>
-<p>This approach can be more performant because the filter is selectively applied to the subset of indexed identifiers.</p>
+<p>This approach can be more performant because the filter is
+selectively applied to the subset of indexed identifiers.</p>
 </div>
+</div>
+<div class="section level2">
+<h2 id="session">Session<a class="anchor" aria-label="anchor" href="#session"></a>
+</h2>
+<details><summary>
+Session Info
+</summary><div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt; R version 4.2.2 (2022-10-31)</span></span>
+<span><span class="co">#&gt; Platform: x86_64-pc-linux-gnu (64-bit)</span></span>
+<span><span class="co">#&gt; Running under: Ubuntu 22.04.2 LTS</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Matrix products: default</span></span>
+<span><span class="co">#&gt; BLAS:   /usr/lib/x86_64-linux-gnu/openblas-pthread/libblas.so.3</span></span>
+<span><span class="co">#&gt; LAPACK: /usr/lib/x86_64-linux-gnu/openblas-pthread/libopenblasp-r0.3.20.so</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; locale:</span></span>
+<span><span class="co">#&gt;  [1] LC_CTYPE=C.UTF-8       LC_NUMERIC=C           LC_TIME=C.UTF-8       </span></span>
+<span><span class="co">#&gt;  [4] LC_COLLATE=C.UTF-8     LC_MONETARY=C.UTF-8    LC_MESSAGES=C.UTF-8   </span></span>
+<span><span class="co">#&gt;  [7] LC_PAPER=C.UTF-8       LC_NAME=C              LC_ADDRESS=C          </span></span>
+<span><span class="co">#&gt; [10] LC_TELEPHONE=C         LC_MEASUREMENT=C.UTF-8 LC_IDENTIFICATION=C   </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; attached base packages:</span></span>
+<span><span class="co">#&gt; [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; other attached packages:</span></span>
+<span><span class="co">#&gt; [1] RcppSpdlog_0.0.12   SeuratObject_4.1.3  sp_1.6-0           </span></span>
+<span><span class="co">#&gt; [4] tiledbsc_0.1.5.9000</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>
+<span><span class="co">#&gt;  [1] Rcpp_1.0.10         progressr_0.13.0    bslib_0.4.2        </span></span>
+<span><span class="co">#&gt;  [4] compiler_4.2.2      jquerylib_0.1.4     tools_4.2.2        </span></span>
+<span><span class="co">#&gt;  [7] digest_0.6.31       bit_4.0.5           jsonlite_1.8.4     </span></span>
+<span><span class="co">#&gt; [10] evaluate_0.20       memoise_2.0.1       lifecycle_1.0.3    </span></span>
+<span><span class="co">#&gt; [13] nanotime_0.3.7      lattice_0.20-45     rlang_1.0.6        </span></span>
+<span><span class="co">#&gt; [16] Matrix_1.5-3        cli_3.6.0           RcppCCTZ_0.2.12    </span></span>
+<span><span class="co">#&gt; [19] parallel_4.2.2      yaml_2.3.7          spdl_0.0.4         </span></span>
+<span><span class="co">#&gt; [22] pkgdown_2.0.7       xfun_0.37           fastmap_1.1.1      </span></span>
+<span><span class="co">#&gt; [25] stringr_1.5.0       knitr_1.42          globals_0.16.2     </span></span>
+<span><span class="co">#&gt; [28] desc_1.4.2          fs_1.6.1            vctrs_0.5.2        </span></span>
+<span><span class="co">#&gt; [31] sass_0.4.5          systemfonts_1.0.4   triebeard_0.4.1    </span></span>
+<span><span class="co">#&gt; [34] rprojroot_2.0.3     bit64_4.0.5         grid_4.2.2         </span></span>
+<span><span class="co">#&gt; [37] glue_1.6.2          listenv_0.9.0       R6_2.5.1           </span></span>
+<span><span class="co">#&gt; [40] textshaping_0.3.6   future.apply_1.10.0 parallelly_1.34.0  </span></span>
+<span><span class="co">#&gt; [43] rmarkdown_2.20      purrr_1.0.1         tiledb_0.18.0      </span></span>
+<span><span class="co">#&gt; [46] magrittr_2.0.3      urltools_1.7.3      codetools_0.2-18   </span></span>
+<span><span class="co">#&gt; [49] htmltools_0.5.4     future_1.32.0       ragg_1.2.5         </span></span>
+<span><span class="co">#&gt; [52] stringi_1.7.12      cachem_1.0.7        zoo_1.8-11</span></span></code></pre></div>
+</details>
 </div>
   </div>
 
@@ -319,7 +411,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>

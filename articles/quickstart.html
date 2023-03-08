@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tiledbsc</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.4.9001</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.5.9000</span>
       </span>
     </div>
 
@@ -84,7 +84,7 @@
 
       
 
-      </header><script src="quickstart_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Getting started with tiledbsc</h1>
@@ -97,15 +97,19 @@
 
     
     
-<div class="section level2">
-<h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
-</h2>
-<p>This vignette provides an overview of the tiledbsc R package which uses the open source <a href="https://github.com/single-cell-data/SOMA" class="external-link">SOMA data model</a> to store single-cell data in a collection of TileDB arrays.</p>
+<div class="section level3">
+<h3 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
+</h3>
+<p>This vignette provides an overview of the tiledbsc R package which
+uses the open source <a href="https://github.com/single-cell-data/SOMA" class="external-link">SOMA data model</a> to
+store single-cell data in a collection of TileDB arrays.</p>
 <p>With tiledbsc you can:</p>
 <ul>
-<li>convert data from Seurat and other popular single-cell formats into SOMA</li>
+<li>convert data from Seurat and other popular single-cell formats into
+SOMA</li>
 <li>access SOMA data using any of TileDB’s APIs</li>
-<li>store your datasets on S3 (or other remote object stores) and slice directly without having to download anything first</li>
+<li>store your datasets on S3 (or other remote object stores) and slice
+directly without having to download anything first</li>
 </ul>
 <p>In this vignette you’ll learn how to:</p>
 <ul>
@@ -114,19 +118,24 @@
 <li>slice by cell-/feature-identifiers</li>
 <li>query using cell-/feature-level annotations</li>
 <li>update a SOMA with analysis results</li>
-<li>load data from SOMA into R as a Seurat or Bioconductor (i.e., <code>SummarizedExperiment</code>) object</li>
+<li>load data from SOMA into R as a Seurat or Bioconductor (i.e.,
+<code>SummarizedExperiment</code>) object</li>
 <li>store your data on S3 and register with TileDB Cloud</li>
 </ul>
 </div>
-<div class="section level2">
-<h2 id="setup">Setup<a class="anchor" aria-label="anchor" href="#setup"></a>
-</h2>
+<div class="section level3">
+<h3 id="setup">Setup<a class="anchor" aria-label="anchor" href="#setup"></a>
+</h3>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/TileDB-Inc/tiledbsc" class="external-link">tiledbsc</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://mojaveazure.github.io/seurat-object/" class="external-link">SeuratObject</a></span><span class="op">)</span></span>
-<span><span class="co">#&gt; Attaching sp</span></span></code></pre></div>
-<p>For this tutorial we’ll use a dataset from 10X genomics containing 2,700 peripheral blood mononuclear cells (PBMC) from a healthy donor. The dataset is available on <a href="https://support.10xgenomics.com/single-cell-gene-expression/datasets/1.1.0/pbmc3k" class="external-link">10X Genomics’ website</a>.</p>
-<p>Use the provided helper function to download the filtered gene/cell matrix from 10X and create a <code>Seurat</code> object.</p>
+<span><span class="co">#&gt; Loading required package: sp</span></span></code></pre></div>
+<p>For this tutorial we’ll use a dataset from 10X genomics containing
+2,700 peripheral blood mononuclear cells (PBMC) from a healthy donor.
+The dataset is available on <a href="https://support.10xgenomics.com/single-cell-gene-expression/datasets/1.1.0/pbmc3k" class="external-link">10X
+Genomics’ website</a>.</p>
+<p>Use the provided helper function to download the filtered gene/cell
+matrix from 10X and create a <code>Seurat</code> object.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pbmc3k</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/dataset_seurat_pbmc3k.html">dataset_seurat_pbmc3k</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">pbmc3k</span></span>
@@ -134,80 +143,91 @@
 <span><span class="co">#&gt; 32738 features across 2700 samples within 1 assay </span></span>
 <span><span class="co">#&gt; Active assay: RNA (32738 features, 0 variable features)</span></span></code></pre></div>
 </div>
-<div class="section level2">
-<h2 id="populate-a-somacollection">Populate a SOMACollection<a class="anchor" aria-label="anchor" href="#populate-a-somacollection"></a>
-</h2>
-<p>Our first step is to create a new <code>SOMACollection</code> at a specific URI. The URI could be a local filepath, an S3 URI, or as discussed below, a TileDB Cloud URI that automatically registers the dataset on TileDB Cloud.</p>
+<div class="section level3">
+<h3 id="populate-a-somacollection">Populate a SOMACollection<a class="anchor" aria-label="anchor" href="#populate-a-somacollection"></a>
+</h3>
+<p>Our first step is to create a new <code>SOMACollection</code> at a
+specific URI. The URI could be a local filepath, an S3 URI, or as
+discussed below, a TileDB Cloud URI that automatically registers the
+dataset on TileDB Cloud.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">soco_uri</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"soco-pbmc3k"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">soco</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/SOMACollection.html">SOMACollection</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>uri <span class="op">=</span> <span class="va">soco_uri</span><span class="op">)</span></span>
-<span><span class="co">#&gt; No SOMACollection currently exists at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k'</span></span>
-<span><span class="co">#&gt; Creating new SOMACollection at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k'</span></span>
-<span><span class="co">#&gt; No TileDBGroup currently exists at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/uns'</span></span>
-<span><span class="co">#&gt; Creating new TileDBGroup at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/uns'</span></span>
+<span><span class="co">#&gt; No SOMACollection currently exists at '/var/folders/mb/hbl3p_1d4kv4_plbcqb6wd8w0000gn/T//RtmpOA4uOo/soco-pbmc3k'</span></span>
+<span><span class="co">#&gt; Creating new SOMACollection at '/var/folders/mb/hbl3p_1d4kv4_plbcqb6wd8w0000gn/T//RtmpOA4uOo/soco-pbmc3k'</span></span>
+<span><span class="co">#&gt; No TileDBGroup currently exists at '/var/folders/mb/hbl3p_1d4kv4_plbcqb6wd8w0000gn/T//RtmpOA4uOo/soco-pbmc3k/uns'</span></span>
+<span><span class="co">#&gt; Creating new TileDBGroup at '/var/folders/mb/hbl3p_1d4kv4_plbcqb6wd8w0000gn/T//RtmpOA4uOo/soco-pbmc3k/uns'</span></span>
 <span><span class="va">soco</span></span>
 <span><span class="co">#&gt; &lt;SOMACollection&gt;</span></span>
-<span><span class="co">#&gt;   uri: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k </span></span>
+<span><span class="co">#&gt;   uri: /var/folders/mb/hbl3p_1d4kv4_plbcqb6wd8w0000gn/T//RtmpOA4uOo/soco-pbmc3k </span></span>
 <span><span class="co">#&gt;   groups: uns</span></span></code></pre></div>
-<p>Now we use tiledbsc to automatically ingest the various components of the <code>pbmc3k</code> object into the new <code>SOMACollection</code>.</p>
+<p>Now we use tiledbsc to automatically ingest the various components of
+the <code>pbmc3k</code> object into the new
+<code>SOMACollection</code>.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">soco</span><span class="op">$</span><span class="fu">from_seurat</span><span class="op">(</span><span class="va">pbmc3k</span><span class="op">)</span></span>
-<span><span class="co">#&gt; No SOMA currently exists at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA'</span></span>
-<span><span class="co">#&gt; Creating new SOMA at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA'</span></span>
-<span><span class="co">#&gt; No AnnotationDataframe found at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/obs'</span></span>
-<span><span class="co">#&gt; No AnnotationDataframe found at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/var'</span></span>
-<span><span class="co">#&gt; No AssayMatrixGroup currently exists at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/X'</span></span>
-<span><span class="co">#&gt; Creating new AssayMatrixGroup at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/X'</span></span>
-<span><span class="co">#&gt; No AnnotationMatrixGroup currently exists at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/obsm'</span></span>
-<span><span class="co">#&gt; Creating new AnnotationMatrixGroup at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/obsm'</span></span>
-<span><span class="co">#&gt; No AnnotationMatrixGroup currently exists at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/varm'</span></span>
-<span><span class="co">#&gt; Creating new AnnotationMatrixGroup at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/varm'</span></span>
-<span><span class="co">#&gt; No AnnotationPairwiseMatrixGroup currently exists at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/obsp'</span></span>
-<span><span class="co">#&gt; Creating new AnnotationPairwiseMatrixGroup at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/obsp'</span></span>
-<span><span class="co">#&gt; No AnnotationPairwiseMatrixGroup currently exists at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/varp'</span></span>
-<span><span class="co">#&gt; Creating new AnnotationPairwiseMatrixGroup at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/varp'</span></span>
-<span><span class="co">#&gt; No TileDBGroup currently exists at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/uns'</span></span>
-<span><span class="co">#&gt; Creating new TileDBGroup at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/uns'</span></span>
-<span><span class="co">#&gt; Creating new AnnotationDataframe array with index [obs_id] at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/obs'</span></span>
-<span><span class="co">#&gt; Ingesting AnnotationDataframe data into: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/obs</span></span>
-<span><span class="co">#&gt; Creating new AnnotationDataframe array with index [var_id] at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/var'</span></span>
-<span><span class="co">#&gt; Ingesting AnnotationDataframe data into: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/var</span></span>
+<span><span class="co">#&gt; No SOMA currently exists at '/var/folders/mb/hbl3p_1d4kv4_plbcqb6wd8w0000gn/T//RtmpOA4uOo/soco-pbmc3k/soma_RNA'</span></span>
+<span><span class="co">#&gt; Creating new SOMA at '/var/folders/mb/hbl3p_1d4kv4_plbcqb6wd8w0000gn/T//RtmpOA4uOo/soco-pbmc3k/soma_RNA'</span></span>
+<span><span class="co">#&gt; No AnnotationDataframe found at '/var/folders/mb/hbl3p_1d4kv4_plbcqb6wd8w0000gn/T//RtmpOA4uOo/soco-pbmc3k/soma_RNA/obs'</span></span>
+<span><span class="co">#&gt; No AnnotationDataframe found at '/var/folders/mb/hbl3p_1d4kv4_plbcqb6wd8w0000gn/T//RtmpOA4uOo/soco-pbmc3k/soma_RNA/var'</span></span>
+<span><span class="co">#&gt; No AssayMatrixGroup currently exists at '/var/folders/mb/hbl3p_1d4kv4_plbcqb6wd8w0000gn/T//RtmpOA4uOo/soco-pbmc3k/soma_RNA/X'</span></span>
+<span><span class="co">#&gt; Creating new AssayMatrixGroup at '/var/folders/mb/hbl3p_1d4kv4_plbcqb6wd8w0000gn/T//RtmpOA4uOo/soco-pbmc3k/soma_RNA/X'</span></span>
+<span><span class="co">#&gt; No AnnotationMatrixGroup currently exists at '/var/folders/mb/hbl3p_1d4kv4_plbcqb6wd8w0000gn/T//RtmpOA4uOo/soco-pbmc3k/soma_RNA/obsm'</span></span>
+<span><span class="co">#&gt; Creating new AnnotationMatrixGroup at '/var/folders/mb/hbl3p_1d4kv4_plbcqb6wd8w0000gn/T//RtmpOA4uOo/soco-pbmc3k/soma_RNA/obsm'</span></span>
+<span><span class="co">#&gt; No AnnotationMatrixGroup currently exists at '/var/folders/mb/hbl3p_1d4kv4_plbcqb6wd8w0000gn/T//RtmpOA4uOo/soco-pbmc3k/soma_RNA/varm'</span></span>
+<span><span class="co">#&gt; Creating new AnnotationMatrixGroup at '/var/folders/mb/hbl3p_1d4kv4_plbcqb6wd8w0000gn/T//RtmpOA4uOo/soco-pbmc3k/soma_RNA/varm'</span></span>
+<span><span class="co">#&gt; No AnnotationPairwiseMatrixGroup currently exists at '/var/folders/mb/hbl3p_1d4kv4_plbcqb6wd8w0000gn/T//RtmpOA4uOo/soco-pbmc3k/soma_RNA/obsp'</span></span>
+<span><span class="co">#&gt; Creating new AnnotationPairwiseMatrixGroup at '/var/folders/mb/hbl3p_1d4kv4_plbcqb6wd8w0000gn/T//RtmpOA4uOo/soco-pbmc3k/soma_RNA/obsp'</span></span>
+<span><span class="co">#&gt; No AnnotationPairwiseMatrixGroup currently exists at '/var/folders/mb/hbl3p_1d4kv4_plbcqb6wd8w0000gn/T//RtmpOA4uOo/soco-pbmc3k/soma_RNA/varp'</span></span>
+<span><span class="co">#&gt; Creating new AnnotationPairwiseMatrixGroup at '/var/folders/mb/hbl3p_1d4kv4_plbcqb6wd8w0000gn/T//RtmpOA4uOo/soco-pbmc3k/soma_RNA/varp'</span></span>
+<span><span class="co">#&gt; No TileDBGroup currently exists at '/var/folders/mb/hbl3p_1d4kv4_plbcqb6wd8w0000gn/T//RtmpOA4uOo/soco-pbmc3k/soma_RNA/uns'</span></span>
+<span><span class="co">#&gt; Creating new TileDBGroup at '/var/folders/mb/hbl3p_1d4kv4_plbcqb6wd8w0000gn/T//RtmpOA4uOo/soco-pbmc3k/soma_RNA/uns'</span></span>
+<span><span class="co">#&gt; Creating new AnnotationDataframe array with index [obs_id] at '/var/folders/mb/hbl3p_1d4kv4_plbcqb6wd8w0000gn/T//RtmpOA4uOo/soco-pbmc3k/soma_RNA/obs'</span></span>
+<span><span class="co">#&gt; Ingesting AnnotationDataframe data into: /var/folders/mb/hbl3p_1d4kv4_plbcqb6wd8w0000gn/T//RtmpOA4uOo/soco-pbmc3k/soma_RNA/obs</span></span>
+<span><span class="co">#&gt; Creating new AnnotationDataframe array with index [var_id] at '/var/folders/mb/hbl3p_1d4kv4_plbcqb6wd8w0000gn/T//RtmpOA4uOo/soco-pbmc3k/soma_RNA/var'</span></span>
+<span><span class="co">#&gt; Ingesting AnnotationDataframe data into: /var/folders/mb/hbl3p_1d4kv4_plbcqb6wd8w0000gn/T//RtmpOA4uOo/soco-pbmc3k/soma_RNA/var</span></span>
 <span><span class="co">#&gt; Skipping ingestion of 'data' because it is identical to 'counts'</span></span>
-<span><span class="co">#&gt; No AssayMatrix found at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/X/counts'</span></span>
-<span><span class="co">#&gt; Creating new AssayMatrix array with index [var_id,obs_id] at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/X/counts'</span></span>
-<span><span class="co">#&gt; Ingesting AssayMatrix data into: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/X/counts</span></span>
+<span><span class="co">#&gt; No AssayMatrix found at '/var/folders/mb/hbl3p_1d4kv4_plbcqb6wd8w0000gn/T//RtmpOA4uOo/soco-pbmc3k/soma_RNA/X/counts'</span></span>
+<span><span class="co">#&gt; Creating new AssayMatrix array with index [var_id,obs_id] at '/var/folders/mb/hbl3p_1d4kv4_plbcqb6wd8w0000gn/T//RtmpOA4uOo/soco-pbmc3k/soma_RNA/X/counts'</span></span>
+<span><span class="co">#&gt; Ingesting AssayMatrix data into: /var/folders/mb/hbl3p_1d4kv4_plbcqb6wd8w0000gn/T//RtmpOA4uOo/soco-pbmc3k/soma_RNA/X/counts</span></span>
 <span><span class="co">#&gt; Finished converting Seurat Assay with key [rna_] to SOMA</span></span>
 <span><span class="co">#&gt; Finished converting Seurat object to SOMACollection</span></span></code></pre></div>
-<p>Printing the <code>soco</code> object shows it comprises 2 members: <code>RNA</code>, which contains the RNA assay data, and <code>uns</code>, which is a special group for miscellaneous (i.e., unstructured) data.</p>
+<p>Printing the <code>soco</code> object shows it comprises 2 members:
+<code>RNA</code>, which contains the RNA assay data, and
+<code>uns</code>, which is a special group for miscellaneous (i.e.,
+unstructured) data.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">soco</span></span>
 <span><span class="co">#&gt; &lt;SOMACollection&gt;</span></span>
-<span><span class="co">#&gt;   uri: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k </span></span>
+<span><span class="co">#&gt;   uri: /var/folders/mb/hbl3p_1d4kv4_plbcqb6wd8w0000gn/T//RtmpOA4uOo/soco-pbmc3k </span></span>
 <span><span class="co">#&gt;   groups: RNA, uns</span></span></code></pre></div>
 </div>
-<div class="section level2">
-<h2 id="access-soma-components">Access SOMA Components<a class="anchor" aria-label="anchor" href="#access-soma-components"></a>
-</h2>
-<p>As this dataset is unimodal, we’ll extract the SOMA containing the RNA data.</p>
+<div class="section level3">
+<h3 id="access-soma-components">Access SOMA Components<a class="anchor" aria-label="anchor" href="#access-soma-components"></a>
+</h3>
+<p>As this dataset is unimodal, we’ll extract the SOMA containing the
+RNA data.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">soma</span> <span class="op">&lt;-</span> <span class="va">soco</span><span class="op">$</span><span class="fu">get_member</span><span class="op">(</span><span class="st">"RNA"</span><span class="op">)</span></span>
 <span><span class="va">soma</span></span>
 <span><span class="co">#&gt; &lt;SOMA&gt;</span></span>
-<span><span class="co">#&gt;   uri: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA </span></span>
+<span><span class="co">#&gt;   uri: /var/folders/mb/hbl3p_1d4kv4_plbcqb6wd8w0000gn/T//RtmpOA4uOo/soco-pbmc3k/soma_RNA </span></span>
 <span><span class="co">#&gt;   arrays: obs, var </span></span>
 <span><span class="co">#&gt;   groups: obsm, obsp, uns, varm, varp, X</span></span></code></pre></div>
-<p>Access the [<code>AnnotationDataframe</code>] representing the <code>obs</code> array containing cell-level metadata stored in <code>obs</code>.</p>
+<p>Access the [<code>AnnotationDataframe</code>] representing the
+<code>obs</code> array containing cell-level metadata stored in
+<code>obs</code>.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">soma</span><span class="op">$</span><span class="va">obs</span></span>
 <span><span class="co">#&gt; &lt;AnnotationDataframe&gt;</span></span>
-<span><span class="co">#&gt;   uri: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/obs </span></span>
+<span><span class="co">#&gt;   uri: /var/folders/mb/hbl3p_1d4kv4_plbcqb6wd8w0000gn/T//RtmpOA4uOo/soco-pbmc3k/soma_RNA/obs </span></span>
 <span><span class="co">#&gt;   dimensions: obs_id </span></span>
 <span><span class="co">#&gt;   attributes: orig.ident, nCount_RNA, nFeature_RNA</span></span></code></pre></div>
 <p>Read it into memory as a <code>data.frame</code>.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">obs</span> <span class="op">&lt;-</span> <span class="va">soma</span><span class="op">$</span><span class="va">obs</span><span class="op">$</span><span class="fu">to_dataframe</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Reading AnnotationDataframe into memory from '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/obs'</span></span>
+<span><span class="co">#&gt; Reading AnnotationDataframe into memory from '/var/folders/mb/hbl3p_1d4kv4_plbcqb6wd8w0000gn/T//RtmpOA4uOo/soco-pbmc3k/soma_RNA/obs'</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">obs</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   orig.ident          nCount_RNA     nFeature_RNA   </span></span>
 <span><span class="co">#&gt;  Length:2700        Min.   :  548   Min.   : 212.0  </span></span>
@@ -216,30 +236,35 @@
 <span><span class="co">#&gt;                     Mean   : 2367   Mean   : 847.0  </span></span>
 <span><span class="co">#&gt;                     3rd Qu.: 2763   3rd Qu.: 953.2  </span></span>
 <span><span class="co">#&gt;                     Max.   :15844   Max.   :3422.0</span></span></code></pre></div>
-<p>Access the [<code>AssayMatrix</code>] representing the <code>X</code> array containing the raw RNA counts.</p>
+<p>Access the [<code>AssayMatrix</code>] representing the <code>X</code>
+array containing the raw RNA counts.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">soma</span><span class="op">$</span><span class="va">X</span><span class="op">$</span><span class="va">members</span><span class="op">$</span><span class="va">counts</span></span>
 <span><span class="co">#&gt; &lt;AssayMatrix&gt;</span></span>
-<span><span class="co">#&gt;   uri: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/X/counts </span></span>
+<span><span class="co">#&gt;   uri: /var/folders/mb/hbl3p_1d4kv4_plbcqb6wd8w0000gn/T//RtmpOA4uOo/soco-pbmc3k/soma_RNA/X/counts </span></span>
 <span><span class="co">#&gt;   dimensions: var_id, obs_id </span></span>
 <span><span class="co">#&gt;   attributes: value</span></span></code></pre></div>
-<p>Read it into memory as a [<code>dgTMatrix</code>][<code>Matrix::TsparseMatrix-class</code>].</p>
+<p>Read it into memory as a
+[<code>dgTMatrix</code>][<code>Matrix::TsparseMatrix-class</code>].</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mat</span> <span class="op">&lt;-</span> <span class="va">soma</span><span class="op">$</span><span class="va">X</span><span class="op">$</span><span class="va">members</span><span class="op">$</span><span class="va">counts</span><span class="op">$</span><span class="fu">to_matrix</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Reading AssayMatrix into memory from '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/X/counts'</span></span>
+<span><span class="co">#&gt; Reading AssayMatrix into memory from '/var/folders/mb/hbl3p_1d4kv4_plbcqb6wd8w0000gn/T//RtmpOA4uOo/soco-pbmc3k/soma_RNA/X/counts'</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">mat</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 16634  2700</span></span></code></pre></div>
 </div>
-<div class="section level2">
-<h2 id="dimension-slicing-and-attribute-filtering">Dimension Slicing and Attribute Filtering<a class="anchor" aria-label="anchor" href="#dimension-slicing-and-attribute-filtering"></a>
-</h2>
-<p><code>SOMACollection</code> and <code>SOMA</code> objects can be sliced by a combination of obs and var identifiers.</p>
+<div class="section level3">
+<h3 id="dimension-slicing-and-attribute-filtering">Dimension Slicing and Attribute Filtering<a class="anchor" aria-label="anchor" href="#dimension-slicing-and-attribute-filtering"></a>
+</h3>
+<p><code>SOMACollection</code> and <code>SOMA</code> objects can be
+sliced by a combination of obs and var identifiers.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">soma</span><span class="op">$</span><span class="fu">set_query</span><span class="op">(</span>obs_ids <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">pbmc3k</span><span class="op">)</span>, <span class="fl">10</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p>This slice is automatically applied to the entire SOMA, so any component read into memory will now only contain the filtered results.</p>
+<p>This slice is automatically applied to the entire SOMA, so any
+component read into memory will now only contain the filtered
+results.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">soma</span><span class="op">$</span><span class="va">obs</span><span class="op">$</span><span class="fu">to_dataframe</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Reading AnnotationDataframe into memory from '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/obs'</span></span>
+<span><span class="co">#&gt; Reading AnnotationDataframe into memory from '/var/folders/mb/hbl3p_1d4kv4_plbcqb6wd8w0000gn/T//RtmpOA4uOo/soco-pbmc3k/soma_RNA/obs'</span></span>
 <span><span class="co">#&gt;                     orig.ident nCount_RNA nFeature_RNA</span></span>
 <span><span class="co">#&gt; AAACATACAACCAC-1 SeuratProject       2421          781</span></span>
 <span><span class="co">#&gt; AAACATTGAGCTAC-1 SeuratProject       4903         1352</span></span>
@@ -255,7 +280,7 @@
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">soma</span><span class="op">$</span><span class="fu">reset_query</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">soma</span><span class="op">$</span><span class="va">obs</span><span class="op">$</span><span class="fu">to_dataframe</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Reading AnnotationDataframe into memory from '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/obs'</span></span>
+<span><span class="co">#&gt; Reading AnnotationDataframe into memory from '/var/folders/mb/hbl3p_1d4kv4_plbcqb6wd8w0000gn/T//RtmpOA4uOo/soco-pbmc3k/soma_RNA/obs'</span></span>
 <span><span class="co">#&gt;   orig.ident          nCount_RNA     nFeature_RNA   </span></span>
 <span><span class="co">#&gt;  Length:2700        Min.   :  548   Min.   : 212.0  </span></span>
 <span><span class="co">#&gt;  Class :character   1st Qu.: 1758   1st Qu.: 690.0  </span></span>
@@ -263,18 +288,21 @@
 <span><span class="co">#&gt;                     Mean   : 2367   Mean   : 847.0  </span></span>
 <span><span class="co">#&gt;                     3rd Qu.: 2763   3rd Qu.: 953.2  </span></span>
 <span><span class="co">#&gt;                     Max.   :15844   Max.   :3422.0</span></span></code></pre></div>
-<p>In addition to dimension slicing we can also apply filters using the cell- and feature-level metadata stored in the <code>obs</code> and <code>var</code> arrays.</p>
+<p>In addition to dimension slicing we can also apply filters using the
+cell- and feature-level metadata stored in the <code>obs</code> and
+<code>var</code> arrays.</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">soma</span><span class="op">$</span><span class="fu">set_query</span><span class="op">(</span></span>
 <span>    obs_attr_filter <span class="op">=</span> <span class="va">seurat_annotations</span> <span class="op">==</span> <span class="st">"B"</span> <span class="op">&amp;&amp;</span> <span class="va">nCount_RNA</span> <span class="op">&gt;</span> <span class="fl">1000</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; Querying obs with attribute filter</span></span>
 <span><span class="co">#&gt; Error: No attibute 'seurat_annotations' present.</span></span></code></pre></div>
-<p>We can load the SOMA slice into memory as a Seurat <code>Assay</code>…</p>
+<p>We can load the SOMA slice into memory as a Seurat
+<code>Assay</code>…</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">soma</span><span class="op">$</span><span class="fu">to_seurat_assay</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Reading AssayMatrix into memory from '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/X/counts'</span></span>
-<span><span class="co">#&gt; Reading AnnotationDataframe into memory from '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/var'</span></span>
+<span><span class="co">#&gt; Reading AssayMatrix into memory from '/var/folders/mb/hbl3p_1d4kv4_plbcqb6wd8w0000gn/T//RtmpOA4uOo/soco-pbmc3k/soma_RNA/X/counts'</span></span>
+<span><span class="co">#&gt; Reading AnnotationDataframe into memory from '/var/folders/mb/hbl3p_1d4kv4_plbcqb6wd8w0000gn/T//RtmpOA4uOo/soco-pbmc3k/soma_RNA/var'</span></span>
 <span><span class="co">#&gt; Assay data with 16634 features for 2700 cells</span></span>
 <span><span class="co">#&gt; First 10 features:</span></span>
 <span><span class="co">#&gt;  ENSG00000000003, ENSG00000000419, ENSG00000000457, ENSG00000000460,</span></span>
@@ -285,9 +313,9 @@
 <code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"SummarizedExperiment"</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">soma</span><span class="op">$</span><span class="fu">to_summarized_experiment</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
-<span><span class="co">#&gt; Reading AssayMatrix into memory from '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/X/counts'</span></span>
-<span><span class="co">#&gt; Reading AnnotationDataframe into memory from '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/obs'</span></span>
-<span><span class="co">#&gt; Reading AnnotationDataframe into memory from '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/var'</span></span>
+<span><span class="co">#&gt; Reading AssayMatrix into memory from '/var/folders/mb/hbl3p_1d4kv4_plbcqb6wd8w0000gn/T//RtmpOA4uOo/soco-pbmc3k/soma_RNA/X/counts'</span></span>
+<span><span class="co">#&gt; Reading AnnotationDataframe into memory from '/var/folders/mb/hbl3p_1d4kv4_plbcqb6wd8w0000gn/T//RtmpOA4uOo/soco-pbmc3k/soma_RNA/obs'</span></span>
+<span><span class="co">#&gt; Reading AnnotationDataframe into memory from '/var/folders/mb/hbl3p_1d4kv4_plbcqb6wd8w0000gn/T//RtmpOA4uOo/soco-pbmc3k/soma_RNA/var'</span></span>
 <span><span class="co">#&gt; class: SummarizedExperiment </span></span>
 <span><span class="co">#&gt; dim: 16634 2700 </span></span>
 <span><span class="co">#&gt; metadata(0):</span></span>
@@ -298,45 +326,52 @@
 <span><span class="co">#&gt; colnames(2700): ATAGATACCATGGT-1 AAACATTGATCAGC-1 ... ACTTGTACCTGTCC-1</span></span>
 <span><span class="co">#&gt;   GCAACCCTCCTCGT-1</span></span>
 <span><span class="co">#&gt; colData names(3): orig.ident nCount_RNA nFeature_RNA</span></span></code></pre></div>
-<p>See <code><a href="../articles/filtering.html">vignette("filtering", package = "tiledbsc")</a></code> for more details.</p>
+<p>See <code><a href="../articles/filtering.html">vignette("filtering", package = "tiledbsc")</a></code> for more
+details.</p>
 </div>
-<div class="section level2">
-<h2 id="adding-analysis-results-to-a-soma">Adding Analysis Results to a SOMA<a class="anchor" aria-label="anchor" href="#adding-analysis-results-to-a-soma"></a>
-</h2>
-<p>The original <code>pbmc3k</code> object contains only the raw counts data. Here we’ll use <code>Seurat</code> to generate new results and add them to the <code>soma</code>.</p>
 <div class="section level3">
-<h3 id="add-layer-for-normalized-counts">Add Layer for Normalized Counts<a class="anchor" aria-label="anchor" href="#add-layer-for-normalized-counts"></a>
+<h3 id="adding-analysis-results-to-a-soma">Adding Analysis Results to a SOMA<a class="anchor" aria-label="anchor" href="#adding-analysis-results-to-a-soma"></a>
 </h3>
-<p>First we normalize the raw counts, which creates a new matrix stored in the <code>Assay</code> object.</p>
+<p>The original <code>pbmc3k</code> object contains only the raw counts
+data. Here we’ll use <code>Seurat</code> to generate new results and add
+them to the <code>soma</code>.</p>
+<div class="section level4">
+<h4 id="add-layer-for-normalized-counts">Add Layer for Normalized Counts<a class="anchor" aria-label="anchor" href="#add-layer-for-normalized-counts"></a>
+</h4>
+<p>First we normalize the raw counts, which creates a new matrix stored
+in the <code>Assay</code> object.</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pbmc3k</span> <span class="op">&lt;-</span> <span class="fu">Seurat</span><span class="fu">::</span><span class="fu">NormalizeData</span><span class="op">(</span><span class="va">pbmc3k</span>, normalization.method <span class="op">=</span> <span class="st">"LogNormalize"</span><span class="op">)</span></span></code></pre></div>
-<p>Currently the RNA SOMA’s <code>X</code> group contains only a single layer, <code>counts</code>.</p>
+<p>Currently the RNA SOMA’s <code>X</code> group contains only a single
+layer, <code>counts</code>.</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">soma</span><span class="op">$</span><span class="va">X</span></span>
 <span><span class="co">#&gt; &lt;AssayMatrixGroup&gt;</span></span>
-<span><span class="co">#&gt;   uri: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/X </span></span>
+<span><span class="co">#&gt;   uri: /var/folders/mb/hbl3p_1d4kv4_plbcqb6wd8w0000gn/T//RtmpOA4uOo/soco-pbmc3k/soma_RNA/X </span></span>
 <span><span class="co">#&gt;   arrays: counts</span></span></code></pre></div>
-<p>Add a new <code>X</code> layer containing log-normalized counts stored in the Seurat <code>Assay</code>’s <code>data</code> slot.</p>
+<p>Add a new <code>X</code> layer containing log-normalized counts
+stored in the Seurat <code>Assay</code>’s <code>data</code> slot.</p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">soma</span><span class="op">$</span><span class="fu">from_seurat_assay</span><span class="op">(</span></span>
 <span>  object <span class="op">=</span> <span class="va">pbmc3k</span><span class="op">[[</span><span class="st">"RNA"</span><span class="op">]</span><span class="op">]</span>,</span>
 <span>  layers <span class="op">=</span> <span class="st">"data"</span>,</span>
 <span>  var <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; No AssayMatrix found at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/X/data'</span></span>
-<span><span class="co">#&gt; Creating new AssayMatrix array with index [var_id,obs_id] at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/X/data'</span></span>
-<span><span class="co">#&gt; Ingesting AssayMatrix data into: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/X/data</span></span>
+<span><span class="co">#&gt; No AssayMatrix found at '/var/folders/mb/hbl3p_1d4kv4_plbcqb6wd8w0000gn/T//RtmpOA4uOo/soco-pbmc3k/soma_RNA/X/data'</span></span>
+<span><span class="co">#&gt; Creating new AssayMatrix array with index [var_id,obs_id] at '/var/folders/mb/hbl3p_1d4kv4_plbcqb6wd8w0000gn/T//RtmpOA4uOo/soco-pbmc3k/soma_RNA/X/data'</span></span>
+<span><span class="co">#&gt; Ingesting AssayMatrix data into: /var/folders/mb/hbl3p_1d4kv4_plbcqb6wd8w0000gn/T//RtmpOA4uOo/soco-pbmc3k/soma_RNA/X/data</span></span>
 <span><span class="co">#&gt; Finished converting Seurat Assay with key [rna_] to SOMA</span></span></code></pre></div>
-<p>Now we can see the SOMA contains 2 <code>X</code> layers: <code>counts</code> and <code>data</code>.</p>
+<p>Now we can see the SOMA contains 2 <code>X</code> layers:
+<code>counts</code> and <code>data</code>.</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">soma</span><span class="op">$</span><span class="va">X</span></span>
 <span><span class="co">#&gt; &lt;AssayMatrixGroup&gt;</span></span>
-<span><span class="co">#&gt;   uri: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/X </span></span>
+<span><span class="co">#&gt;   uri: /var/folders/mb/hbl3p_1d4kv4_plbcqb6wd8w0000gn/T//RtmpOA4uOo/soco-pbmc3k/soma_RNA/X </span></span>
 <span><span class="co">#&gt;   arrays: counts, data</span></span></code></pre></div>
 </div>
-<div class="section level3">
-<h3 id="add-layer-for-scaled-counts">Add Layer for Scaled counts<a class="anchor" aria-label="anchor" href="#add-layer-for-scaled-counts"></a>
-</h3>
+<div class="section level4">
+<h4 id="add-layer-for-scaled-counts">Add Layer for Scaled counts<a class="anchor" aria-label="anchor" href="#add-layer-for-scaled-counts"></a>
+</h4>
 <p>First, we identify highly variable subset of genes to scale.</p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">var_genes</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://mojaveazure.github.io/seurat-object/reference/VariableFeatures.html" class="external-link">VariableFeatures</a></span><span class="op">(</span></span>
@@ -344,139 +379,148 @@
 <span><span class="op">)</span></span></code></pre></div>
 <p>Then generate the scaled data.</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">pbmc3k</span> <span class="op">&lt;-</span> <span class="fu">Seurat</span><span class="fu">::</span><span class="fu">ScaleData</span><span class="op">(</span><span class="va">pbmc3k</span>, features <span class="op">=</span> <span class="va">var_genes</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Centering and scaling data matrix</span></span></code></pre></div>
-<p>And ingest the scaled data into a new <code>X</code> layer called <code>"scale.data"</code>.</p>
+<code class="sourceCode R"><span><span class="va">pbmc3k</span> <span class="op">&lt;-</span> <span class="fu">Seurat</span><span class="fu">::</span><span class="fu">ScaleData</span><span class="op">(</span><span class="va">pbmc3k</span>, features <span class="op">=</span> <span class="va">var_genes</span><span class="op">)</span></span></code></pre></div>
+<p>And ingest the scaled data into a new <code>X</code> layer called
+<code>"scale.data"</code>.</p>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">soma</span><span class="op">$</span><span class="fu">from_seurat_assay</span><span class="op">(</span></span>
 <span>    object <span class="op">=</span> <span class="va">pbmc3k</span><span class="op">[[</span><span class="st">"RNA"</span><span class="op">]</span><span class="op">]</span>,</span>
 <span>    layers <span class="op">=</span> <span class="st">"scale.data"</span>,</span>
 <span>    var <span class="op">=</span> <span class="cn">FALSE</span></span>
-<span><span class="op">)</span></span>
-<span><span class="co">#&gt; Skipping ingestion of 'data' because it is identical to 'counts'</span></span>
-<span><span class="co">#&gt; No AssayMatrix found at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/X/scale.data'</span></span>
-<span><span class="co">#&gt; Creating new AssayMatrix array with index [var_id,obs_id] at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/X/scale.data'</span></span>
-<span><span class="co">#&gt; Ingesting AssayMatrix data into: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/X/scale.data</span></span>
-<span><span class="co">#&gt; Finished converting Seurat Assay with key [rna_] to SOMA</span></span></code></pre></div>
+<span><span class="op">)</span></span></code></pre></div>
 <p>Again, verify the new layer was added.</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">soma</span><span class="op">$</span><span class="va">X</span></span>
 <span><span class="co">#&gt; &lt;AssayMatrixGroup&gt;</span></span>
-<span><span class="co">#&gt;   uri: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/X </span></span>
-<span><span class="co">#&gt;   arrays: counts, data, scale.data</span></span></code></pre></div>
+<span><span class="co">#&gt;   uri: /var/folders/mb/hbl3p_1d4kv4_plbcqb6wd8w0000gn/T//RtmpOA4uOo/soco-pbmc3k/soma_RNA/X </span></span>
+<span><span class="co">#&gt;   arrays: counts, data</span></span></code></pre></div>
 </div>
-<div class="section level3">
-<h3 id="add-dimensional-reduction-results">Add Dimensional Reduction Results<a class="anchor" aria-label="anchor" href="#add-dimensional-reduction-results"></a>
-</h3>
-<p>We can use a similar workflow for dimensional-reduction results, which are stored in either the <code>obsm</code> or <code>varm</code> slots of a SOMA.</p>
+<div class="section level4">
+<h4 id="add-dimensional-reduction-results">Add Dimensional Reduction Results<a class="anchor" aria-label="anchor" href="#add-dimensional-reduction-results"></a>
+</h4>
+<p>We can use a similar workflow for dimensional-reduction results,
+which are stored in either the <code>obsm</code> or <code>varm</code>
+slots of a SOMA.</p>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dimreduc_pca</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://mojaveazure.github.io/seurat-object/reference/ObjectAccess.html" class="external-link">Reductions</a></span><span class="op">(</span></span>
 <span>  <span class="fu">Seurat</span><span class="fu">::</span><span class="fu">RunPCA</span><span class="op">(</span><span class="va">pbmc3k</span>, features <span class="op">=</span> <span class="va">var_genes</span><span class="op">)</span>,</span>
 <span>  slot <span class="op">=</span> <span class="st">"pca"</span></span>
-<span><span class="op">)</span></span>
-<span><span class="co">#&gt; PC_ 1 </span></span>
-<span><span class="co">#&gt; Positive:  ENSG00000101439, ENSG00000011600, ENSG00000204482, ENSG00000204472, ENSG00000087086, ENSG00000085265, ENSG00000090382, ENSG00000167996, ENSG00000163220, ENSG00000158869 </span></span>
-<span><span class="co">#&gt;     ENSG00000025708, ENSG00000197766, ENSG00000100097, ENSG00000143546, ENSG00000163131, ENSG00000100079, ENSG00000197249, ENSG00000066336, ENSG00000142089, ENSG00000197746 </span></span>
-<span><span class="co">#&gt;     ENSG00000126759, ENSG00000130066, ENSG00000216490, ENSG00000103187, ENSG00000163191, ENSG00000119655, ENSG00000131981, ENSG00000084207, ENSG00000103490, ENSG00000116701 </span></span>
-<span><span class="co">#&gt; Negative:  ENSG00000251562, ENSG00000227507, ENSG00000008517, ENSG00000116824, ENSG00000072818, ENSG00000164543, ENSG00000172543, ENSG00000198821, ENSG00000161570, ENSG00000196329 </span></span>
-<span><span class="co">#&gt;     ENSG00000165272, ENSG00000145649, ENSG00000077984, ENSG00000009790, ENSG00000172005, ENSG00000171476, ENSG00000078596, ENSG00000113088, ENSG00000136997, ENSG00000179144 </span></span>
-<span><span class="co">#&gt;     ENSG00000133134, ENSG00000134954, ENSG00000157978, ENSG00000115085, ENSG00000145220, ENSG00000166405, ENSG00000145779, ENSG00000105374, ENSG00000139187, ENSG00000164483 </span></span>
-<span><span class="co">#&gt; PC_ 2 </span></span>
-<span><span class="co">#&gt; Positive:  ENSG00000105374, ENSG00000180644, ENSG00000077984, ENSG00000145649, ENSG00000100453, ENSG00000137441, ENSG00000172543, ENSG00000115523, ENSG00000100450, ENSG00000159674 </span></span>
-<span><span class="co">#&gt;     ENSG00000129277, ENSG00000203747, ENSG00000161570, ENSG00000198821, ENSG00000143185, ENSG00000169583, ENSG00000196139, ENSG00000122862, ENSG00000171476, ENSG00000109861 </span></span>
-<span><span class="co">#&gt;     ENSG00000075234, ENSG00000196154, ENSG00000135046, ENSG00000008517, ENSG00000163453, ENSG00000115738, ENSG00000075624, ENSG00000143184, ENSG00000239713, ENSG00000164483 </span></span>
-<span><span class="co">#&gt; Negative:  ENSG00000105369, ENSG00000156738, ENSG00000100721, ENSG00000196735, ENSG00000204287, ENSG00000179344, ENSG00000247982, ENSG00000007312, ENSG00000196126, ENSG00000019582 </span></span>
-<span><span class="co">#&gt;     ENSG00000223865, ENSG00000204257, ENSG00000237541, ENSG00000198502, ENSG00000231389, ENSG00000242574, ENSG00000132185, ENSG00000122986, ENSG00000227507, ENSG00000095585 </span></span>
-<span><span class="co">#&gt;     ENSG00000226777, ENSG00000083454, ENSG00000140968, ENSG00000254709, ENSG00000133789, ENSG00000138639, ENSG00000163683, ENSG00000167641, ENSG00000132704, ENSG00000154102 </span></span>
-<span><span class="co">#&gt; PC_ 3 </span></span>
-<span><span class="co">#&gt; Positive:  ENSG00000196735, ENSG00000105369, ENSG00000007312, ENSG00000179344, ENSG00000223865, ENSG00000019582, ENSG00000231389, ENSG00000156738, ENSG00000196126, ENSG00000198502 </span></span>
-<span><span class="co">#&gt;     ENSG00000204287, ENSG00000237541, ENSG00000100721, ENSG00000247982, ENSG00000242574, ENSG00000204257, ENSG00000122986, ENSG00000132185, ENSG00000140968, ENSG00000095585 </span></span>
-<span><span class="co">#&gt;     ENSG00000226777, ENSG00000163683, ENSG00000166428, ENSG00000083454, ENSG00000254709, ENSG00000133789, ENSG00000086730, ENSG00000034510, ENSG00000132465, ENSG00000170476 </span></span>
-<span><span class="co">#&gt; Negative:  ENSG00000163736, ENSG00000163737, ENSG00000168497, ENSG00000113140, ENSG00000127920, ENSG00000154146, ENSG00000169704, ENSG00000150681, ENSG00000101162, ENSG00000120885 </span></span>
-<span><span class="co">#&gt;     ENSG00000180573, ENSG00000236304, ENSG00000005961, ENSG00000010278, ENSG00000088726, ENSG00000104267, ENSG00000171611, ENSG00000111644, ENSG00000108960, ENSG00000166681 </span></span>
-<span><span class="co">#&gt;     ENSG00000161911, ENSG00000124491, ENSG00000176783, ENSG00000184702, ENSG00000130830, ENSG00000102804, ENSG00000166091, ENSG00000272053, ENSG00000101335, ENSG00000185245 </span></span>
-<span><span class="co">#&gt; PC_ 4 </span></span>
-<span><span class="co">#&gt; Positive:  ENSG00000196735, ENSG00000180573, ENSG00000163737, ENSG00000105369, ENSG00000168497, ENSG00000007312, ENSG00000163736, ENSG00000127920, ENSG00000179344, ENSG00000113140 </span></span>
-<span><span class="co">#&gt;     ENSG00000156738, ENSG00000019582, ENSG00000169704, ENSG00000223865, ENSG00000150681, ENSG00000154146, ENSG00000171611, ENSG00000010278, ENSG00000237541, ENSG00000236304 </span></span>
-<span><span class="co">#&gt;     ENSG00000120885, ENSG00000101162, ENSG00000104267, ENSG00000196126, ENSG00000231389, ENSG00000005961, ENSG00000204287, ENSG00000100721, ENSG00000088726, ENSG00000111644 </span></span>
-<span><span class="co">#&gt; Negative:  ENSG00000026025, ENSG00000143546, ENSG00000197956, ENSG00000196154, ENSG00000034510, ENSG00000163220, ENSG00000008517, ENSG00000179144, ENSG00000197747, ENSG00000100079 </span></span>
-<span><span class="co">#&gt;     ENSG00000162444, ENSG00000172005, ENSG00000085265, ENSG00000090382, ENSG00000116824, ENSG00000163221, ENSG00000110077, ENSG00000082074, ENSG00000163191, ENSG00000165272 </span></span>
-<span><span class="co">#&gt;     ENSG00000133574, ENSG00000110203, ENSG00000135046, ENSG00000251562, ENSG00000204472, ENSG00000196329, ENSG00000169429, ENSG00000126709, ENSG00000186854, ENSG00000141505 </span></span>
-<span><span class="co">#&gt; PC_ 5 </span></span>
-<span><span class="co">#&gt; Positive:  ENSG00000227507, ENSG00000026025, ENSG00000165272, ENSG00000180817, ENSG00000172005, ENSG00000166803, ENSG00000116824, ENSG00000172725, ENSG00000115165, ENSG00000082074 </span></span>
-<span><span class="co">#&gt;     ENSG00000008517, ENSG00000102871, ENSG00000164111, ENSG00000123416, ENSG00000189159, ENSG00000110958, ENSG00000176890, ENSG00000078596, ENSG00000103187, ENSG00000169508 </span></span>
-<span><span class="co">#&gt;     ENSG00000184009, ENSG00000145779, ENSG00000165629, ENSG00000009790, ENSG00000133574, ENSG00000117450, ENSG00000122952, ENSG00000146386, ENSG00000166681, ENSG00000157978 </span></span>
-<span><span class="co">#&gt; Negative:  ENSG00000100453, ENSG00000137441, ENSG00000105374, ENSG00000115523, ENSG00000180644, ENSG00000129277, ENSG00000077984, ENSG00000159674, ENSG00000145649, ENSG00000100450 </span></span>
-<span><span class="co">#&gt;     ENSG00000169583, ENSG00000143185, ENSG00000172543, ENSG00000075234, ENSG00000196139, ENSG00000161570, ENSG00000163453, ENSG00000143184, ENSG00000143546, ENSG00000006075 </span></span>
-<span><span class="co">#&gt;     ENSG00000011600, ENSG00000171476, ENSG00000117281, ENSG00000135077, ENSG00000163220, ENSG00000158869, ENSG00000168229, ENSG00000100079, ENSG00000162444, ENSG00000163221</span></span></code></pre></div>
+<span><span class="op">)</span></span></code></pre></div>
 <p>Add the Seurat <code>DimReduc</code> object to the SOMA.</p>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">soma</span><span class="op">$</span><span class="fu">add_seurat_dimreduction</span><span class="op">(</span></span>
 <span>    <span class="va">dimreduc_pca</span>,</span>
 <span>    technique <span class="op">=</span> <span class="st">"pca"</span></span>
-<span><span class="op">)</span></span>
-<span><span class="co">#&gt; No AnnotationMatrix found at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/varm/dimreduction_pca'</span></span>
-<span><span class="co">#&gt; Creating new AnnotationMatrix array with index [var_id] at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/varm/dimreduction_pca'</span></span>
-<span><span class="co">#&gt; Ingesting AnnotationMatrix data into: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/varm/dimreduction_pca</span></span>
-<span><span class="co">#&gt; No AnnotationMatrix found at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/obsm/dimreduction_pca'</span></span>
-<span><span class="co">#&gt; Creating new AnnotationMatrix array with index [obs_id] at '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/obsm/dimreduction_pca'</span></span>
-<span><span class="co">#&gt; Ingesting AnnotationMatrix data into: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/obsm/dimreduction_pca</span></span>
-<span><span class="co">#&gt; &lt;SOMA&gt;</span></span>
-<span><span class="co">#&gt;   uri: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA </span></span>
-<span><span class="co">#&gt;   arrays: obs, var </span></span>
-<span><span class="co">#&gt;   groups: obsm, obsp, uns, varm, varp, X</span></span></code></pre></div>
-<p>The SOMA now contains 2 new arrays, one within the <code>obsm</code> group storing the cell embeddings</p>
+<span><span class="op">)</span></span></code></pre></div>
+<p>The SOMA now contains 2 new arrays, one within the <code>obsm</code>
+group storing the cell embeddings</p>
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">soma</span><span class="op">$</span><span class="va">obsm</span></span>
 <span><span class="co">#&gt; &lt;AnnotationMatrixGroup&gt;</span></span>
-<span><span class="co">#&gt;   uri: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/obsm </span></span>
-<span><span class="co">#&gt;   arrays: dimreduction_pca</span></span></code></pre></div>
-<p>and a second within the <code>varm</code> group storing the feature loadings.</p>
+<span><span class="co">#&gt;   uri: /var/folders/mb/hbl3p_1d4kv4_plbcqb6wd8w0000gn/T//RtmpOA4uOo/soco-pbmc3k/soma_RNA/obsm</span></span></code></pre></div>
+<p>and a second within the <code>varm</code> group storing the feature
+loadings.</p>
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">soma</span><span class="op">$</span><span class="va">varm</span></span>
 <span><span class="co">#&gt; &lt;AnnotationMatrixGroup&gt;</span></span>
-<span><span class="co">#&gt;   uri: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/varm </span></span>
-<span><span class="co">#&gt;   arrays: dimreduction_pca</span></span></code></pre></div>
-<p>Either of these can be accessed and queried directly, which is often useful for visualization applications.</p>
+<span><span class="co">#&gt;   uri: /var/folders/mb/hbl3p_1d4kv4_plbcqb6wd8w0000gn/T//RtmpOA4uOo/soco-pbmc3k/soma_RNA/varm</span></span></code></pre></div>
+<p>Either of these can be accessed and queried directly, which is often
+useful for visualization applications.</p>
 <div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">obsm_pca</span> <span class="op">&lt;-</span> <span class="va">soma</span><span class="op">$</span><span class="va">obsm</span><span class="op">$</span><span class="fu">get_member</span><span class="op">(</span><span class="st">"dimreduction_pca"</span><span class="op">)</span></span>
-<span><span class="va">obsm_pca</span></span>
-<span><span class="co">#&gt; &lt;AnnotationMatrix&gt;</span></span>
-<span><span class="co">#&gt;   uri: /var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/obsm/dimreduction_pca </span></span>
-<span><span class="co">#&gt;   dimensions: obs_id </span></span>
-<span><span class="co">#&gt;   attributes: PC_1, PC_2, PC_3, PC_4, PC_5, PC_6, PC_7, PC_8, PC_9, PC_10, PC_11, PC_12, PC...</span></span></code></pre></div>
-<p>Here we’ll load the cell embeddings as a <code>matrix</code> and visualize the first 5 PCs.</p>
+<span><span class="va">obsm_pca</span></span></code></pre></div>
+<p>Here we’ll load the cell embeddings as a <code>matrix</code> and
+visualize the first 5 PCs.</p>
 <div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cell_pcs</span> <span class="op">&lt;-</span> <span class="va">obsm_pca</span><span class="op">$</span><span class="fu">to_matrix</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Reading AnnotationMatrix into memory from '/var/folders/rn/r3r2rnt56z98l344kf1tq5ph0000gn/T//RtmpdUqxcd/soco-pbmc3k/soma_RNA/obsm/dimreduction_pca'</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/pairs.html" class="external-link">pairs</a></span><span class="op">(</span><span class="va">cell_pcs</span><span class="op">[</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
-<div class="figure">
-<img src="quickstart-pc-pairs-1.png" alt=""><p class="caption">plot of chunk pc-pairs</p>
 </div>
 </div>
-</div>
-<div class="section level2">
-<h2 id="populate-a-somacollection-in-tiledb-cloud">Populate a SOMACollection in TileDB Cloud<a class="anchor" aria-label="anchor" href="#populate-a-somacollection-in-tiledb-cloud"></a>
-</h2>
-<p>You can ingest a Seurat object into an S3 <code>SOMACollection</code> that’s automatically registered with TileDB Cloud using a special URI composed of:</p>
+<div class="section level3">
+<h3 id="populate-a-somacollection-in-tiledb-cloud">Populate a SOMACollection in TileDB Cloud<a class="anchor" aria-label="anchor" href="#populate-a-somacollection-in-tiledb-cloud"></a>
+</h3>
+<p>You can ingest a Seurat object into an S3 <code>SOMACollection</code>
+that’s automatically registered with TileDB Cloud using a special URI
+composed of:</p>
 <ul>
 <li>your TileDB namespace</li>
 <li>an S3 bucket where the dataset will be created</li>
 </ul>
-<p>and running the same initialization/ingestion steps we performed earlier:</p>
+<p>and running the same initialization/ingestion steps we performed
+earlier:</p>
 <div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">soco</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/SOMACollection.html">SOMACollection</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="st">"tiledb://&lt;namespace&gt;/s3://&lt;bucket&gt;/pbmc3k-soco"</span><span class="op">)</span></span>
 <span><span class="va">soco</span><span class="op">$</span><span class="fu">from_seurat</span><span class="op">(</span><span class="va">pbmc3k</span><span class="op">)</span></span></code></pre></div>
 <p>Note this assumes you:</p>
 <ul>
 <li>have a TileDB Cloud account</li>
-<li>registered <a href="https://cloud.tiledb.com/user-settings/credentials" class="external-link">cloud credentials</a> for AWS</li>
-<li>provided a <a href="https://cloud.tiledb.com/user-settings/storage-paths" class="external-link">default S3 storage path</a>
+<li>registered <a href="https://cloud.tiledb.com/user-settings/credentials" class="external-link">cloud
+credentials</a> for AWS</li>
+<li>provided a <a href="https://cloud.tiledb.com/user-settings/storage-paths" class="external-link">default S3
+storage path</a>
 </li>
-<li>are <a href="https://tiledb-inc.github.io/TileDB-Cloud-R/articles/Login.html" class="external-link">logged into TileDB Cloud</a> in your environment</li>
+<li>are <a href="https://tiledb-inc.github.io/TileDB-Cloud-R/articles/Login.html" class="external-link">logged
+into TileDB Cloud</a> in your environment</li>
 </ul>
-<p>You can then view the new SOMACollection directly on TileDB Cloud where you can inspect the various dataset components, share securely, view activity logs, and more. For example, here’s the TileDB Cloud view of the <code>pbmc3k</code> dataset we just ingested: <a href="https://cloud.tiledb.com/groups/aaronwolen/68ffab71-b090-42c9-8d8b-977d00979257/overview" class="external-link"><code>aaronwolen/pbmc3k-soco</code></a>.</p>
-<p>You can also securely access the dataset directly via R (or Python) using its TileDB Cloud URI, <code>tiledb://aaronwolen/pbmc3k-soco</code>.</p>
+<p>You can then view the new SOMACollection directly on TileDB Cloud
+where you can inspect the various dataset components, share securely,
+view activity logs, and more. For example, here’s the TileDB Cloud view
+of the <code>pbmc3k</code> dataset we just ingested: <a href="https://cloud.tiledb.com/groups/aaronwolen/68ffab71-b090-42c9-8d8b-977d00979257/overview" class="external-link"><code>aaronwolen/pbmc3k-soco</code></a>.</p>
+<p>You can also securely access the dataset directly via R (or Python)
+using its TileDB Cloud URI,
+<code>tiledb://aaronwolen/pbmc3k-soco</code>.</p>
+</div>
+<div class="section level2">
+<h2 id="session">Session<a class="anchor" aria-label="anchor" href="#session"></a>
+</h2>
+<details><summary>
+Session Info
+</summary><div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt; R version 4.2.2 (2022-10-31)</span></span>
+<span><span class="co">#&gt; Platform: x86_64-apple-darwin17.0 (64-bit)</span></span>
+<span><span class="co">#&gt; Running under: macOS Big Sur ... 10.16</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Matrix products: default</span></span>
+<span><span class="co">#&gt; BLAS:   /Library/Frameworks/R.framework/Versions/4.2/Resources/lib/libRblas.0.dylib</span></span>
+<span><span class="co">#&gt; LAPACK: /Library/Frameworks/R.framework/Versions/4.2/Resources/lib/libRlapack.dylib</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; locale:</span></span>
+<span><span class="co">#&gt; [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; attached base packages:</span></span>
+<span><span class="co">#&gt; [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; other attached packages:</span></span>
+<span><span class="co">#&gt; [1] RcppSpdlog_0.0.12  SeuratObject_4.1.3 sp_1.6-0           tiledbsc_0.1.5    </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>
+<span><span class="co">#&gt;  [1] Rcpp_1.0.10                 XVector_0.38.0             </span></span>
+<span><span class="co">#&gt;  [3] GenomeInfoDb_1.34.9         compiler_4.2.2             </span></span>
+<span><span class="co">#&gt;  [5] progressr_0.13.0            zlibbioc_1.44.0            </span></span>
+<span><span class="co">#&gt;  [7] bitops_1.0-7                MatrixGenerics_1.10.0      </span></span>
+<span><span class="co">#&gt;  [9] tools_4.2.2                 digest_0.6.31              </span></span>
+<span><span class="co">#&gt; [11] bit_4.0.5                   evaluate_0.20              </span></span>
+<span><span class="co">#&gt; [13] lattice_0.20-45             nanotime_0.3.7             </span></span>
+<span><span class="co">#&gt; [15] rlang_1.0.6                 Matrix_1.5-3               </span></span>
+<span><span class="co">#&gt; [17] DelayedArray_0.24.0         cli_3.6.0                  </span></span>
+<span><span class="co">#&gt; [19] RcppCCTZ_0.2.12             spdl_0.0.4                 </span></span>
+<span><span class="co">#&gt; [21] parallel_4.2.2              xfun_0.37                  </span></span>
+<span><span class="co">#&gt; [23] GenomeInfoDbData_1.2.9      knitr_1.42                 </span></span>
+<span><span class="co">#&gt; [25] IRanges_2.32.0              S4Vectors_0.36.2           </span></span>
+<span><span class="co">#&gt; [27] fs_1.6.1                    vctrs_0.5.2                </span></span>
+<span><span class="co">#&gt; [29] globals_0.16.2              stats4_4.2.2               </span></span>
+<span><span class="co">#&gt; [31] triebeard_0.3.0             bit64_4.0.5                </span></span>
+<span><span class="co">#&gt; [33] grid_4.2.2                  Biobase_2.58.0             </span></span>
+<span><span class="co">#&gt; [35] glue_1.6.2                  data.table_1.14.8          </span></span>
+<span><span class="co">#&gt; [37] listenv_0.9.0               R6_2.5.1                   </span></span>
+<span><span class="co">#&gt; [39] future.apply_1.10.0         parallelly_1.34.0          </span></span>
+<span><span class="co">#&gt; [41] tiledb_0.18.0.1             GenomicRanges_1.50.2       </span></span>
+<span><span class="co">#&gt; [43] matrixStats_0.63.0          urltools_1.7.3             </span></span>
+<span><span class="co">#&gt; [45] codetools_0.2-18            BiocGenerics_0.44.0        </span></span>
+<span><span class="co">#&gt; [47] SummarizedExperiment_1.28.0 future_1.32.0              </span></span>
+<span><span class="co">#&gt; [49] RCurl_1.98-1.10             zoo_1.8-11</span></span></code></pre></div>
+</details>
 </div>
   </div>
 
@@ -497,7 +541,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>
