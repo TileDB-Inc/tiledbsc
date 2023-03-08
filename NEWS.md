@@ -1,4 +1,4 @@
-# tiledbsc dev version
+# tiledbsc (development version)
 
 ## Changes
 
