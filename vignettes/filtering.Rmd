@@ -148,9 +148,12 @@ This approach can be more performant because the filter is selectively applied t
 
 # Session
 
+<details>
+  <summary>Session Info</summary>
 ```{r}
 sessionInfo()
 ```
+</details>
 
 ```{r cleanup, include=FALSE}
 tiledb::tiledb_vfs_remove_dir(soma$uri)

@@ -298,3 +298,14 @@ You can then view the new SOMACollection directly on TileDB Cloud where you can
 inspect the various dataset components, share securely, view activity logs, and more. For example, here's the TileDB Cloud view of the `pbmc3k` dataset we just ingested: [`aaronwolen/pbmc3k-soco`](https://cloud.tiledb.com/groups/aaronwolen/68ffab71-b090-42c9-8d8b-977d00979257/overview).
 
 You can also securely access the dataset directly via R (or Python) using its TileDB Cloud URI, `tiledb://aaronwolen/pbmc3k-soco`.
+
+# Session
+
+<details>
+  <summary>Session Info</summary>
+
+```{r}
+sessionInfo()
+```
+
+</details>
