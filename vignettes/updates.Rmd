@@ -151,9 +151,12 @@ sapply(
 
 # Session
 
+<details>
+  <summary>Session Info</summary>
 ```{r}
 sessionInfo()
 ```
+</details>
 
 ```{r cleanup, include=FALSE}
 tiledb::tiledb_vfs_remove_dir(soma$uri)

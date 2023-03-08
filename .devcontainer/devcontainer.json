@@ -20,7 +20,7 @@
 	"extensions": [
 		"stkb.rewrap",
 		"eamodio.gitlens",
-		"Ikuyadeu.r"
+		"REditorSupport.r"
 	],
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.

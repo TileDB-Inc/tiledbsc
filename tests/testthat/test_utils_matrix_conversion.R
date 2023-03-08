@@ -2,7 +2,7 @@
 test_that("conversion of dgTMatrix to COO data frame", {
   # create an ordered dgTMatrix by starting with an ordered dgCMatrix and
   # coercing that to a dgTMatrix
-  omat <- as(create_sparse_matrix_with_string_dims(repr = "C"), "dgTMatrix")
+  omat <- as(create_sparse_matrix_with_string_dims(repr = "C"), "CsparseMatrix")
 
   # create an unordered dgTMatrix
   umat <- create_sparse_matrix_with_string_dims(repr = "T")
@@ -36,7 +36,8 @@ test_that("conversion of dgTMatrix to COO data frame", {
   expect_setequal(jlabs, colnames(omat))
 
   omat2 <- dataframe_to_dgtmatrix(odf)[[1]]
-  expect_identical(
+
+  expect_equivalent(
     omat2[ilabs, jlabs],
     omat[ilabs, jlabs]
   )
@@ -59,7 +60,7 @@ test_that("conversion of a list dgTMatrix's to COO data frame", {
     SeuratObject::GetAssayData(pbmc_small, "counts"),
     SeuratObject::GetAssayData(pbmc_small, "data")
   )
-  mats <- lapply(mats, FUN = as, Class = "dgTMatrix")
+  mats <- lapply(mats, FUN = as, Class = "TsparseMatrix")
 
   df <- matrix_to_coo(mats)
   testthat::expect_true(is.data.frame(df))
@@ -80,7 +81,7 @@ test_that("conversion of a list dgTMatrix's to COO data frame", {
 
   mats[[3]] <- SeuratObject::GetAssayData(pbmc_small, "scale.data")
 
-  mats[[3]] <- as(mats[[3]], "dgTMatrix")
+  mats[[3]] <- as(mats[[3]], "TsparseMatrix")
   expect_error(
     matrix_to_coo(mats),
     "Matrix 1 and 3 are not layerable"

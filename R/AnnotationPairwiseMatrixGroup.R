@@ -66,7 +66,7 @@ AnnotationPairwiseMatrixGroup <- R6::R6Class(
       array_name <- paste0(prefix, technique)
 
       self$add_matrix(
-        data = as(object, "dgTMatrix"),
+        data = as(object, "TsparseMatrix"),
         name = array_name,
         metadata = list(
           assay_used = assay,

@@ -439,7 +439,7 @@ SOMA <- R6::R6Class(
         # and 'scale.data' must be coerced to a dgCMatrix and base::matrix,
         # respectively. Bug?
         assay_obj <- SeuratObject::CreateAssayObject(
-          data = as(assay_mats$data, "dgCMatrix"),
+          data = as(assay_mats$data, "CsparseMatrix"),
           min.cells = min_cells,
           min.features = min_features,
           check.matrix = check_matrix
@@ -455,7 +455,7 @@ SOMA <- R6::R6Class(
           assay_obj <- SeuratObject::SetAssayData(
             object = assay_obj,
             slot = "data",
-            new.data = as(assay_mats$data, "dgCMatrix")
+            new.data = as(assay_mats$data, "CsparseMatrix")
           )
         }
       }

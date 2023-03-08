@@ -44,6 +44,7 @@ ENV TZ UTC
 # r-cran-docopt is not currently in c2d4u so we install from source
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
+        pandoc \
         r-base \
         r-base-dev \
         r-recommended \
@@ -56,8 +57,10 @@ RUN apt-get update \
     && ln -s /usr/lib/R/site-library/littler/examples/installGithub.r /usr/local/bin/installGithub.r \
     && ln -s /usr/lib/R/site-library/littler/examples/testInstalled.r /usr/local/bin/testInstalled.r \
     && ln -s /usr/lib/R/site-library/littler/examples/installDeps.r /usr/local/bin/installDeps.r \
-    && rm -rf /var/lib/apt/lists/* \
-    && chgrp 1000 /usr/local/lib/R/site-library
+    && rm -rf /var/lib/apt/lists/*
+
+# Make site-library writeable by vscode user
+RUN chown -R vscode:vscode /usr/local/lib/R/site-library
 
 COPY Rprofile.site /etc/R
 
