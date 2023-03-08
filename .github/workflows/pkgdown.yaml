@@ -28,10 +28,10 @@ jobs:
         with:
           use-public-rspm: true
 
-      - name: Install dependencies
-        env:
-          R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
-        run: Rscript -e "install.packages(c('remotes', 'pkgdown'))" -e "remotes::install_deps(dependencies = TRUE)" -e "remotes::install_local()"
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          extra-packages: any::pkgdown, local::.
+          needs: website
 
       - name: Deploy package
         run: |
