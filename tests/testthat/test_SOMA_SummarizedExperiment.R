@@ -47,7 +47,7 @@ test_that("a SummarizedExperiment can be created from an existing SOMA", {
 
 
 test_that("a SingleCellExperiment can be created from an existing SOMA", {
-  skip_if_not_installed("SummarizedExperiment")
+  skip_if_not_installed("SingleCellExperiment")
   uri <- file.path(withr::local_tempdir(), "singlecellexperiment")
 
   # start with scdataset so the soma includes annot matrices
