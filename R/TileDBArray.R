@@ -253,6 +253,7 @@ TileDBArray <- R6::R6Class(
         if (self$verbose) message("...reading in batches")
         private$batched_query_object <- tiledb::createBatched(arr)
 
+
         if (return_incomplete) {
           results <- tiledb::fetchBatched(arr, private$batched_query_object)
         } else {
@@ -275,6 +276,7 @@ TileDBArray <- R6::R6Class(
       results
     },
 
+    #' @description Check if the read has completed.
     read_complete = function() {
       if (is.null(private$batched_query_object)) {
         stop("No batched query object found.")
@@ -282,6 +284,7 @@ TileDBArray <- R6::R6Class(
       tiledb::completedBatched(private$batched_query_object)
     },
 
+    #' @description Read the next batch of data.
     read_next = function() {
       if (self$read_complete()) {
         stop("No more data to read.", call. = FALSE)
