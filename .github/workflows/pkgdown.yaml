@@ -3,6 +3,8 @@
 on:
   push:
     branches: [main]
+  pull_request:
+    branches: [main]
   release:
     types: [published]
   workflow_dispatch:
@@ -33,7 +35,9 @@ jobs:
           extra-packages: any::pkgdown, local::.
           needs: website
 
+      #  Only run this step on releases
       - name: Deploy package
+        if: github.event_name == 'release'
         run: |
           git config --local user.name "$GITHUB_ACTOR"
           git config --local user.email "$GITHUB_ACTOR@users.noreply.github.com"
