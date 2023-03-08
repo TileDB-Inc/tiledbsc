@@ -145,3 +145,13 @@ soma$set_query(var_ids = vfs, var_attr_filter = vst.mean > 5)
 ```
 
 This approach can be more performant because the filter is selectively applied to the subset of indexed identifiers.
+
+# Session
+
+```{r}
+sessionInfo()
+```
+
+```{r cleanup, include=FALSE}
+tiledb::tiledb_vfs_remove_dir(soma$uri)
+```
