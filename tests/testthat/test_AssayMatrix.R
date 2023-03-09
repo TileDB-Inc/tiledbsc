@@ -29,6 +29,7 @@ test_that("AssayMatrix object can be created from a dgCMatrix", {
 
 test_that("Incomplete queries can be completed via batching", {
   uri <- withr::local_tempdir("assay-matrix-batched")
+  orig_local_value <<- tiledb::get_allocation_size_preference()
   with_allocation_size_preference(5e5)
 
   nr <- 1e3
@@ -52,5 +53,5 @@ test_that("Incomplete queries can be completed via batching", {
 })
 
 test_that("user allocation has returned to its default size", {
-  expect_equal(tiledb::get_allocation_size_preference(), 10485760)
+  expect_equal(tiledb::get_allocation_size_preference(), orig_local_value)
 })
