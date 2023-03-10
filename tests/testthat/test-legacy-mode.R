@@ -1,7 +1,6 @@
 test_that("read and write array without legacy mode", {
-  uri <- withr::local_tempdir("df-no-legacy18")
-  old_cfg <- tiledb::tiledb_config()
-  on.exit(tiledb::tiledb_ctx(old_cfg))
+  on.exit(tiledb::tiledb_ctx(tiledb::tiledb_config()))
+  uri <- withr::local_tempdir("df-no-legacy")
 
   expect_null(tiledb_ctx_get_key(TILEDB_LEGACY_KEY))
 
