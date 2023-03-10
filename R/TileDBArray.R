@@ -93,6 +93,9 @@ TileDBArray <- R6::R6Class(
         "Metadata must be a named list" = is_named_list(metadata)
       )
       on.exit(private$close())
+      if (self$verbose) {
+        message(sprintf("Adding %i metadata keys to array", length(metadata)))
+      }
       private$open("WRITE")
       mapply(
         FUN = tiledb::tiledb_put_metadata,
