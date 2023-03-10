@@ -26,6 +26,8 @@ TileDBArray <- R6::R6Class(
       if (self$exists()) {
         msg <- sprintf("Found existing %s at '%s'", self$class(), self$uri)
         private$initialize_object()
+        # Check for legacy validity mode metadata tag
+        toggle_tiledb_legacy_mode_if_needed(self$object, self$verbose)
       } else {
         msg <- sprintf("No %s found at '%s'", self$class(), self$uri)
       }
@@ -245,13 +247,16 @@ TileDBArray <- R6::R6Class(
         query_layout = "UNORDERED"
       )
 
-      # Enable validity legacy mode if the metadata tag is absent or set to true
-      leg_val <- self$get_metadata(SOMA_LEGACY_VALIDITY_KEY)
-      if (is.null(leg_val) || leg_val == "true") {
-        if (self$verbose) message("Switching to legacy validity mode.")
-        self$config["r.legacy_validity_mode"] <- "true"
-        self$ctx <- tiledb::tiledb_ctx(self$config)
-      }
+      # Check for legacy validity mode metadata tag
+      # private$open("READ")
+      # toggle_tiledb_legacy_mode_if_needed(private$tiledb_object, self$verbose)
+
+      # private$close()
+      # self$get_metadata()
+      # private$open("READ")
+      # tiledb::tiledb_get_all_metadata(private$tiledb_object)
+      # private$close()
+
       private$close()
     },
 
