@@ -241,6 +241,12 @@ TileDBArray <- R6::R6Class(
         ctx = self$ctx,
         query_layout = "UNORDERED"
       )
+      leg_val <- self$get_metadata(SOMA_LEGACY_VALIDITY_KEY)
+      if (is.null(leg_val) || leg_val != SOMA_LEGACY_VALIDITY) {
+        message("Switching to legacy validity mode.")
+        self$config["r.legacy_validity_mode"] <- "false"
+        self$ctx <- tiledb::tiledb_ctx(self$config)
+      }
       private$close()
     },
 
@@ -248,6 +254,7 @@ TileDBArray <- R6::R6Class(
       meta <- list()
       meta[[SOMA_OBJECT_TYPE_METADATA_KEY]] <- class(self)[1]
       meta[[SOMA_ENCODING_VERSION_METADATA_KEY]] <- SOMA_ENCODING_VERSION
+      meta[[SOMA_LEGACY_VALIDITY_KEY]] <- SOMA_LEGACY_VALIDITY
       self$add_metadata(meta) # TileDBArray or TileDBGroup
     },
 

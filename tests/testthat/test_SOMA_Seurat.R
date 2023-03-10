@@ -4,7 +4,7 @@ setup({
 })
 
 teardown({
-  tiledb::tiledb_vfs_remove_dir(tdb_uri)
+  #tiledb::tiledb_vfs_remove_dir(tdb_uri)
 })
 
 
