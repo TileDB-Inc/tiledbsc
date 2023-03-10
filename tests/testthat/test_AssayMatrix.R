@@ -25,6 +25,12 @@ test_that("AssayMatrix object can be created from a dgCMatrix", {
   rlabs <- rownames(mat2)
   clabs <- colnames(mat2)
   expect_equal(mat1[rlabs, clabs], mat2[rlabs, clabs])
+
+  # verify legacy metadata tag is present
+  expect_equal(
+    assaymat$get_metadata(SOMA_LEGACY_VALIDITY_KEY),
+    SOMA_LEGACY_VALIDITY
+  )
 })
 
 test_that("Incomplete queries can be completed via batching", {
