@@ -241,10 +241,12 @@ TileDBArray <- R6::R6Class(
         ctx = self$ctx,
         query_layout = "UNORDERED"
       )
+
+      # Enable validity legacy mode if the metadata tag is absent or set to true
       leg_val <- self$get_metadata(SOMA_LEGACY_VALIDITY_KEY)
-      if (is.null(leg_val) || leg_val != SOMA_LEGACY_VALIDITY) {
-        message("Switching to legacy validity mode.")
-        self$config["r.legacy_validity_mode"] <- "false"
+      if (is.null(leg_val) || leg_val == "true") {
+        if (self$verbose) message("Switching to legacy validity mode.")
+        self$config["r.legacy_validity_mode"] <- "true"
         self$ctx <- tiledb::tiledb_ctx(self$config)
       }
       private$close()
