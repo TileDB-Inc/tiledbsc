@@ -49,4 +49,8 @@ jobs:
           extra-packages: any::rcmdcheck
           needs: check
 
+      # need current GH version
+      - name: Update TileDB-R
+        run: Rscript -e 'install.packages("remotes"); remotes::install_github("TileDB-Inc/TileDB-R")'
+          
       - uses: r-lib/actions/check-r-package@v2
