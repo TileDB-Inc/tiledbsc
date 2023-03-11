@@ -42,10 +42,11 @@ tiledb_ctx_set_key <- function(key, value) {
 #' Note this has to open and close the array to read the metadata.
 #'
 #' @param arr A [`tiledb::tiledb_array`]
+#' @importFrom utils packageVersion
 #' @noRd
 toggle_tiledb_legacy_mode_if_needed <- function(arr, verbose = FALSE) {
   stopifnot(inherits(arr, "tiledb_array"))
-  if (packageVersion("tiledb") < "0.18.0.3") return()
+  if (utils::packageVersion("tiledb") < "0.18.0.3") return()
   if (verbose) message(sprintf("Checking legacy validity mode for array: '%s'", arr@uri))
 
   # Get the metadata "soma_legacy_validity" tag
