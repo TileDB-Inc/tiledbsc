@@ -5,6 +5,7 @@
 - Set minimum version of Matrix to 1.5.3 to avoid `CsparseMatrix` validation issue present 1.5.2
 - In CI `r-lib/actions/setup-r-dependencies@v2` is now used to install dependencies
 - Sparse matrix conversions are now performed via virtual classes to comply with the changes noted in the Matrix 1.5.0 release notes
+- A new metadata tag, `soma_legacy_validity`, is now attached to all arrays created by `SOMA` objects. By default this value is `"false"` unless the TileDB-R legacy validity mode was enabled at creation time (i.e., `r.legacy_validity_mode`). When reading arrays from disk, the `AnnotationDataFrame` class will check for this tag on initialization and when performing reads or writes. If the tag is present and set to `"true"`, legacy validity mode is enabled globally (as its not possible to set on a per-array basis). Legacy validity mode is also enabled when reading `AnnotationDataFrame` arrays that lack the tag, as this indicates the array was created with an older version of the package. These checks are limited to `AnnotationDataFrame` arrays because the incorrect validity map values only affect nullable string attributes. See TileDB-R's [release notes](https://github.com/TileDB-Inc/TileDB-R/blob/master/NEWS.md#breaking-changes) for more information.
 
 # tiledbsc 0.1.5
 
