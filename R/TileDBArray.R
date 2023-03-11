@@ -247,16 +247,6 @@ TileDBArray <- R6::R6Class(
         query_layout = "UNORDERED"
       )
 
-      # Check for legacy validity mode metadata tag
-      # private$open("READ")
-      # toggle_tiledb_legacy_mode_if_needed(private$tiledb_object, self$verbose)
-
-      # private$close()
-      # self$get_metadata()
-      # private$open("READ")
-      # tiledb::tiledb_get_all_metadata(private$tiledb_object)
-      # private$close()
-
       private$close()
     },
 
