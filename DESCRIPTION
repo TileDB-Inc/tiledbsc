@@ -56,4 +56,3 @@ Suggests:
     SingleCellExperiment
 VignetteBuilder: knitr
 Config/testthat/edition: 2
-Additional_repositories: https://tiledb-inc.r-universe.dev
