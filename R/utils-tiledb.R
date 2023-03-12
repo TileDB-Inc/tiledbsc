@@ -30,13 +30,13 @@ tiledb_ctx_set_key <- function(key, value) {
 #' Toggle legacy validity mode in the global context
 #'
 #' Legacy validity mode is enabled if:
-#' - the array does not contain the metadata tag `"soma_legacy_validity"`
+#' - the array does not contain the metadata tag `SOMA_LEGACY_VALIDITY_KEY`
 #' - the array contains the metadata tag `"soma_legacy_validity"` and it is set
 #'   to `"true"`
 #'
 #' Legacy validity mode is disabled if:
 #' - `"r.legacy_validity_mode"`` is `"true"` in the global context and the array
-#'   contains the metadata tag `"soma_legacy_validity"` and it is set to
+#'   contains the metadata tag `SOMA_LEGACY_VALIDITY_KEY` and it is set to
 #'   `"false"`
 #'
 #' Note this has to open and close the array to read the metadata.
