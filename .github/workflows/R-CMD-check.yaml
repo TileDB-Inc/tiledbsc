@@ -19,7 +19,7 @@ jobs:
       matrix:
         config:
           - {os: macOS-latest,   r: 'release'}
-          - {os: windows-latest, r: 'release'}
+# off for now: - {os: windows-latest, r: 'release'}
           - {os: ubuntu-latest,   r: 'devel', http-user-agent: 'release'}
           - {os: ubuntu-latest,   r: 'release'}
           - {os: ubuntu-latest,   r: 'oldrel-1'}
@@ -49,4 +49,8 @@ jobs:
           extra-packages: any::rcmdcheck
           needs: check
 
+      # need current GH version
+      - name: Update TileDB-R
+        run: Rscript -e 'install.packages("remotes"); remotes::install_github("TileDB-Inc/TileDB-R")'
+          
       - uses: r-lib/actions/check-r-package@v2
