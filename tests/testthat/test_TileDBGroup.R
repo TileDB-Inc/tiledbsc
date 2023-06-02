@@ -64,9 +64,11 @@ test_that("members can be added and retrieved from a new group", {
 
   # remove members
   grp$remove_member("a1")
+  expect_length(grp$members, 1)
   expect_equal(grp$count_members(), 1)
   grp$remove_member("g1")
   expect_equal(grp$count_members(), 0)
+  expect_length(grp$members, 0)
 })
 
 test_that("group member names are retained", {
