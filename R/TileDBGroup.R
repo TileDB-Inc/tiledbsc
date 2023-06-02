@@ -148,6 +148,8 @@ TileDBGroup <- R6::R6Class(
         grp = self$object,
         uri = name
       )
+      # Remove from cache
+      self$members[[name]] <- NULL
     },
 
     #' @description Count the number of members in the group.
