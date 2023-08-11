@@ -52,7 +52,8 @@ Add a new \code{\link{AssayMatrix}} array to the group.
   data,
   name,
   value_col = "value",
-  metadata = NULL
+  metadata = NULL,
+  transpose = FALSE
 )}\if{html}{\out{</div>}}
 }
 
@@ -69,6 +70,10 @@ must be aligned to the dimension indicated by the group's
 contain the matrix values.}
 
 \item{\code{metadata}}{Named list of metadata to add.}
+
+\item{\code{transpose}}{If \code{TRUE}, the order of the new TileDB array's
+dimensions are reversed relative to the names defined by
+\code{AssayMatrixGroup}'s \code{dimension_name}.}
 }
 \if{html}{\out{</div>}}
 }

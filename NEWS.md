@@ -26,6 +26,8 @@
 
 ## Features
 
+### Batched Reads
+
 * Added `batch_mode` option to methods that read `X` layers (i.e., `AssayMatrix` objects) into memory. When enabled, batch mode leverages the family of `Batched` classes added to tiledb-r in version [0.14.0](https://github.com/TileDB-Inc/TileDB-R/releases/tag/0.14.0) to detect partial query results and resubmit until all results are retrieved. This feature is currently disabled by default and only applies to `X` layers (which are typically the largest arrays). You can enable batch mode from the following methods:
   - `SOMACollection$to_seurat()`
   - `SOMA$to_seurat_assay()`
@@ -40,8 +42,58 @@
 * Updated bundled `Makefile` to add targets for generating pre-computed vignettes and performing common dev operations
 * Added `CONTRIBUTING.md` to reference TileDB's CoC and document the `Makefile`
 
+### `AssayMatrix` Dimension Order
+
+`obs_id` is now the first dimension in TileDB arrays created by the `AssayMatrix` class when converting a `Seurat` object or *Seurat* `Assay` object to a `SOMACollection` or `SOMA`, respectively.
+
+This change is *backwards compatible* with existing SOMAs, but it is recommended that you recreate arrays with the latest version of *tiledbsc*.
+
+This functionality is enabled by the new `transpose` argument added to the `AssayMatrix` class' methods for reading/writing `matrix`-like objects. Concretely, this makes it possible to ingest a matrix into a TileDB array with the dimension order reversed relative to the original matrix shape. For example, consider matrix, `mat`, with dimensions i and j:
+
+```r
+mat <- matrix(1:6, nrow = 3, dimnames = list(LETTERS[1:3], letters[1:2]))
+mat
+#>   a b
+#> A 1 4
+#> B 2 5
+#> C 3 6
+```
+
+By default AssayMatrix will create a TileDB array with dimensions i/j (i.e., the same order as the matrix):
+
+```r
+amat1 <- AssayMatrix$new(uri = "mem://assaymatrix1", verbose = FALSE)
+amat1$from_matrix(mat, index_cols = c("i", "j"))
+amat1$to_dataframe()
+#>   i j value
+#> 1 A a     1
+#> 2 A b     4
+#> 3 B a     2
+#> 4 B b     5
+#> 5 C a     3
+#> 6 C b     6
+```
+
+However, if you set `transpose = TRUE`, the TileDB array will have dimensions j/i instead:
+
+```r
+amat2 <- AssayMatrix$new(uri = "mem://assaymatrix2", verbose = FALSE)
+amat2$from_matrix(mat, index_cols = c("i", "j"), transpose = TRUE)
+amat2$to_dataframe()
+#>   j i value
+#> 1 a A     1
+#> 2 a B     2
+#> 3 a C     3
+#> 4 b A     4
+#> 5 b B     5
+#> 6 b C     6
+```
+
+Effectively, this stores the data on disk in column-major order. However, the `transpose` approach makes it possible to store `var` &times; `obs` matrices used by *Seurat* and *SummarizedExperiment* in `obs` &times `var` arrays prescribed the SOMA specification and used by *tiledbsc-py*.
+
 ## Changes
 
+* `AssayMatrix$from_matrix()`, `AssayMatrix$to_matrix()`, and `AssayMatrixGroup$add_assay_matrix()` gained a `transpose` argument (#80).
 * Removed vestigial code for merging non-layerable COO data.frames, which was previously used to add ingest dense `scaled.data` from a Seurat `Assay` as an attribute of the `X` array, along with `counts`/`data`. This is no longer necessary as each layer is now ingested into a separate array within the `X` group (#73).
 * The internal utility `dgtmatrix_to_dataframe()` was replaced with `matrix_to_coo()`, which converts Matrix-like objects to COO data frames much more efficiently (#75).
 * The internal utility `pad_matrix()` can now pad a matrix by adding empty rows (#79).

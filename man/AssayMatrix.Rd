@@ -58,7 +58,7 @@ Used for the \code{X} field of \code{\link{SOMA}}.
 \subsection{Method \code{from_matrix()}}{
 Ingest assay data from a sparse matrix
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AssayMatrix$from_matrix(x, index_cols, value_col = "value")}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{AssayMatrix$from_matrix(x, index_cols, value_col = "value", transpose = FALSE)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -72,6 +72,53 @@ will contain the matrix row/column names.}
 
 \item{\code{value_col}}{Name to use for the TileDB array's attribute that will
 contain the matrix values.}
+
+\item{\code{transpose}}{If \code{TRUE}, the order of the new TileDB array's
+dimensions are reversed relative to the names defined by \code{index_cols}.
+\subsection{Transposing Dimensions}{
+
+The \code{transpose} argument allows you to ingest a matrix into a TileDB
+array with the dimension order reversed relative to the original matrix
+shape. For example, consider matrix \code{mat} with dimensions \code{i} and \code{j}:
+
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{mat <- matrix(1:6, nrow = 3, dimnames = list(LETTERS[1:3], letters[1:2]))
+mat
+#>   a b
+#> A 1 4
+#> B 2 5
+#> C 3 6
+}\if{html}{\out{</div>}}
+
+By default \code{AssayMatrix} will create a TileDB array will have dimensions
+\code{i}/\code{j} (i.e., the same order as the matrix):
+
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{amat1 <- AssayMatrix$new(uri = "mem://assaymatrix1", verbose = FALSE)
+amat1$from_matrix(mat, index_cols = c("i", "j"))
+amat1$to_dataframe()
+#>   i j value
+#> 1 A a     1
+#> 2 A b     4
+#> 3 B a     2
+#> 4 B b     5
+#> 5 C a     3
+#> 6 C b     6
+}\if{html}{\out{</div>}}
+
+If you set \code{transpose = TRUE}, the TileDB array will have dimensions
+\code{j}/\code{i} instead:
+
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{amat2 <- AssayMatrix$new(uri = "mem://assaymatrix2", verbose = FALSE)
+amat2$from_matrix(mat, index_cols = c("i", "j"), transpose = TRUE)
+amat2$to_dataframe()
+#>   j i value
+#> 1 a A     1
+#> 2 a B     2
+#> 3 a C     3
+#> 4 b A     4
+#> 5 b B     5
+#> 6 b C     6
+}\if{html}{\out{</div>}}
+}}
 }
 \if{html}{\out{</div>}}
 }
@@ -128,7 +175,7 @@ A \code{\link[Matrix:dgTMatrix-class]{Matrix::dgTMatrix}}.
 \subsection{Method \code{to_matrix()}}{
 Retrieve assay data from TileDB as a 2D sparse matrix.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AssayMatrix$to_matrix(attr = NULL, batch_mode = FALSE)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{AssayMatrix$to_matrix(attr = NULL, batch_mode = FALSE, transpose = FALSE)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -140,6 +187,10 @@ first layer is returned.}
 \item{\code{batch_mode}}{logical, if \code{TRUE}, batch query mode is enabled, which
 provides the ability to detect partial query results and resubmit until
 all results are retrieved.}
+
+\item{\code{transpose}}{If \code{TRUE}, the order of the matrix's dimensions are
+reversed relative to the TileDB array's dimension name.
+dimensions are reversed relative to the names defined by \code{index_cols}.}
 }
 \if{html}{\out{</div>}}
 }

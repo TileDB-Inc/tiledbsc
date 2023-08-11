@@ -27,17 +27,55 @@ AssayMatrix <- R6::R6Class(
     #' will contain the matrix row/column names.
     #' @param value_col Name to use for the TileDB array's attribute that will
     #' contain the matrix values.
-    from_matrix = function(x, index_cols, value_col = "value") {
+    #' @param transpose If `TRUE`, the order of the new TileDB array's
+    #' dimensions are reversed relative to the names defined by `index_cols`.
+    #'
+    #' ## Transposing Dimensions
+    #'
+    #' The `transpose` argument allows you to ingest a matrix into a TileDB
+    #' array with the dimension order reversed relative to the original matrix
+    #' shape. For example, consider matrix `mat` with dimensions `i` and `j`:
+    #'
+    #' ```{r}
+    #' mat <- matrix(1:6, nrow = 3, dimnames = list(LETTERS[1:3], letters[1:2]))
+    #' mat
+    #' ```
+    #'
+    #' By default `AssayMatrix` will create a TileDB array will have dimensions
+    #' `i`/`j` (i.e., the same order as the matrix):
+    #'
+    #' ```{r}
+    #' amat1 <- AssayMatrix$new(uri = "mem://assaymatrix1", verbose = FALSE)
+    #' amat1$from_matrix(mat, index_cols = c("i", "j"))
+    #' amat1$to_dataframe()
+    #' ```
+    #'
+    #' If you set `transpose = TRUE`, the TileDB array will have dimensions
+    #' `j`/`i` instead:
+    #'
+    #' ```{r}
+    #' amat2 <- AssayMatrix$new(uri = "mem://assaymatrix2", verbose = FALSE)
+    #' amat2$from_matrix(mat, index_cols = c("i", "j"), transpose = TRUE)
+    #' amat2$to_dataframe()
+    #' ```
+
+    from_matrix = function(
+      x,
+      index_cols,
+      value_col = "value",
+      transpose = FALSE
+    ) {
       stopifnot(
         "Must provide 'index_cols' to name the index columns" = !missing(index_cols),
         "'value_col' must be scalar" = is_scalar_character(value_col)
       )
       private$validate_matrix(x)
+      df <- matrix_to_coo(x, index_cols = index_cols, value_cols = value_col)
 
-      self$from_dataframe(
-        matrix_to_coo(x, index_cols = index_cols, value_cols = value_col),
-        index_cols = index_cols
-      )
+      # reverse index columns if transposing array dimensions
+      if (transpose) index_cols <- rev(index_cols)
+
+      self$from_dataframe(df, index_cols = index_cols)
     },
 
     #' @description Ingest assay data from a COO-formatted data frame
@@ -80,8 +118,11 @@ AssayMatrix <- R6::R6Class(
     #' @description Retrieve assay data from TileDB as a 2D sparse matrix.
     #' @param attr The name of the attribute layer to retrieve. If `NULL`, the
     #' first layer is returned.
+    #' @param transpose If `TRUE`, the order of the matrix's dimensions are
+    #' reversed relative to the TileDB array's dimension name.
+    #' dimensions are reversed relative to the names defined by `index_cols`.
     #' @return A [`Matrix::dgTMatrix-class`].
-    to_matrix = function(attr = NULL, batch_mode = FALSE) {
+    to_matrix = function(attr = NULL, batch_mode = FALSE, transpose = FALSE) {
       if (is.null(attr)) {
         attr <- self$attrnames()[1]
       }
@@ -92,6 +133,9 @@ AssayMatrix <- R6::R6Class(
         batch_mode = batch_mode,
         return_as = "data.frame"
       )
+
+      # reverse index columns if transposing array dimensions
+      if (transpose) assay_data <- assay_data[c(rev(self$dimnames()), attr)]
 
       assay_dims <- vapply_int(assay_data[1:2], n_unique)
       row_labels <- unique(assay_data[[1]])
