@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tiledbsc</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.5.9001</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.5.9002</span>
       </span>
     </div>
 
@@ -74,6 +74,10 @@
 <li>In CI <code>r-lib/actions/setup-r-dependencies@v2</code> is now used to install dependencies</li>
 <li>Sparse matrix conversions are now performed via virtual classes to comply with the changes noted in the Matrix 1.5.0 release notes</li>
 <li>A new metadata tag, <code>soma_legacy_validity</code>, is now attached to all arrays created by <code>SOMA</code> objects. By default this value is <code>"false"</code> unless the TileDB-R legacy validity mode was enabled at creation time (i.e., <code>r.legacy_validity_mode</code>). When reading arrays from disk, the <code>AnnotationDataFrame</code> class will check for this tag on initialization and when performing reads or writes. If the tag is present and set to <code>"true"</code>, legacy validity mode is enabled globally (as its not possible to set on a per-array basis). Legacy validity mode is also enabled when reading <code>AnnotationDataFrame</code> arrays that lack the tag, as this indicates the array was created with an older version of the package. These checks are limited to <code>AnnotationDataFrame</code> arrays because the incorrect validity map values only affect nullable string attributes. See TileDB-R’s <a href="https://github.com/TileDB-Inc/TileDB-R/blob/master/NEWS.md#breaking-changes" class="external-link">release notes</a> for more information.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="fixes-development-version">Fixes<a class="anchor" aria-label="anchor" href="#fixes-development-version"></a></h3>
+<ul><li>Group member cache is now updated when a member is removed (<a href="https://github.com/TileDB-Inc/tiledbsc/issues/102" class="external-link">#102</a>)</li>
 </ul></div>
 </div>
     <div class="section level2">
