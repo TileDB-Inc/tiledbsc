@@ -55,11 +55,7 @@ AssayMatrix <- R6::R6Class(
       if (!self$exists()) {
         private$create_empty_array(x, index_cols)
       } else {
-        if (self$verbose) {
-          message(
-            sprintf("Updating existing %s at '%s'", self$class(), self$uri)
-          )
-        }
+        spdl::info(sprintf("Updating existing %s at '%s'", self$class(), self$uri))
       }
       private$ingest_data(x, index_cols)
     },

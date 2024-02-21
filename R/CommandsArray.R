@@ -37,11 +37,7 @@ CommandsArray <- R6::R6Class(
       if (!self$exists()) {
         private$create_empty_array(command_dataframe, "index")
       } else {
-        if (self$verbose) {
-          message(
-            sprintf("Updating existing %s at '%s'", self$class(), self$uri)
-          )
-        }
+        spdl::info(sprintf("Updating existing %s at '%s'", self$class(), self$uri))
       }
       private$ingest_data(command_dataframe)
     },
@@ -49,7 +45,7 @@ CommandsArray <- R6::R6Class(
     #' @description Retrieve the Seurat Command history from TileDB
     #' @return A named list of Seurat Command objects
     to_named_list_of_commands = function() {
-      if (self$verbose) message("Reading command history into memory")
+      spdl::info("Reading command history into memory")
 
       arr <- self$tiledb_array(return_as = "data.frame")[]
       df <- arr[]
@@ -74,6 +70,9 @@ CommandsArray <- R6::R6Class(
 
 # Coerce a Seurat Command to a data.frame, using JSON serialization of the
 # command's parameters
+#' @method as.data.frame SeuratCommand
+#' @export
+#'
 as.data.frame.SeuratCommand <- function(x, row.names = FALSE, optional = FALSE, ...) {
     data.frame(
         name = slot(x, "name"),

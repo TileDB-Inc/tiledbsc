@@ -29,10 +29,12 @@ TileDBObject <- R6::R6Class(
       if (!is.null(config) && !is.null(ctx)) stop("Cannot pass a config and context, please choose one")
 
       if (!is.null(self$config)) {
+        spdl::info("Creating context from provided config")
         self$ctx <- tiledb::tiledb_ctx(self$config)
       }
 
       if (is.null(self$ctx)) {
+        spdl::info("Using cached TileDB context")
         self$ctx <- tiledb::tiledb_get_context()
       }
     },
@@ -60,6 +62,7 @@ TileDBObject <- R6::R6Class(
       } else {
         stop("Unknown object type")
       }
+      spdl::debug("Expecting self to be a '{}'", paste(expected_type, collapse = ', '))
       tiledb::tiledb_object_type(self$uri, ctx = self$ctx) %in% expected_type
     }
   ),
@@ -82,6 +85,7 @@ TileDBObject <- R6::R6Class(
       # initialize private$tiledb_object
       if (is.null(private$tiledb_object)) {
         if (self$exists()) {
+          spdl::debug("Initializing the underlying TileDB object")
           private$initialize_object()
         } else {
           stop("TileDB object does not exist")

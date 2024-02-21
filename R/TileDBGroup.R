@@ -24,17 +24,9 @@ TileDBGroup <- R6::R6Class(
       super$initialize(uri, verbose, config, ctx)
 
       if (self$exists()) {
-        if (self$verbose) {
-          message(
-            sprintf("Found existing %s at '%s'", self$class(), self$uri)
-          )
-        }
+        spdl::info(sprintf("Found existing %s at '%s'", self$class(), self$uri))
       } else {
-        if (self$verbose) {
-          message(
-            sprintf("No %s currently exists at '%s'", self$class(), self$uri)
-          )
-        }
+        spdl::info(sprintf("No %s currently exists at '%s'", self$class(), self$uri))
         private$create_group()
       }
       private$initialize_object()
@@ -281,23 +273,24 @@ TileDBGroup <- R6::R6Class(
   private = list(
 
     create_group = function() {
-      if (self$verbose) {
-        message(sprintf("Creating new %s at '%s'", self$class(), self$uri))
-      }
+      spdl::info(sprintf("Creating new %s at '%s'", self$class(), self$uri))
       tiledb::tiledb_group_create(self$uri, ctx = self$ctx)
       private$write_object_type_metadata()
     },
 
     open = function(mode) {
       mode <- match.arg(mode, c("READ", "WRITE"))
+      spdl::debug("Opening group at {} with mode '{}'", self$uri, mode)
       invisible(tiledb::tiledb_group_open(self$object, type = mode))
     },
 
     close = function() {
+      spdl::debug("Closing group at {}", self$uri)
       invisible(tiledb::tiledb_group_close(self$object))
     },
 
     initialize_object = function() {
+      spdl::debug("Initializing TileDB group at {}'", self$uri)
       private$tiledb_object <- tiledb::tiledb_group(self$uri, ctx = self$ctx)
       private$close()
     },
@@ -306,6 +299,7 @@ TileDBGroup <- R6::R6Class(
       meta <- list()
       meta[[SOMA_OBJECT_TYPE_METADATA_KEY]] <- class(self)[1]
       meta[[SOMA_ENCODING_VERSION_METADATA_KEY]] <- SOMA_ENCODING_VERSION
+      spdl::debug("Adding object-type group-level metadata")
       self$add_metadata(meta) # TileDBArray or TileDBGroup
     },
 

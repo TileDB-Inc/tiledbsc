@@ -47,7 +47,7 @@ tiledb_ctx_set_key <- function(key, value) {
 toggle_tiledb_legacy_mode_if_needed <- function(arr, verbose = FALSE) {
   stopifnot(inherits(arr, "tiledb_array"))
   if (utils::packageVersion("tiledb") < "0.18.0.3") return()
-  if (verbose) message(sprintf("Checking legacy validity mode for array: '%s'", arr@uri))
+  spdl::info(sprintf("Checking legacy validity mode for array: '%s'", arr@uri))
 
   # Get the metadata "soma_legacy_validity" tag
   tiledb::tiledb_array_open(arr, "READ")
@@ -61,7 +61,7 @@ toggle_tiledb_legacy_mode_if_needed <- function(arr, verbose = FALSE) {
   if (is.null(legacy_ctx_value)) { # Validity mode is unset in the global context
     if (is.null(legacy_md_value) || legacy_md_value == "true") {
       tiledb_ctx_set_key(TILEDB_LEGACY_KEY, "true")
-      if (verbose) message("Enabled legacy validity mode")
+      spdl::info("Enabled legacy validity mode")
     }
   } else { # Validity mode was previously set in the global context
     if (is.null(legacy_md_value)) {
