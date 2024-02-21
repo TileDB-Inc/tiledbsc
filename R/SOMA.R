@@ -205,15 +205,13 @@ SOMA <- R6::R6Class(
       var_attr_filter <- var_attr_filter %||% "NULL"
 
       if (var_attr_filter != "NULL") {
-        if (self$verbose) message("Querying var with attribute filter")
+        spdl::info("Querying var with attribute filter")
         self$var$set_query(
           dims = dims["var_id"],
           attr_filter = var_attr_filter
         )
         dims$var_id <- self$var$ids()
-        if (self$verbose) {
-          message(sprintf("...retrieved %i var IDs", length(dims$var_id)))
-        }
+        spdl::info(sprintf("...retrieved %i var IDs", length(dims$var_id)))
         self$var$reset_query()
       }
 
@@ -226,15 +224,13 @@ SOMA <- R6::R6Class(
       obs_attr_filter <- obs_attr_filter %||% "NULL"
 
       if (obs_attr_filter != "NULL") {
-        if (self$verbose) message("Querying obs with attribute filter")
+        spdl::info("Querying obs with attribute filter")
         self$obs$set_query(
           dims = dims["obs_id"],
           attr_filter = obs_attr_filter
         )
         dims$obs_id <- self$obs$ids()
-        if (self$verbose) {
-          message(sprintf("...retrieved %i obs IDs", length(dims$obs_id)))
-        }
+        spdl::info(sprintf("...retrieved %i obs IDs", length(dims$obs_id)))
         self$obs$reset_query()
       }
 
@@ -371,11 +367,7 @@ SOMA <- R6::R6Class(
       # Don't ingest the 'data' layer if it's identical to the 'counts'
       if (identical(assay_mats$counts, assay_mats$data)) {
         assay_mats$data <- NULL
-        if (self$verbose) {
-          message(
-            "Skipping ingestion of 'data' because it is identical to 'counts'"
-          )
-        }
+        spdl::info("Skipping ingestion of 'data' because it is identical to 'counts'")
       }
 
       # create a list of non-empty matrices
@@ -394,14 +386,11 @@ SOMA <- R6::R6Class(
         self$X$add_metadata(list(key = assay_key))
       }
 
-      if (self$verbose) {
-        msg <- sprintf(
-          "Finished converting Seurat Assay with key [%s] to %s",
-          assay_key,
-          self$class()
-        )
-        message(msg)
-      }
+      spdl::info(sprintf(
+        "Finished converting Seurat Assay with key [%s] to %s",
+        assay_key,
+        self$class()
+      ))
     },
 
     #' @description Convert to a [`SeuratObject::Assay`] object.
@@ -592,11 +581,7 @@ SOMA <- R6::R6Class(
         arrays <- technique_arrays
       }
 
-      if (self$verbose) {
-        message(
-          sprintf("Found %i dim reduction arrays", length(unlist(arrays)))
-        )
-      }
+      spdl::info(sprintf("Found %i dim reduction arrays", length(unlist(arrays))))
 
       # TODO: validate we're only returning 1 array per dimension
       mats <- lapply(arrays,

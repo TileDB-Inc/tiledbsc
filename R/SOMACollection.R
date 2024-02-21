@@ -190,10 +190,7 @@ SOMACollection <- R6::R6Class(
         }
       }
 
-      if (self$verbose) {
-        msg <- sprintf("Finished converting Seurat object to %s", self$class())
-        message(msg)
-      }
+      spdl::info(sprintf("Finished converting Seurat object to %s", self$class()))
     },
 
     #' @description Convert to a [SeuratObject::Seurat] object.

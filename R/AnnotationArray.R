@@ -103,26 +103,20 @@ AnnotationArray <- R6::R6Class(
     },
 
     log_array_creation = function(index_cols) {
-      if (self$verbose) {
-        msg <- sprintf(
-          "Creating new %s array with index [%s] at '%s'",
-          self$class(),
-          paste0(index_cols, collapse = ","),
-          self$uri
-        )
-        message(msg)
-      }
+      spdl::info(sprintf(
+        "Creating new %s array with index [%s] at '%s'",
+        self$class(),
+        paste0(index_cols, collapse = ","),
+        self$uri
+      ))
     },
 
     log_array_ingestion = function() {
-      if (self$verbose) {
-        msg <- sprintf(
-          "Ingesting %s data into: %s",
-          self$class(),
-          self$uri
-        )
-        message(msg)
-      }
+      spdl::info(sprintf(
+        "Ingesting %s data into: %s",
+        self$class(),
+        self$uri
+      ))
     }
   )
 )

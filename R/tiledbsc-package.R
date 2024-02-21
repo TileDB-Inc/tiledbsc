@@ -11,3 +11,13 @@
 ## usethis namespace: start
 ## usethis namespace: end
 NULL
+
+#' @importFrom spdl setup
+#' @export
+#'
+spdl::setup
+
+#' @importFrom spdl set_level
+#' @export
+#'
+spdl::set_level

@@ -36,11 +36,7 @@ AnnotationPairwiseMatrix <- R6::R6Class(
       if (!self$exists()) {
         private$create_empty_array(x, index_cols)
       } else {
-        if (self$verbose) {
-          message(
-            sprintf("Updating existing %s at '%s'", self$class(), self$uri)
-          )
-        }
+        spdl::info(sprintf("Updating existing %s at '%s'", self$class(), self$uri))
       }
       private$ingest_data(x)
     },
@@ -48,11 +44,11 @@ AnnotationPairwiseMatrix <- R6::R6Class(
     #' @description Read annotation data from TileDB into a matrix
     #' @return A [`matrix`]
     to_matrix = function() {
-      if (self$verbose) {
-        message(
-          sprintf("Reading %s into matrix from '%s'", self$class(), self$uri)
-        )
-      }
+      spdl::info(sprintf(
+        "Reading %s into matrix from '%s'",
+        self$class(),
+        self$uri
+      ))
       self$tiledb_array(return_as = "matrix")[]
     },
 
@@ -61,11 +57,7 @@ AnnotationPairwiseMatrix <- R6::R6Class(
     #' all attributes are retrieved.
     #' @return A [`data.frame`]
     to_dataframe = function(attrs = NULL) {
-      if (self$verbose) {
-        message(
-          sprintf("Reading %s into dataframe from '%s'", self$class(), self$uri)
-        )
-      }
+      spdl::info(sprintf("Reading %s into dataframe from '%s'", self$class(), self$uri))
       attrs <- attrs %||% character()
       self$tiledb_array(attrs = attrs, return_as = "data.frame")[]
     },
