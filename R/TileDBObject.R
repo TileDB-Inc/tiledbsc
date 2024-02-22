@@ -20,21 +20,27 @@ TileDBObject <- R6::R6Class(
     #' @param config optional configuration
     #' @param ctx optional TileDB context
     initialize = function(uri, verbose = TRUE, config = NULL, ctx = NULL) {
-      if (missing(uri)) stop("A `uri` must be specified")
+      if (missing(uri)) {
+        spdl::error(msg <- "A `uri` must be specified")
+        stop(msg)
+      }
       private$tiledb_uri <- TileDBURI$new(uri)
       self$verbose <- verbose
       self$config <- config
       self$ctx <- ctx
 
-      if (!is.null(config) && !is.null(ctx)) stop("Cannot pass a config and context, please choose one")
+      if (!is.null(config) && !is.null(ctx)) {
+        spdl::error(msg <- "Cannot pass a config and context, please choose one")
+        stop(msg)
+      }
 
       if (!is.null(self$config)) {
-        spdl::info("Creating context from provided config")
+        spdl::debug("Creating context from provided config")
         self$ctx <- tiledb::tiledb_ctx(self$config)
       }
 
       if (is.null(self$ctx)) {
-        spdl::info("Using cached TileDB context")
+        spdl::debug("Using cached TileDB context")
         self$ctx <- tiledb::tiledb_get_context()
       }
     },
@@ -72,14 +78,16 @@ TileDBObject <- R6::R6Class(
     #' The URI of the TileDB object.
     uri = function(value) {
       if (missing(value)) return(private$tiledb_uri$uri)
-      stop(sprintf("'%s' is a read-only field.", "uri"))
+      spdl::error(msg <- sprintf("'%s' is a read-only field.", "uri"))
+      stop(msg)
     },
 
     #' @field object Access the underlying TileB object directly (either a
     #' [`tiledb::tiledb_array`] or [`tiledb::tiledb_group`]).
     object = function(value) {
       if (!missing(value)) {
-        stop(sprintf("'%s' is a read-only field.", "object"))
+        spdl::error(msg <- sprintf("'%s' is a read-only field.", "object"))
+        stop(msg)
       }
       # If the array was created after the object was instantiated, we need to
       # initialize private$tiledb_object
@@ -88,7 +96,8 @@ TileDBObject <- R6::R6Class(
           spdl::debug("Initializing the underlying TileDB object")
           private$initialize_object()
         } else {
-          stop("TileDB object does not exist")
+          spdl::error(msg <- "TileDB object does not exist")
+          stop(msg)
         }
       }
       private$tiledb_object

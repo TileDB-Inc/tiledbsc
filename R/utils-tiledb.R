@@ -66,16 +66,22 @@ toggle_tiledb_legacy_mode_if_needed <- function(arr, verbose = FALSE) {
   } else { # Validity mode was previously set in the global context
     if (is.null(legacy_md_value)) {
       if (legacy_ctx_value == "false") {
-        warning(
-          sprintf("This array does not contain the '%s' metadata but legacy mode is disabled", SOMA_LEGACY_VALIDITY_KEY),
-          call. = FALSE
+        msg <- sprintf(
+          "This array does not contain the '%s' metadata but legacy mode is disabled",
+          SOMA_LEGACY_VALIDITY_KEY
         )
+        warning(msg, call. = FALSE)
+        spdl::warn(msg)
       }
     } else {
       if (legacy_ctx_value == "true" && legacy_md_value == "false") {
-        stop("Legacy mode is enabled but this array was created without it", call. = FALSE)
+        msg <- "Legacy mode is enabled but this array was created without it"
+        spdl::error(msg)
+        stop(msg, call. = FALSE)
       } else if (legacy_ctx_value == "false" && legacy_md_value == "true") {
-        stop("Legacy mode is disabled but this array was created with it", call. = FALSE)
+        msg <- "Legacy mode is disabled but this array was created with it"
+        spdl::error(msg)
+        stop(msg, call. = FALSE)
       }
     }
   }

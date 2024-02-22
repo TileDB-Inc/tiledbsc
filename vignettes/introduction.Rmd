@@ -24,7 +24,7 @@ library(fs)
 library(tiledb)
 library(SeuratObject)
 
-set_level("debug")
+set_level("info")
 
 data_dir <- file.path(tempdir(), "pbmc_small")
 dir.create(data_dir, showWarnings = FALSE)
