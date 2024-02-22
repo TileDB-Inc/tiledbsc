@@ -24,12 +24,10 @@ TileDBArray <- R6::R6Class(
       super$initialize(uri, verbose, config, ctx)
 
       if (self$exists()) {
-        msg <- sprintf("Found existing %s at '%s'", self$class(), self$uri)
-        spdl::info(debug)
+        spdl::info(sprintf("Found existing %s at '%s'", self$class(), self$uri))
         private$initialize_object()
       } else {
-        msg <- sprintf("No %s found at '%s'", self$class(), self$uri)
-        spdl::info(msg)
+        spdl::info(sprintf("No %s found at '%s'", self$class(), self$uri))
       }
       return(self)
     },

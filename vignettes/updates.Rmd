@@ -21,6 +21,8 @@ knitr::opts_chunk$set(
 ```{r setup}
 library(tiledbsc)
 library(SeuratObject)
+
+set_level("info")
 ```
 
 # Overview
