@@ -24,14 +24,12 @@ TileDBArray <- R6::R6Class(
       super$initialize(uri, verbose, config, ctx)
 
       if (self$exists()) {
-        msg <- sprintf("Found existing %s at '%s'", self$class(), self$uri)
-        spdl::info(debug)
+        spdl::info(sprintf("Found existing %s at '%s'", self$class(), self$uri))
         private$initialize_object()
         # Check for legacy validity mode metadata tag
         toggle_tiledb_legacy_mode_if_needed(self$object, self$verbose)
       } else {
-        msg <- sprintf("No %s found at '%s'", self$class(), self$uri)
-        spdl::info(msg)
+        spdl::info(sprintf("No %s found at '%s'", self$class(), self$uri))
       }
       return(self)
     },
