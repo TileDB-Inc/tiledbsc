@@ -198,16 +198,17 @@ TileDBArray <- R6::R6Class(
       )
 
       if (inherits(is_character_expression, "try-error")) {
-          # attr_filter is an unevaluated expression
-          captured_filter <- substitute(attr_filter)
+        # attr_filter is an unevaluated expression
+        captured_filter <- substitute(attr_filter)
       } else if (is_character_expression) {
-          # attr_filter has already been captured and converted to a char vector
-          if (attr_filter == "NULL") return(NULL)
-          captured_filter <- str2lang(attr_filter)
+        # attr_filter has already been captured and converted to a char vector
+        if (attr_filter == "NULL") return(NULL)
+        captured_filter <- str2lang(attr_filter)
       } else if (is.null(attr_filter)) {
-          return(NULL)
+        return(NULL)
       } else {
-          stop("'attr_filter' is not a valid expression")
+        spdl::error(msg <- "'attr_filter' is not a valid expression")
+        stop(msg)
       }
 
       tiledb::query_condition(private$tiledb_object) <- do.call(
