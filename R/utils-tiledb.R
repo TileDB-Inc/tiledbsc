@@ -47,7 +47,7 @@ tiledb_ctx_set_key <- function(key, value) {
 toggle_tiledb_legacy_mode_if_needed <- function(arr, verbose = FALSE) {
   stopifnot(inherits(arr, "tiledb_array"))
   if (utils::packageVersion("tiledb") < "0.18.0.3") return()
-  if (verbose) message(sprintf("Checking legacy validity mode for array: '%s'", arr@uri))
+  spdl::info(sprintf("Checking legacy validity mode for array: '%s'", arr@uri))
 
   # Get the metadata "soma_legacy_validity" tag
   tiledb::tiledb_array_open(arr, "READ")
@@ -61,21 +61,27 @@ toggle_tiledb_legacy_mode_if_needed <- function(arr, verbose = FALSE) {
   if (is.null(legacy_ctx_value)) { # Validity mode is unset in the global context
     if (is.null(legacy_md_value) || legacy_md_value == "true") {
       tiledb_ctx_set_key(TILEDB_LEGACY_KEY, "true")
-      if (verbose) message("Enabled legacy validity mode")
+      spdl::info("Enabled legacy validity mode")
     }
   } else { # Validity mode was previously set in the global context
     if (is.null(legacy_md_value)) {
       if (legacy_ctx_value == "false") {
-        warning(
-          sprintf("This array does not contain the '%s' metadata but legacy mode is disabled", SOMA_LEGACY_VALIDITY_KEY),
-          call. = FALSE
+        msg <- sprintf(
+          "This array does not contain the '%s' metadata but legacy mode is disabled",
+          SOMA_LEGACY_VALIDITY_KEY
         )
+        warning(msg, call. = FALSE)
+        spdl::warn(msg)
       }
     } else {
       if (legacy_ctx_value == "true" && legacy_md_value == "false") {
-        stop("Legacy mode is enabled but this array was created without it", call. = FALSE)
+        msg <- "Legacy mode is enabled but this array was created without it"
+        spdl::error(msg)
+        stop(msg, call. = FALSE)
       } else if (legacy_ctx_value == "false" && legacy_md_value == "true") {
-        stop("Legacy mode is disabled but this array was created with it", call. = FALSE)
+        msg <- "Legacy mode is disabled but this array was created with it"
+        spdl::error(msg)
+        stop(msg, call. = FALSE)
       }
     }
   }

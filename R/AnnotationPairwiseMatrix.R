@@ -26,6 +26,7 @@ AnnotationPairwiseMatrix <- R6::R6Class(
         "'value_col' must be a scalar character" = is_scalar_character(value_col)
       )
       private$validate_matrix(x)
+      spdl::debug("Populating {} at '{}' with matrix data", self$class(), self$uri)
 
       x <- matrix_to_coo(
         x = x,
@@ -36,11 +37,7 @@ AnnotationPairwiseMatrix <- R6::R6Class(
       if (!self$exists()) {
         private$create_empty_array(x, index_cols)
       } else {
-        if (self$verbose) {
-          message(
-            sprintf("Updating existing %s at '%s'", self$class(), self$uri)
-          )
-        }
+        spdl::info(sprintf("Updating existing %s at '%s'", self$class(), self$uri))
       }
       private$ingest_data(x)
     },
@@ -48,11 +45,11 @@ AnnotationPairwiseMatrix <- R6::R6Class(
     #' @description Read annotation data from TileDB into a matrix
     #' @return A [`matrix`]
     to_matrix = function() {
-      if (self$verbose) {
-        message(
-          sprintf("Reading %s into matrix from '%s'", self$class(), self$uri)
-        )
-      }
+      spdl::info(sprintf(
+        "Reading %s into matrix from '%s'",
+        self$class(),
+        self$uri
+      ))
       self$tiledb_array(return_as = "matrix")[]
     },
 
@@ -61,11 +58,7 @@ AnnotationPairwiseMatrix <- R6::R6Class(
     #' all attributes are retrieved.
     #' @return A [`data.frame`]
     to_dataframe = function(attrs = NULL) {
-      if (self$verbose) {
-        message(
-          sprintf("Reading %s into dataframe from '%s'", self$class(), self$uri)
-        )
-      }
+      spdl::info(sprintf("Reading %s into dataframe from '%s'", self$class(), self$uri))
       attrs <- attrs %||% character()
       self$tiledb_array(attrs = attrs, return_as = "data.frame")[]
     },
@@ -73,6 +66,11 @@ AnnotationPairwiseMatrix <- R6::R6Class(
     #' @description Read annotation data from TileDB into a sparse matrix
     #' @return A [`Matrix::dgTMatrix-class`].
     to_sparse_matrix = function() {
+      spdl::info(sprintf(
+        "Reading %s into sparse dgT matrix from '%s'",
+        self$class(),
+        self$uri
+      ))
       dataframe_to_dgtmatrix(
         self$to_dataframe(),
         index_cols = self$dimnames()
@@ -83,6 +81,11 @@ AnnotationPairwiseMatrix <- R6::R6Class(
     #' @return A [`SeuratObject::Graph-class`]
     #' @importFrom SeuratObject DefaultAssay
     to_seurat_graph = function() {
+      spdl::info(sprintf(
+        "Reading %s into SeuratObject::Graph from '%s'",
+        self$class(),
+        self$uri
+      ))
       assay <- self$get_metadata(key = "assay_used")
       object <- SeuratObject::as.Graph(self$to_sparse_matrix())
       SeuratObject::DefaultAssay(object) <- assay

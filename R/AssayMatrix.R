@@ -34,6 +34,8 @@ AssayMatrix <- R6::R6Class(
       )
       private$validate_matrix(x)
 
+      spdl::debug("Populating {} at '{}' with matrix data", self$class(), self$uri)
+
       self$from_dataframe(
         matrix_to_coo(x, index_cols = index_cols, value_cols = value_col),
         index_cols = index_cols
@@ -52,14 +54,11 @@ AssayMatrix <- R6::R6Class(
         length(index_cols) == 2,
         all(index_cols %in% colnames(x))
       )
+      spdl::debug("Populating {} at '{}' with triplet data", self$class(), self$uri)
       if (!self$exists()) {
         private$create_empty_array(x, index_cols)
       } else {
-        if (self$verbose) {
-          message(
-            sprintf("Updating existing %s at '%s'", self$class(), self$uri)
-          )
-        }
+        spdl::info(sprintf("Updating existing %s at '%s'", self$class(), self$uri))
       }
       private$ingest_data(x, index_cols)
     },
@@ -70,6 +69,7 @@ AssayMatrix <- R6::R6Class(
     #' @return A [`Matrix::dgTMatrix-class`].
     #' @importFrom vctrs vec_rbind
     to_dataframe = function(attrs = NULL, batch_mode = FALSE) {
+      spdl::debug("Returning {} at '{}' as triplets", self$class(), self$uri)
       private$read_data(
         attrs = attrs,
         batch_mode = batch_mode,
@@ -86,6 +86,8 @@ AssayMatrix <- R6::R6Class(
         attr <- self$attrnames()[1]
       }
       stopifnot(is_scalar_character(attr))
+
+      spdl::debug("Returning {} at '{}' as a dgT matrix", self$class(), self$uri)
 
       assay_data <- private$read_data(
         attrs = attr,

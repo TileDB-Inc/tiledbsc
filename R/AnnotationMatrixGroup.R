@@ -26,6 +26,7 @@ AnnotationMatrixGroup <- R6::R6Class(
       # TODO: Verify that the matrix is aligned to the group's dimension
 
       # create the new array
+      spdl::debug("Adding matrix as '{}' to group at '{}'", name, self$uri)
       array_uri <- file_path(self$uri, name)
       array <- AnnotationMatrix$new(
         uri = array_uri,

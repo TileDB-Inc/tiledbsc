@@ -30,12 +30,15 @@ SOMACollection <- R6::R6Class(
       # For compatibility with SCDatasets created with <=0.1.2 we look for a
       # misc directory first and treat it as uns
       if ("misc" %in% names(self$members)) {
-        warning("Found deprecated 'misc' directory in SOMACollection.")
+        spdl::warn(msg <- "Found deprecated 'misc' directory in SOMACollection.")
+        warning(msg)
         self$uns <- self$get_member("misc")
       } else {
         if ("uns" %in% names(self$members)) {
+          spdl::debug("Found existing 'uns' directory")
           self$uns <- self$get_member("uns")
         } else {
+          spdl::debug("No 'uns' or 'misc' directories found, creating 'uns'")
           self$uns <- TileDBGroup$new(
             uri = file_path(self$uri, "uns"),
             verbose = self$verbose
@@ -46,6 +49,7 @@ SOMACollection <- R6::R6Class(
 
       # Special handling of Seurat commands array
       if ("commands" %in% names(self$uns$members)) {
+        spdl::debug("Found Seurat command logs, coercing to `CommandsArray`")
         self$uns$members$commands <- CommandsArray$new(
           uri = self$uns$members$commands$uri,
           verbose = self$verbose
@@ -85,6 +89,7 @@ SOMACollection <- R6::R6Class(
       var_attr_filter <- deparse(substitute(var_attr_filter))
 
       for (soma in names(self$somas)) {
+        spdl::debug("Setting the query for member '{}'", soma)
         self$members[[soma]]$set_query(
           obs_ids = obs_ids,
           var_ids = var_ids,
@@ -99,6 +104,7 @@ SOMACollection <- R6::R6Class(
     reset_query = function() {
       stopifnot("No SOMAs to reset" = length(self$somas) > 0)
       for (member in names(self$somas)) {
+        spdl::debug("Resetting the query for memeber '{}'", member)
         self$members[[member]]$reset_query()
       }
     },
@@ -130,6 +136,8 @@ SOMACollection <- R6::R6Class(
 
       idents <- SeuratObject::Idents(object)
       if (nlevels(idents) > 1L) {
+        spdl::debug("Stashing active identities as 'active_ident'")
+        # NP: probably should be object[["active_ident"]] <- as.character(idents)
         object <- SeuratObject::AddMetaData(
           object = object,
           metadata = as.character(idents),
@@ -140,10 +148,12 @@ SOMACollection <- R6::R6Class(
       assays <- SeuratObject::Assays(object)
       for (assay in assays) {
         if (is.null(self$members[[assay]])) {
+          spdl::debug("Creating new SOMA for assay '{}'", assay)
           assay_uri <- file_path(self$uri, paste0("soma_", assay))
           soma <- SOMA$new(assay_uri, verbose = self$verbose, config = self$config, ctx = self$context)
           self$add_member(soma, name = assay)
         } else {
+          spdl::info("Using existing SOMA for assay '{}'", assay)
           soma <- self$members[[assay]]
         }
         assay_object <- object[[assay]]
@@ -151,10 +161,17 @@ SOMACollection <- R6::R6Class(
       }
 
       reductions <- SeuratObject::Reductions(object)
+      # NP: can replace if() with `for (reduction in SeuratObject::Reductions(object))`
       if (!is_empty(reductions)) {
         for (reduction in reductions) {
+          # NP: should be `reduction_object <- object[[reduction]]`
           reduction_object <- SeuratObject::Reductions(object, slot = reduction)
           assay <- SeuratObject::DefaultAssay(reduction_object)
+          spdl::debug(
+            "Adding dimensional reduction '{}' for assay '{}'",
+            reduction,
+            assay
+          )
           self$members[[assay]]$add_seurat_dimreduction(
             object = reduction_object,
             technique = reduction
@@ -163,11 +180,18 @@ SOMACollection <- R6::R6Class(
       }
 
       graphs <- SeuratObject::Graphs(object)
+      # NP: can replace if() with just `for (graph in SeuratObject::Graphs(object))`
       if (!is_empty(graphs)) {
         for (graph in graphs) {
+          # NP: should be `graph_object <- object[[graph]]`
           graph_object <- SeuratObject::Graphs(object, slot = graph)
           assay <- SeuratObject::DefaultAssay(graph_object)
           technique <- sub(paste0(assay, "_"), "", graph, fixed = TRUE)
+          spdl::debug(
+            "Adding graph '{}' for assay '{}'",
+            graph,
+            assay
+          )
           self$members[[assay]]$obsp$add_seurat_graph(
             object = graph_object,
             technique = technique
@@ -177,8 +201,12 @@ SOMACollection <- R6::R6Class(
 
       commandNames <- SeuratObject::Command(object)
       if (!is_empty(commandNames)) {
+        # NP: should replace `lapply(); names<-()`
+        # with `sapply(simplify = FALSE, USE.NAMES = TRUE)`
         namedListOfCommands <- lapply(commandNames, SeuratObject::Command,  object=object)
         names(namedListOfCommands) <- commandNames
+
+        spdl::debug("Adding {} command logs", length(namedListOfCommands))
 
         commandsArray <- CommandsArray$new(
           uri = file_path(self$uns$uri, "commands"),
@@ -186,14 +214,12 @@ SOMACollection <- R6::R6Class(
         )
         commandsArray$from_named_list_of_commands(namedListOfCommands)
         if (is.null(self$uns$members$commands)) {
+          spdl::debug("Adding command arry to collection at {}", self$uri)
           self$uns$add_member(commandsArray, name = "commands")
         }
       }
 
-      if (self$verbose) {
-        msg <- sprintf("Finished converting Seurat object to %s", self$class())
-        message(msg)
-      }
+      spdl::info(sprintf("Finished converting Seurat object to %s", self$class()))
     },
 
     #' @description Convert to a [SeuratObject::Seurat] object.
@@ -235,6 +261,11 @@ SOMACollection <- R6::R6Class(
 
       assays <- mapply(
         FUN = function(soma, layers, batch_mode) {
+          spdl::debug(
+            "Creating assay from SOMA {} with {} layers",
+            soma$uri,
+            length(layers)
+          )
           soma$to_seurat_assay(layers = layers, batch_mode = batch_mode)
         },
         soma = self$somas[names(soma_list)],
@@ -246,6 +277,7 @@ SOMACollection <- R6::R6Class(
 
       # cell-level obs metadata is stored in each soma, so for now we
       # just take the first soma's obs metadata
+      spdl::debug("Loading obs data frame")
       obs_df <- self$somas[[1]]$obs$to_dataframe()
 
       # retain cell identities before restoring cell-level metadata
@@ -255,6 +287,7 @@ SOMACollection <- R6::R6Class(
         obs_df$active_ident <- NULL
       }
 
+      spdl::debug("Creating `Seurat` object")
       object <- SeuratObject::CreateSeuratObject(
         counts = assays[[1]],
         project = project,
@@ -263,12 +296,15 @@ SOMACollection <- R6::R6Class(
       )
 
       if (!is.null(idents)) {
+        spdl::debug("Setting idents")
         SeuratObject::Idents(object) <- idents[SeuratObject::Cells(object)]
       }
 
       if (nassays > 1) {
+        spdl::debug("Adding {} additional assays", nassays - 1L)
         for (i in seq(2, nassays)) {
           assay <- names(assays)[i]
+          spdl::debug("Adding assay {} ({} of {})", assay, i - 1L, nassays - 1L)
           object[[assay]] <- assays[[assay]]
         }
       }
@@ -281,6 +317,7 @@ SOMACollection <- R6::R6Class(
         self$somas,
         function(x) x$get_seurat_dimreductions_list()
       )
+      spdl::debug("Adding %s dimensional reductions", length(unlist(dimreductions)))
       object@reductions <- Reduce(base::c, dimreductions)
 
       # graphs
@@ -289,6 +326,8 @@ SOMACollection <- R6::R6Class(
       )
       if (!is_empty(graph_arrays)) {
         graph_arrays <- unlist(graph_arrays)
+        spdl::debug("Found {} graph arrays", length(graph_arrays))
+        spdl::debug("Casting to Seurat `Graph`")
         graphs <- lapply(graph_arrays, function(x) x$to_seurat_graph())
         # TODO: Bit of a hack to recreate the graph names
         names(graphs) <- sub("\\.(obs|var)p\\.graph", "", names(graphs))
@@ -297,6 +336,7 @@ SOMACollection <- R6::R6Class(
 
       # command history
       if ("commands" %in% names(self$uns$members)) {
+        spdl::debug("Loading command logs")
         commands_array <- self$uns$get_member("commands")
         object@commands <- commands_array$to_named_list_of_commands()
       }
@@ -315,7 +355,8 @@ SOMACollection <- R6::R6Class(
     #' @field somas Retrieve [`SOMA`] members.
     somas = function(value) {
       if (!missing(value)) {
-        stop("somas is read-only, use 'add_member()' to add a new SOMA")
+        spdl::error(msg <- "somas is read-only, use 'add_member()' to add a new SOMA")
+        stop(msg)
       }
       Filter(function(x) inherits(x, "SOMA"), self$members)
     }
@@ -331,6 +372,7 @@ SOMACollection <- R6::R6Class(
 
       # TODO: Remove misc check when SCDatasets/SCGroups/misc are defunct
       if ("misc" %in% names(member_uris)) {
+        spdl::debug("Found 'misc', renaming to 'uns'")
         member_uris <- rename(member_uris, c(uns = "misc"))
       }
 
@@ -408,7 +450,8 @@ SCDataset <- R6::R6Class(
     #' @field scgroups Retrieve the [`SOMA`] (formerly `SCGroup`) members.
     scgroups = function(value) {
       if (!missing(value)) {
-        stop("scgroups is read-only, use 'add_member()' to add a new SOMA")
+        spdl::error(msg <- "scgroups is read-only, use 'add_member()' to add a new SOMA")
+        stop(msg)
       }
       .Deprecated(new = "somas", old = "scgroups", package = "tiledbsoma")
       self$somas
@@ -416,7 +459,10 @@ SCDataset <- R6::R6Class(
 
     #' @field misc An alias for `uns`.
     misc = function(value) {
-      if (!missing(value)) stop("misc is read-only")
+      if (!missing(value)) {
+        spdl::error(msg <- "misc is read-only")
+        stop(msg)
+      }
       .Deprecated(new = "uns", old = "misc", package = "tiledbsoma")
       self$uns
     }

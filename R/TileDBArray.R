@@ -24,14 +24,13 @@ TileDBArray <- R6::R6Class(
       super$initialize(uri, verbose, config, ctx)
 
       if (self$exists()) {
-        msg <- sprintf("Found existing %s at '%s'", self$class(), self$uri)
+        spdl::info(sprintf("Found existing %s at '%s'", self$class(), self$uri))
         private$initialize_object()
         # Check for legacy validity mode metadata tag
         toggle_tiledb_legacy_mode_if_needed(self$object, self$verbose)
       } else {
-        msg <- sprintf("No %s found at '%s'", self$class(), self$uri)
+        spdl::info(sprintf("No %s found at '%s'", self$class(), self$uri))
       }
-      if (self$verbose) message(msg)
       return(self)
     },
 
@@ -75,11 +74,17 @@ TileDBArray <- R6::R6Class(
       on.exit(private$close())
       private$open("READ")
       if (!is.null(key)) {
+        spdl::debug("Fetching array-level metadata for key '{}'", key)
         metadata <- tiledb::tiledb_get_metadata(self$object, key)
       } else {
         # coerce tiledb_metadata to list
+        spdl::debug("Fetching all array-level metadata")
         metadata <- unclass(tiledb::tiledb_get_all_metadata(self$object))
         if (!is.null(prefix)) {
+          spdl::debug(
+            "Filtering array-level metadata to those starting with '{}'",
+            prefix
+          )
           metadata <- metadata[string_starts_with(names(metadata), prefix)]
         }
       }
@@ -95,9 +100,7 @@ TileDBArray <- R6::R6Class(
         "Metadata must be a named list" = is_named_list(metadata)
       )
       on.exit(private$close())
-      if (self$verbose) {
-        message(sprintf("Adding %i metadata keys to array", length(metadata)))
-      }
+      spdl::info(sprintf("Adding %i metadata keys to array", length(metadata)))
       private$open("WRITE")
       mapply(
         FUN = tiledb::tiledb_put_metadata,
@@ -195,16 +198,17 @@ TileDBArray <- R6::R6Class(
       )
 
       if (inherits(is_character_expression, "try-error")) {
-          # attr_filter is an unevaluated expression
-          captured_filter <- substitute(attr_filter)
+        # attr_filter is an unevaluated expression
+        captured_filter <- substitute(attr_filter)
       } else if (is_character_expression) {
-          # attr_filter has already been captured and converted to a char vector
-          if (attr_filter == "NULL") return(NULL)
-          captured_filter <- str2lang(attr_filter)
+        # attr_filter has already been captured and converted to a char vector
+        if (attr_filter == "NULL") return(NULL)
+        captured_filter <- str2lang(attr_filter)
       } else if (is.null(attr_filter)) {
-          return(NULL)
+        return(NULL)
       } else {
-          stop("'attr_filter' is not a valid expression")
+        spdl::error(msg <- "'attr_filter' is not a valid expression")
+        stop(msg)
       }
 
       tiledb::query_condition(private$tiledb_object) <- do.call(
@@ -226,9 +230,11 @@ TileDBArray <- R6::R6Class(
           = isTRUE(dims) || isTRUE(attr_filter)
       )
       if (isTRUE(dims)) {
+        spdl::debug("Resetting the dimension ranges")
         tiledb::selected_ranges(private$tiledb_object) <- list()
       }
       if (isTRUE(attr_filter)) {
+        spdl::debug("Resetting the attribute filters")
         tiledb::query_condition(private$tiledb_object) <- new(
           "tiledb_query_condition"
         )
@@ -241,6 +247,7 @@ TileDBArray <- R6::R6Class(
     # Once the array has been created this initializes the TileDB array object
     # and stores the reference in private$tiledb_object.
     initialize_object = function() {
+      spdl::debug("Initializing TileDB array at {}'", self$uri)
       private$tiledb_object <- tiledb::tiledb_array(
         uri = self$uri,
         ctx = self$ctx,
@@ -255,6 +262,7 @@ TileDBArray <- R6::R6Class(
       meta[[SOMA_OBJECT_TYPE_METADATA_KEY]] <- class(self)[1]
       meta[[SOMA_ENCODING_VERSION_METADATA_KEY]] <- SOMA_ENCODING_VERSION
       meta[[SOMA_LEGACY_VALIDITY_KEY]] <- SOMA_LEGACY_VALIDITY
+      spdl::debug("Adding object-type array-level metadata")
       self$add_metadata(meta) # TileDBArray or TileDBGroup
     },
 
@@ -263,10 +271,12 @@ TileDBArray <- R6::R6Class(
 
     open = function(mode) {
       mode <- match.arg(mode, c("READ", "WRITE"))
+      spdl::debug("Opening array at {} with mode '{}'", self$uri, mode)
       invisible(tiledb::tiledb_array_open(self$object, type = mode))
     },
 
     close = function() {
+      spdl::debug("Closing array at {}", self$uri)
       invisible(tiledb::tiledb_array_close(self$object))
     },
 
@@ -280,22 +290,18 @@ TileDBArray <- R6::R6Class(
     # @param return_as Data can be read in as a `list` (default), `array`,
     # `matrix`, `data.frame`, `data.table` or `tibble`.
     read_data = function(attrs = NULL, batch_mode = FALSE, return_as = NULL) {
-      if (self$verbose) {
-        message(
-          sprintf("Reading %s into memory from '%s'", self$class(), self$uri)
-        )
-      }
+      spdl::info(sprintf("Reading %s into memory from '%s'", self$class(), self$uri))
       arr <- self$object
       tiledb::attrs(arr) <- attrs %||% character()
       tiledb::return_as(arr) <- return_as %||% "asis"
 
       if (batch_mode) {
-        if (self$verbose) message("...reading in batches")
+        spdl::info("...reading in batches")
         batcher <- tiledb::createBatched(arr)
         results <- list()
         i <- 1
         while (isFALSE(tiledb::completedBatched(batcher))) {
-          if (self$verbose) message(sprintf("...retrieving batch %d", i))
+          spdl::info(sprintf("...retrieving batch %d", i))
           results[[i]] <- tiledb::fetchBatched(arr, batcher)
           i <- i + 1
         }
@@ -305,6 +311,7 @@ TileDBArray <- R6::R6Class(
         # add class-specific concatenation logic here.
         results <- vctrs::vec_rbind(!!!results)
       } else {
+        spdl::info("...reading as complete block")
         results <- arr[]
       }
       results

@@ -12,6 +12,7 @@ TileDBURI <- R6::R6Class(
       private$.pieces <- private$url_parse(uri)
 
       if (self$is_tiledb_cloud_uri()) {
+        spdl::debug("Found TileDB Cloud URI")
         private$.tiledb_cloud_uri <- private$url_compose(
           scheme = private$.pieces$scheme,
           domain = private$.pieces$domain,
@@ -19,6 +20,7 @@ TileDBURI <- R6::R6Class(
         )
 
         if (self$is_tiledb_cloud_creation_uri()) {
+          spdl::debug("Found TileDB Cloud creation URI")
           private$.object_uri <- private$.pieces$path
         }
       }
@@ -71,6 +73,7 @@ TileDBURI <- R6::R6Class(
 
     # Parse URL and remove empty pieces rather than keeping them as NA
     url_parse = function(url) {
+      spdl::debug("Parsing and cleaning URL")
       Filter(
         Negate(is.na),
         as.list(urltools::url_parse(url))
@@ -79,6 +82,7 @@ TileDBURI <- R6::R6Class(
 
     # Compose URLs using only a subset of pieces
     url_compose = function(scheme = NULL, domain = NULL, path = NULL) {
+      spdl::debug("Composing complete URL")
       url <- urltools::url_compose(
         data.frame(
           scheme = scheme %||% NA_character_,

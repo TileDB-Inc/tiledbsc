@@ -26,6 +26,8 @@ AssayMatrixGroup <- R6::R6Class(
         stop("Must provide a `matrix` to ingest into the new AnnotationMatrix")
       }
 
+      spdl::debug("Populating {} at '{}' with matrix data", self$class(), self$uri)
+
       # create the new array
       array_uri <- file_path(self$uri, name)
       array <- AssayMatrix$new(

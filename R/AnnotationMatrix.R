@@ -27,6 +27,7 @@ AnnotationMatrix <- R6::R6Class(
         "'index_col' must be a scalar character" = is_scalar_character(index_col)
       )
       private$validate_matrix(x)
+      spdl::debug("Populating {} at '{}' with matrix data", self$class(), self$uri)
 
       # convert to a data frame containing the index column
       x <- as.data.frame(x)
@@ -35,11 +36,7 @@ AnnotationMatrix <- R6::R6Class(
       if (!self$exists()) {
         private$create_empty_array(x, index_col)
       } else {
-        if (self$verbose) {
-          message(
-            sprintf("Updating existing %s at '%s'", self$class(), self$uri)
-          )
-        }
+        spdl::info(sprintf("Updating existing %s at '%s'", self$class(), self$uri))
       }
       private$ingest_data(x)
     },
@@ -49,6 +46,8 @@ AnnotationMatrix <- R6::R6Class(
     #' default, all attributes are retrieved.
     #' @return A [`matrix`]
     to_matrix = function(attrs = NULL, batch_mode = FALSE) {
+
+      spdl::debug("Returning {} at '{}' as a matrix", self$class(), self$uri)
 
       df <- private$read_data(
         attrs = attrs,
