@@ -43,6 +43,7 @@ AnnotationGroup <- R6::R6Class(
 
       # Assuming all members are TileDBArrays
       for (member in names(self$members)) {
+        spdl::debug("Setting the query for '{}'", member)
         self$members[[member]]$set_query(dims, attr_filter)
       }
     },
@@ -53,6 +54,7 @@ AnnotationGroup <- R6::R6Class(
     #' @return NULL
     reset_query = function(dims = TRUE, attr_filter = TRUE) {
       for (member in names(self$members)) {
+        spdl::debug("Resetting the query for '{}'", member)
         self$members[[member]]$reset_query(dims, attr_filter)
       }
     }

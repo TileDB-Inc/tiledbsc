@@ -56,8 +56,10 @@ SOMA <- R6::R6Class(
       super$initialize(uri, verbose, config, ctx)
 
       if ("obs" %in% names(self$members)) {
+        spdl::debug("Found existing 'obs'")
         self$obs <- self$get_member("obs")
       } else {
+        spdl::debug("No 'obs' found, creating...")
         self$obs <- AnnotationDataframe$new(
           uri = file_path(self$uri, "obs"),
           verbose = self$verbose
@@ -65,8 +67,10 @@ SOMA <- R6::R6Class(
       }
 
       if ("var" %in% names(self$members)) {
+        spdl::debug("Found existing 'var'")
         self$var <- self$get_member("var")
       } else {
+        spdl::debug("No 'var' found, creating...")
         self$var <- AnnotationDataframe$new(
           uri = file_path(self$uri, "var"),
           verbose = self$verbose
@@ -74,8 +78,10 @@ SOMA <- R6::R6Class(
       }
 
       if ("X" %in% names(self$members)) {
+        spdl::debug("Found existing 'X'")
         self$X <- self$get_member("X")
       } else {
+        spdl::debug("No 'X' found, creating...")
         self$X <- AssayMatrixGroup$new(
           uri = file_path(self$uri, "X"),
           verbose = self$verbose
@@ -87,8 +93,10 @@ SOMA <- R6::R6Class(
       self$X$dimension_name <- c("var_id", "obs_id")
 
       if ("obsm" %in% names(self$members)) {
+        spdl::debug("Found existing 'obsm'")
         self$obsm <- self$get_member("obsm")
       } else {
+        spdl::debug("No 'obsm' found, creating...")
         self$obsm <- AnnotationMatrixGroup$new(
           uri = file_path(self$uri, "obsm"),
           verbose = self$verbose
@@ -98,8 +106,10 @@ SOMA <- R6::R6Class(
       self$obsm$dimension_name <- "obs_id"
 
       if ("varm" %in% names(self$members)) {
+        spdl::debug("Found existing 'varm'")
         self$varm <- self$get_member("varm")
       } else {
+        spdl::debug("No 'varm' found, creating...")
         self$varm <- AnnotationMatrixGroup$new(
           uri = file_path(self$uri, "varm"),
           verbose = self$verbose
@@ -109,8 +119,10 @@ SOMA <- R6::R6Class(
       self$varm$dimension_name <- "var_id"
 
       if ("obsp" %in% names(self$members)) {
+        spdl::debug("Found existing 'obsp'")
         self$obsp <- self$get_member("obsp")
       } else {
+        spdl::debug("No 'obsp' found, creating...")
         self$obsp <- AnnotationPairwiseMatrixGroup$new(
           uri = file_path(self$uri, "obsp"),
           verbose = self$verbose
@@ -120,8 +132,10 @@ SOMA <- R6::R6Class(
       self$obsp$dimension_name <- "obs_id"
 
       if ("varp" %in% names(self$members)) {
+        spdl::debug("Found existing 'varp'")
         self$varp <- self$get_member("varp")
       } else {
+        spdl::debug("No 'varp' found, creating...")
         self$varp <- AnnotationPairwiseMatrixGroup$new(
           uri = file_path(self$uri, "varp"),
           verbose = self$verbose
@@ -133,12 +147,15 @@ SOMA <- R6::R6Class(
       # For compatibility with SCGroups created with <=0.1.2 we look for a misc
       # directory first and treat it as uns
       if ("misc" %in% names(self$members)) {
-        warning("Found deprecated 'misc' directory in SOMA.")
+        spdl::warn(msg <- "Found deprecated 'misc' directory in SOMA.")
+        warning(msg)
         self$uns <- self$get_member("misc")
       } else {
         if ("uns" %in% names(self$members)) {
+          spdl::debug("Found existing 'uns'")
           self$uns <- self$get_member("uns")
         } else {
+          spdl::debug("No 'uns' found, creating...")
           self$uns <- TileDBGroup$new(
             uri = file_path(self$uri, "uns"),
             verbose = self$verbose
@@ -235,18 +252,25 @@ SOMA <- R6::R6Class(
       }
 
       # obs_id/var_id members
+      spdl::debug("Setting the query for 'X'")
       self$X$set_query(dims = dims)
 
       # obs_id members
+      spdl::debug("Setting the query for 'obs'")
       self$obs$set_query(dims = dims["obs_id"])
+      spdl::debug("Setting the query for 'obsm'")
       self$obsm$set_query(dims = dims["obs_id"])
+      spdl::debug("Setting the query for 'obsp'")
       self$members$obsp$set_query(
         dims = list(obs_id_i = dims$obs_id, obs_id_j = dims$obs_id)
       )
 
       # var_id members
+      spdl::debug("Setting the query for 'var'")
       self$var$set_query(dims = dims["var_id"])
+      spdl::debug("Setting the query for 'varm'")
       self$varm$set_query(dims = dims["var_id"])
+      spdl::debug("Setting the query for 'varp'")
       self$members$varp$set_query(
         dims = list(var_id_i = dims$var_id, var_id_j = dims$var_id)
       )
@@ -257,6 +281,7 @@ SOMA <- R6::R6Class(
     reset_query = function() {
       indexed_members <- setdiff(names(self$members), c("uns", "misc"))
       for (member in indexed_members) {
+        spdl::debug("Resetting the query for '{}'", member)
         self$members[[member]]$reset_query()
       }
     },
@@ -343,6 +368,7 @@ SOMA <- R6::R6Class(
       }
 
       if (!is_empty(SeuratObject::VariableFeatures(object))) {
+        spdl::debug("Adding variable features to feature-level meta data")
         object <- SeuratObject::AddMetaData(
           object = object,
           metadata = rownames(object) %in% SeuratObject::VariableFeatures(object),
@@ -351,12 +377,14 @@ SOMA <- R6::R6Class(
       }
 
       if (var) {
+        spdl::debug("Adding var to SOMA at {}", self$uri)
         self$var$from_dataframe(object[[]], index_col = "var_id")
         if (is.null(self$get_member("var"))) {
           self$add_member(self$var, name = "var")
         }
       }
 
+      # NP: replace `slot` argument with `layer`
       assay_mats <- mapply(
         FUN = SeuratObject::GetAssayData,
         slot = layers,
@@ -374,6 +402,7 @@ SOMA <- R6::R6Class(
       assay_mats <- Filter(Negate(is_empty), assay_mats)
 
       for (assay in names(assay_mats)) {
+        spdl::debug("Adding '{}' layer to SOMA at {}", assay, self$uri)
         self$X$add_assay_matrix(
           data = assay_mats[[assay]],
           name = assay
@@ -383,6 +412,7 @@ SOMA <- R6::R6Class(
       # Store value of the Assay object's key as metadata
       assay_key <- SeuratObject::Key(object)
       if (!is_empty(assay_key)) {
+        spdl::debug("Adding assay key to group-level metadata")
         self$X$add_metadata(list(key = assay_key))
       }
 
@@ -423,10 +453,18 @@ SOMA <- R6::R6Class(
 
       # Seurat doesn't allow us to supply data for both the `counts` and `data`
       # slots simultaneously, so we have to update the `data` slot separately.
+      #
+      # NP: `Assay` objects should be initialized with `data` with `counts`
+      # added separately; if the `Assay` is initialized with `counts`, Seurat
+      # will duplicate `counts` into `data`
       if (is.null(assay_mats$counts)) {
         # CreateAssayObject only accepts a dgTMatrix matrix for `counts`, 'data'
         # and 'scale.data' must be coerced to a dgCMatrix and base::matrix,
         # respectively. Bug?
+        #
+        # NP: `data` and `counts` must be `matrix` or `dgCMatrix`; `scale.data`
+        # must be `matrix`; this is intentional
+        spdl::debug("Initalizing assay with 'data'")
         assay_obj <- SeuratObject::CreateAssayObject(
           data = as(assay_mats$data, "dgCMatrix"),
           min.cells = min_cells,
@@ -434,6 +472,7 @@ SOMA <- R6::R6Class(
           check.matrix = check_matrix
         )
       } else {
+        spdl::debug("Initalizing assay with 'counts'")
         assay_obj <- SeuratObject::CreateAssayObject(
           counts = assay_mats$counts,
           min.cells = min_cells,
@@ -441,6 +480,7 @@ SOMA <- R6::R6Class(
           check.matrix = check_matrix
         )
         if (!is.null(assay_mats$data)) {
+          spdl::debug("Adding 'data' to assay")
           assay_obj <- SeuratObject::SetAssayData(
             object = assay_obj,
             slot = "data",
@@ -450,6 +490,7 @@ SOMA <- R6::R6Class(
       }
 
       if (!is.null(assay_mats$scale.data)) {
+        spdl::debug("Adding 'scale.data' to assay")
         assay_obj <- SeuratObject::SetAssayData(
           object = assay_obj,
           slot = "scale.data",
@@ -459,9 +500,11 @@ SOMA <- R6::R6Class(
 
       # variable annotations
       if (!is_empty(self$var$attrnames())) {
+        spdl::debug("Adding feature-level metadata to the assay")
         var_df <- self$var$to_dataframe()
         # highly variable features
         if ("highly_variable" %in% colnames(var_df)) {
+          spdl::debug("Adding highly-variable features to the assay")
           var_features <- rownames(var_df)[as.logical(var_df$highly_variable)]
           SeuratObject::VariableFeatures(assay_obj) <- var_features
           var_df$highly_variable <- NULL
@@ -472,6 +515,7 @@ SOMA <- R6::R6Class(
       # set metadata
       assay_key <- self$X$get_metadata(key = "key")
       if (!is.null(assay_key)) {
+        spdl::debug("Setting the key to '{}'", assay_key)
         SeuratObject::Key(assay_obj) <- self$X$get_metadata(key = "key")
       }
       return(assay_obj)
@@ -528,6 +572,7 @@ SOMA <- R6::R6Class(
 
       loadings <- SeuratObject::Loadings(object)
       if (!is_empty(loadings)) {
+        spdl::debug("Adding loadings for reduction '{}'", technique)
         self$varm$add_annotation_matrix(
           data = loadings,
           name = array_name,
@@ -537,6 +582,7 @@ SOMA <- R6::R6Class(
 
       embeddings <- SeuratObject::Embeddings(object)
       if (!is_empty(embeddings)) {
+        spdl::debug("Adding embeddings for reduction '{}'", technique)
         self$obsm$add_annotation_matrix(
           data = embeddings,
           name = array_name,
@@ -558,7 +604,8 @@ SOMA <- R6::R6Class(
       arrays <- self$get_annotation_matrix_arrays(prefix)
 
       if (is_empty(arrays)) {
-        stop("No obsm/varm dim reduction arrays found")
+        spdl::error(msg <- "No obsm/varm dim reduction arrays found")
+        stop(msg)
       }
 
       # Use the first array's technique if none is specified
@@ -571,12 +618,11 @@ SOMA <- R6::R6Class(
       technique_arrays <- self$get_annotation_matrix_arrays(array_name)
 
       if (is_empty(technique_arrays)) {
-        stop(
-          sprintf(
-            "No dim reduction arrays found for technique '%s'",
-            technique
-          )
-        )
+        spdl::error(msg <- sprintf(
+          "No dim reduction arrays found for technique '%s'",
+          technique
+        ))
+        stop(msg)
       } else {
         arrays <- technique_arrays
       }
@@ -604,6 +650,7 @@ SOMA <- R6::R6Class(
       arrays <- self$get_annotation_matrix_arrays(prefix = "dimreduction_")
       array_names <- names(unlist(arrays))
       techniques <- unique(sub("(obs|var)m\\.dimreduction_", "", array_names))
+      spdl::debug("Fetching {} dimensional reductions", length(techniques))
       sapply(
         techniques,
         function(x) self$get_seurat_dimreduction(x, batch_mode = batch_mode),
@@ -618,8 +665,10 @@ SOMA <- R6::R6Class(
       stopifnot(is_scalar_character(project))
 
       assay_obj <- self$to_seurat_assay()
+      spdl::debug("Loading cell-level metadata")
       obs_df <- self$obs$to_dataframe()[colnames(assay_obj), , drop = FALSE]
 
+      spdl::debug("Assembling final `Seurat` object")
       SeuratObject::CreateSeuratObject(
         counts = assay_obj,
         project = project,
@@ -735,11 +784,8 @@ SOMA <- R6::R6Class(
       # objects where `.raw` is populated. However, Seurat/BioC objects do not
       # have an obvious place to store this data, so we ignore it for now.
       if ("raw" %in% members$NAME) {
-        warning(
-          "Ignoring unsupported 'raw' group",
-          call. = FALSE,
-          immediate. = TRUE
-        )
+        spdl::warn(msg <- "Ignoring unsupported 'raw' group")
+        warning(msg, call. = FALSE, immediate. = TRUE)
         members <- members[members$NAME != "raw", ]
       }
 
@@ -793,7 +839,8 @@ SOMA <- R6::R6Class(
       available_layers <- names(self$X$members)
       matching_layers <- layers[layers %in% available_layers]
       if (is_empty(matching_layers)) {
-        stop("Did not find any matching 'X' layers")
+        spdl::error(msg <- "Did not find any matching 'X' layers")
+        stop(msg)
       }
       matching_layers
     },
