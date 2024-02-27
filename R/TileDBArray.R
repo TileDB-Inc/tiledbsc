@@ -230,9 +230,11 @@ TileDBArray <- R6::R6Class(
           = isTRUE(dims) || isTRUE(attr_filter)
       )
       if (isTRUE(dims)) {
+        spdl::debug("Resetting the dimension ranges")
         tiledb::selected_ranges(private$tiledb_object) <- list()
       }
       if (isTRUE(attr_filter)) {
+        spdl::debug("Resetting the attribute filters")
         tiledb::query_condition(private$tiledb_object) <- new(
           "tiledb_query_condition"
         )
@@ -309,6 +311,7 @@ TileDBArray <- R6::R6Class(
         # add class-specific concatenation logic here.
         results <- vctrs::vec_rbind(!!!results)
       } else {
+        spdl::info("...reading as complete block")
         results <- arr[]
       }
       results

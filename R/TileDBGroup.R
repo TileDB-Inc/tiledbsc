@@ -119,6 +119,7 @@ TileDBGroup <- R6::R6Class(
       }
       name <- name %||% basename(uri)
 
+      spdl::debug("Adding '{}' to group as '{}'", object$class(), name)
       on.exit(private$close())
       private$open("WRITE")
       tiledb::tiledb_group_add_member(
@@ -134,6 +135,7 @@ TileDBGroup <- R6::R6Class(
     #' @param name The name of the member to remove.
     #' @export
     remove_member = function(name) {
+      spdl::debug("Removing memeber '{}' from group at '{}'", name, self$uri)
       on.exit(private$close())
       private$open("WRITE")
       tiledb::tiledb_group_remove_member(

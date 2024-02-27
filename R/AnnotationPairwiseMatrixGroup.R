@@ -26,6 +26,7 @@ AnnotationPairwiseMatrixGroup <- R6::R6Class(
 
       # TODO: Verify that the matrix is aligned to the group's dimension
       # create the new array
+      spdl::debug("Adding {} as '{}' to group at '{}'", self$class(), name, self$uri)
       array_uri <- file_path(self$uri, name)
       array <- AnnotationPairwiseMatrix$new(
         uri = array_uri,
@@ -65,6 +66,7 @@ AnnotationPairwiseMatrixGroup <- R6::R6Class(
       assay <- SeuratObject::DefaultAssay(object)
       array_name <- paste0(prefix, technique)
 
+      spdl::debug("Adding SeuratObject::Graph as '{}' to group at '{}'", array_name, self$uri)
       self$add_matrix(
         data = as(object, "TsparseMatrix"),
         name = array_name,

@@ -23,6 +23,8 @@ CommandsArray <- R6::R6Class(
         )
       }
 
+      spdl::debug("Populating {} at '{}' with SeuratCommand data", self$class(), self$uri)
+
       # Convert from list of objects to list of dataframes.
       command_dataframes <- lapply(x, as.data.frame.SeuratCommand)
 

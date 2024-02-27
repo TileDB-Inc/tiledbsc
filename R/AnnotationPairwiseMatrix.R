@@ -26,6 +26,7 @@ AnnotationPairwiseMatrix <- R6::R6Class(
         "'value_col' must be a scalar character" = is_scalar_character(value_col)
       )
       private$validate_matrix(x)
+      spdl::debug("Populating {} at '{}' with matrix data", self$class(), self$uri)
 
       x <- matrix_to_coo(
         x = x,
@@ -65,6 +66,11 @@ AnnotationPairwiseMatrix <- R6::R6Class(
     #' @description Read annotation data from TileDB into a sparse matrix
     #' @return A [`Matrix::dgTMatrix-class`].
     to_sparse_matrix = function() {
+      spdl::info(sprintf(
+        "Reading %s into sparse dgT matrix from '%s'",
+        self$class(),
+        self$uri
+      ))
       dataframe_to_dgtmatrix(
         self$to_dataframe(),
         index_cols = self$dimnames()
@@ -75,6 +81,11 @@ AnnotationPairwiseMatrix <- R6::R6Class(
     #' @return A [`SeuratObject::Graph-class`]
     #' @importFrom SeuratObject DefaultAssay
     to_seurat_graph = function() {
+      spdl::info(sprintf(
+        "Reading %s into SeuratObject::Graph from '%s'",
+        self$class(),
+        self$uri
+      ))
       assay <- self$get_metadata(key = "assay_used")
       object <- SeuratObject::as.Graph(self$to_sparse_matrix())
       SeuratObject::DefaultAssay(object) <- assay

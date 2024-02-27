@@ -34,6 +34,8 @@ AnnotationDataframe <- R6::R6Class(
         "'index_col' must be a scalar character" = is_scalar_character(index_col)
       )
 
+      spdl::debug("Populating {} at '{}' with data.frame data", self$class(), self$uri)
+
       # convert rownames to a column
       x[[index_col]] <- rownames(x)
       if (!self$exists()) {
@@ -58,6 +60,7 @@ AnnotationDataframe <- R6::R6Class(
     #' @return A [`data.frame`] with row names containing values from the index
     #'    dimension
     to_dataframe = function(attrs = NULL) {
+      spdl::debug("Returning {} at '{}' to data.frame", self$class(), self$uri)
       spdl::info(sprintf("Reading %s into memory from '%s'", self$class(), self$uri))
 
       # Check for legacy validity mode metadata tag
