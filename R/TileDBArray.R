@@ -258,7 +258,7 @@ TileDBArray <- R6::R6Class(
       meta <- list()
       meta[[SOMA_OBJECT_TYPE_METADATA_KEY]] <- class(self)[1]
       meta[[SOMA_ENCODING_VERSION_METADATA_KEY]] <- SOMA_ENCODING_VERSION
-      meta[[SOMA_LEGACY_VALIDITY_KEY]] <- SOMA_LEGACY_VALIDITY
+      # meta[[SOMA_LEGACY_VALIDITY_KEY]] <- SOMA_LEGACY_VALIDITY
       spdl::debug("Adding object-type array-level metadata")
       self$add_metadata(meta) # TileDBArray or TileDBGroup
     },

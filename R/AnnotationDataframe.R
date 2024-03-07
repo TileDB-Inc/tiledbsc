@@ -61,8 +61,8 @@ AnnotationDataframe <- R6::R6Class(
       spdl::debug("Returning {} at '{}' to data.frame", self$class(), self$uri)
       spdl::info(sprintf("Reading %s into memory from '%s'", self$class(), self$uri))
 
-      # Check for legacy validity mode metadata tag
-      toggle_tiledb_legacy_mode_if_needed(self$object, self$verbose)
+      # # Check for legacy validity mode metadata tag
+      # toggle_tiledb_legacy_mode_if_needed(self$object, self$verbose)
 
       arr <- self$object
       tiledb::attrs(arr) <- attrs %||% character()
