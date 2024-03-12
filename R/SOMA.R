@@ -414,13 +414,13 @@ SOMA <- R6::R6Class(
       if (!is_empty(assay_key)) {
         spdl::debug("Adding assay key to group-level metadata")
         self$X$add_metadata(list(key = assay_key))
-      }
 
-      spdl::info(sprintf(
+        spdl::info(sprintf(
         "Finished converting Seurat Assay with key [%s] to %s",
         assay_key,
         self$class()
-      ))
+        ))
+      }
     },
 
     #' @description Convert to a [`SeuratObject::Assay`] object.
